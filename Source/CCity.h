@@ -17,8 +17,10 @@ class CCity
 {
 private:
 	int			m_nImageID;
+	int			m_nCityID;
 	int			m_nGoldTribute;
-	int			m_nOwner;
+	int			m_nCurrentOwner;
+	int			m_nOriginalOwner;
 	DWORD		m_dwColor;
 	RECT		m_rClickRect;
 	bool		m_bIsAttackable;
@@ -53,13 +55,15 @@ public:
 	//	Purpose:	Gets the specified type
 	//////////////////////////////////////////////////////
 	inline int GetGoldTribute() { return m_nGoldTribute; }
-	inline int GetOwner() { return m_nOwner; }
+	inline int GetOwner() { return m_nCurrentOwner; }
 	inline int GetImageID() { return m_nImageID; }
 	inline int GetColor() { return m_dwColor; }
+	inline int GetID() { return m_nCityID; }
 	inline RECT GetClickRect() { return m_rClickRect; }
 	inline bool IsAttackable() { return m_bIsAttackable; }
 	inline POINT GetAttackPoint() { return m_ptAttackPoint; }
 	inline vector<int> GetAdjacent() { return m_vAdjacentCities; }
+
 
 	//////////////////////////////////////////////////////
 	//	Function:	Mutators
@@ -68,17 +72,27 @@ public:
 	//////////////////////////////////////////////////////
 	inline void SetGoldTribute(int nGoldTribute) { m_nGoldTribute = nGoldTribute; }
 	inline void SetColor(DWORD dwColor) { m_dwColor = dwColor; }
+	inline void SetID(int nCityID) { m_nCityID = nCityID; }
 	inline void SetAttackable(bool nIsAttackable) { m_bIsAttackable = nIsAttackable; }
 	inline void SetAttackPoint(int nX, int nY) { m_ptAttackPoint.x = nX; m_ptAttackPoint.y = nY; }
 	inline void AddAdjacent(int nCityID) { m_vAdjacentCities.push_back(nCityID); }
 	inline void SetOwner( int nCityType) { 
-		m_nOwner = nCityType; 
-		if(m_nOwner == PLAYER_CITY) 
+		m_nCurrentOwner = nCityType; 
+		if(m_nCurrentOwner == PLAYER_CITY) 
 		{
 			m_bIsAttackable = false;
 			SetColor(D3DCOLOR_ARGB(255, 0, 255, 255));
 		}
-	
+	}
+	inline void SetOriginalOwner(int nCityType)
+	{
+		m_nOriginalOwner = nCityType;
+		SetOwner(nCityType);
+	}
+	inline void Revolt(int nCityID) 
+	{ 
+		m_nCurrentOwner = m_nOriginalOwner; 
+		SetDefaultColor(nCityID);
 	}
 	inline void SetImageID( int nImageID) { m_nImageID = nImageID; }
 	inline void SetClickRect( RECT rClickRect) { m_rClickRect = rClickRect; }

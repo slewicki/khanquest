@@ -13,6 +13,7 @@
 #include "CSGD_TextureManager.h"
 #include "CSGD_WaveManager.h"
 #include "CSGD_DirectInput.h"
+#include "CBitmapFont.h"
 
 class CCity;
 
@@ -24,12 +25,20 @@ private:
 	CSGD_WaveManager*						m_pWM;
 	CSGD_TextureManager*					m_pTM;
 	CSGD_DirectInput*						m_pDI;
+	CBitmapFont								m_cFont;
+	string									m_szTitle;
 	
+
 	// Unit sprite IDs (Unit animations later)
 	CCity*									m_pSelectedCity;
 	int										m_nDisplayID;
+	int										m_nButtonID;
+	int										m_nFontID;
 	float									m_fPositionX;
 	bool									m_bRetract;
+	RECT									m_rInvade;
+	RECT									m_rCancel;
+
 	////////////////////////////////////////////
 	//	Function:	"CCityInfoState(Constructor)"
 	//	Last Modified: July 23, 2008

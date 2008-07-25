@@ -42,7 +42,10 @@ void CWorldMapState::Enter(void)
 
 	// Get our city info from CGame
 	this->m_pCities = CGame::GetInstance()->GetCities();
-
+	for (int i = 0; i < 10; i++)
+	{
+		m_pCities[i]->SetAttackable(false);
+	}
 	// Figure out what our player owns
 	m_pPlayerOwnedCities.clear();
 	for (unsigned int i = 0; i < 10; i++)
@@ -64,7 +67,7 @@ void CWorldMapState::Enter(void)
 	m_nAttackSymbolID = m_pTM->LoadTexture("Resource/KQ_AttackSymbol.png");
 	m_nTitleID = m_pTM->LoadTexture("Resource/KQ_Title.png");
 	m_nLucidiaWhiteID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
-	m_cLucidiaWhite.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
+	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
 }
 
 void CWorldMapState::Exit(void)
@@ -133,18 +136,20 @@ void CWorldMapState::Render(float fElapsedTime)
 			m_pTM->Draw(m_nAttackSymbolID, ptAttackSymbol.x, ptAttackSymbol.y);
 		}
 	}
-	m_cLucidiaWhite.DrawTextA("Mongolia", 240, 155, .25, .25, D3DCOLOR_ARGB(255, 0, 0, 0));
+	m_cFont.DrawTextA("Mongolia", 240, 155, .25, .25, D3DCOLOR_ARGB(255, 0, 0, 0));
 
-}
+	//------------------------------------
+	char szG[10];
+	char szF[10];
+	itoa(CGame::GetInstance()->GetTotalGold(), szG, 10);
+	itoa(CGame::GetInstance()->GetTotalFoodTribute(), szF, 10);
+	string szFood = "Food:";
+	string szGold = "/Gold:";
+	string szGoldVal = szG;
+	string szFoodVal = szF;
+	m_cFont.DrawTextA(szFood + szFoodVal, 50, 500, .2f, .3f, D3DCOLOR_ARGB(255, 255, 0, 0));
+	m_cFont.DrawTextA(szGold + szGoldVal, 50, 505, .2f, .3f, D3DCOLOR_ARGB(255, 255, 255, 0));
 
-void CWorldMapState::SetCityConquered(CCity* pCity)
-{
-	pCity->SetOwner(PLAYER_CITY);
-	m_pPlayerOwnedCities.push_back(pCity);
-	vector<int> vAdjacent = pCity->GetAdjacent();
-	for (unsigned int j = 0; j < vAdjacent.size(); j++)
-	{
-		if(m_pCities[vAdjacent[j]]->GetOwner() != PLAYER_CITY)
-			m_pCities[vAdjacent[j]]->SetAttackable(true);
-	}
+	//------------------------------------
+
 }

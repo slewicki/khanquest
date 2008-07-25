@@ -25,7 +25,7 @@ private:
 	CSGD_TextureManager*			m_pTM;
 	CSGD_DirectInput*				m_pDI;
 
-	CBitmapFont						m_cLucidiaWhite;
+	CBitmapFont						m_cFont;
 
 	CCity**							m_pCities;
 	CCity*							m_pSelectedCity;
@@ -121,13 +121,6 @@ public:
 	//  Purpose : Modifies the specified type.
 	///////////////////////////////////////////
 
-	///////////////////////////////////////////
-	//  Function: SetCityConquerored
-	//	Last Modified: July 23, 2008
-	//  Purpose : Used to allow an update to
-	//			  our city vectors when a city
-	//			  has been conquered.
-	///////////////////////////////////////////
-	void SetCityConquered(CCity* pCity);
+	
 
 };

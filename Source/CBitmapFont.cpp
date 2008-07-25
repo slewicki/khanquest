@@ -34,7 +34,6 @@ bool CBitmapFont::InitBitmapFont(int nImageID, char chStartCh, int nNumColumns, 
 	SetCellHeight(nCellHeight);
 	SetStartCharacter(chStartCh);
 	return true;
-	
 }
 
 
@@ -42,11 +41,21 @@ void CBitmapFont::DrawText(string szText, int nPosX, int nPosY, float fScaleX,
 							float fScaleY, DWORD dwColor)
 {
 	RECT rLetterBox;
+	int x = 0;
 	for (unsigned int i = 0; i < szText.size(); i++)
 	{
-		rLetterBox = CalcRect(szText[i]);
-		CSGD_TextureManager::GetInstance()->Draw(m_nImageID, nPosX+(int)(m_nCellWidth*fScaleX*i), nPosY, 
-			fScaleX, fScaleY, &rLetterBox, 0.f, 0.f, 0.f, dwColor);
+		if(szText[i] == '/')
+		{
+			nPosY += (int)(m_nCellHeight*fScaleY)+5;
+			x = 0;
+		}
+		else
+		{
+			x++;
+			rLetterBox = CalcRect(szText[i]);
+			CSGD_TextureManager::GetInstance()->Draw(m_nImageID, nPosX+(int)(m_nCellWidth*fScaleX*x), nPosY, 
+				fScaleX, fScaleY, &rLetterBox, 0.f, 0.f, 0.f, dwColor);
+		}
 	}
 }
 
