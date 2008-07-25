@@ -31,6 +31,7 @@ CGame::CGame(void)
 	m_nSFXVolume = 50;
 	m_nMusicVolume = 50;
 	*m_pCities = NULL;
+	m_nGold = 0;
 }
 
 CGame::~CGame(void)
@@ -110,6 +111,7 @@ void CGame::Shutdown(void)
 	//	Unload assets
 	for (int i = 0; i < 10; i++)
 	{
+		m_pTM->ReleaseTexture(m_pCities[i]->GetImageID());
 		delete m_pCities[i];
 	}
 	//	Safe Release
@@ -423,14 +425,14 @@ void CGame::InitCities()
 	for (int i = 0; i < 10; i++)
 	{
 		m_pCities[i] = new CCity();
-		//m_pCities[i]->SetAttackable(true);
+		m_pCities[i]->SetID(i);
 
 	}
 
 	// Player City
 	m_pCities[PCITY]->SetDefaultColor(PCITY);
 	m_pCities[PCITY]->SetGoldTribute(0);
-	m_pCities[PCITY]->SetOwner(PLAYER_CITY);
+	m_pCities[PCITY]->SetOriginalOwner(PLAYER_CITY);
 	m_pCities[PCITY]->SetImageID(m_pTM->LoadTexture("Resource/KQ_Mongolia.png"));
 
 	m_pCities[PCITY]->SetClickRect(0, 0, 0, 0);
@@ -456,7 +458,7 @@ void CGame::InitCities()
 
 	m_pCities[KCITY1]->SetDefaultColor(KCITY1);
 	m_pCities[KCITY1]->SetGoldTribute(300);
-	m_pCities[KCITY1]->SetOwner(K_CITY);
+	m_pCities[KCITY1]->SetOriginalOwner(K_CITY);
 	m_pCities[KCITY1]->SetImageID(m_pTM->LoadTexture("Resource/KQ_kEasy.png"));
 	// Adjacent
 	m_pCities[KCITY1]->AddAdjacent(KCITY2);
@@ -465,7 +467,7 @@ void CGame::InitCities()
 
 	m_pCities[KCITY2]->SetDefaultColor(KCITY2);
 	m_pCities[KCITY2]->SetGoldTribute(525);
-	m_pCities[KCITY2]->SetOwner(K_CITY);
+	m_pCities[KCITY2]->SetOriginalOwner(K_CITY);
 	m_pCities[KCITY2]->SetImageID(m_pTM->LoadTexture("Resource/KQ_kMedium.png"));
 	// Adjacent
 	m_pCities[KCITY2]->AddAdjacent(KCITY1);
@@ -476,7 +478,7 @@ void CGame::InitCities()
 
 	m_pCities[KCITY3]->SetDefaultColor(KCITY3);
 	m_pCities[KCITY3]->SetGoldTribute(850);
-	m_pCities[KCITY3]->SetOwner(K_CITY);
+	m_pCities[KCITY3]->SetOriginalOwner(K_CITY);
 	m_pCities[KCITY3]->SetImageID(m_pTM->LoadTexture("Resource/KQ_kHard.png"));
 	// Adjacent
 	m_pCities[KCITY3]->AddAdjacent(KCITY1);
@@ -500,7 +502,7 @@ void CGame::InitCities()
 
 	m_pCities[XCITY1]->SetDefaultColor(XCITY1);
 	m_pCities[XCITY1]->SetGoldTribute(275);
-	m_pCities[XCITY1]->SetOwner(XIA_CITY);
+	m_pCities[XCITY1]->SetOriginalOwner(XIA_CITY);
 	m_pCities[XCITY1]->SetImageID(m_pTM->LoadTexture("Resource/KQ_xiaEasy.png"));
 	// Adjacent
 	m_pCities[XCITY1]->AddAdjacent(XCITY2);
@@ -510,7 +512,7 @@ void CGame::InitCities()
 
 	m_pCities[XCITY2]->SetDefaultColor(XCITY2);
 	m_pCities[XCITY2]->SetGoldTribute(525);
-	m_pCities[XCITY2]->SetOwner(XIA_CITY);
+	m_pCities[XCITY2]->SetOriginalOwner(XIA_CITY);
 	m_pCities[XCITY2]->SetImageID(m_pTM->LoadTexture("Resource/KQ_xiaMedium.png"));
 	// Adjacent
 	m_pCities[XCITY2]->AddAdjacent(KCITY2);
@@ -522,7 +524,7 @@ void CGame::InitCities()
 
 	m_pCities[XCITY3]->SetDefaultColor(XCITY3);
 	m_pCities[XCITY3]->SetGoldTribute(850);
-	m_pCities[XCITY3]->SetOwner(XIA_CITY);
+	m_pCities[XCITY3]->SetOriginalOwner(XIA_CITY);
 	m_pCities[XCITY3]->SetImageID(m_pTM->LoadTexture("Resource/KQ_xiaHard.png"));
 	// Adjacent
 	m_pCities[XCITY3]->AddAdjacent(XCITY2);
@@ -544,7 +546,7 @@ void CGame::InitCities()
 
 	m_pCities[JCITY1]->SetDefaultColor(JCITY1);
 	m_pCities[JCITY1]->SetGoldTribute(300);
-	m_pCities[JCITY1]->SetOwner(JIN_CITY);
+	m_pCities[JCITY1]->SetOriginalOwner(JIN_CITY);
 	m_pCities[JCITY1]->SetImageID(m_pTM->LoadTexture("Resource/KQ_jinEasy.png"));
 	// Adjacent
 	m_pCities[JCITY1]->AddAdjacent(JCITY2);
@@ -553,7 +555,7 @@ void CGame::InitCities()
 
 	m_pCities[JCITY2]->SetDefaultColor(JCITY2);
 	m_pCities[JCITY2]->SetGoldTribute(525);
-	m_pCities[JCITY2]->SetOwner(JIN_CITY);
+	m_pCities[JCITY2]->SetOriginalOwner(JIN_CITY);
 	m_pCities[JCITY2]->SetImageID(m_pTM->LoadTexture("Resource/KQ_jinMedium.png"));
 	// Adjacent
 	m_pCities[JCITY2]->AddAdjacent(JCITY1);
@@ -565,7 +567,7 @@ void CGame::InitCities()
 
 	m_pCities[JCITY3]->SetDefaultColor(JCITY3);
 	m_pCities[JCITY3]->SetGoldTribute(850);
-	m_pCities[JCITY3]->SetOwner(JIN_CITY);
+	m_pCities[JCITY3]->SetOriginalOwner(JIN_CITY);
 	m_pCities[JCITY3]->SetImageID(m_pTM->LoadTexture("Resource/KQ_jinHard.png"));
 	// Adjacent
 	m_pCities[JCITY3]->AddAdjacent(JCITY1);
@@ -574,3 +576,95 @@ void CGame::InitCities()
 
 }
 
+int CGame::GetNumConquered()
+{
+	int nConquered = 0;
+	// Skip the Mongolia (i=0)
+	for (int i = 1; i < 10; i++)
+	{
+		if(m_pCities[i]->GetOwner() == PLAYER_CITY)
+			nConquered++;
+	}
+	return nConquered;
+}
+
+int CGame::GetNextFoodTribute()
+{
+	int nConquered = GetNumConquered();
+	if(nConquered >= 6)
+		return 0;
+	switch(GetNumConquered()+1)
+	{
+	case 1:
+		return 250;
+		break;
+	case 2:
+		return 300;
+		break;
+	case 3:
+		return 300;
+		break;
+	case 4:
+		return 350;
+		break;
+	case 5:
+		return 400;
+		break;
+	case 6:
+		return 400;
+		break;
+	default:
+		return 0;
+	}
+}
+int CGame::GetTotalFoodTribute()
+{
+	switch(GetNumConquered())
+	{
+	case 0:
+		return 1000;
+		break;
+	case 1:
+		return 1250;
+		break;
+	case 2:
+		return 1550;
+		break;
+	case 3:
+		return 1850;
+		break;
+	case 4:
+		return 2200;
+		break;
+	case 5:
+		return 2600;
+		break;
+	default:
+		return 3000;
+		break;
+	}
+}
+
+void CGame::SetCityConquered(CCity* pCity)
+{
+	pCity->SetOwner(PLAYER_CITY);
+
+	// Add it to our conquered ID list
+	m_vConqueredCities.push_back(pCity->GetID());
+
+	// Give our player the gold loot!
+	CGame::GetInstance()->SetTotalGold(CGame::GetInstance()->GetTotalGold() + pCity->GetGoldTribute());
+
+	// This city can no longer be sacked for gold
+	pCity->SetGoldTribute(0);
+
+}
+
+void CGame::LoseLastCity()
+{
+	if(m_vConqueredCities.size() < 1)
+		return;
+	int nCityID = m_vConqueredCities[m_vConqueredCities.size()-1];
+	m_vConqueredCities.pop_back();
+	m_pCities[nCityID]->Revolt(nCityID);
+}

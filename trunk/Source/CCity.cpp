@@ -12,7 +12,7 @@ CCity::CCity()
 {
 	m_nImageID = -1;
 	m_nGoldTribute = 0;
-	m_nOwner = -1;
+	m_nCurrentOwner = -1;
 	m_dwColor = 0;
 	m_bIsAttackable = false;
 	m_ptAttackPoint.x = 0;

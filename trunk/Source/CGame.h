@@ -48,6 +48,8 @@ private:
 	CUnit					m_pPlayerUnitInfo[6];	// Info for player's units
 	CUnit					m_pCPUUnitInfo[6];		// Info for CPU's units
 
+	int						m_nGold;				// The player's current gold amount
+
 	HWND					m_hWnd;
 	HINSTANCE				m_hInstance;
 
@@ -56,6 +58,8 @@ private:
 
 	CCity*					m_pCities[10];
 	CCity*					m_pSelectedCity;
+
+	vector<int>				m_vConqueredCities;
 	//	Proper singleton:
 
 	////////////////////////////////////////////
@@ -140,11 +144,34 @@ public:
 	inline int GetSFXVolume() { return m_nSFXVolume; }
 	inline CCity* GetSelectedCity() { return m_pSelectedCity; }
 	inline CCity** GetCities() { return m_pCities; }
+	inline int GetTotalGold() { return m_nGold; }
 	inline bool IsMouseInRect(RECT rIsMouseHere)
 	{
 		return (m_ptMousePos.x <= rIsMouseHere.right && m_ptMousePos.x >= rIsMouseHere.left &&
 				m_ptMousePos.y >= rIsMouseHere.top && m_ptMousePos.y <= rIsMouseHere.bottom);
 	}
+
+	///////////////////////////////////////////
+	//  Function: "GetNumConquered"
+	//	Last Modified: July 18, 2008
+	//  Purpose : Returns the number of conquered cities
+	///////////////////////////////////////////
+	int GetNumConquered();
+
+	///////////////////////////////////////////
+	//  Function: "GetNextFoodTribute"
+	//	Last Modified: July 18, 2008
+	//  Purpose : Returns the the food tribute 
+	//	of the next conquered city
+	///////////////////////////////////////////
+	int GetNextFoodTribute();
+
+	///////////////////////////////////////////
+	//  Function: "GetTotalFoodTribute"
+	//	Last Modified: July 18, 2008
+	//  Purpose : Returns the total food tribute
+	///////////////////////////////////////////
+	int GetTotalFoodTribute();
 
 	///////////////////////////////////////////
 	//  Function: "GetWindowPosition"
@@ -173,6 +200,7 @@ public:
 	inline void SetCursorClick() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_CLICK))); }
 	inline void SetCursorAttack() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_ATTACK))); }
 	inline void SetSelectedCity(CCity* pSelectedCity) { m_pSelectedCity = pSelectedCity; }
+	inline void SetTotalGold(int nTotalGold) { m_nGold = nTotalGold; }
 
 	///////////////////////////////////////////
 	//  Function: ParseXMLUnitInfo
@@ -219,5 +247,21 @@ public:
 	//			  info of the specified type.
 	///////////////////////////////////////////
 	CUnit	GetCPUUnitInfo		(int nType);
+
+	///////////////////////////////////////////
+	//  Function: SetCityConquerored
+	//	Last Modified: July 24, 2008
+	//  Purpose : Updates all needed values when
+	//			  a city has been conquered.
+	///////////////////////////////////////////
+	void SetCityConquered(CCity* pCity);
+
+	///////////////////////////////////////////
+	//  Function: LoseLastCity
+	//	Last Modified: July 24, 2008
+	//  Purpose : Removes the player's last 
+	//	conquered city from their control
+	///////////////////////////////////////////
+	void LoseLastCity();
 
 };
