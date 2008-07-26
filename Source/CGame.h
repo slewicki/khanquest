@@ -59,6 +59,10 @@ private:
 	CCity*					m_pCities[10];
 	CCity*					m_pSelectedCity;
 
+	char					m_chXiaCount;
+	char					m_chKCount;
+	char					m_chJinCount;
+
 	vector<int>				m_vConqueredCities;
 	//	Proper singleton:
 
@@ -144,7 +148,11 @@ public:
 	inline int GetSFXVolume() { return m_nSFXVolume; }
 	inline CCity* GetSelectedCity() { return m_pSelectedCity; }
 	inline CCity** GetCities() { return m_pCities; }
+	inline CUnit*	GetPlayerUnitInfo() { return m_pPlayerUnitInfo; }
 	inline int GetTotalGold() { return m_nGold; }
+	inline int IsArcherUnlocked() { return m_chJinCount>=3; }
+	inline int IsAxmenUnlocked() { return m_chXiaCount>=3; }
+	inline int IsWarElephantUnlocked() { return m_chKCount>=3; }
 	inline bool IsMouseInRect(RECT rIsMouseHere)
 	{
 		return (m_ptMousePos.x <= rIsMouseHere.right && m_ptMousePos.x >= rIsMouseHere.left &&
@@ -201,6 +209,8 @@ public:
 	inline void SetCursorAttack() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_ATTACK))); }
 	inline void SetSelectedCity(CCity* pSelectedCity) { m_pSelectedCity = pSelectedCity; }
 	inline void SetTotalGold(int nTotalGold) { m_nGold = nTotalGold; }
+
+
 
 	///////////////////////////////////////////
 	//  Function: ParseXMLUnitInfo

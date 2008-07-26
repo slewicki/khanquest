@@ -38,7 +38,6 @@ private:
 	
 	bool			m_bIsSelected;		// Is the unit selected by the player
 
-
 	CTile*			m_pDestinationTile; // Tile the unit is traveling to
 	CTile*			m_pCurrentTile;		// Current tile the unit is on
 

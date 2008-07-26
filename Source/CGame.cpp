@@ -32,6 +32,8 @@ CGame::CGame(void)
 	m_nMusicVolume = 50;
 	*m_pCities = NULL;
 	m_nGold = 0;
+	
+	m_chJinCount = m_chKCount = m_chXiaCount = 0;
 }
 
 CGame::~CGame(void)
@@ -54,6 +56,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	
 	//this->ParseBinaryUnitInfo("Resource/KQ_unitStats.dat");
 	this->ParseXMLUnitInfo("Resource/KQ_unitStats.XML");
+
 	//	Get pointers to singletons:
 	m_pD3D	= CSGD_Direct3D::GetInstance();
 	m_pTM	= CSGD_TextureManager::GetInstance();
@@ -647,6 +650,20 @@ int CGame::GetTotalFoodTribute()
 
 void CGame::SetCityConquered(CCity* pCity)
 {
+
+	switch(pCity->GetOwner())
+	{
+	case XIA_CITY:
+		m_chXiaCount++;
+		break;
+	case JIN_CITY:
+		m_chJinCount++;
+		break;
+	case K_CITY:
+		m_chKCount++;
+		break;
+	};
+
 	pCity->SetOwner(PLAYER_CITY);
 
 	// Add it to our conquered ID list

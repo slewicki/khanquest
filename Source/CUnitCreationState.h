@@ -13,6 +13,9 @@
 #include "CSGD_TextureManager.h"
 #include "CSGD_WaveManager.h"
 #include "CSGD_DirectInput.h"
+#include "CCity.h"
+#include "CGame.h"
+#include "CBitmapFont.h"
 
 
 class CUnitCreationState : public IGameState
@@ -28,6 +31,12 @@ private:
 	int										m_nDisplayID;
 	int										m_nUnitID[6];
 	float									m_fTimer;
+
+	CCity*									m_pSelectedCity;
+	CBitmapFont								m_cFont;
+	CUnit*									m_pPlayerUnitInfo;
+	int										m_nLucidiaWhiteID;
+	int										m_nUnitCosts[6];
 
 	////////////////////////////////////////////
 	//	Function:	"CUnitCreationState(Constructor)"
@@ -92,6 +101,20 @@ public:
 	//	Purpose: To render our information to the screen
 	//////////////////////////////////////////////////////
 	void Render(float fElapsedTime);
+
+	//////////////////////////////////////////////////////
+	//	Function: “IntToString”
+	//	Last Modified: July 23, 2008
+	//	Purpose: Helper function, turn int to string
+	//////////////////////////////////////////////////////
+	string IntToString(int nNum);
+
+	//////////////////////////////////////////////////////
+	//	Function: “IntToString”
+	//	Last Modified: July 23, 2008
+	//	Purpose: Helper function, turn float to string
+	//////////////////////////////////////////////////////
+	string FloatToString(float fNum);
 
 	///////////////////////////////////////////
 	//  Function: Accessors
