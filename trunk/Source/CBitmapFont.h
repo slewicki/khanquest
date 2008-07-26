@@ -18,7 +18,9 @@ private:
 	int		m_nCellWidth;
 	int		m_nCellHeight;
 	char	m_chStartCharacter;
-
+	int		m_nCurrentPosX;
+	int		m_nCustomWidth;
+	int		m_nOffsetX;
 	//////////////////////////////////////////////////////
 	//	Function: “CalcRect”
 	//	Last Modified: July 18, 2008

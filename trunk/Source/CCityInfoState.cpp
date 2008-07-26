@@ -53,16 +53,22 @@ void CCityInfoState::Enter(void)
 	{
 	case K_CITY:
 		m_nDisplayID = m_pTM->LoadTexture("Resource/KQ_KInfoBkg.png");
-		m_szTitle = "KHWAREZMIAN";
-		//m_szDescription = "The Khwarezmian Empire controls this city./Their strength lies in heavily mount army./Be wary of their War Elephants, Khan, /for their power is unmatched in the known world.";
+		m_szTitle = " KHWAREZMIAN";
+		m_szDescription = 
+		"The Khwarezmian Empire controls this city.  Their /strength lies in their entirely mounted army.  Be /wary of their War Elephants, Khan, for their power /is unmatched in the known world.";
 		break;
 	case XIA_CITY:
 		m_nDisplayID = m_pTM->LoadTexture("Resource/KQ_XiaInfoBkg.png");
-		m_szTitle = "    XIA";
+		m_szTitle = "          XIA";
+		m_szDescription = 
+		"The Xia Dynasty controls this city.  Their axmen are /vicious barbarians, thirsty for blood.  They travel /only by foot, Sire, and we should take advantage /of that."; 
+		
 		break;
 	case JIN_CITY:
 		m_nDisplayID = m_pTM->LoadTexture("Resource/KQ_JinInfoBkg.png");
-		m_szTitle = "    JIN";
+		m_szTitle = "          JIN";
+		m_szDescription = 
+		"The Jin Dynasty controls this city.  The Jin boast of /their untouchable, ranged army.  They live and die /by their archers, my lord, surely we will put them to /the test.";
 		break;
 	default:
 		// We got a problem here
@@ -93,9 +99,9 @@ bool CCityInfoState::Input(float fElapsedTime)
 			{
 				// This function is used only if the city is conquered after battle
 				//--------------------
-				CGame::GetInstance()->SetCityConquered(m_pSelectedCity);
+				//CGame::GetInstance()->SetCityConquered(m_pSelectedCity);
 				//--------------------
-				//CGame::GetInstance()->ChangeState(CUnitCreationState::GetInstance());
+				CGame::GetInstance()->ChangeState(CUnitCreationState::GetInstance());
 				m_bRetract = true;
 			}
 		}
@@ -130,22 +136,27 @@ void CCityInfoState::Render(float fElapsedTime)
 {
 	m_pTM->Draw(m_nDisplayID, (int)m_fPositionX, 20);
 	m_pTM->Draw(m_nButtonID, (int)m_fPositionX+87, 465, .4f, .3f);
-	m_cFont.DrawTextA("INVADE", (int)m_fPositionX+80, 489, .14f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+	m_cFont.DrawTextA("INVADE", (int)m_fPositionX+99, 489, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 	m_pTM->Draw(m_nButtonID, (int)m_fPositionX+300, 465, .4f, .3f);
-	m_cFont.DrawTextA("CANCEL", (int)m_fPositionX+293, 489, .14f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+	m_cFont.DrawTextA("CANCEL", (int)m_fPositionX+318, 489, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 	
-	m_cFont.DrawTextA(m_szTitle, (int)m_fPositionX+90, 40, .2f, .4f, D3DCOLOR_ARGB(255, 0, 0, 0));
+	m_cFont.DrawTextA(m_szTitle, (int)m_fPositionX+90, 40, .3f, .3f, D3DCOLOR_ARGB(255, 0, 0, 0));
 	
 	char szG[10];
 	char szF[10];
 	itoa(m_pSelectedCity->GetGoldTribute(), szG, 10);
 	itoa(CGame::GetInstance()->GetNextFoodTribute(), szF, 10);
+
+	// Print Food and Gold values gained from conquering this city
 	string szFood = "Food Tribute:  ";
 	string szGold = "/Sackable Gold: ";
 	string szGoldVal = szG;
 	string szFoodVal = szF;
-	m_cFont.DrawTextA(szFood + szFoodVal + szGold + szGoldVal, (int)m_fPositionX+30, 300, .15f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
+	m_cFont.DrawTextA(szFood + szFoodVal + szGold + szGoldVal, (int)m_fPositionX+50, 275, .15f, .15f, D3DCOLOR_ARGB(255, 0, 0, 0));
 	
+	// Scout Report: Hints about the city
+	m_cFont.DrawTextA("Scout's Report", (int)m_fPositionX+190, 325, .18f, .18f, D3DCOLOR_ARGB(255, 0, 0, 0));
+	m_cFont.DrawTextA(m_szDescription, (int)m_fPositionX+50, 355, .15f, .15f, D3DCOLOR_ARGB(255, 0, 0, 0));
 
 }
 

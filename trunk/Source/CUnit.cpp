@@ -21,8 +21,6 @@ CUnit::CUnit(void)
 	m_pTarget			= NULL;			
 
 	m_nDirectionFacing	= SOUTH; 
-
-
 	m_nState			= IDLE;			
 	
 }
@@ -34,7 +32,7 @@ CUnit::~CUnit(void)
 
 void CUnit::Update(float fElapsedTime)
 {
-
+	// AI
 }
 
 void CUnit::Render(float fElapsedTime)

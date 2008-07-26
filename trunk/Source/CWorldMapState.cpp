@@ -61,7 +61,7 @@ void CWorldMapState::Enter(void)
 			}
 		}
 	}
-	
+
 	// Load textures
 	m_nWorldMapID = m_pTM->LoadTexture("Resource/KQ_WorldMap.png");
 	m_nAttackSymbolID = m_pTM->LoadTexture("Resource/KQ_AttackSymbol.png");
@@ -119,7 +119,7 @@ void CWorldMapState::Render(float fElapsedTime)
 
 	POINT ptAttackSymbol;
 	
-	m_pTM->Draw(m_nTitleID, 20, 20, .75, .75);
+	//m_pTM->Draw(m_nTitleID, 20, 20, .75, .75);
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -129,6 +129,18 @@ void CWorldMapState::Render(float fElapsedTime)
 		{
 			m_pTM->Draw(m_pCities[i]->GetImageID(), 0, 0, 1, 1, 0, 0, 0, 0, this->m_dwSelectedColor);
 			CGame::GetInstance()->SetCursorClick();
+			switch(m_pCities[i]->GetOwner())
+			{
+			case XIA_CITY:
+				m_cFont.DrawTextA("Xia Territoy", 20, 20, .25f, .25f, D3DCOLOR_ARGB(255, 255, 128, 0));
+				break;
+			case JIN_CITY:
+				m_cFont.DrawTextA("Jin Territoy", 20, 20, .25f, .25f, D3DCOLOR_ARGB(255, 178, 0, 255));
+				break;
+			case K_CITY:
+				m_cFont.DrawTextA("Khwarezmian Territoy", 20, 20, .25f, .25f, D3DCOLOR_ARGB(255, 0, 255, 0));
+				break;
+			}
 		}
 		if(m_pCities[i]->IsAttackable())
 		{
@@ -136,7 +148,7 @@ void CWorldMapState::Render(float fElapsedTime)
 			m_pTM->Draw(m_nAttackSymbolID, ptAttackSymbol.x, ptAttackSymbol.y);
 		}
 	}
-	m_cFont.DrawTextA("Mongolia", 240, 155, .25, .25, D3DCOLOR_ARGB(255, 0, 0, 0));
+	m_cFont.DrawTextA("Mongolia", 300, 155, .25, .25, D3DCOLOR_ARGB(255, 0, 0, 0));
 
 	//------------------------------------
 	char szG[10];
@@ -144,11 +156,11 @@ void CWorldMapState::Render(float fElapsedTime)
 	itoa(CGame::GetInstance()->GetTotalGold(), szG, 10);
 	itoa(CGame::GetInstance()->GetTotalFoodTribute(), szF, 10);
 	string szFood = "Food:";
-	string szGold = "/Gold:";
+	string szGold = "Gold:";
 	string szGoldVal = szG;
 	string szFoodVal = szF;
-	m_cFont.DrawTextA(szFood + szFoodVal, 50, 500, .2f, .3f, D3DCOLOR_ARGB(255, 255, 0, 0));
-	m_cFont.DrawTextA(szGold + szGoldVal, 50, 505, .2f, .3f, D3DCOLOR_ARGB(255, 255, 255, 0));
+	m_cFont.DrawTextA(szFood + szFoodVal, 50, 500, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+	m_cFont.DrawTextA(szGold + szGoldVal, 55, 525, .2f, .2f, D3DCOLOR_ARGB(255, 255, 255, 0));
 
 	//------------------------------------
 

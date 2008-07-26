@@ -27,6 +27,7 @@ private:
 	CSGD_DirectInput*						m_pDI;
 	CBitmapFont								m_cFont;
 	string									m_szTitle;
+	string									m_szDescription;
 	
 
 	// Unit sprite IDs (Unit animations later)
