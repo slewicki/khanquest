@@ -16,7 +16,7 @@
 #include "CCity.h"
 #include "CGame.h"
 #include "CBitmapFont.h"
-
+#define	MAX_UNITS 40
 
 class CUnitCreationState : public IGameState
 {
@@ -31,12 +31,26 @@ private:
 	int										m_nDisplayID;
 	int										m_nUnitID[6];
 	float									m_fTimer;
+	int										m_nScrollButtonID;
+	
 
 	CCity*									m_pSelectedCity;
 	CBitmapFont								m_cFont;
 	CUnit*									m_pPlayerUnitInfo;
 	int										m_nLucidiaWhiteID;
 	int										m_nUnitCosts[6];
+	int										m_nPlusButtonID;
+	int										m_nMinusButtonID;
+	int										m_nBackgroundID;
+	RECT									m_rPlusButtons[6];
+	RECT									m_rMinusButtons[6];
+	RECT									m_rAttackButton;
+	RECT									m_rBackButton;
+
+	int										m_nNumUnits[6];
+	int										m_nTotalUnits;
+
+	int										m_nFoodTotal;
 
 	////////////////////////////////////////////
 	//	Function:	"CUnitCreationState(Constructor)"

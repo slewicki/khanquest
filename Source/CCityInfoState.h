@@ -37,6 +37,7 @@ private:
 	int										m_nFontID;
 	float									m_fPositionX;
 	bool									m_bRetract;
+	bool									m_bClickInvade;
 	RECT									m_rInvade;
 	RECT									m_rCancel;
 

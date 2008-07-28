@@ -273,7 +273,7 @@ bool CGame::ParseXMLUnitInfo (const char* szFile)
 	nUnit = 0;
 	float fAttackSpeed, fMovement;
 	irr::io::IrrXMLReader* xml = irr::io::createIrrXMLReader(szFile);
-	string name;
+	string szName;
 	// parse the file until end reached
 	while(xml && xml->read())
 	{
@@ -281,20 +281,20 @@ bool CGame::ParseXMLUnitInfo (const char* szFile)
 		{
 		case irr::io::EXN_ELEMENT:
 			{
-				name = xml->getNodeName();
+				szName = xml->getNodeName();
 			}
 			break;
 		case irr::io::EXN_TEXT:
 			{
-				if (!strcmp("HP", name.c_str()))
+				if (!strcmp("HP", szName.c_str()))
 					nHP = atoi(xml->getNodeName());
-				if (!strcmp("Attack", name.c_str()))
+				if (!strcmp("Attack", szName.c_str()))
 					nAttack = atoi(xml->getNodeName());
-				if (!strcmp("Range", name.c_str()))
+				if (!strcmp("Range", szName.c_str()))
 					nRange = atoi(xml->getNodeName());
-				if (!strcmp("AttackSpeed", name.c_str()))
+				if (!strcmp("AttackSpeed", szName.c_str()))
 					fAttackSpeed = (float)atof(xml->getNodeName());
-				if (!strcmp("Movement", name.c_str()))
+				if (!strcmp("Movement", szName.c_str()))
 				{
 					fMovement = (float)atof(xml->getNodeName());
 
@@ -317,8 +317,7 @@ bool CGame::ParseXMLUnitInfo (const char* szFile)
 					m_pCPUUnitInfo[nUnit].SetSpeed(fMovement);
 					nUnit++;		
 				}
-				name = "none";
-		
+				szName = "none";
 		}
 		break;
 		}
@@ -501,8 +500,6 @@ void CGame::InitCities()
 	m_pCities[XCITY3]->SetAttackPoint(642, 413);
 
 
-
-
 	m_pCities[XCITY1]->SetDefaultColor(XCITY1);
 	m_pCities[XCITY1]->SetGoldTribute(275);
 	m_pCities[XCITY1]->SetOriginalOwner(XIA_CITY);
@@ -683,5 +680,21 @@ void CGame::LoseLastCity()
 		return;
 	int nCityID = m_vConqueredCities[m_vConqueredCities.size()-1];
 	m_vConqueredCities.pop_back();
-	m_pCities[nCityID]->Revolt(nCityID);
+	m_pCities[nCityID]->Revolt();
+
+	switch(m_pCities[nCityID]->GetOwner())
+	{
+	case XIA_CITY:
+		if(m_chXiaCount < 3)
+			m_chXiaCount--;
+		break;
+	case JIN_CITY:
+		if(m_chJinCount < 3)
+			m_chJinCount--;
+		break;
+	case K_CITY:
+		if(m_chKCount < 3)
+			m_chKCount--;
+		break;
+	};
 }

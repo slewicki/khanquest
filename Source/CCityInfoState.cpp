@@ -16,6 +16,7 @@ CCityInfoState::CCityInfoState(void)
 {
 	m_pSelectedCity = NULL;
 	m_bRetract = false;
+	m_bClickInvade = false;
 }
 
 
@@ -29,6 +30,7 @@ void CCityInfoState::Enter(void)
 {
 	// Get Our Managers Ready
 	m_bRetract = false;
+	m_bClickInvade = false;
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pWM = CSGD_WaveManager::GetInstance();
 	m_pDI = CSGD_DirectInput::GetInstance();
@@ -101,8 +103,9 @@ bool CCityInfoState::Input(float fElapsedTime)
 				//--------------------
 				//CGame::GetInstance()->SetCityConquered(m_pSelectedCity);
 				//--------------------
-				CGame::GetInstance()->ChangeState(CUnitCreationState::GetInstance());
 				m_bRetract = true;
+				m_bClickInvade = true;
+				
 			}
 		}
 		else if(CGame::GetInstance()->IsMouseInRect(m_rCancel))
@@ -111,7 +114,10 @@ bool CCityInfoState::Input(float fElapsedTime)
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 			{
 				m_bRetract = true;
-				CGame::GetInstance()->LoseLastCity();
+				// This function is used only if the player lost 2 battles
+				//--------------------
+				//CGame::GetInstance()->LoseLastCity();
+				//--------------------
 			}
 		}
 
@@ -125,7 +131,12 @@ void CCityInfoState::Update(float fElapsedTime)
 	{
 		m_fPositionX  += 500*fElapsedTime;
 		if(m_fPositionX > 805)
-			CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
+		{
+			if(m_bClickInvade)
+				CGame::GetInstance()->ChangeState(CUnitCreationState::GetInstance());
+			else
+				CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
+		}
 	}
 	else if(m_fPositionX >= 270)
 		m_fPositionX  -= 500*fElapsedTime;
