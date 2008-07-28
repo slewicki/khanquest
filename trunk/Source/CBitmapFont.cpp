@@ -316,6 +316,7 @@ RECT CBitmapFont::CalcRect(char chLetter)
 	
 	}
 
+
 	RECT rCell;
 	rCell.left = ( nID % m_nColumns ) * m_nCellWidth+m_nOffsetX;
 	rCell.top  = ( nID / m_nColumns ) * m_nCellHeight;

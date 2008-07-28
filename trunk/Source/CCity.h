@@ -89,10 +89,10 @@ public:
 		m_nOriginalOwner = nCityType;
 		SetOwner(nCityType);
 	}
-	inline void Revolt(int nCityID) 
+	inline void Revolt() 
 	{ 
 		m_nCurrentOwner = m_nOriginalOwner; 
-		SetDefaultColor(nCityID);
+		SetDefaultColor(this->GetID());
 	}
 	inline void SetImageID( int nImageID) { m_nImageID = nImageID; }
 	inline void SetClickRect( RECT rClickRect) { m_rClickRect = rClickRect; }

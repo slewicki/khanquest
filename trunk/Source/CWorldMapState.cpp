@@ -37,7 +37,6 @@ void CWorldMapState::Enter(void)
 	m_pDI = CSGD_DirectInput::GetInstance();
 	// Register any Events with the CWorldMapState
 
-
 	m_bPaused = false;
 
 	// Get our city info from CGame
@@ -83,6 +82,12 @@ bool CWorldMapState::Input(float fElapsedTime)
 	// Only get input if we aren't paused
 	if(m_bPaused)
 		return true;
+
+	// Exit game for now
+	//-----------------------------------------
+	if(m_pDI->GetBufferedKey(DIK_ESCAPE))
+		return false;
+	//-----------------------------------------
 
 	if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 	{
