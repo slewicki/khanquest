@@ -28,7 +28,7 @@ void CParticleEngine::Exit(void)
 
 void CParticleEngine::Render(float fElapsedTime)
 {
-	if (m_bIsRunning)
+	if (m_bIsRunning && vEmitterList.size() > 0)
 	{
 		m_pTM = CSGD_TextureManager::GetInstance();
 		m_pD3D = CSGD_Direct3D::GetInstance();	
@@ -43,12 +43,11 @@ void CParticleEngine::Render(float fElapsedTime)
 				for (unsigned int k = 0; k < m_dwPartTimer ; ++k)
 				{
 	
-					m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_SRCBLEND, &source);
-					m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_DESTBLEND, &dest);
+					//m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_SRCBLEND, &source);
+					//m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_DESTBLEND, &dest);
 
-					//				m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND,  GetBlendMode(vEmitterList[i][j].m_szSourceBlend) );
-					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND,  vEmitterList[i][j].m_szDestBlend );
-					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, GetBlendMode(vEmitterList[i][j].m_szDestBlend) );
+					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND,  GetBlendMode(vEmitterList[i][j].m_szSourceBlend) );
+					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, GetBlendMode(vEmitterList[i][j].m_szDestBlend) );
 
 					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ZWRITEENABLE, false);
 					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
@@ -57,19 +56,20 @@ void CParticleEngine::Render(float fElapsedTime)
 	
 					if (vEmitterList[i][j].m_bAlive == true)
 					{
-	
+						
 						m_pTM->Draw(vEmitterList[i][j].m_nImageID,
 							(int)vEmitterList[i][j].m_fLocX,
 							(int)vEmitterList[i][j].m_fLocY,
 							(float)vEmitterList[i][j].m_fCurrentScaleX,
 							(float)vEmitterList[i][j].m_fCurrentScaleY,
 							0, 0, 0, 0,
-							vEmitterList[i][j].m_cCurrentColor);
+							D3DCOLOR_ARGB((int)vEmitterList[i][j].m_cCurrentColor.a, (int)vEmitterList[i][j].m_cCurrentColor.r, (int)vEmitterList[i][j].m_cCurrentColor.g, (int)vEmitterList[i][j].m_cCurrentColor.b)
+							);
 					}
 				}
 	
-				m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND, source );
-				m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, dest );
+				//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND, source );
+				//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, dest );
 			}
 		}
 	}
@@ -85,7 +85,7 @@ void CParticleEngine::Update(float fElapsedTime)
 		m_dwCurrentTime = GetTickCount();
 		m_dElapsedTime = (float)(m_dwCurrentTime - m_dwPreviousTime);// / 1000.0f);
 	
-		if (GetTickCount() - m_dwPartTimer > (unsigned int)( 6000 ) )
+		if (GetTickCount() - m_dwPartTimer > (unsigned int)( 8000 ) )
 		{
 			m_dwPartTimer = 0;
 		}
@@ -127,6 +127,15 @@ void CParticleEngine::Update(float fElapsedTime)
 			}
 		}
 	}
+	if (!m_bIsRunning)
+	{
+		if (vEmitterList.size() != 0)
+		{
+			vEmitterList.clear();
+		}
+
+
+	}
 }
 
 
@@ -139,6 +148,7 @@ void CParticleEngine::LoadXmlEmitter(char* emitterFileName, float locX, float lo
 
 	// load the emitter to the list
 	vEmitterList.push_back( vParticleList );
+	vParticleList.clear();
 
 }
 void CParticleEngine::LoadBineryEmitter(char* emitterFileName, float locX, float locY)
@@ -150,6 +160,7 @@ void CParticleEngine::LoadBineryEmitter(char* emitterFileName, float locX, float
 
 	// load the emitter to the list
 	vEmitterList.push_back( vParticleList );
+	vParticleList.clear();
 
 }
 void CParticleEngine::SetEmitterVel(float XVel, float YVel)
@@ -192,7 +203,6 @@ void CParticleEngine::UpdateColor(int i, int j)
 
 	m_fColorPercent = (vEmitterList[i][j].m_fAge / vEmitterList[i][j].m_fLife) ;
 	D3DXColorLerp(&vEmitterList[i][j].m_cCurrentColor, &vEmitterList[i][j].m_cStartColor, &vEmitterList[i][j].m_cEndColor, m_fColorPercent);
-
 }
 
 void CParticleEngine::UpdateScale(int i, int j)
