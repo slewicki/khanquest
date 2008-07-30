@@ -40,7 +40,7 @@ class CAnimation
 	float	m_fSpeed;
 	float	m_fFrameTimer;
 	int		m_nAnimationID;
-	int		m_nCurrentFrame;
+	unsigned int m_nCurrentFrame;
 	bool	m_bIsPlaying;
 	bool	m_bIsLooping;
 

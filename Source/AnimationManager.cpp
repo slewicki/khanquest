@@ -81,7 +81,7 @@ void CAnimationManager::BinParse(char* szFileName)
 				//read in the animations speed
 				toRead.read((char*)&fSpeed,sizeof(fSpeed));
 				//set the speed of the animation
-				AnimationToAdd.SetSpeed(fSpeed);
+				AnimationToAdd.SetSpeed((float)fSpeed);
 				//find the number of frames in the animation
 				toRead.read((char*)&nFrameCount,sizeof(nFrameCount));
 				for(int j = 0; j < nFrameCount; j++)
@@ -127,7 +127,7 @@ void CAnimationManager::BinParse(char* szFileName)
 					//read in the duration of the current frame
 					toRead.read((char*)&fDuration,sizeof(fDuration));
 					//set the duration for the current frame
-					FrameToAdd.fDuration = fDuration;
+					FrameToAdd.fDuration = (float)fDuration;
 
 #pragma region Trigger Information
 					//read in the length of the trigger name
@@ -191,7 +191,7 @@ void CAnimationManager::BinParse(char* szFileName)
 				//read in the animations speed
 				toRead.read((char*)&fSpeed,sizeof(fSpeed));
 				//set the speed of the animation
-				AnimationToAdd.SetSpeed(fSpeed);
+				AnimationToAdd.SetSpeed((float)fSpeed);
 				//find the number of frames in the animation
 				toRead.read((char*)&nFrameCount,sizeof(nFrameCount));
 				for(int j = 0; j < nFrameCount; j++)
@@ -238,7 +238,7 @@ void CAnimationManager::BinParse(char* szFileName)
 					//read in the duration of the current frame
 					toRead.read((char*)&fDuration,sizeof(fDuration));
 					//set the duration for the current frame
-					FrameToAdd.fDuration = fDuration;
+					FrameToAdd.fDuration = (float)fDuration;
 
 #pragma region Trigger Information
 					//read in the length of the trigger name
@@ -301,7 +301,7 @@ void CAnimationManager::BinParse(char* szFileName)
 				//read in the animations speed
 				toRead.read((char*)&fSpeed,sizeof(fSpeed));
 				//set the speed of the animation
-				AnimationToAdd.SetSpeed(fSpeed);
+				AnimationToAdd.SetSpeed((float)fSpeed);
 				//find the number of frames in the animation
 				toRead.read((char*)&nFrameCount,sizeof(nFrameCount));
 				for(int j = 0; j < nFrameCount; j++)
@@ -348,7 +348,7 @@ void CAnimationManager::BinParse(char* szFileName)
 					//read in the duration of the current frame
 					toRead.read((char*)&fDuration,sizeof(fDuration));
 					//set the duration for the current frame
-					FrameToAdd.fDuration = fDuration;
+					FrameToAdd.fDuration = (float)fDuration;
 
 #pragma region Trigger Information
 					//read in the length of the trigger name
@@ -411,7 +411,7 @@ void CAnimationManager::BinParse(char* szFileName)
 				//read in the animations speed
 				toRead.read((char*)&fSpeed,sizeof(fSpeed));
 				//set the speed of the animation
-				AnimationToAdd.SetSpeed(fSpeed);
+				AnimationToAdd.SetSpeed((float)fSpeed);
 				//find the number of frames in the animation
 				toRead.read((char*)&nFrameCount,sizeof(nFrameCount));
 				for(int j = 0; j < nFrameCount; j++)
@@ -458,7 +458,7 @@ void CAnimationManager::BinParse(char* szFileName)
 					//read in the duration of the current frame
 					toRead.read((char*)&fDuration,sizeof(fDuration));
 					//set the duration for the current frame
-					FrameToAdd.fDuration = fDuration;
+					FrameToAdd.fDuration = (float)fDuration;
 
 #pragma region Trigger Information
 					//read in the length of the trigger name
@@ -522,7 +522,7 @@ void CAnimationManager::BinParse(char* szFileName)
 				//read in the animations speed
 				toRead.read((char*)&fSpeed,sizeof(fSpeed));
 				//set the speed of the animation
-				AnimationToAdd.SetSpeed(fSpeed);
+				AnimationToAdd.SetSpeed((float)fSpeed);
 				//find the number of frames in the animation
 				toRead.read((char*)&nFrameCount,sizeof(nFrameCount));
 				for(int j = 0; j < nFrameCount; j++)
@@ -569,7 +569,7 @@ void CAnimationManager::BinParse(char* szFileName)
 					//read in the duration of the current frame
 					toRead.read((char*)&fDuration,sizeof(fDuration));
 					//set the duration for the current frame
-					FrameToAdd.fDuration = fDuration;
+					FrameToAdd.fDuration = (float)fDuration;
 
 #pragma region Trigger Information
 					//read in the length of the trigger name
@@ -633,7 +633,7 @@ void CAnimationManager::BinParse(char* szFileName)
 				//read in the animations speed
 				toRead.read((char*)&fSpeed,sizeof(fSpeed));
 				//set the speed of the animation
-				AnimationToAdd.SetSpeed(fSpeed);
+				AnimationToAdd.SetSpeed((float)fSpeed);
 				//find the number of frames in the animation
 				toRead.read((char*)&nFrameCount,sizeof(nFrameCount));
 				for(int j = 0; j < nFrameCount; j++)
@@ -680,7 +680,7 @@ void CAnimationManager::BinParse(char* szFileName)
 					//read in the duration of the current frame
 					toRead.read((char*)&fDuration,sizeof(fDuration));
 					//set the duration for the current frame
-					FrameToAdd.fDuration = fDuration;
+					FrameToAdd.fDuration = (float)fDuration;
 
 #pragma region Trigger Information
 					//read in the length of the trigger name
@@ -733,5 +733,7 @@ CSheet CAnimationManager::LookUp(int UnitType)
 		if(UnitType == m_UnitSheets[i].GetUnitType())
 			return m_UnitSheets[i];
 	}
+	CSheet Sheet;
+	return Sheet;
 }
 
