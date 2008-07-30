@@ -43,17 +43,17 @@ void CParticleEngine::Render(float fElapsedTime)
 				for (unsigned int k = 0; k < m_dwPartTimer ; ++k)
 				{
 	
-	
-					//m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_SRCBLEND, &source);
-					//m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_DESTBLEND, &dest);
-	
-					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND,  vEmitterList[i][j].m_szSourceBlend );
-//					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND,  vEmitterList[i][j].m_szDestBlend );
+					m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_SRCBLEND, &source);
+					m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_DESTBLEND, &dest);
+
+					//				m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND,  GetBlendMode(vEmitterList[i][j].m_szSourceBlend) );
+					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND,  vEmitterList[i][j].m_szDestBlend );
 					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, GetBlendMode(vEmitterList[i][j].m_szDestBlend) );
-					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ZWRITEENABLE false);
-					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ZWRITEENABLE false);
-					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE true);
-					//m_pD3D->GetDirect3DDevice()->SetRenderState (D3DRS_ALPHATESTENABLE true);
+
+					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ZWRITEENABLE, false);
+					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+					//m_pD3D->GetDirect3DDevice()->SetRenderState (D3DRS_ALPHATESTENABLE, true);
+
 	
 					if (vEmitterList[i][j].m_bAlive == true)
 					{
@@ -68,8 +68,8 @@ void CParticleEngine::Render(float fElapsedTime)
 					}
 				}
 	
-				//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND, &source );
-				//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, &dest );
+				m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND, source );
+				m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, dest );
 			}
 		}
 	}
