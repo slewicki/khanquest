@@ -64,6 +64,7 @@ public:
 	vector<Frame> GetFrames(){return m_vFrames;}
 	int GetCurrentFrame(){return m_nCurrentFrame;}
 	void IsLooping(bool ToLoop){m_bIsLooping = ToLoop;}
+	bool IsPlaying(){return m_bIsPlaying;}
 	void SetAnimationID(int nAnimationID) {m_nAnimationID = nAnimationID;}
 	void SetDurration(float fDurr){m_vFrames[m_nCurrentFrame].fDuration = fDurr;}
 #pragma endregion
