@@ -8,9 +8,7 @@
 //
 //	Purpose: TileEngine
 //////////////////////////////////////////////////////////
-#include "CSGD_Direct3D.h"
 #include "CSGD_TextureManager.h"
-#include "CSGD_DirectInput.h"
 
 #include <iostream>
 #include <string>
@@ -43,6 +41,7 @@ struct tTile
 class CTileEngine
 {
 private:
+	CSGD_TextureManager* m_pTM;
 	int m_nMapHeight;
 	int m_nMapWidth;
 	int m_nTileHeight;
