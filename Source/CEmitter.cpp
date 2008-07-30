@@ -85,19 +85,19 @@ void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY, 
 		particle.m_bContinuous = false;
 
 	fin.read((char*)&nStringSize, sizeof(int));
-	particle.m_fMaxParticles = nStringSize;
+	particle.m_fMaxParticles = (float)nStringSize;
 
 	fin.read((char*)&nStringSize, sizeof(int));
-	particle.m_fMaxLife = nStringSize;
+	particle.m_fMaxLife = (float)nStringSize;
 	
 	fin.read((char*)&nStringSize, sizeof(int));
-	particle.m_fMinLife = nStringSize;
+	particle.m_fMinLife = (float)nStringSize;
 	
 	fin.read((char*)&nStringSize, sizeof(int));
-	particle.m_fVelX = nStringSize;		
+	particle.m_fVelX = (float)nStringSize;		
 
 	fin.read((char*)&nStringSize, sizeof(int));
-	particle.m_fVelY = nStringSize;	
+	particle.m_fVelY = (float)nStringSize;	
 
 	fin.read((char*)&nStringSize,sizeof(int));
 	fin.read(szBuffer,nStringSize);
@@ -116,40 +116,40 @@ void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY, 
 	particle.m_nOffsetY = nStringSize;	
 
 	fin.read((char*)&nStringSize, sizeof(int));
-	particle.m_fStartRed = nStringSize;	
+	particle.m_fStartRed = (float)nStringSize;	
 
 	fin.read((char*)&nStringSize, sizeof(int));
-	particle.m_fEndRed = nStringSize;	
+	particle.m_fEndRed = (float)nStringSize;	
 
 	fin.read((char*)&nStringSize, sizeof(int));
-	particle.m_fStartGreen = nStringSize;	
+	particle.m_fStartGreen = (float)nStringSize;	
 
 	fin.read((char*)&nStringSize, sizeof(int));
-	particle.m_fEndGreen = nStringSize;
+	particle.m_fEndGreen = (float)nStringSize;
 
 	fin.read((char*)&nStringSize, sizeof(int));
-	particle.m_fStartBlue = nStringSize;
+	particle.m_fStartBlue = (float)nStringSize;
 
 	fin.read((char*)&nStringSize, sizeof(int));
-	particle.m_fEndBlue = nStringSize;
+	particle.m_fEndBlue = (float)nStringSize;
 
 	fin.read((char*)&nStringSize, sizeof(int));
-	particle.m_fStartAlpha = nStringSize;
+	particle.m_fStartAlpha = (float)nStringSize;
 
 	fin.read((char*)&nStringSize, sizeof(int));
-	particle.m_fEndAlpha = nStringSize;
+	particle.m_fEndAlpha = (float)nStringSize;
 
 	fin.read((char*)&nDouble, sizeof(nDouble));
-	particle.m_fStartScaleX = nDouble;
+	particle.m_fStartScaleX = (float)nDouble;
 
 	fin.read((char*)&nDouble, sizeof(nDouble));
-	particle.m_fEndScaleX = nDouble;
+	particle.m_fEndScaleX = (float)nDouble;
 
 	fin.read((char*)&nDouble, sizeof(nDouble));
-	particle.m_fStartScaleY = nDouble;
+	particle.m_fStartScaleY = (float)nDouble;
 
 	fin.read((char*)&nDouble, sizeof(nDouble));
-	particle.m_fEndScaleY = nDouble;
+	particle.m_fEndScaleY = (float)nDouble;
 
 	fin.read((char*)&nStringSize, sizeof(int));
 	fin.read(szBuffer,nStringSize);
@@ -213,7 +213,7 @@ void CEmitter::LoadXMLEmitter(char* emitterFileName, float locX, float locY, vec
 			{
 				if (!strcmp("Emitter", xml->getNodeName()))
 				{
-				particle.m_bContinuous = (bool)xml->getAttributeValue("Continuous");
+				particle.m_bContinuous = reinterpret_cast<bool>(xml->getAttributeValue("Continuous"));
 				particle.m_fMaxParticles =	xml->getAttributeValueAsFloat("MaxParticles");
 				particle.m_fMaxLife = xml->getAttributeValueAsFloat("MaxLife");
 				particle.m_fMinLife = xml->getAttributeValueAsFloat("MinLife");
