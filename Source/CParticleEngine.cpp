@@ -142,7 +142,7 @@ void CParticleEngine::Update(float fElapsedTime)
 void CParticleEngine::LoadXmlEmitter(char* emitterFileName, float locX, float locY)
 {
 	m_fLocX = locX;
-	m_fLocY = locX;
+	m_fLocY = locY;
 	// load an emitter
 	m_ceEmitter.LoadXMLEmitter(emitterFileName, locX, locY, vParticleList);
 
@@ -154,7 +154,7 @@ void CParticleEngine::LoadXmlEmitter(char* emitterFileName, float locX, float lo
 void CParticleEngine::LoadBineryEmitter(char* emitterFileName, float locX, float locY)
 {
 	m_fLocX = locX;
-	m_fLocY = locX;
+	m_fLocY = locY;
 	// load an emitter
 	m_ceEmitter.LoadBinaryEmitter(emitterFileName, locX, locY, vParticleList);
 
