@@ -115,6 +115,7 @@ class CParticleEngine
 		//  Purpose : Modifies the specified type.
 		//////////////////////////////////////////////////////
 		void SetIsRunning(bool isRunnig){m_bIsRunning = isRunnig;}
+		void ClearEmitter(void){vEmitterList.clear();}
 
 		//////////////////////////////////////////////////////
 		//	Function: “Exit”
