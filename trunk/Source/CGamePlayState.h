@@ -13,6 +13,7 @@
 #include "CSGD_TextureManager.h"
 #include "CSGD_WaveManager.h"
 #include "CSGD_DirectInput.h"
+#include "CBitmapFont.h"
 
 
 class CGamePlayState : public IGameState
@@ -25,6 +26,14 @@ private:
 	CSGD_DirectInput*						m_pDI;
 	
 	bool									m_bIsPaused;
+
+	// TEMP BUTTONS FOR DEMO - SHOW WORLD MAP AFTER WIN OR LOSS
+	// REMOVE AFTER DEMO
+	RECT									m_rVictoryButton;
+	RECT									m_rRetreatButton;
+	int										m_nButtonID;
+	CBitmapFont								m_cFont;
+	int										m_nLucidiaWhiteID;
 
 
 	////////////////////////////////////////////

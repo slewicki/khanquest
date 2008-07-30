@@ -11,9 +11,8 @@
 #include "CSGD_Direct3D.h"
 #include "CSGD_TextureManager.h"
 #include "CEventSystem.h"
-#include "CMessageSystem.h"
 #include "CParticle.h"
-#include "../xml/irrXML.h"
+#include "../irrxml/irrXML.h"
 //using std::list;
 using namespace irr;
 using namespace io;
@@ -26,7 +25,6 @@ private:
 
 	CSGD_Direct3D*			m_pD3D;			// direct 3D
 	CEventSystem*			m_pES;			// Event System
-	CMessageSystem*			m_pMS;			// Message System
 	CSGD_TextureManager*	m_pTM;			// Texture Manager
 
 	int						m_nEmitterXLocation; // X location to draw the emitter

@@ -9,6 +9,7 @@
 
 #pragma once
 #include "CBase.h"
+#include "AnimInstance.h"
 
 enum	// Unit States
 {
@@ -18,7 +19,7 @@ enum	// Unit States
 	RETREAT,
 };
 
-enum { NORTH, SOUTH, EAST, WEST, NE, NW, SE, SW};
+enum { NORTH, SOUTH, EAST, WEST, NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST};
 
 class CTile;
 class CUnit : public CBase
@@ -50,13 +51,16 @@ private:
 
 	int				m_nState;			// The state the unit is in
 
+	CAnimInstance*	m_pAnimInstance;
+
 public:
 	//////////////////////////////////////////////////////
 	//	Function:	"CUnit(Constructor)"
 	//	Last Modified: July 18, 2008
 	//	Purpose:	Constructor
 	//////////////////////////////////////////////////////
-	CUnit(void);
+	CUnit() {}
+	CUnit(int nType);
 
 	//////////////////////////////////////////////////////
 	//	Function:	"CUnit(Destructor)"
@@ -82,6 +86,7 @@ public:
 	inline bool	  IsSelected	(void) const { return m_bIsSelected; }
 	inline bool	  IsGrouped		(void) const { return m_bIsGrouped; }
 	inline int    GetState		(void) const { return m_nState; }
+	inline int    GetDirection	(void) const { return m_nDirectionFacing; }
 
 
 	//////////////////////////////////////////////////////
@@ -97,6 +102,16 @@ public:
 	inline void SetBonus		(int nBonus)		{ m_nBonus = nBonus; }
 	inline void SetSelected		(bool bIsSelected)	{ m_bIsSelected = bIsSelected; }
 	inline void SetGrouped		(bool bIsGrouped)	{ m_bIsGrouped = bIsGrouped; }
+	inline void SetDirection (int nDirectionFacing)	
+	{ 
+		m_nDirectionFacing = nDirectionFacing; 
+		m_pAnimInstance->Play(GetDirection(), GetState());	
+	}
+	inline void SetState (int nState)				
+	{ 
+		m_nState = nState; 
+		m_pAnimInstance->Play(GetDirection(), GetState());	
+	}
 	
 	////////////////////////////////////////
 	//	Function:	"Update"
