@@ -21,7 +21,7 @@ public:
 	void SetUnitType(int value){m_szUnitType = value;}
 	void SetImageID(int value)
 	{
-		for(int i = 0; i < m_vAnimations.size();i++)
+		for(unsigned int i = 0; i < m_vAnimations.size();i++)
 			m_vAnimations[i].SetAnimationID(value);
 	}
 	// Last Modified: July 27, 2008 

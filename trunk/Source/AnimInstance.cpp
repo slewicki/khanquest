@@ -61,7 +61,7 @@ void CAnimInstance::Play(int Direction, int Action)
 	};
 
 	string name = m_szAction + "_" + m_szDirection;
-	for(int i = 0; i < m_Sheet.GetAnimations().size();i++)
+	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
 		if(name == m_Sheet.GetAnimations()[i].GetName())
 			m_Sheet.GetAnimations()[i].Play();
 }
@@ -74,7 +74,7 @@ void CAnimInstance::Play(int Direction, int Action)
 void CAnimInstance::Update(float fElapsedTime)
 {
 	
-	for(int i = 0; i < m_Sheet.GetAnimations().size();i++)
+	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
 	{
 		
 		/*if(m_nCounter > m_Sheet.GetAnimations().size() - 1)
@@ -94,7 +94,7 @@ void CAnimInstance::Update(float fElapsedTime)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimInstance::Render()
 {
-	for(int i = 0; i < m_Sheet.GetAnimations().size();i++)
+	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
 	{
 		string name = m_szAction + "_" + m_szDirection;
 		if(name == m_Sheet.GetAnimations()[i].GetName())
