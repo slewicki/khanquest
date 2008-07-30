@@ -99,20 +99,24 @@ void CGamePlayState::Update(float fElapsedTime)
 void CGamePlayState::Render(float fElapsedTime)
 {
 	// Render units
-	ObjectManager::GetInstance()->RenderObjects(fElapsedTime);
+	
 
-	m_pTM->Draw(m_nButtonID, m_rVictoryButton.left, m_rVictoryButton.top, .4f, .3f);
-	m_pTM->Draw(m_nButtonID, m_rRetreatButton.left, m_rRetreatButton.top, .4f, .3f);
+	
 
 	if( m_pDI->GetBufferedKey(DIK_1))
 		Map.LoadFile("Resource/Levels/KQ_Wawa.level");
 	else if( m_pDI->GetBufferedKey(DIK_2))
+		Map.LoadFile("Resource/Levels/KQ_Wee.level");
+	else if( m_pDI->GetBufferedKey(DIK_3))
 		Map.LoadFile("Resource/Levels/KQ_Tech_Demo1.level");
 	Map.Render();
+	
+	m_pTM->Draw(m_nButtonID, m_rVictoryButton.left, m_rVictoryButton.top, .4f, .3f);
+	m_pTM->Draw(m_nButtonID, m_rRetreatButton.left, m_rRetreatButton.top, .4f, .3f);
 
 	m_cFont.DrawTextA("Victory", m_rVictoryButton.left+30, m_rVictoryButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 	m_cFont.DrawTextA("Retreat", m_rRetreatButton.left+30, m_rRetreatButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
-	
+	ObjectManager::GetInstance()->RenderObjects(fElapsedTime);
 
 }
 

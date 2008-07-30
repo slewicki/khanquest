@@ -38,6 +38,8 @@ CUnit::~CUnit(void)
 void CUnit::Update(float fElapsedTime)
 {
 	m_pAnimInstance->Update(fElapsedTime);
+	m_pAnimInstance->SetX(GetPosX());
+	m_pAnimInstance->SetY(GetPosY());
 	// AI
 }
 

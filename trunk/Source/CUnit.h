@@ -13,7 +13,7 @@
 
 enum	// Unit States
 {
-	IDLE,
+	//IDLE,
 	MOVEMENT,
 	COMBAT,
 	RETREAT,

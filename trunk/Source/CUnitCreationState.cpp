@@ -146,7 +146,7 @@ void CUnitCreationState::Exit(void)
 	m_pTM->ReleaseTexture(m_nBackgroundID);
 	m_pTM->ReleaseTexture(m_nScrollButtonID);
 
-	/*for (int i = 0; i < m_nNumUnits[UNIT_INFANTRY] ; i++)
+	for (int i = 0; i < m_nNumUnits[UNIT_INFANTRY] ; i++)
 		CFactory::CreatePlayerUnit(UNIT_INFANTRY);
 	for (int i = 0; i < m_nNumUnits[UNIT_CAVALRY] ; i++)
 		CFactory::CreatePlayerUnit(UNIT_CAVALRY);
@@ -157,7 +157,7 @@ void CUnitCreationState::Exit(void)
 	for (int i = 0; i < m_nNumUnits[UNIT_ARCHER] ; i++)
 		CFactory::CreatePlayerUnit(UNIT_ARCHER);
 	for (int i = 0; i < m_nNumUnits[UNIT_WAR_ELEPHANT] ; i++)
-		CFactory::CreatePlayerUnit(UNIT_WAR_ELEPHANT);*/
+		CFactory::CreatePlayerUnit(UNIT_WAR_ELEPHANT);
 
 }
 
@@ -289,7 +289,7 @@ void CUnitCreationState::Render(float fElapsedTime)
 	{
 		m_pTM->Draw(m_nMinusButtonID, m_rMinusButtons[3].left, m_rMinusButtons[3].top, .5f, .5f);
 		// Draw unit picture or animation
-		m_cFont.DrawTextA(IntToString(m_nNumUnits[3]), m_rMinusButtons[3].right + 40, m_rMinusButtons[3].bottom, .25f, .25f);
+		m_cFont.DrawTextA(IntToString(m_nNumUnits[3]), m_rMinusButtons[3].right + 40, m_rMinusButtons[3].bottom, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
 		m_pTM->Draw(m_nPlusButtonID, m_rPlusButtons[3].left, m_rPlusButtons[3].top, .5f, .5f);
 	}
 	else
@@ -298,7 +298,7 @@ void CUnitCreationState::Render(float fElapsedTime)
 	{
 		m_pTM->Draw(m_nMinusButtonID, m_rMinusButtons[4].left, m_rMinusButtons[4].top, .5f, .5f);
 		// Draw unit picture or animation
-		m_cFont.DrawTextA(IntToString(m_nNumUnits[4]), m_rMinusButtons[4].right + 40, m_rMinusButtons[4].bottom, .25f, .25f);
+		m_cFont.DrawTextA(IntToString(m_nNumUnits[4]), m_rMinusButtons[4].right + 40, m_rMinusButtons[4].bottom, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
 		m_pTM->Draw(m_nPlusButtonID, m_rPlusButtons[4].left, m_rPlusButtons[4].top, .5f, .5f);
 	}
 	else
@@ -308,7 +308,7 @@ void CUnitCreationState::Render(float fElapsedTime)
 	{
 		m_pTM->Draw(m_nMinusButtonID, m_rMinusButtons[5].left, m_rMinusButtons[5].top, .5f, .5f);
 		// Draw unit picture or animation
-		m_cFont.DrawTextA(IntToString(m_nNumUnits[5]), m_rMinusButtons[5].right + 40, m_rMinusButtons[5].bottom, .25f, .25f);
+		m_cFont.DrawTextA(IntToString(m_nNumUnits[5]), m_rMinusButtons[5].right + 40, m_rMinusButtons[5].bottom, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
 		m_pTM->Draw(m_nPlusButtonID, m_rPlusButtons[5].left, m_rPlusButtons[5].top, .5f, .5f);
 	}
 	else
