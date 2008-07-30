@@ -55,7 +55,7 @@ void CAnimInstance::Play(int Direction, int Action)
 	case 3:
 		m_szDirection = "North_West";
 		break;
-	case 4:
+	case 7:
 		m_szDirection = "South_West";
 		break;
 	};

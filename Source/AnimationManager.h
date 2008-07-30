@@ -17,10 +17,10 @@ class CAnimationManager
 	enum
 	{
 		UNIT_INFANTRY = 0,
-		UNIT_ARCHER,
 		UNIT_CAVALRY,
 		UNIT_CAVALRY_ARCHER,
 		UNIT_AXMEN,
+		UNIT_ARCHER,
 		UNIT_WAR_ELEPHANT,
 	};
 	

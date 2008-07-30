@@ -14,6 +14,7 @@
 #include "CSGD_DirectSound.h"
 #include "CSGD_WaveManager.h"
 #include "CSGD_DirectInput.h"
+#include "AnimationManager.h"
 
 #include "IGameState.h"
 #include <windows.h>
@@ -32,7 +33,7 @@ private:
 	CSGD_DirectSound*		m_pDS;
 	CSGD_WaveManager*		m_pWM;
 	CSGD_DirectInput*		m_pDI;
-
+	CAnimationManager*		m_pAM;
 	// Time and Frame Variables
 	DWORD					m_dwPreviousTime;
 	int						m_nFrameCounter;	//counts number of frames per second
