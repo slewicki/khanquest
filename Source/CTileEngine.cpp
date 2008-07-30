@@ -11,7 +11,7 @@ CTileEngine::CTileEngine()
 {
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_nImageID = -1;
-	m_nImageID = CSGD_TextureManager::GetInstance()->LoadTexture("resource/GroundTemplate.bmp", D3DCOLOR_XRGB(255, 0, 255));
+	m_nImageID = CSGD_TextureManager::GetInstance()->LoadTexture("Resource/KQ_GroundTemplate.bmp", D3DCOLOR_XRGB(255, 0, 255));
 }
 
 CTileEngine::~CTileEngine()
@@ -244,7 +244,7 @@ void CTileEngine::Render()
 				rTile.right = rTile.left + m_nTileWidth;
 				rTile.bottom = rTile.top + m_nTileHeight;
 
-				m_pTM->Draw(m_nImageID, ((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2), ((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)), 1, 1, &rTile, 0, 0, 0); 
+				m_pTM->Draw(m_nImageID, ((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2), ((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300, 1, 1, &rTile, 0, 0, 0); 
 			}
 		}
 	}
