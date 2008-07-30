@@ -1,6 +1,6 @@
 #include "CUnit.h"
 
-CUnit::CUnit(void)
+CUnit::CUnit(int nType)
 {
 	m_nHP				= 0;			
 	m_nAttack			= 0;			
@@ -18,26 +18,32 @@ CUnit::CUnit(void)
 	m_pDestinationTile	= NULL; 
 	m_pCurrentTile		= NULL;		
 
-	m_pTarget			= NULL;			
+	m_pTarget			= NULL;		
 
-	m_nDirectionFacing	= SOUTH; 
-	m_nState			= IDLE;			
+	m_nDirectionFacing	= SOUTH_WEST; 
+	m_nState			= MOVEMENT;	
+
+
+	SetType(nType);
+	m_pAnimInstance = new CAnimInstance(GetType());
+	m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 	
 }
 
 CUnit::~CUnit(void)
 {
-
+	delete m_pAnimInstance;
 }
 
 void CUnit::Update(float fElapsedTime)
 {
+	m_pAnimInstance->Update(fElapsedTime);
 	// AI
 }
 
 void CUnit::Render(float fElapsedTime)
 {
-
+	m_pAnimInstance->Render();
 }
 
 bool CUnit::CheckCollisions(CBase* pBase)

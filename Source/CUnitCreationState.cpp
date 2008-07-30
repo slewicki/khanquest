@@ -8,7 +8,9 @@
 
 #include "CUnitCreationState.h"
 #include "CWorldMapState.h"
+#include "CGamePlayState.h"
 #include "CGame.h"
+#include "CFactory.h"
 
 
 CUnitCreationState::CUnitCreationState(void)
@@ -143,6 +145,20 @@ void CUnitCreationState::Exit(void)
 	m_pTM->ReleaseTexture(m_nLucidiaWhiteID);
 	m_pTM->ReleaseTexture(m_nBackgroundID);
 	m_pTM->ReleaseTexture(m_nScrollButtonID);
+
+	/*for (int i = 0; i < m_nNumUnits[UNIT_INFANTRY] ; i++)
+		CFactory::CreatePlayerUnit(UNIT_INFANTRY);
+	for (int i = 0; i < m_nNumUnits[UNIT_CAVALRY] ; i++)
+		CFactory::CreatePlayerUnit(UNIT_CAVALRY);
+	for (int i = 0; i < m_nNumUnits[UNIT_CAVALRY_ARCHER] ; i++)
+		CFactory::CreatePlayerUnit(UNIT_CAVALRY_ARCHER);
+	for (int i = 0; i < m_nNumUnits[UNIT_AXMEN] ; i++)
+		CFactory::CreatePlayerUnit(UNIT_AXMEN);
+	for (int i = 0; i < m_nNumUnits[UNIT_ARCHER] ; i++)
+		CFactory::CreatePlayerUnit(UNIT_ARCHER);
+	for (int i = 0; i < m_nNumUnits[UNIT_WAR_ELEPHANT] ; i++)
+		CFactory::CreatePlayerUnit(UNIT_WAR_ELEPHANT);*/
+
 }
 
 bool CUnitCreationState::Input(float fElapsedTime)
@@ -188,9 +204,10 @@ bool CUnitCreationState::Input(float fElapsedTime)
 			{
 				// Ask if they are sure...?
 				
-				// Add units to object manager (call factory creates)
 				// Figure out map and enemy units (call factory creates)
-				// Push on GamePlayState
+				// Change to on GamePlayState
+				CGame::GetInstance()->ChangeState(CGamePlayState::GetInstance());
+				
 			}
 		}
 	}

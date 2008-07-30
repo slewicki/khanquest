@@ -7,7 +7,7 @@
 #include "CSGD_TextureManager.h"
 #include <fstream>
 #include <windows.h>
-#include "../XML/irrXML.h"
+#include "../irrXML/irrXML.h"
 using namespace irr;
 using namespace io;
 CAnimationManager::CAnimationManager(void)
