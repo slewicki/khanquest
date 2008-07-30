@@ -14,6 +14,7 @@
 #include "CSGD_WaveManager.h"
 #include "CSGD_DirectInput.h"
 #include "CBitmapFont.h"
+#include "CTileEngine.h"
 
 
 class CGamePlayState : public IGameState
@@ -26,6 +27,9 @@ private:
 	CSGD_DirectInput*						m_pDI;
 	
 	bool									m_bIsPaused;
+
+	//Engines
+	CTileEngine Map;
 
 	// TEMP BUTTONS FOR DEMO - SHOW WORLD MAP AFTER WIN OR LOSS
 	// REMOVE AFTER DEMO

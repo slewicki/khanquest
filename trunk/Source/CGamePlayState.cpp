@@ -33,7 +33,7 @@ void CGamePlayState::Enter(void)
 	m_pDI = CSGD_DirectInput::GetInstance();
 	
 	// Register any Events with the GamePlayState
-
+	Map.LoadFile("Resource/Levels/KQ_Wawa.level");
 	//---------------------------------
 	m_rVictoryButton.left = 100;
 	m_rVictoryButton.top = 500;
@@ -103,6 +103,13 @@ void CGamePlayState::Render(float fElapsedTime)
 
 	m_pTM->Draw(m_nButtonID, m_rVictoryButton.left, m_rVictoryButton.top, .4f, .3f);
 	m_pTM->Draw(m_nButtonID, m_rRetreatButton.left, m_rRetreatButton.top, .4f, .3f);
+
+	if( m_pDI->GetBufferedKey(DIK_1))
+		Map.LoadFile("Resource/Levels/KQ_Wawa.level");
+	else if( m_pDI->GetBufferedKey(DIK_2))
+		Map.LoadFile("Resource/Levels/KQ_Tech_Demo1.level");
+	Map.Render();
+
 	m_cFont.DrawTextA("Victory", m_rVictoryButton.left+30, m_rVictoryButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 	m_cFont.DrawTextA("Retreat", m_rRetreatButton.left+30, m_rRetreatButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 	
