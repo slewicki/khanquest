@@ -131,7 +131,7 @@ void CParticleEngine::Update(float fElapsedTime)
 	{
 		if (vEmitterList.size() != 0)
 		{
-			vEmitterList.clear();
+			//vEmitterList.clear();
 		}
 
 

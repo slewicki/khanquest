@@ -55,7 +55,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	m_hInstance = hInstance;
 	
 	//this->ParseBinaryUnitInfo("Resource/KQ_unitStats.dat");
-	this->ParseXMLUnitInfo("Resource/KQ_unitStats.XML");
+	this->ParseBinaryUnitInfo("Resource/KQ_unitStats.dat");
 
 	//	Get pointers to singletons:
 	m_pD3D	= CSGD_Direct3D::GetInstance();

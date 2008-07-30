@@ -8,12 +8,15 @@
 #pragma once
 #include "CBase.h"
 #include <vector>
+#include "CParticleEngine.h"
+#include "IListener.h"
 using std::vector;
 
-class ObjectManager
+class ObjectManager : public IListener
 {
 private:
 	vector<CBase*> m_vObjectList;
+	CParticleEngine* pPE;
 
 	////////////////////////////////////////////
 	//	Function:	"ObjectManager(Constructor)"
@@ -76,4 +79,11 @@ public:
 	// Purpose: To remove all objects from the list
 	//////////////////////////////////////////////////////
 	void RemoveAllObjects(void);
+
+	//////////////////////////////////////////////////////
+	// Function: “HandleEvent”
+	//
+	// Purpose: Handle event.
+	//////////////////////////////////////////////////////
+	void EventHandler(CEvent* pEvent);
 };
