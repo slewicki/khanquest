@@ -35,7 +35,7 @@ CEmitter::CEmitter(void)
 	m_dwCurrentTime = GetTickCount();
 	m_dwPreviousTime = GetTickCount();
 	m_dwFrameTimer = GetTickCount();
-	m_cCurrentColor = D3DXCOLOR(0,0,0,0);
+	m_cCurrentColor = D3DCOLOR_ARGB(0,0,0,0);
 }
 
 
@@ -75,8 +75,7 @@ void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY, 
 	if(!fin.is_open())
 		return;	
 
-	//szBuffer = new char[nStringSize];
-
+#pragma region Read In
 	fin.read((char*)&nContinue, sizeof(short));
 
 	if(nContinue != 0)
@@ -160,6 +159,7 @@ void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY, 
 	fin.read(szBuffer,nStringSize);
 	szBuffer[nStringSize] = 0;
 	particle.m_szFileName = szBuffer;
+#pragma endregion Read In
 
 	fin.close();
 
