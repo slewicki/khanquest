@@ -13,7 +13,7 @@ CParticleEngine::CParticleEngine(void)
 {
 	m_dwFrameTimer = 0;
 	m_dwPartTimer = 0;
-	m_bIsRunning = true;
+	m_bIsRunning = false;
 	m_nBlendMode = 0;
 }
 
