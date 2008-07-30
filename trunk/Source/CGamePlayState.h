@@ -15,6 +15,7 @@
 #include "CSGD_DirectInput.h"
 #include "CBitmapFont.h"
 #include "CTileEngine.h"
+#include "CEventSystem.h"
 
 
 class CGamePlayState : public IGameState
@@ -25,7 +26,7 @@ private:
 	CSGD_WaveManager*						m_pWM;
 	CSGD_TextureManager*					m_pTM;
 	CSGD_DirectInput*						m_pDI;
-	
+	CEventSystem*							m_pES;
 	bool									m_bIsPaused;
 
 	//Engines
@@ -116,6 +117,8 @@ public:
 	//	Last Modified: July 23, 2008
 	//  Purpose : Modifies the specified type.
 	///////////////////////////////////////////
+
+	
 	
 
 };

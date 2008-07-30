@@ -31,7 +31,11 @@ void CGamePlayState::Enter(void)
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pWM = CSGD_WaveManager::GetInstance();
 	m_pDI = CSGD_DirectInput::GetInstance();
-	
+	m_pES = CEventSystem::GetInstance();
+
+	m_pES->RegisterClient("Play", ObjectManager::GetInstance());
+
+
 	// Register any Events with the GamePlayState
 	Map.LoadFile("Resource/Levels/KQ_Wawa.level");
 	//---------------------------------
@@ -93,6 +97,7 @@ void CGamePlayState::Update(float fElapsedTime)
 		return;
 	// Update units
 	ObjectManager::GetInstance()->UpdateObjects(fElapsedTime);
+	m_pES->ProcessEvents();
 
 }
 

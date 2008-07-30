@@ -43,7 +43,7 @@ void CFactory::CreatePlayerUnit(int nType)
 	if(yPos >= 500)
 	{
 		yPos = 50;
-		xPos = 0;
+		xPos = 100;
 	}
 	
 	

@@ -49,7 +49,7 @@ bool CAnimation::Update(float fElapsedTime)
 				Position->x = m_vFrames[m_nCurrentFrame].ptAccessories[0].x ;
 				Position->y = m_vFrames[m_nCurrentFrame].ptAccessories[0].y ;
 
-				CEventSystem::GetInstance()->SendEvent(m_vFrames[m_nCurrentFrame].szTriggerName,(void*)Position);
+				CEventSystem::GetInstance()->SendEvent(m_vFrames[m_nCurrentFrame].szTriggerName,(void*)&m_vFrames[m_nCurrentFrame]);
 			}
 		}
 	}

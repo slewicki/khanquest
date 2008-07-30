@@ -6,9 +6,12 @@
 //	Purpose	:	To contain and manage all of our game objects.
 /////////////////////////////////////////////////
 #include "ObjectManager.h"
+#include "Sheet.h"
 
 ObjectManager::ObjectManager(void)
 {
+	pPE = CParticleEngine::GetInstance();
+	pPE->LoadBineryEmitter("Resource/KQ_DustCload.dat", 128, 128);
 }
 
 ObjectManager::~ObjectManager(void)
@@ -41,6 +44,7 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 		(*iter)->Update(fElapsedTime);
 		iter++;
 	}
+	pPE->Update(fElapsedTime);
 }
 
 void ObjectManager::RenderObjects(float fElapsedTime)
@@ -49,6 +53,8 @@ void ObjectManager::RenderObjects(float fElapsedTime)
 	{
 		m_vObjectList[i]->Render(fElapsedTime);
 	}
+	pPE->Render(fElapsedTime);
+
 }
 
 void ObjectManager::AddObject(CBase* pObject)
@@ -98,4 +104,22 @@ void ObjectManager::RemoveAllObjects(void)
 
 	//	Clear the vector
 	m_vObjectList.clear();
+}
+void ObjectManager::EventHandler(CEvent* pEvent)
+{
+	if(pEvent->GetEventID() == "Play")
+	{
+		Frame* pFrame = (Frame*)pEvent->GetParam();
+		for (int i = 0; i < m_vObjectList.size(); i++)
+		{
+			if(m_vObjectList[i]->GetType() == UNIT_CAVALRY)
+			{
+				pPE->SetPostion(m_vObjectList[i]->GetPosX() - pFrame->ptAnchorX + pFrame->ptAccessories[0].x, m_vObjectList[i]->GetPosY() - pFrame->ptAnchorY + pFrame->ptAccessories[0].y);
+				pPE->SetIsRunning(true);
+				return;
+			}
+		}
+		
+
+	}
 }
