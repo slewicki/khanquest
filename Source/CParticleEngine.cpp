@@ -285,5 +285,13 @@ int CParticleEngine::GetBlendMode(string mode)
 	}
 
 	return m_nBlendMode;
+
 }
+
+void CParticleEngine::SetPostion(int XPos, int YPos)
+{
+	m_fLocX = (float)XPos;
+	m_fLocY = (float)YPos;
+}
+
 

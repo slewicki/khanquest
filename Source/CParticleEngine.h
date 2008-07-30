@@ -9,6 +9,7 @@
 #pragma once
 #include "CSGD_Direct3D.h"
 #include "CEventSystem.h"
+#include "CMessageSystem.h"
 #include "CSGD_TextureManager.h"
 #include "CEmitter.h"
 #include "CParticle.h"
@@ -20,6 +21,7 @@ class CParticleEngine
 
 	CSGD_Direct3D*			m_pD3D;			// direct 3D
 	CEventSystem*			m_pES;			// Event System
+	CMessageSystem*			m_pMS;			// Message System
 	CSGD_TextureManager*	m_pTM;			// Texture Manager
 
 	int						m_nEmitterXLocation; // X location to draw the emitter
@@ -73,6 +75,13 @@ class CParticleEngine
 		//	Purpose:	Proper singleton
 		////////////////////////////////////////////
 		~CParticleEngine(void);
+
+		//////////////////////////////////////////////////////////////////////////
+		// Function: “UpdateLoc”
+		//	Last Modified: July 27, 2008
+		// Purpose: Update the Location of the particle
+		//////////////////////////////////////////////////////////////////////////
+		void UpdateLoc(int i, int j);
 
 	public:
 
@@ -171,12 +180,7 @@ class CParticleEngine
 		//////////////////////////////////////////////////////////////////////////
 		void UpdateScale(int i, int j);
 
-		//////////////////////////////////////////////////////////////////////////
-		// Function: “UpdateLoc”
-		//	Last Modified: July 27, 2008
-		// Purpose: Update the Location of the particle
-		//////////////////////////////////////////////////////////////////////////
-		void UpdateLoc(int i, int j);
+
 
 		//////////////////////////////////////////////////////////////////////////
 		// Function: “GetBlendMode”
@@ -184,4 +188,12 @@ class CParticleEngine
 		// Purpose: Update the Location of the particle
 		//////////////////////////////////////////////////////////////////////////
 		int GetBlendMode(string mode);
+
+		//////////////////////////////////////////////////////////////////////////
+		// Function: “SetPostion”
+		//	Last Modified: July 27, 2008
+		// Purpose: Update the Location of the particle
+		//////////////////////////////////////////////////////////////////////////
+		void SetPostion(int XPos, int YPos);
+
 	};
