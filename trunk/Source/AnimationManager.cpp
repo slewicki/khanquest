@@ -7,7 +7,7 @@
 #include "CSGD_TextureManager.h"
 #include <fstream>
 #include <windows.h>
-#include "../irrXML/irrXML.h"
+#include "../XML/irrXML.h"
 using namespace irr;
 using namespace io;
 CAnimationManager::CAnimationManager(void)
@@ -24,7 +24,7 @@ CAnimationManager::~CAnimationManager(void)
 // Last Modified: July 25, 2008
 // Purpose: Parse a binary file.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-void CAnimationManager::BinParse(char* szFileName)
+void CAnimationManager::BinParse(char* szFileName, char* szImageName)
 {
 	ifstream toRead;
 	toRead.open(szFileName,ios::in | ios::binary);
@@ -161,7 +161,7 @@ void CAnimationManager::BinParse(char* szFileName)
 					AnimationToAdd.AddFrame(FrameToAdd);
 				}
 				m_UnitSheets[UNIT_INFANTRY].AddAnimation(AnimationToAdd);
-				m_UnitSheets[UNIT_INFANTRY].SetImageID(TM->LoadTexture("Resource/dbz_buu_sheet.png"));
+				m_UnitSheets[UNIT_INFANTRY].SetImageID(TM->LoadTexture(szImageName));
 
 			}
 		}
@@ -272,7 +272,7 @@ void CAnimationManager::BinParse(char* szFileName)
 					AnimationToAdd.AddFrame(FrameToAdd);
 				}
 				m_UnitSheets[UNIT_CAVALRY].AddAnimation(AnimationToAdd);
-				m_UnitSheets[UNIT_CAVALRY].SetImageID(TM->LoadTexture("Resource/dbz_buu_sheet.png"));
+				m_UnitSheets[UNIT_CAVALRY].SetImageID(TM->LoadTexture(szImageName));
 			}
 		}
 #pragma endregion
@@ -382,7 +382,7 @@ void CAnimationManager::BinParse(char* szFileName)
 					AnimationToAdd.AddFrame(FrameToAdd);
 				}
 				m_UnitSheets[UNIT_ARCHER].AddAnimation(AnimationToAdd);
-				m_UnitSheets[UNIT_ARCHER].SetImageID(TM->LoadTexture("Resource/dbz_buu_sheet.png"));
+				m_UnitSheets[UNIT_ARCHER].SetImageID(TM->LoadTexture(szImageName));
 			}
 		}
 #pragma endregion
@@ -492,7 +492,7 @@ void CAnimationManager::BinParse(char* szFileName)
 					AnimationToAdd.AddFrame(FrameToAdd);
 				}
 				m_UnitSheets[UNIT_AXMEN].AddAnimation(AnimationToAdd);
-				m_UnitSheets[UNIT_AXMEN].SetImageID(TM->LoadTexture("Resource/dbz_buu_sheet.png"));
+				m_UnitSheets[UNIT_AXMEN].SetImageID(TM->LoadTexture(szImageName));
 
 			}
 		}
@@ -603,8 +603,7 @@ void CAnimationManager::BinParse(char* szFileName)
 					AnimationToAdd.AddFrame(FrameToAdd);
 				}
 				m_UnitSheets[UNIT_CAVALRY_ARCHER].AddAnimation(AnimationToAdd);
-				m_UnitSheets[UNIT_CAVALRY_ARCHER].SetImageID(TM->LoadTexture("Resource/dbz_buu_sheet.png"));
-
+				m_UnitSheets[UNIT_CAVALRY_ARCHER].SetImageID(TM->LoadTexture(szImageName));
 			}
 		}
 #pragma endregion
@@ -714,7 +713,7 @@ void CAnimationManager::BinParse(char* szFileName)
 					AnimationToAdd.AddFrame(FrameToAdd);
 				}
 				m_UnitSheets[UNIT_WAR_ELEPHANT].AddAnimation(AnimationToAdd);
-				m_UnitSheets[UNIT_WAR_ELEPHANT].SetImageID(TM->LoadTexture("Resource/dbz_buu_sheet.png"));
+				m_UnitSheets[UNIT_WAR_ELEPHANT].SetImageID(TM->LoadTexture(szImageName));
 			}
 		}
 #pragma endregion
@@ -733,7 +732,5 @@ CSheet CAnimationManager::LookUp(int UnitType)
 		if(UnitType == m_UnitSheets[i].GetUnitType())
 			return m_UnitSheets[i];
 	}
-	CSheet Sheet;
-	return Sheet;
 }
 

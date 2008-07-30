@@ -9,6 +9,8 @@ CAnimation::CAnimation(void)
 {
 	m_nCurrentFrame = 0;
 	m_fFrameTimer = 0;
+	m_bIsLooping = true;
+	m_bIsPlaying = false;
 }
 
 CAnimation::~CAnimation(void)
@@ -24,7 +26,7 @@ bool CAnimation::Update(float fElapsedTime)
 	if(!m_bIsPlaying)
 		return false;
 
-	m_fFrameTimer += fElapsedTime * m_fSpeed;
+	m_fFrameTimer += fElapsedTime * m_fSpeed *5;
 	if(m_fFrameTimer > m_vFrames[m_nCurrentFrame].fDuration)
 	{
 		m_nCurrentFrame++;
@@ -42,11 +44,13 @@ bool CAnimation::Update(float fElapsedTime)
 		if(m_vFrames[m_nCurrentFrame].szTriggerName != "")
 		{
 			POINT* Position = new POINT();
-			
-			Position->x = m_vFrames[m_nCurrentFrame].ptAccessories[0].x ;
-			Position->y = m_vFrames[m_nCurrentFrame].ptAccessories[0].y ;
+			if(m_vFrames[m_nCurrentFrame].ptAccessories.size())
+			{
+				Position->x = m_vFrames[m_nCurrentFrame].ptAccessories[0].x ;
+				Position->y = m_vFrames[m_nCurrentFrame].ptAccessories[0].y ;
 
-			CEventSystem::GetInstance()->SendEvent(m_vFrames[m_nCurrentFrame].szTriggerName,(void*)Position);
+				CEventSystem::GetInstance()->SendEvent(m_vFrames[m_nCurrentFrame].szTriggerName,(void*)Position);
+			}
 		}
 	}
 	return true;
