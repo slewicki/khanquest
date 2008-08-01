@@ -1,4 +1,5 @@
 #include "CUnit.h"
+#include "CCamera.h"
 
 CUnit::CUnit(int nType)
 {
@@ -39,13 +40,15 @@ CUnit::~CUnit(void)
 void CUnit::Update(float fElapsedTime)
 {
 	m_pAnimInstance->Update(fElapsedTime);
-	m_pAnimInstance->SetX((int)GetPosX());
-	m_pAnimInstance->SetY((int)GetPosY());
+	POINT ptPos = CCamera::GetInstance()->TransformToScreen((int)GetPosX(), (int)GetPosY());
+	m_pAnimInstance->SetX(ptPos.x);
+	m_pAnimInstance->SetY(ptPos.y);
 	// AI
 }
 
 void CUnit::Render(float fElapsedTime)
 {
+	
 	m_pAnimInstance->Render();
 }
 
