@@ -7,6 +7,7 @@ CUnit::CUnit(int nType)
 	m_nRange			= 0;			
 	m_fAttackSpeed		= 0.f;		
 	m_fMovementSpeed	= 0.f;	
+	m_nCost				= 0;
 
 	m_nBonus			= 0;			
 
@@ -38,8 +39,8 @@ CUnit::~CUnit(void)
 void CUnit::Update(float fElapsedTime)
 {
 	m_pAnimInstance->Update(fElapsedTime);
-	m_pAnimInstance->SetX(GetPosX());
-	m_pAnimInstance->SetY(GetPosY());
+	m_pAnimInstance->SetX((int)GetPosX());
+	m_pAnimInstance->SetY((int)GetPosY());
 	// AI
 }
 

@@ -269,7 +269,7 @@ void CUnitCreationState::Render(float fElapsedTime)
 		"/Attack Speed: " + FloatToString(m_pPlayerUnitInfo[i].GetAttackSpeed()) +
 		"/Range: " + IntToString(m_pPlayerUnitInfo[i].GetRange()) +
 		"/Movement: " + FloatToString(m_pPlayerUnitInfo[i].GetSpeed()), nPosX, nPosY, .15f, .15f, D3DCOLOR_ARGB(255, 0, 0, 0));
-		m_cFont.DrawTextA("Food: " + IntToString(m_nUnitCosts[i]), nPosX, nPosY - 25, .15f, .15f, D3DCOLOR_ARGB(255, 255, 0, 0));
+		m_cFont.DrawTextA("Food: " + IntToString(m_pPlayerUnitInfo[i].GetCost()), nPosX, nPosY - 25, .15f, .15f, D3DCOLOR_ARGB(255, 255, 0, 0));
 		
 		nPosY += 170;
 	}
