@@ -29,6 +29,7 @@ private:
 	int				m_nHP;				// Current Hitpoints
 	int				m_nAttack;			// Attack power
 	int				m_nRange;			// Attack Range
+	int				m_nCost;			// Cost
 	float			m_fAttackSpeed;		// Attack Speed
 	float			m_fMovementSpeed;	// Movement Speed
 
@@ -80,6 +81,7 @@ public:
 	inline int	 GetRange		(void) const { return m_nRange; }
 	inline float GetAttackSpeed	(void) const { return m_fAttackSpeed; }
 	inline float GetSpeed		(void) const { return m_fMovementSpeed; }
+	inline int GetCost		(void) const { return m_nCost; }
 	
 	inline CTile* GetDestTile	(void) const { return m_pDestinationTile; }
 	inline CUnit* GetTarget		(void) const { return m_pTarget; }
@@ -97,6 +99,7 @@ public:
 	inline void SetHP			(int nHP)			{ m_nHP = nHP; }
 	inline void SetAttackPower	(int nAttack)		{ m_nAttack = nAttack; }
 	inline void SetRange		(int nRange)		{ m_nRange = nRange; }
+	inline void SetCost		(int nCost)		{ m_nCost = nCost; }
 	inline void SetAttackSpeed	(float fAttackSpeed)	{ m_fAttackSpeed = fAttackSpeed; }
 	inline void SetSpeed		(float fMovementSpeed){ m_fMovementSpeed = fMovementSpeed; }
 	inline void SetBonus		(int nBonus)		{ m_nBonus = nBonus; }

@@ -296,13 +296,15 @@ bool CGame::ParseXMLUnitInfo (const char* szFile)
 			{
 				if (!strcmp("HP", szName.c_str()))
 					nHP = atoi(xml->getNodeName());
-				if (!strcmp("Attack", szName.c_str()))
+				else if (!strcmp("Attack", szName.c_str()))
 					nAttack = atoi(xml->getNodeName());
-				if (!strcmp("Range", szName.c_str()))
+				else if (!strcmp("Range", szName.c_str()))
 					nRange = atoi(xml->getNodeName());
-				if (!strcmp("AttackSpeed", szName.c_str()))
+				else if (!strcmp("AttackSpeed", szName.c_str()))
 					fAttackSpeed = (float)atof(xml->getNodeName());
-				if (!strcmp("Movement", szName.c_str()))
+				else if (!strcmp("Cost", szName.c_str()))
+					fAttackSpeed = (float)atof(xml->getNodeName());
+				else if (!strcmp("Movement", szName.c_str()))
 				{
 					fMovement = (float)atof(xml->getNodeName());
 
@@ -339,8 +341,8 @@ bool CGame::ParseXMLUnitInfo (const char* szFile)
 
 bool CGame::ParseBinaryUnitInfo (const char* szFile)
 {
-	int nType, nHP, nAttack, nRange;
-	double dAttackSpeed, dMovement;
+	int nType, nHP, nAttack, nRange, nCost, nBuffer;
+	double dAttackSpeed, dMovement, dBuffer;
 	try 
 	{	 
 		ifstream input(szFile,ios_base::binary);
@@ -352,15 +354,37 @@ bool CGame::ParseBinaryUnitInfo (const char* szFile)
 			input.read((char*)&nHP,sizeof(nHP));
 			input.read((char*)&nAttack,sizeof(nAttack));
 			input.read((char*)&nRange,sizeof(nRange));
-
 			input.read((char*)&dAttackSpeed,sizeof(dAttackSpeed));
 			input.read((char*)&dMovement,sizeof(dMovement));
+			input.read((char*)&nCost,sizeof(nCost));
+
+			// Unneeded info
+			//-------------
+			input.read((char*)&nBuffer,sizeof(nBuffer));
+			input.read((char*)&nBuffer,sizeof(nBuffer));
+			input.read((char*)&nBuffer,sizeof(nBuffer));
+			input.read((char*)&nBuffer,sizeof(nBuffer));
+			input.read((char*)&nBuffer,sizeof(nBuffer));
+			input.read((char*)&nBuffer,sizeof(nBuffer));
+
+			input.read((char*)&dBuffer,sizeof(dBuffer));
+			input.read((char*)&dBuffer,sizeof(dBuffer));
+			input.read((char*)&dBuffer,sizeof(dBuffer));
+			input.read((char*)&dBuffer,sizeof(dBuffer));
+
+			input.read((char*)&nBuffer,sizeof(nBuffer));
+			input.read((char*)&nBuffer,sizeof(nBuffer));
+
+			
+			//-------------
+
 			
 			// Player unit info
 			m_pPlayerUnitInfo[i].SetType(nType);
 			m_pPlayerUnitInfo[i].SetHP(nHP);
 			m_pPlayerUnitInfo[i].SetAttackPower(nAttack);
 			m_pPlayerUnitInfo[i].SetRange(nRange);
+			m_pPlayerUnitInfo[i].SetCost(nCost);
 
 			m_pPlayerUnitInfo[i].SetAttackSpeed((float)dAttackSpeed);
 			m_pPlayerUnitInfo[i].SetSpeed((float)dMovement);
