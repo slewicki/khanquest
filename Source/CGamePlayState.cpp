@@ -14,7 +14,7 @@
 
 CGamePlayState::CGamePlayState(void)
 {
-
+	m_pCamera = NULL;
 	m_nButtonID = -1;
 }
 
@@ -34,7 +34,8 @@ void CGamePlayState::Enter(void)
 	m_pES = CEventSystem::GetInstance();
 
 	m_pES->RegisterClient("Play", ObjectManager::GetInstance());
-
+	m_pCamera = CCamera::GetInstance();
+	m_pCamera->InitCamera(0.f,0.f);
 
 	// Register any Events with the GamePlayState
 	Map.LoadFile("Resource/Levels/KQ_Wawa.level");
@@ -60,7 +61,7 @@ void CGamePlayState::Exit(void)
 {
 	m_pTM->ReleaseTexture(m_nButtonID);
 	m_pTM->ReleaseTexture(m_nLucidiaWhiteID);
-
+	
 	//Remove all objects from manager?	
 	ObjectManager::GetInstance()->RemoveAllObjects();
 
@@ -68,6 +69,9 @@ void CGamePlayState::Exit(void)
 
 bool CGamePlayState::Input(float fElapsedTime)
 {
+
+
+#pragma region TempButtons
 	if(CGame::GetInstance()->IsMouseInRect(m_rVictoryButton))
 	{
 		CGame::GetInstance()->SetCursorClick();
@@ -87,7 +91,20 @@ bool CGamePlayState::Input(float fElapsedTime)
 			CGame::GetInstance()->LoseLastCity();
 			CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
 		}
-	}
+	} 
+#pragma endregion
+	m_pCamera->SetVelX(0);
+	m_pCamera->SetVelY(0);
+	POINT ptMousePos = CGame::GetInstance()->GetMousePos();
+	if(ptMousePos.x >= 799)
+		m_pCamera->SetVelX(100);
+	if(ptMousePos.x <= 0)
+		m_pCamera->SetVelX(-100);
+	if(ptMousePos.y >= 599)
+		m_pCamera->SetVelY(100);
+	if(ptMousePos.y <= 0)
+		m_pCamera->SetVelY(-100);
+
 	return true;
 }
 
@@ -95,6 +112,7 @@ void CGamePlayState::Update(float fElapsedTime)
 {
 	if(m_bIsPaused)
 		return;
+	m_pCamera->Update(fElapsedTime);
 	// Update units
 	ObjectManager::GetInstance()->UpdateObjects(fElapsedTime);
 	m_pES->ProcessEvents();

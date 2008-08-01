@@ -110,11 +110,11 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 	if(pEvent->GetEventID() == "Play")
 	{
 		Frame* pFrame = (Frame*)pEvent->GetParam();
-		for (int i = 0; i < m_vObjectList.size(); i++)
+		for (unsigned int i = 0; i < m_vObjectList.size(); i++)
 		{
 			if(m_vObjectList[i]->GetType() == UNIT_CAVALRY)
 			{
-				pPE->SetPostion(m_vObjectList[i]->GetPosX() - pFrame->ptAnchorX + pFrame->ptAccessories[0].x, m_vObjectList[i]->GetPosY() - pFrame->ptAnchorY + pFrame->ptAccessories[0].y);
+				pPE->SetPostion((int)m_vObjectList[i]->GetPosX() - pFrame->ptAnchorX + pFrame->ptAccessories[0].x, (int)m_vObjectList[i]->GetPosY() - pFrame->ptAnchorY + pFrame->ptAccessories[0].y);
 				pPE->SetIsRunning(true);
 				return;
 			}
