@@ -20,6 +20,8 @@ class CAnimInstance
 
 	int x; 
 	int y;
+	string GetName(int Direction,int Action);
+
 
 public:
 	CAnimInstance(int UnitType);
@@ -30,6 +32,9 @@ public:
 	void SetY(int value){y = value;}
 	int GetX(){return x;}
 	int GetY(){return y;}
+	int GetFrameWidth(int Direction, int Action);
+	int GetFrameHeight(int Direction, int Action);
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 // Function: “Play” 
