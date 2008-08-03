@@ -106,6 +106,35 @@ void CAnimInstance::Render()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimInstance::Stop(int Direction,int Action)
 {
+	string name = GetName(Direction,Action);
+
+	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
+		if(name == m_Sheet.GetAnimations()[i].GetName())
+			m_Sheet.GetAnimations()[i].Stop();
+}
+
+int CAnimInstance::GetFrameHeight(int Direction, int Action)
+{
+	string name = GetName(Direction,Action);
+
+	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
+		if(name == m_Sheet.GetAnimations()[i].GetName())
+			return m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].rRender.bottom - m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].rRender.top;
+	return -1;
+}
+
+int CAnimInstance::GetFrameWidth(int Direction, int Action)
+{
+	string name = GetName(Direction,Action);
+
+	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
+		if(name == m_Sheet.GetAnimations()[i].GetName())
+			return m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].rRender.right - m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].rRender.left;
+	return -1;
+}
+
+string CAnimInstance::GetName(int Direction, int Action)
+{
 	switch(Action)
 	{
 	case 0:
@@ -137,9 +166,6 @@ void CAnimInstance::Stop(int Direction,int Action)
 		m_szDirection = "South_West";
 		break;
 	};
-
 	string name = m_szAction + "_" + m_szDirection;
-	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
-		if(name == m_Sheet.GetAnimations()[i].GetName())
-			m_Sheet.GetAnimations()[i].Stop();
+	return name;
 }
