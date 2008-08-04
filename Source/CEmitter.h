@@ -11,7 +11,7 @@
 #include "CSGD_Direct3D.h"
 #include "CSGD_TextureManager.h"
 #include "CParticle.h"
-#include "../xml/irrXML.h"
+#include "../irrXML/irrXML.h"
 //using std::list;
 using namespace irr;
 using namespace io;

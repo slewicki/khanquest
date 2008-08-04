@@ -25,7 +25,7 @@ CUnit::CUnit(int nType)
 	m_nDirectionFacing	= SOUTH_WEST; 
 	m_nState			= MOVEMENT;	
 
-
+	
 	SetType(nType);
 	m_pAnimInstance = new CAnimInstance(GetType());
 	m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
@@ -40,16 +40,34 @@ CUnit::~CUnit(void)
 void CUnit::Update(float fElapsedTime)
 {
 	m_pAnimInstance->Update(fElapsedTime);
+
+	// Set Global Rect
+	//-------------------------------
+	m_rGlobalRect.left = (int)GetPosX();
+	m_rGlobalRect.top = (int)GetPosY();
+	m_rGlobalRect.right = m_rGlobalRect.left + m_pAnimInstance->GetFrameWidth(m_nDirectionFacing, m_nState);
+	m_rGlobalRect.bottom = m_rGlobalRect.top + m_pAnimInstance->GetFrameHeight(m_nDirectionFacing, m_nState);
+	//-------------------------------
+
 	POINT ptPos = CCamera::GetInstance()->TransformToScreen((int)GetPosX(), (int)GetPosY());
 	m_pAnimInstance->SetX(ptPos.x);
 	m_pAnimInstance->SetY(ptPos.y);
+
+	// Set Local Rect
+	//-------------------------------
+	m_rLocalRect.left = ptPos.x;
+	m_rLocalRect.top = ptPos.y;
+	m_rLocalRect.right = m_rGlobalRect.left + m_pAnimInstance->GetFrameWidth(m_nDirectionFacing, m_nState);
+	m_rLocalRect.bottom = m_rGlobalRect.top + m_pAnimInstance->GetFrameHeight(m_nDirectionFacing, m_nState);
+	//-------------------------------
 	// AI
 }
 
 void CUnit::Render(float fElapsedTime)
 {
 	
-	m_pAnimInstance->Render();
+	if(CCamera::GetInstance()->IsOnScreen(GetGlobalRect()))
+		m_pAnimInstance->Render();
 }
 
 bool CUnit::CheckCollisions(CBase* pBase)

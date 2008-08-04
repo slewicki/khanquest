@@ -7,7 +7,7 @@
 //			all of the info for a particle
 //////////////////////////////////////////////////////////////////////////
 #include "CEmitter.h"
-#include "../xml/irrXML.h"
+#include "../irrXML/irrXML.h"
 #include <fstream>
 #include <iostream>
 using namespace std;

@@ -16,6 +16,7 @@
 #include "CBitmapFont.h"
 #include "CTileEngine.h"
 #include "CEventSystem.h"
+#include "CCamera.h"
 
 
 class CGamePlayState : public IGameState
@@ -27,6 +28,7 @@ private:
 	CSGD_TextureManager*					m_pTM;
 	CSGD_DirectInput*						m_pDI;
 	CEventSystem*							m_pES;
+	CCamera*								m_pCamera;
 	bool									m_bIsPaused;
 
 	//Engines
@@ -118,7 +120,12 @@ public:
 	//  Purpose : Modifies the specified type.
 	///////////////////////////////////////////
 
-	
+	//////////////////////////////////////////////////////
+	//	Function: “IntToString”
+	//	Last Modified: July 23, 2008
+	//	Purpose: Helper function, turn int to string
+	//////////////////////////////////////////////////////
+	string IntToString(int nNum);
 	
 
 };

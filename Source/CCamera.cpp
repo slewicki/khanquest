@@ -48,7 +48,7 @@ void CCamera::Update(float fElapsedTime)
 	m_rScreenArea.left = (int)m_vPos.fX;
 	m_rScreenArea.right = m_rScreenArea.left + 800;
 	m_rScreenArea.top = (int)m_vPos.fY;
-	m_rScreenArea.bottom = m_rScreenArea.bottom + 600;
+	m_rScreenArea.bottom = m_rScreenArea.top + 600;
 }
 
 
