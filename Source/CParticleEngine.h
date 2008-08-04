@@ -8,7 +8,6 @@
 //////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "CSGD_Direct3D.h"
-#include "CEventSystem.h"
 #include "CSGD_TextureManager.h"
 #include "CEmitter.h"
 #include "CParticle.h"
@@ -19,7 +18,6 @@ class CParticleEngine
 {
 
 	CSGD_Direct3D*			m_pD3D;			// direct 3D
-	CEventSystem*			m_pES;			// Event System
 	CSGD_TextureManager*	m_pTM;			// Texture Manager
 
 	int						m_nEmitterXLocation; // X location to draw the emitter
@@ -31,13 +29,12 @@ class CParticleEngine
 	float 					m_fPercentBlue;	
 
 	float					m_fPercentScale;
-	//float					m_fPercentYScale;
 
 	float					m_fUpdateFloat;	
 	float					m_fUpdateQuarter;
 	int						m_nImageID;
-	float					m_fLocX;
-	float					m_fLocY;
+	//float					m_fLocX;
+	//float					m_fLocY;
 	//	For calculating elapsed time
 	DWORD				m_dwPreviousTime;	//	Time stamp of the last frame
 	float				m_dElapsedTime;		//	Time elapsed (in seconds) since the previous frame.
@@ -64,8 +61,8 @@ class CParticleEngine
 		//	Purpose:	Proper singleton
 		////////////////////////////////////////////
 		CParticleEngine(void);
-		CParticleEngine(const CParticleEngine&);
-		CParticleEngine& operator=(const CParticleEngine&);
+		//CParticleEngine(const CParticleEngine&);
+		//CParticleEngine& operator=(const CParticleEngine&);
 
 		////////////////////////////////////////////
 		//	Function:	"~CWorldMapState(Destructor)"
@@ -84,8 +81,8 @@ class CParticleEngine
 	public:
 
 		CEmitter							m_ceEmitter;
-		vector<CParticle>					vParticleList;	// vector of particles
-		vector< vector <CParticle> >		vEmitterList;	// vector of emitters
+		//vector<CParticle>					vParticleList;	// vector of particles
+		vector<CEmitter>					vEmitterList;	// vector of emitters
 		//////////////////////////////////////////////////////
 		// Function: “GetInstance”
 		//	Last Modified: July 18, 2008
@@ -112,7 +109,6 @@ class CParticleEngine
 		//	Last Modified: July 23, 2008
 		//  Purpose : Modifies the specified type.
 		//////////////////////////////////////////////////////
-		void SetIsRunning(bool isRunnig){m_bIsRunning = isRunnig;}
 		void ClearEmitter(void){vEmitterList.clear();}
 
 		//////////////////////////////////////////////////////
@@ -138,17 +134,17 @@ class CParticleEngine
 
 		//////////////////////////////////////////////////////
 		//	Function: “LoadEmitter”
-		//	Last Modified: July 27, 2008
+		//	Last Modified: August 2, 2008
 		//	Purpose: To Load an Emitter into the CParticle Engine
 		//////////////////////////////////////////////////////
-		void LoadXmlEmitter(char* emitterFileName , float locX, float locY);
+		int LoadXmlEmitter(char* emitterFileName , float locX, float locY);
 
 		//////////////////////////////////////////////////////
 		//	Function: “LoadBineryEmitter”
-		//	Last Modified: July 27, 2008
+		//	Last Modified: August 2, 2008
 		//	Purpose: To Load an Emitter into the CParticle Engine
 		//////////////////////////////////////////////////////
-		void LoadBineryEmitter(char* emitterFileName, float locX, float locY);
+		int LoadBineryEmitter(char* emitterFileName, float locX, float locY);
 
 		//////////////////////////////////////////////////////
 		//	Function: “SetEmitterVel”
@@ -179,8 +175,6 @@ class CParticleEngine
 		//////////////////////////////////////////////////////////////////////////
 		void UpdateScale(int i, int j);
 
-
-
 		//////////////////////////////////////////////////////////////////////////
 		// Function: “GetBlendMode”
 		//	Last Modified: July 27, 2008
@@ -190,9 +184,24 @@ class CParticleEngine
 
 		//////////////////////////////////////////////////////////////////////////
 		// Function: “SetPostion”
-		//	Last Modified: July 27, 2008
+		//	Last Modified: August 2, 2008
 		// Purpose: Update the Location of the particle
 		//////////////////////////////////////////////////////////////////////////
-		void SetPostion(int XPos, int YPos);
+		void SetPostion(float XPos, float YPos, int ID);
+
+		//////////////////////////////////////////////////////////////////////////
+		// Function: “SetIsRunning”
+		//	Last Modified: August 2, 2008
+		// Purpose: Set Emitter off or on
+		//////////////////////////////////////////////////////////////////////////
+		void SetIsRunning(int ID, bool isRunnig);
+
+		//////////////////////////////////////////////////////////////////////////
+		// Function: “SetIsRunning”
+		//	Last Modified: August 4, 2008
+		// Purpose: Set Emitter off or on
+		//////////////////////////////////////////////////////////////////////////
+		void UnLoadEmitter(int ID);
+
 
 	};

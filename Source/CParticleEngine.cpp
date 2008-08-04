@@ -28,48 +28,48 @@ void CParticleEngine::Exit(void)
 
 void CParticleEngine::Render(float fElapsedTime)
 {
-	if (m_bIsRunning && vEmitterList.size() > 0)
+	if (vEmitterList.size() > 0)
 	{
 		m_pTM = CSGD_TextureManager::GetInstance();
 		m_pD3D = CSGD_Direct3D::GetInstance();	
-	
-	
+
+
 		for (unsigned int i = 0; i < vEmitterList.size(); ++i )
 		{
-	
-			for (unsigned int j = 0; j < vEmitterList[i].size(); ++j )
+
+			for (unsigned int j = 0; j < vEmitterList[i].vParticleList.size(); ++j )
 			{
-	
-				for (unsigned int k = 0; k < m_dwPartTimer ; ++k)
+
+				if (vEmitterList[i].vParticleList[j].m_bAlive == true)
 				{
-	
-					//m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_SRCBLEND, &source);
-					//m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_DESTBLEND, &dest);
+					// Set blend mode
+					m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_SRCBLEND, &source);
+					m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_DESTBLEND, &dest);
 
-					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND,  GetBlendMode(vEmitterList[i][j].m_szSourceBlend) );
-					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, GetBlendMode(vEmitterList[i][j].m_szDestBlend) );
+					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND,  GetBlendMode(vEmitterList[i].vParticleList[j].m_szSourceBlend) );
+					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, GetBlendMode(vEmitterList[i].vParticleList[j].m_szDestBlend) );
 
-					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ZWRITEENABLE, false);
-					//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
-					//m_pD3D->GetDirect3DDevice()->SetRenderState (D3DRS_ALPHATESTENABLE, true);
+					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ZWRITEENABLE, false);
+					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+					m_pD3D->GetDirect3DDevice()->SetRenderState (D3DRS_ALPHATESTENABLE, true);
 
-	
-					if (vEmitterList[i][j].m_bAlive == true)
+					for (unsigned int k = 0; k < m_dwPartTimer ; ++k)
 					{
-						
-						m_pTM->Draw(vEmitterList[i][j].m_nImageID,
-							(int)vEmitterList[i][j].m_fLocX,
-							(int)vEmitterList[i][j].m_fLocY,
-							(float)vEmitterList[i][j].m_fCurrentScaleX,
-							(float)vEmitterList[i][j].m_fCurrentScaleY,
+
+						m_pTM->Draw(vEmitterList[i].vParticleList[j].m_nImageID,
+							(int)vEmitterList[i].vParticleList[j].m_fPartLocX,
+							(int)vEmitterList[i].vParticleList[j].m_fPartLocY,
+							(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleX,
+							(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleY,
 							0, 0, 0, 0,
-							D3DCOLOR_ARGB((int)vEmitterList[i][j].m_cCurrentColor.a, (int)vEmitterList[i][j].m_cCurrentColor.r, (int)vEmitterList[i][j].m_cCurrentColor.g, (int)vEmitterList[i][j].m_cCurrentColor.b)
+							D3DCOLOR_ARGB((int)vEmitterList[i].vParticleList[j].m_cCurrentColor.a, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.r, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.g, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.b)
 							);
 					}
+					// reset blend mode to default
+					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND, source );
+					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, dest );
 				}
-	
-				//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND, source );
-				//m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, dest );
+
 			}
 		}
 	}
@@ -78,89 +78,83 @@ void CParticleEngine::Render(float fElapsedTime)
 
 void CParticleEngine::Update(float fElapsedTime)
 {
-	if (m_bIsRunning)
+
+	// timing
+	m_dwPreviousTime = m_dwCurrentTime;
+	m_dwCurrentTime = GetTickCount();
+	m_dElapsedTime = (float)(m_dwCurrentTime - m_dwPreviousTime);// / 1000.0f);
+
+	if (GetTickCount() - m_dwPartTimer > (unsigned int)( 8000 ) )
 	{
-		// timing
-		m_dwPreviousTime = m_dwCurrentTime;
-		m_dwCurrentTime = GetTickCount();
-		m_dElapsedTime = (float)(m_dwCurrentTime - m_dwPreviousTime);// / 1000.0f);
-	
-		if (GetTickCount() - m_dwPartTimer > (unsigned int)( 8000 ) )
+		m_dwPartTimer = 0;
+	}
+
+	// do not update if empty
+	if (vEmitterList.size() != 0)
+	{
+		m_dwFrameTimer += m_dElapsedTime; // advance timer
+
+		if ( m_dwFrameTimer > (unsigned int)( 1 ) )
 		{
-			m_dwPartTimer = 0;
-		}
-	
-		// do not update if empty
-		if (vEmitterList.size() != 0)
-		{
-			m_dwFrameTimer += m_dElapsedTime; // advance timer
-	
-			if ( m_dwFrameTimer > (unsigned int)( 1 ) )
+			for (unsigned int i = 0; i < vEmitterList.size(); ++i )
 			{
-				for (unsigned int i = 0; i < vEmitterList.size(); ++i )
+				if (vEmitterList[i].m_bIsRunning)
 				{
-					for (unsigned int j = 0; j < vEmitterList[i].size(); ++j )
+					for (unsigned int j = 0; j < vEmitterList[i].vParticleList.size(); ++j )
 					{
-	
-						if (m_dwPartTimer < vEmitterList[i].size())
+
+						if (m_dwPartTimer < vEmitterList.size())
 						{
 							++m_dwPartTimer;
 						}
 						// Update location
 						//////////////////////////////////////////////////////////////////////////
 						UpdateLoc(i, j);
-	
+
 						// Update the scale
 						//////////////////////////////////////////////////////////////////////////
 						UpdateScale(i, j);
-	
+
 						// Update Age
 						//////////////////////////////////////////////////////////////////////////
 						UpdateAge(i, j);
-	
+
 						// Update Color
 						//////////////////////////////////////////////////////////////////////////
 						UpdateColor(i, j);
 					}
 				}
-				m_dwFrameTimer = 0;
 			}
+			m_dwFrameTimer = 0;
 		}
-	}
-	if (!m_bIsRunning)
-	{
-		if (vEmitterList.size() != 0)
-		{
-			//vEmitterList.clear();
-		}
-
-
 	}
 }
 
 
-void CParticleEngine::LoadXmlEmitter(char* emitterFileName, float locX, float locY)
+
+int CParticleEngine::LoadXmlEmitter(char* emitterFileName, float locX, float locY)
 {
-	m_fLocX = locX;
-	m_fLocY = locY;
 	// load an emitter
-	m_ceEmitter.LoadXMLEmitter(emitterFileName, locX, locY, vParticleList);
+	m_ceEmitter.LoadXMLEmitter(emitterFileName, locX, locY);
 
 	// load the emitter to the list
-	vEmitterList.push_back( vParticleList );
-	vParticleList.clear();
+	vEmitterList.push_back( m_ceEmitter );
+	return (int)vEmitterList.size() - 1;
+
 
 }
-void CParticleEngine::LoadBineryEmitter(char* emitterFileName, float locX, float locY)
+int CParticleEngine::LoadBineryEmitter(char* emitterFileName, float locX, float locY)
 {
-	m_fLocX = locX;
-	m_fLocY = locY;
+	m_ceEmitter.m_nEmitterXLoc = locX;
+	m_ceEmitter.m_nEmitterYLoc = locY;
+
 	// load an emitter
-	m_ceEmitter.LoadBinaryEmitter(emitterFileName, locX, locY, vParticleList);
+	m_ceEmitter.LoadBinaryEmitter(emitterFileName, locX, locY);
 
 	// load the emitter to the list
-	vEmitterList.push_back( vParticleList );
-	vParticleList.clear();
+	vEmitterList.push_back( m_ceEmitter );
+	m_ceEmitter.ClearList();
+	return (int)vEmitterList.size() - 1;
 
 }
 void CParticleEngine::SetEmitterVel(float XVel, float YVel)
@@ -171,28 +165,31 @@ void CParticleEngine::SetEmitterVel(float XVel, float YVel)
 void CParticleEngine::UpdateAge(int i, int j)
 {
 
-	vEmitterList[i][j].m_fAge = vEmitterList[i][j].m_fAge +1;
-	float percent = vEmitterList[i][j].m_fAge / vEmitterList[i][j].m_fLife;
+	vEmitterList[i].vParticleList[j].m_fAge = vEmitterList[i].vParticleList[j].m_fAge +1;
+	float percent = vEmitterList[i].vParticleList[j].m_fAge / vEmitterList[i].vParticleList[j].m_fLife;
 
-	if (vEmitterList[i][j].m_fAge > vEmitterList[i][j].m_fLife)
+	if (vEmitterList[i].vParticleList[j].m_fAge > vEmitterList[i].vParticleList[j].m_fLife)
 	{
-		if (vEmitterList[i][j].m_bContinuous)
+		if (vEmitterList[i].vParticleList[j].m_bAlive)
 		{
-			// reset age and life
-			vEmitterList[i][j].m_fAge = 0;
-			vEmitterList[i][j].m_fLife = RAND_FLOAT( vEmitterList[i][j].m_fMinLife , vEmitterList[i][j].m_fMaxLife );
-			// reset loc
-			vEmitterList[i][j].m_fLocX = RAND_FLOAT(m_fLocX - vEmitterList[i][j].m_nOffsetX, m_fLocX +  vEmitterList[i][j].m_nOffsetX);
-			vEmitterList[i][j].m_fLocY = RAND_FLOAT(m_fLocY - vEmitterList[i][j].m_nOffsetX, m_fLocY +  vEmitterList[i][j].m_nOffsetY);
-			// reset colors
-			vEmitterList[i][j].m_cCurrentColor = vEmitterList[i][j].m_cStartColor;
-			// reset scale
-			vEmitterList[i][j].m_fCurrentScaleX = vEmitterList[i][j].m_fStartScaleX;
-			vEmitterList[i][j].m_fCurrentScaleY = vEmitterList[i][j].m_fStartScaleY;
-		}
-		else
-		{
-			vEmitterList[i][j].m_bAlive = false;
+			if (vEmitterList[i].vParticleList[j].m_bContinuous)
+			{
+				// reset age and life
+				vEmitterList[i].vParticleList[j].m_fAge = 0;
+				vEmitterList[i].vParticleList[j].m_fLife = RAND_FLOAT( vEmitterList[i].vParticleList[j].m_fMinLife , vEmitterList[i].vParticleList[j].m_fMaxLife );
+				// reset loc
+				vEmitterList[i].vParticleList[j].m_fPartLocX = RAND_FLOAT(vEmitterList[i].m_nEmitterXLoc - vEmitterList[i].vParticleList[j].m_nOffsetX, vEmitterList[i].m_nEmitterXLoc +  vEmitterList[i].vParticleList[j].m_nOffsetX);
+				vEmitterList[i].vParticleList[j].m_fPartLocY = RAND_FLOAT(vEmitterList[i].m_nEmitterYLoc - vEmitterList[i].vParticleList[j].m_nOffsetX, vEmitterList[i].m_nEmitterYLoc +  vEmitterList[i].vParticleList[j].m_nOffsetY);
+				// reset colors
+				vEmitterList[i].vParticleList[j].m_cCurrentColor = vEmitterList[i].vParticleList[j].m_cStartColor;
+				// reset scale
+				vEmitterList[i].vParticleList[j].m_fCurrentScaleX = vEmitterList[i].vParticleList[j].m_fStartScaleX;
+				vEmitterList[i].vParticleList[j].m_fCurrentScaleY = vEmitterList[i].vParticleList[j].m_fStartScaleY;
+			}
+			else
+			{
+				vEmitterList[i].vParticleList[j].m_bAlive = false;
+			}
 		}
 	}
 
@@ -201,23 +198,23 @@ void CParticleEngine::UpdateAge(int i, int j)
 void CParticleEngine::UpdateColor(int i, int j)
 {
 
-	m_fColorPercent = (vEmitterList[i][j].m_fAge / vEmitterList[i][j].m_fLife) ;
-	D3DXColorLerp(&vEmitterList[i][j].m_cCurrentColor, &vEmitterList[i][j].m_cStartColor, &vEmitterList[i][j].m_cEndColor, m_fColorPercent);
+	m_fColorPercent = (vEmitterList[i].vParticleList[j].m_fAge / vEmitterList[i].vParticleList[j].m_fLife) ;
+	D3DXColorLerp(&vEmitterList[i].vParticleList[j].m_cCurrentColor, &vEmitterList[i].vParticleList[j].m_cStartColor, &vEmitterList[i].vParticleList[j].m_cEndColor, m_fColorPercent);
 }
 
 void CParticleEngine::UpdateScale(int i, int j)
 {
 	// update ScaleX
-	m_fPercentScale = (vEmitterList[i][j].m_fAge / vEmitterList[i][j].m_fLife) ;
+	m_fPercentScale = (vEmitterList[i].vParticleList[j].m_fAge / vEmitterList[i].vParticleList[j].m_fLife) ;
 
-	vEmitterList[i][j].m_fCurrentScaleX = Lerp(vEmitterList[i][j].m_fStartScaleX, vEmitterList[i][j].m_fEndScaleX, m_fPercentScale );
-	vEmitterList[i][j].m_fCurrentScaleY = Lerp(vEmitterList[i][j].m_fStartScaleY, vEmitterList[i][j].m_fEndScaleY, m_fPercentScale );
+	vEmitterList[i].vParticleList[j].m_fCurrentScaleX = Lerp(vEmitterList[i].vParticleList[j].m_fStartScaleX, vEmitterList[i].vParticleList[j].m_fEndScaleX, m_fPercentScale );
+	vEmitterList[i].vParticleList[j].m_fCurrentScaleY = Lerp(vEmitterList[i].vParticleList[j].m_fStartScaleY, vEmitterList[i].vParticleList[j].m_fEndScaleY, m_fPercentScale );
 }
 
 void CParticleEngine::UpdateLoc(int i, int j)
 {
-	vEmitterList[i][j].m_fLocX += vEmitterList[i][j].m_fVelX;
-	vEmitterList[i][j].m_fLocY += vEmitterList[i][j].m_fVelY;
+	vEmitterList[i].vParticleList[j].m_fPartLocX += vEmitterList[i].vParticleList[j].m_fVelX;
+	vEmitterList[i].vParticleList[j].m_fPartLocY += vEmitterList[i].vParticleList[j].m_fVelY;
 }
 
 int CParticleEngine::GetBlendMode(string mode)
@@ -288,10 +285,25 @@ int CParticleEngine::GetBlendMode(string mode)
 
 }
 
-void CParticleEngine::SetPostion(int XPos, int YPos)
+void CParticleEngine::SetPostion(float XPos, float YPos, int ID)
 {
-	m_fLocX = (float)XPos;
-	m_fLocY = (float)YPos;
+	if (vEmitterList.size() > 0 && vEmitterList[ID].m_bHasParts)
+	{
+		vEmitterList[ID].m_nEmitterXLoc = XPos;
+		vEmitterList[ID].m_nEmitterYLoc = YPos;
+	}
 }
-
+void CParticleEngine::SetIsRunning(int ID, bool isRunnig)
+{
+	vEmitterList[ID].m_bIsRunning = isRunnig;
+}
+void CParticleEngine::UnLoadEmitter(int ID)
+{
+	CEmitter empty;
+	vEmitterList[ID].m_bIsRunning =  false;
+	if (vEmitterList.size() > 0 && vEmitterList[ID].m_bHasParts)
+	{
+		vEmitterList[ID] = empty;
+	}
+}
 

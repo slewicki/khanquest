@@ -11,8 +11,8 @@ CParticle::CParticle(void)
 {
 	m_bAlive = true;
 	m_bContinuous =  true;
-	m_fLocX  =  0;
-	m_fLocY  =  0;
+	m_fPartLocX  =  0;
+	m_fPartLocY  =  0;
 	m_nOffsetX  =  0;
 	m_nOffsetY  =  0;
 	m_fMaxParticles =  0;
@@ -50,7 +50,7 @@ CParticle::CParticle(void)
 	m_szSourceBlend =  "";
 	m_szDestBlend =  "";
 
-	m_szFileName =  "Resource/KQ_puff.png";
+	m_szFileName =  "Resource/ParticleEmitters/KQ_puff.png";
 	m_nImageID =  -1;
 
 	m_szTrigger = "";

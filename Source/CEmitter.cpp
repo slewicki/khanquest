@@ -7,7 +7,7 @@
 //			all of the info for a particle
 //////////////////////////////////////////////////////////////////////////
 #include "CEmitter.h"
-#include "../irrXML/irrXML.h"
+#include "../xml/irrXML.h"
 #include <fstream>
 #include <iostream>
 using namespace std;
@@ -24,6 +24,7 @@ CEmitter::CEmitter(void)
 	m_fPercentGreen		= 0;
 	m_fPercentBlue		= 0;
 
+	m_bIsRunning =  false;
 
 	m_fPercentXScale = 0;
 	m_fPercentYScale = 0;
@@ -39,19 +40,19 @@ CEmitter::CEmitter(void)
 }
 
 
-CEmitter::CEmitter(const CEmitter& ref)
-{
+//CEmitter::CEmitter(const CEmitter& ref)
+//{
+//
+//}
 
-}
-
-CEmitter& CEmitter::operator=(const CEmitter& ref)
-{
-	if(this != &ref)
-	{
-
-	}
-	return *this;
-}
+//CEmitter& CEmitter::operator=(const CEmitter& ref)
+//{
+//	if(this != &ref)
+//	{
+//
+//	}
+//	return *this;
+//}
 
 CEmitter::~CEmitter(void)
 {
@@ -62,7 +63,7 @@ void CEmitter::Exit(void)
 {
 
 }
-void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY, vector<CParticle> &vParticleList)
+void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY)
 {
 	ifstream fin;
 
@@ -163,11 +164,8 @@ void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY, 
 
 	fin.close();
 
-	//m_fLocX  = locX;
-	//m_fLocY  = locY;
-
-	particle.m_fLocX = locX;
-	particle.m_fLocY = locY;
+	particle.m_fPartLocX = locX;
+	particle.m_fPartLocY = locY;
 
 	particle.m_szFileName = "Resource/" + particle.m_szFileName;
 
@@ -195,9 +193,11 @@ void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY, 
 	{
 		vParticleList.push_back(particle);
 	}
+	if(vParticleList.size() > 0)
+		m_bHasParts = true;
 }
 
-void CEmitter::LoadXMLEmitter(char* emitterFileName, float locX, float locY, vector<CParticle> &vParticleList)
+void CEmitter::LoadXMLEmitter(char* emitterFileName, float locX, float locY)
 {
 	string filename = emitterFileName;
 
@@ -249,8 +249,8 @@ void CEmitter::LoadXMLEmitter(char* emitterFileName, float locX, float locY, vec
 	delete xml;
 
 
-	particle.m_fLocX = locX;
-	particle.m_fLocY = locY;
+	particle.m_fPartLocX = locX;
+	particle.m_fPartLocY = locY;
 
 	particle.m_szFileName = "Resource/" + particle.m_szFileName;
 
