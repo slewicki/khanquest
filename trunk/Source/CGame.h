@@ -153,6 +153,7 @@ public:
 	inline int GetTotalGold() { return m_nGold; }
 	inline int IsArcherUnlocked() { return m_chJinCount>=3; }
 	inline int IsAxmenUnlocked() { return m_chXiaCount>=3; }
+	inline POINT GetMousePos() { return m_ptMousePos; }
 	inline int IsWarElephantUnlocked() { return m_chKCount>=3; }
 	inline bool IsMouseInRect(RECT rIsMouseHere)
 	{

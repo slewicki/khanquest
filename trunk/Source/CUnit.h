@@ -54,6 +54,9 @@ private:
 
 	CAnimInstance*	m_pAnimInstance;
 
+	RECT			m_rLocalRect;
+	RECT			m_rGlobalRect;
+
 public:
 	//////////////////////////////////////////////////////
 	//	Function:	"CUnit(Constructor)"
@@ -82,13 +85,14 @@ public:
 	inline float GetAttackSpeed	(void) const { return m_fAttackSpeed; }
 	inline float GetSpeed		(void) const { return m_fMovementSpeed; }
 	inline int GetCost		(void) const { return m_nCost; }
-	// NEED A GET RECT FROM ANIMINSTANCE
 	inline CTile* GetDestTile	(void) const { return m_pDestinationTile; }
 	inline CUnit* GetTarget		(void) const { return m_pTarget; }
 	inline bool	  IsSelected	(void) const { return m_bIsSelected; }
 	inline bool	  IsGrouped		(void) const { return m_bIsGrouped; }
 	inline int    GetState		(void) const { return m_nState; }
 	inline int    GetDirection	(void) const { return m_nDirectionFacing; }
+	inline RECT    GetLocalRect	(void) const { return m_rLocalRect; }
+	inline RECT    GetGlobalRect	(void) const { return m_rGlobalRect; }
 
 
 	//////////////////////////////////////////////////////

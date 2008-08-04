@@ -114,8 +114,8 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 		{
 			if(m_vObjectList[i]->GetType() == UNIT_CAVALRY)
 			{
-				pPE->SetPostion((int)m_vObjectList[i]->GetPosX() - pFrame->ptAnchorX + pFrame->ptAccessories[0].x, (int)m_vObjectList[i]->GetPosY() - pFrame->ptAnchorY + pFrame->ptAccessories[0].y);
-				pPE->SetIsRunning(true);
+				//pPE->SetPostion((int)m_vObjectList[i]->GetPosX() - pFrame->ptAnchorX + pFrame->ptAccessories[0].x, (int)m_vObjectList[i]->GetPosY() - pFrame->ptAnchorY + pFrame->ptAccessories[0].y);
+				//pPE->SetIsRunning(true);
 				return;
 			}
 		}

@@ -733,5 +733,6 @@ CSheet CAnimationManager::LookUp(int UnitType)
 		if(UnitType == m_UnitSheets[i].GetUnitType())
 			return m_UnitSheets[i];
 	}
+	return CSheet();
 }
 

@@ -43,11 +43,8 @@ bool CAnimation::Update(float fElapsedTime)
 		}
 		if(m_vFrames[m_nCurrentFrame].szTriggerName != "")
 		{
-			POINT* Position = new POINT();
 			if(m_vFrames[m_nCurrentFrame].ptAccessories.size())
 			{
-				Position->x = m_vFrames[m_nCurrentFrame].ptAccessories[0].x ;
-				Position->y = m_vFrames[m_nCurrentFrame].ptAccessories[0].y ;
 
 				CEventSystem::GetInstance()->SendEvent(m_vFrames[m_nCurrentFrame].szTriggerName,(void*)&m_vFrames[m_nCurrentFrame]);
 			}

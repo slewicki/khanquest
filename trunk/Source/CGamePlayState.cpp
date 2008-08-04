@@ -93,17 +93,23 @@ bool CGamePlayState::Input(float fElapsedTime)
 		}
 	} 
 #pragma endregion
+#pragma region Camera
 	m_pCamera->SetVelX(0);
 	m_pCamera->SetVelY(0);
 	POINT ptMousePos = CGame::GetInstance()->GetMousePos();
-	if(ptMousePos.x >= 799)
+	// Left
+	if(ptMousePos.x >= 799 || m_pDI->GetKey(DIK_D))
 		m_pCamera->SetVelX(100);
-	if(ptMousePos.x <= 0)
+	// Right
+	if(ptMousePos.x <= 0 || m_pDI->GetKey(DIK_A))
 		m_pCamera->SetVelX(-100);
-	if(ptMousePos.y >= 599)
+	// Down
+	if(ptMousePos.y >= 599 || m_pDI->GetKey(DIK_S))
 		m_pCamera->SetVelY(100);
-	if(ptMousePos.y <= 0)
-		m_pCamera->SetVelY(-100);
+	// Up
+	if(ptMousePos.y <= 0 || m_pDI->GetKey(DIK_W))
+		m_pCamera->SetVelY(-100); 
+#pragma endregion
 
 	return true;
 }
@@ -123,9 +129,6 @@ void CGamePlayState::Render(float fElapsedTime)
 {
 	// Render units
 	
-
-	
-
 	if( m_pDI->GetBufferedKey(DIK_1))
 		Map.LoadFile("Resource/Levels/KQ_Wawa.level");
 	else if( m_pDI->GetBufferedKey(DIK_2))
@@ -139,7 +142,17 @@ void CGamePlayState::Render(float fElapsedTime)
 
 	m_cFont.DrawTextA("Victory", m_rVictoryButton.left+30, m_rVictoryButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 	m_cFont.DrawTextA("Retreat", m_rRetreatButton.left+30, m_rRetreatButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+	
+	
+
 	ObjectManager::GetInstance()->RenderObjects(fElapsedTime);
 
 }
 
+string CGamePlayState::IntToString(int nNum)
+{
+	char szNumVal[10];
+	itoa(nNum, szNumVal, 10);
+	string szNum = szNumVal;
+	return szNum;
+}
