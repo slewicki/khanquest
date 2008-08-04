@@ -27,7 +27,6 @@ private:
 	CSGD_TextureManager*					m_pTM;
 	CSGD_DirectInput*						m_pDI;
 	
-	// Unit sprite IDs (Unit animations later)
 	int										m_nDisplayID;
 	int										m_nUnitID[6];
 	float									m_fTimer;
@@ -47,8 +46,8 @@ private:
 	RECT									m_rAttackButton;
 	RECT									m_rBackButton;
 
-	int										m_nNumUnits[6];
-	int										m_nTotalUnits;
+	int										m_nNumUnits[6];	// Number of units purchased
+	int										m_nTotalUnits;	// Total units
 
 	int										m_nFoodTotal;
 

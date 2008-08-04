@@ -38,10 +38,12 @@ private:
 	// REMOVE AFTER DEMO
 	RECT									m_rVictoryButton;
 	RECT									m_rRetreatButton;
+	//------------------------------------------------------
 	int										m_nButtonID;
 	CBitmapFont								m_cFont;
 	int										m_nLucidiaWhiteID;
-
+	// Create a vector of list of selected units (CUnit*) and make an accessor
+	// for the HUD to use.  The HUD should disply up to 8 units, the max that can be selected.
 
 	////////////////////////////////////////////
 	//	Function:	"CGamePlayState(Constructor)"

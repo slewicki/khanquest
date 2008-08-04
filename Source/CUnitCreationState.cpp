@@ -167,6 +167,7 @@ bool CUnitCreationState::Input(float fElapsedTime)
 	{
 		if(CGame::GetInstance()->IsMouseInRect(m_rMinusButtons[i]))
 		{
+			// Change cursor to click icon
 			CGame::GetInstance()->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 			{
@@ -204,7 +205,7 @@ bool CUnitCreationState::Input(float fElapsedTime)
 			{
 				// Ask if they are sure...?
 				
-				// Figure out map and enemy units (call factory creates)
+				// Figure out map and enemy units (call factory enemycreates)
 				// Change to on GamePlayState
 				CGame::GetInstance()->ChangeState(CGamePlayState::GetInstance());
 				

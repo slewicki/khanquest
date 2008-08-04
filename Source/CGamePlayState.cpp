@@ -78,6 +78,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
 			// Go back to the map
+			// Call this function if the user wins the battle
 			CGame::GetInstance()->SetCityConquered(CGame::GetInstance()->GetSelectedCity());
 			CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
 		}
@@ -88,6 +89,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
 			// Go back to the map
+			// If two battles are lost in a row, call LoseLastCity
 			CGame::GetInstance()->LoseLastCity();
 			CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
 		}
@@ -97,16 +99,16 @@ bool CGamePlayState::Input(float fElapsedTime)
 	m_pCamera->SetVelX(0);
 	m_pCamera->SetVelY(0);
 	POINT ptMousePos = CGame::GetInstance()->GetMousePos();
-	// Left
+	// Move camera Left
 	if(ptMousePos.x >= 799 || m_pDI->GetKey(DIK_D))
 		m_pCamera->SetVelX(100);
-	// Right
+	// Move camera Right
 	if(ptMousePos.x <= 0 || m_pDI->GetKey(DIK_A))
 		m_pCamera->SetVelX(-100);
-	// Down
+	// Move camera Down
 	if(ptMousePos.y >= 599 || m_pDI->GetKey(DIK_S))
 		m_pCamera->SetVelY(100);
-	// Up
+	// Move camera Up
 	if(ptMousePos.y <= 0 || m_pDI->GetKey(DIK_W))
 		m_pCamera->SetVelY(-100); 
 #pragma endregion
@@ -121,6 +123,8 @@ void CGamePlayState::Update(float fElapsedTime)
 	m_pCamera->Update(fElapsedTime);
 	// Update units
 	ObjectManager::GetInstance()->UpdateObjects(fElapsedTime);
+
+	
 	m_pES->ProcessEvents();
 
 }
@@ -128,23 +132,24 @@ void CGamePlayState::Update(float fElapsedTime)
 void CGamePlayState::Render(float fElapsedTime)
 {
 	// Render units
-	
+	// Temp for map changes
+	//-----------------------------------------------
 	if( m_pDI->GetBufferedKey(DIK_1))
 		Map.LoadFile("Resource/Levels/KQ_Wawa.level");
 	else if( m_pDI->GetBufferedKey(DIK_2))
 		Map.LoadFile("Resource/Levels/KQ_Wee.level");
 	else if( m_pDI->GetBufferedKey(DIK_3))
 		Map.LoadFile("Resource/Levels/KQ_Tech_Demo1.level");
-	Map.Render();
 	
+	// Temp for demo
 	m_pTM->Draw(m_nButtonID, m_rVictoryButton.left, m_rVictoryButton.top, .4f, .3f);
 	m_pTM->Draw(m_nButtonID, m_rRetreatButton.left, m_rRetreatButton.top, .4f, .3f);
 
 	m_cFont.DrawTextA("Victory", m_rVictoryButton.left+30, m_rVictoryButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 	m_cFont.DrawTextA("Retreat", m_rRetreatButton.left+30, m_rRetreatButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+	//-----------------------------------------------
 	
-	
-
+	Map.Render();
 	ObjectManager::GetInstance()->RenderObjects(fElapsedTime);
 
 }
