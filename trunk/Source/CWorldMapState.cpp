@@ -120,11 +120,10 @@ void CWorldMapState::Update(float fElapsedTime)
 void CWorldMapState::Render(float fElapsedTime)
 {
 
-	m_pTM->Draw(m_nWorldMapID, 0, 0);//, 1, 1, 0, 0, 0, 0, D3DCOLOR_ARGB(255, 0, 0, 0));
+	m_pTM->Draw(m_nWorldMapID, 0, 0);
 
 	POINT ptAttackSymbol;
 	
-	//m_pTM->Draw(m_nTitleID, 20, 20, .75, .75);
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -156,6 +155,7 @@ void CWorldMapState::Render(float fElapsedTime)
 	m_cFont.DrawTextA("Mongolia", 300, 155, .25, .25, D3DCOLOR_ARGB(255, 0, 0, 0));
 
 	//------------------------------------
+	// Display player's total Food and Gold Currently
 	char szG[10];
 	char szF[10];
 	itoa(CGame::GetInstance()->GetTotalGold(), szG, 10);
