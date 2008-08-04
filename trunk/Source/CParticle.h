@@ -13,14 +13,13 @@ using std::string;
 
 class CParticle
 {
-private:
 
 public:
 
 	bool	m_bAlive;
 	bool	m_bContinuous;
-	float	m_fLocX ;
-	float	m_fLocY ;
+	float	m_fPartLocX ;
+	float	m_fPartLocY ;
 	int		m_nOffsetX ;
 	int		m_nOffsetY ;
 	float	m_fMaxParticles;
@@ -86,8 +85,8 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	bool	IsAlive(void)			{return m_bAlive;}
 	bool	GetIsContinuous(void)	{return m_bContinuous;}
-	float	GetLocX(void)			{return m_fLocX;}
-	float	GetLocY(void)			{return m_fLocY;}
+	float	GetLocX(void)			{return m_fPartLocX;}
+	float	GetLocY(void)			{return m_fPartLocY;}
 	int		GetOffsetX(void)		{return	m_nOffsetX;}
 	int		GetOffsetY(void)		{return m_nOffsetY;}
 	float	GetMaxParticles(void)	{return	m_fMaxParticles;}
@@ -135,8 +134,8 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	void	SetIsAlive(bool Alive)					{m_bAlive = Alive;}
 	void	SetIsContinuous(bool Continuous)		{m_bContinuous = Continuous;}
-	void	SetLocX(float LocX)						{m_fLocX = LocX ;}
-	void	SetLocY(float LocY)						{m_fLocY = LocY ;}
+	void	SetLocX(float LocX)						{m_fPartLocX = LocX ;}
+	void	SetLocY(float LocY)						{m_fPartLocY = LocY ;}
 	void	SetOffsetX(int OffsetX)					{m_nOffsetX =  OffsetX;}
 	void	SetOffsetY(int OffsetY)					{m_nOffsetY =  OffsetY;}
 	void	SetMaxParticles(float MaxParticles)		{m_fMaxParticles = MaxParticles ;}

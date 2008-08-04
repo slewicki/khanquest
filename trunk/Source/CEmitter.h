@@ -10,9 +10,8 @@
 #include <vector>
 #include "CSGD_Direct3D.h"
 #include "CSGD_TextureManager.h"
-#include "CEventSystem.h"
 #include "CParticle.h"
-#include "../irrxml/irrXML.h"
+#include "../xml/irrXML.h"
 //using std::list;
 using namespace irr;
 using namespace io;
@@ -21,14 +20,14 @@ using namespace io;
 
 class CEmitter
 {
-private:
+
+public:
 
 	CSGD_Direct3D*			m_pD3D;			// direct 3D
-	CEventSystem*			m_pES;			// Event System
 	CSGD_TextureManager*	m_pTM;			// Texture Manager
 
-	int						m_nEmitterXLocation; // X location to draw the emitter
-	int						m_nEmitterYLocation; // X location to draw the emitter
+	float					m_nEmitterXLoc; // X location to draw the emitter
+	float					m_nEmitterYLoc; // X location to draw the emitter
 
 	float 					m_fPercentAlpha;	
 	float 					m_fPercentRed;	
@@ -41,6 +40,9 @@ private:
 	float					m_fUpdateFloat;	
 	float					m_fUpdateQuarter;
 	int						m_nImageID;
+
+	bool					m_bIsRunning;
+	bool					m_bHasParts;
 
 	//	For calculating elapsed time
 	DWORD				m_dwPreviousTime;	//	Time stamp of the last frame
@@ -56,9 +58,7 @@ private:
 
 	CParticle			particle;		// single particle
 
-public:
-
-	vector<CParticle>	ParticleList;	// list of particles
+	vector<CParticle>	vParticleList;	// list of particles
 
 	//////////////////////////////////////////////////////////////////////////
 	//  Function: CEmitter
@@ -72,14 +72,14 @@ public:
 	//	Last Modified: July 26, 2008
 	//  Purpose : Copy constructor.
 	//////////////////////////////////////////////////////////////////////////
-	CEmitter(const CEmitter& ref);
+	//CEmitter(const CEmitter& ref);
 
 	//////////////////////////////////////////////////////////////////////////
 	//  Function: operator=
 	//	Last Modified: July 26, 2008
 	//  Purpose : Assignment Operator.
 	//////////////////////////////////////////////////////////////////////////
-	CEmitter& operator=(const CEmitter& ref);
+	//CEmitter& operator=(const CEmitter& ref);
 
 	//////////////////////////////////////////////////////////////////////////
 	//  Function: ~CEmitter
@@ -93,18 +93,19 @@ public:
 	//	Last Modified: July 25, 2008
 	//  Purpose : Returns the specified type.
 	//////////////////////////////////////////////////////////////////////////
-	int GetEmitterXLocation(void)	{return m_nEmitterXLocation;}
-	int GetEmitterYLocation(void)	{return m_nEmitterYLocation;}
+	float GetEmitterXLocation(void)	{return m_nEmitterXLoc;}
+	float GetEmitterYLocation(void)	{return m_nEmitterYLoc;}
 	int GetImageID(void)			{return m_nImageID;}
 
 	//////////////////////////////////////////////////////////////////////////
 	// Function: Modifiers
-	//	Last Modified: July 25, 2008
+	//	Last Modified: August 2, 2008
 	//  Purpose: Modifies the specified type.
 	//////////////////////////////////////////////////////////////////////////
-	void SetEmitterXLocation(int emitterXLocation)	{ m_nEmitterXLocation = emitterXLocation;}
-	void SetEmitterYLocation(int emitterYLocation)	{ m_nEmitterYLocation = emitterYLocation;}
-	int GetImageID(int ImageID)						{m_nImageID = ImageID;}
+	void SetEmitterXLocation(float emitterXLoc)	{ m_nEmitterXLoc = emitterXLoc;}
+	void SetEmitterYLocation(float emitterYLoc)	{ m_nEmitterYLoc = emitterYLoc;}
+	int GetImageID(int ImageID)					{m_nImageID = ImageID;}
+	void ClearList(void)						{vParticleList.clear();}
 
 	//////////////////////////////////////////////////////////////////////////
 	// Function: “Exit”
@@ -118,21 +119,15 @@ public:
 	//	Last Modified: July 27, 2008
 	//  Purpose: Loads the particle emitter information from a XML file
 	//////////////////////////////////////////////////////////////////////////
-	void LoadXMLEmitter(char* emitterFileName, float locX, float locY, vector<CParticle> &vParticleList);
+	void LoadXMLEmitter(char* emitterFileName, float locX, float locY);
 
 
 	//////////////////////////////////////////////////////////////////////////
 	// Function: LoadXMLParicle
-	//	Last Modified: July 27, 2008
+	//	Last Modified: August 2, 2008
 	//  Purpose: Loads the particle emitter information from a XML file
 	//////////////////////////////////////////////////////////////////////////
-	void LoadBinaryEmitter(char* emitterFileName, float locX, float locY, vector<CParticle> &vParticleList);
+	void LoadBinaryEmitter(char* emitterFileName, float locX, float locY);
 
-	//////////////////////////////////////////////////////////////////////////
-	// Function: LoadBinParicle
-	//	Last Modified: July 27, 2008
-	//  Purpose: Loads the particle  emitter information from a Binary file
-	//////////////////////////////////////////////////////////////////////////
-	void LoadBinEmitter(char* emitterFileName, float locX, float locY, vector<CParticle> &vParticleList);
 
 };
