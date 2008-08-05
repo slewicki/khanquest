@@ -15,28 +15,27 @@
 #include <fstream>
 #include <windows.h>
 
+#include "CTile.h"
+#include "CMouseMap.h"
+#include "CGDICanvas.h"
+
 using std::iostream;
 using std::string;
 using std::ifstream;
 using std::ofstream;
 
 
-enum TileType { PLAIN, MOUNTAIN, FOREST, SHALLOW_WATER, DEEP_WATER, COLLISION };
+//enum TileType { PLAIN, MOUNTAIN, FOREST, SHALLOW_WATER, DEEP_WATER };
 
-struct tPoint
-{
-	int X;
-	int Y;
-};
 
-struct tTile
-{
-	TileType nType;
-	tPoint ptPos;
-	bool bIsPlayerSpawn;
-	bool bIsEnemySpawn;
-	bool bIsCollision;
-};
+//struct tTile
+//{
+//	TileType nType;
+//	tPoint ptPos;
+//	bool bIsPlayerSpawn;
+//	bool bIsEnemySpawn;
+//	bool bIsCollision;
+//};
 
 class CTileEngine
 {
@@ -50,13 +49,13 @@ private:
 	string m_szFileName;
 	string m_szImagePath;
 	string m_szTileType;
-	tTile** pTileArray;
+	CTile** pTileArray;
 	//tTile pTileArray[4][4];
-	tPoint m_ptWorldPosition;
+	POINT m_ptWorldPosition;
 	RECT m_rTileRect;
 	int m_nLayer;
 
-	tPoint m_ptSelectedTile;
+	POINT m_ptSelectedTile;
 	int m_nTileSetHeight;
 	int m_nTileSetWidth;
 	int m_nBitmapSizeHeight;
@@ -102,7 +101,7 @@ public:
 	//Tile
 	int GetTileWidth() { return m_nTileWidth; }
 	int GetTileHeight() { return m_nTileHeight; }
-	tTile GetTile(int x, int y) { return pTileArray[x][y]; }
+	CTile GetTile(int x, int y) { return pTileArray[x][y]; }
 
 	//Image
 	int GetImageID() { return m_nImageID; }
@@ -122,7 +121,7 @@ public:
 	//
 	//	Purpose: Gets the specified type
 	/////////////////////////////////
-	tPoint GetSelectedTile() { return m_ptSelectedTile; }
+	POINT GetSelectedTile() { return m_ptSelectedTile; }
 	int GetTileSetHeight() { return m_nTileSetHeight; }
 	int GetTileSetWidth() { return m_nTileSetWidth; }
 #pragma endregion TileSet_Accessor
@@ -144,7 +143,7 @@ public:
 	void SetTileSize(int nTileWidth, int nTileHeight);
 	void SetTileWidth(int nTileWidth);
 	void SetTileHeight(int nTileHeight);
-	void SetTile(tTile tile, int x, int y);
+	void SetTile(CTile tile, int x, int y);
 
 	//Image
 	void SetImageID(int nImageID);
@@ -164,12 +163,14 @@ public:
 	//
 	//	Purpose: Sets the specified value
 	/////////////////////////////////
-	void SetSelectedTile(tPoint ptSelectedTile);
+	void SetSelectedTile(POINT ptSelectedTile);
 	void SetSelectedTileX(int nXPos);
 	void SetSelectedTileY(int nYPos);
 	void SetTileSetHeight(int nTileSetHeight);
 	void SetTileSetWidth(int nTileSetWidth);
 #pragma endregion TileSet_Mutator
+
+	void MouseMapLoad(CMouseMap* pmm, char* szFileName);
 };
 
 #endif
