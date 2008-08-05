@@ -20,7 +20,7 @@
 #include <windows.h>
 #include "CUnit.h"
 #include "CCity.h"
-#include "../resource.h"	//  For icon/cursor ID
+#include "resource.h"	//  For icon/cursor ID
 
 using std::string;
 

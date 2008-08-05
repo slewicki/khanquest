@@ -12,7 +12,7 @@
 #include <iostream>
 #include <string>
 #include "CWorldMapState.h"
-#include "../irrXML/irrXML.h"
+#include "irrXML.h"
 using namespace std;
 
 CGame::CGame(void)
