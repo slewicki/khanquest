@@ -58,7 +58,7 @@ void CTileEngine::SetTileHeight(int nTileHeight)
 	m_nTileHeight = nTileHeight;
 }
 
-void CTileEngine::SetTile(tTile tile, int x, int y)
+void CTileEngine::SetTile(CTile tile, int x, int y)
 {
 	pTileArray[x][y] = tile;
 }
@@ -96,7 +96,7 @@ void CTileEngine::SetRectSize(int nLeft, int nTop, int nRight, int nBottom)
 #pragma endregion Map
 //Tile
 #pragma region TileSet
-void CTileEngine::SetSelectedTile(tPoint ptSelectedTile)
+void CTileEngine::SetSelectedTile(POINT ptSelectedTile)
 {
 }
 
@@ -149,11 +149,11 @@ void CTileEngine::LoadFile(char* szFileName)
 			fin.read((char*)&m_nTileHeight, sizeof(m_nTileHeight));
 
 			//pTileArray** = new tTile[m_nMapHeight][m_nMapWidth];
-			pTileArray = new tTile*[m_nMapWidth];
+			pTileArray = new CTile*[m_nMapWidth];
 
 			for(int i = 0; i < m_nMapWidth; i++)
 			{
-				pTileArray[i] = new tTile[m_nMapHeight];
+				pTileArray[i] = new CTile[m_nMapHeight];
 			}
 
 			for(int x = 0; x < m_nMapHeight; x++)
@@ -183,16 +183,16 @@ void CTileEngine::LoadFile(char* szFileName)
 						pTileArray[x][y].nType = SHALLOW_WATER;
 					else if(m_szTileType == "DEEP_WATER")
 						pTileArray[x][y].nType = DEEP_WATER;
-					else if(m_szTileType == "COLLISION")
-						pTileArray[x][y].nType = COLLISION;
+					/*else if(m_szTileType == "COLLISION")
+						pTileArray[x][y].nType = COLLISION;*/
 
 					int nPosX = 0;
 					int nPosY = 0;
 					fin.read((char*)&nPosX, sizeof(nPosX));
 					fin.read((char*)&nPosY, sizeof(nPosY));
 
-					pTileArray[x][y].ptPos.X = nPosX;
-					pTileArray[x][y].ptPos.Y = nPosY;
+					pTileArray[x][y].ptPos.x = nPosX;
+					pTileArray[x][y].ptPos.y = nPosY;
 
 					fin.read((char*)&bTempBool, sizeof(bTempBool));
 					if (bTempBool)
@@ -239,8 +239,8 @@ void CTileEngine::Render()
 			for(int Row = 0; Row < m_nMapWidth; Row++)
 			{
 				RECT rTile;
-				rTile.left = pTileArray[Row][Col].ptPos.X * m_nTileWidth;
-				rTile.top = pTileArray[Row][Col].ptPos.Y * m_nTileHeight;
+				rTile.left = pTileArray[Row][Col].ptPos.x * m_nTileWidth;
+				rTile.top = pTileArray[Row][Col].ptPos.y * m_nTileHeight;
 				rTile.right = rTile.left + m_nTileWidth;
 				rTile.bottom = rTile.top + m_nTileHeight;
 
@@ -261,11 +261,41 @@ void CTileEngine::LoadTileSet(char *szFileName)
 	{
 		for ( int y = 0; y < m_nMapWidth; y++)
 		{
-			if(m_ptSelectedTile.X == pTileArray[x][y].ptPos.X)
-				m_ptSelectedTile.X = pTileArray[x][y].ptPos.X; // / m_nBitmapSizeWidth;
+			if(m_ptSelectedTile.x == pTileArray[x][y].ptPos.x)
+				m_ptSelectedTile.x = pTileArray[x][y].ptPos.x; // / m_nBitmapSizeWidth;
 
-			if(m_ptSelectedTile.Y == pTileArray[x][y].ptPos.Y)
-			m_ptSelectedTile.Y = pTileArray[x][y].ptPos.Y; 
+			if(m_ptSelectedTile.y == pTileArray[x][y].ptPos.y)
+			m_ptSelectedTile.y = pTileArray[x][y].ptPos.y; 
+		}
+	}
+}
+
+void CTileEngine::MouseMapLoad(CMouseMap* pmm, char* szFileName)
+{
+	//Create Canvas
+	CGDICanvas gdic;
+	//Load the file
+	gdic.Load(NULL, szFileName);
+	//Assign Width/Height
+	pmm->SetSize(gdic.GetWidth(), gdic.GetHeight());
+	//Allocate space for the LookUp Array
+	pmm->CreateLookUpArray(gdic.GetWidth()*gdic.GetHeight());
+
+	//Get color to check mouse movement
+	COLORREF crNW = GetPixel(gdic, 0, 0);
+	COLORREF crNE = GetPixel(gdic, gdic.GetWidth() - 1, 0);
+	COLORREF crSW = GetPixel(gdic, 0, gdic.GetHeight() - 1);
+	COLORREF crSE = GetPixel(gdic, gdic.GetWidth() - 1, gdic.GetHeight() - 1);
+	//Test pixel colors
+	COLORREF crTest;
+
+	//Scan bitmap into LookUp Array
+	for(int y = 0; y < gdic.GetHeight(); y++)
+	{
+		for(int x = 0; x < gdic.GetWidth(); x++)
+		{
+			//grab test pixel
+			crTest = GetPixel(gdic, x, y);
 		}
 	}
 }
