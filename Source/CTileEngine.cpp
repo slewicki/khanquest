@@ -22,6 +22,12 @@ CTileEngine::~CTileEngine()
 	delete [] pTileArray;
 }
 
+CTileEngine* CTileEngine::GetInstance()
+{
+	static CTileEngine Instance;
+	return &Instance;
+}
+
 //Mutators
 //Map
 #pragma region Map
@@ -296,6 +302,17 @@ void CTileEngine::MouseMapLoad(CMouseMap* pmm, char* szFileName)
 		{
 			//grab test pixel
 			crTest = GetPixel(gdic, x, y);
+			//Set LookUp to default
+			pmm->SetDirection(MM_CENTER, x+y*pmm->GetSize().x);
+			//Check Colors
+			if(crTest == crNW)
+				pmm->SetDirection(MM_NW, x+y*pmm->GetSize().x);
+			else if(crTest == crNE)
+				pmm->SetDirection(MM_NE, x+y*pmm->GetSize().x);
+			else if(crTest == crSW)
+				pmm->SetDirection(MM_SW, x+y*pmm->GetSize().x);
+			else if(crTest == crSE)
+				pmm->SetDirection(MM_SE, x+y*pmm->GetSize().x);
 		}
 	}
 }
