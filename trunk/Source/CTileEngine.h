@@ -171,6 +171,8 @@ public:
 #pragma endregion TileSet_Mutator
 
 	void MouseMapLoad(CMouseMap* pmm, char* szFileName);
+
+	static CTileEngine* GetInstance();
 };
 
 #endif
