@@ -22,7 +22,7 @@
 //	These read the keyboard asynchronously
 #define KEY_DOWN(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0)
 
-const char* CLASSNAME		= "BasicWindow";		//	Window Class Name.
+const char* CLASSNAME		= "Khanquest";		//	Window Class Name.
 
 const char* WINDOW_TITLE	= "Khanquest";			//	Window Title.
 const int	WINDOW_WIDTH	= 800;					//	Window Width.
