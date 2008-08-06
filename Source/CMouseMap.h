@@ -30,7 +30,7 @@ public:
 
 	void SetSize(int nX, int nY);
 	void SetRef(int nX, int nY);
-	void SetDirection(MouseMapDirection mmDirection);
+	void SetDirection(MouseMapDirection mmDirection, int nLoc);
 
 	void CreateLookUpArray(int nSize);
 	void DeleteLookUpArray();

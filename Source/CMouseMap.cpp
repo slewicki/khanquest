@@ -20,14 +20,15 @@ void CMouseMap::SetRef(int nX, int nY)
 	m_ptRef.y = nY;
 }
 
-void CMouseMap::SetDirection(MouseMapDirection mmDirection)
+void CMouseMap::SetDirection(MouseMapDirection mmDirection, int nLoc)
 {
-	m_mmLookUp = &mmDirection;
+	m_mmLookUp[nLoc] = mmDirection;
 }
 
 void CMouseMap::CreateLookUpArray(int nSize)
 {
-	m_mmLookUp = new MouseMapDirection[nSize];
+	m_mmLookUp = NULL;
+//	m_mmLookUp = new MouseMapDirection[nSize];
 }
 
 void CMouseMap::DeleteLookUpArray()
