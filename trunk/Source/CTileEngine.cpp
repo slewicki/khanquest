@@ -392,3 +392,11 @@ CTile CTileEngine::MapToTile(int x, int y, int z)
 
 	return pTileArray[newPoint.x][newPoint.y];
 }
+
+POINT CTileEngine::GetTileAnchor()
+{
+	TileAnchor.x = m_nTileWidth / 2;
+	TileAnchor.y = m_nTileHeight / 2;
+
+	return TileAnchor;
+}
