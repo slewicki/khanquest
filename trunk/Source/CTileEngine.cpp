@@ -224,6 +224,8 @@ void CTileEngine::LoadFile(char* szFileName)
 		}
 
 		fin.close();
+
+		SetAnchor();
 }
 
 void CTileEngine::Render()
@@ -279,10 +281,38 @@ void CTileEngine::Render()
 				rAnchor.bottom = 8;*/
 
 				//m_pD3D->DrawRect(rTestCollision, 255, 255, 255);
+				//pTileArray[Row][Col].ptAnchor.x = (((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2)) + (m_nTileWidth / 2);
+				//pTileArray[Row][Col].ptAnchor.y = (((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300) + (m_nTileHeight / 2);
+
+				m_pTM->Draw(m_nImageID, ((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2), ((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300, 1, 1, &rTile, 0, 0, 0); 
+				//Anchor Testing
+				//m_pTM->Draw(TempImage, pTileArray[Row][Col].ptAnchor.x, pTileArray[Row][Col].ptAnchor.y);
+			}
+		}
+	}
+}
+
+void CTileEngine::SetAnchor()
+{
+	for ( int nLayer = 0; nLayer < m_nLayer; nLayer++)
+	{
+		for (int Col = 0; Col < m_nMapHeight; Col++)
+		{
+			for(int Row = 0; Row < m_nMapWidth; Row++)
+			{
+
+				//Tile based Anchor Testing
+				/*RECT rAnchor;
+				rAnchor.left = 0;
+				rAnchor.top = 0;
+				rAnchor.right = 8;
+				rAnchor.bottom = 8;*/
+
+				//m_pD3D->DrawRect(rTestCollision, 255, 255, 255);
 				pTileArray[Row][Col].ptAnchor.x = (((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2)) + (m_nTileWidth / 2);
 				pTileArray[Row][Col].ptAnchor.y = (((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300) + (m_nTileHeight / 2);
 
-				m_pTM->Draw(m_nImageID, ((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2), ((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300, 1, 1, &rTile, 0, 0, 0); 
+				//m_pTM->Draw(m_nImageID, ((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2), ((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300, 1, 1, &rTile, 0, 0, 0); 
 				//Anchor Testing
 				//m_pTM->Draw(TempImage, pTileArray[Row][Col].ptAnchor.x, pTileArray[Row][Col].ptAnchor.y);
 			}
