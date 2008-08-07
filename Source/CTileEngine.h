@@ -70,6 +70,7 @@ private:
 
 	//Temp variables
 	POINT MousePoint;
+	POINT TileAnchor;
 
 
 public:
@@ -190,6 +191,7 @@ public:
 	CTile GetTile(int x, int y) { return pTileArray[x][y]; }
 	CTile SetDestinationTile(int x, int y);
 	CTile MapToTile(int x, int y, int z);
+	POINT GetTileAnchor();
 };
 
 #endif
