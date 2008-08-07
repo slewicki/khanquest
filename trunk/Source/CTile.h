@@ -21,6 +21,7 @@ public:
 	bool bIsEnemySpawn;
 	bool bIsCollision;
 	POINT ptAnchor;
+	bool bIsOccupied;
 };
 
 #endif
