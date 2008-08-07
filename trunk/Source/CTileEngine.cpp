@@ -211,14 +211,20 @@ void CTileEngine::LoadFile(char* szFileName)
 					fin.read((char*)&bTempBool, sizeof(bTempBool));
 					if (bTempBool)
 						pTileArray[x][y].bIsEnemySpawn = true;
+					else
+						pTileArray[x][y].bIsEnemySpawn = false;
 
 					fin.read((char*)&bTempBool, sizeof(bTempBool));
 					if (bTempBool)
 						pTileArray[x][y].bIsPlayerSpawn = true;
+					else
+						pTileArray[x][y].bIsPlayerSpawn = false;
 
 					fin.read((char*)&bTempBool, sizeof(bTempBool));
 					if (bTempBool)
 						pTileArray[x][y].bIsCollision = true;
+					else
+						pTileArray[x][y].bIsEnemySpawn = false;
 				}
 			}
 		}
@@ -466,11 +472,4 @@ void CTileEngine::Clear()
 		delete pTileArray[nDelCount];
 
 	delete [] pTileArray;
-}
-
-POINT CTileEngine::TileToMap(int x, int y)
-{
-	POINT newPoint;
-
-	return newPoint;
 }
