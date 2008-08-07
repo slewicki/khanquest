@@ -355,24 +355,24 @@ POINT CTileEngine::IsoMouse(int x, int y, int z)
 	newPoint.x = (floor(newPoint.x / 64.0f) * 64.0f);
 	newPoint.y = (floor(newPoint.y / 32.0f) * 32.0f);*/
 
-	if(x < m_nMapWidth && y < m_nMapHeight)
-	{
-		newPoint.x = (m_nTileWidth * y + m_nTileHeight * x) / (64 * 32) - 10;
-		newPoint.y = (m_nTileWidth * y - m_nTileHeight * x) / (64 * 32);
+	newPoint.x = (m_nTileWidth * y + m_nTileHeight * x) / (64 * 32) - 10;
+	newPoint.y = (m_nTileWidth * y - m_nTileHeight * x) / (64 * 32);
 
-		for(int i = 0, j = m_nMapHeight - 1; i < m_nMapHeight; i++, j--)
+	for(int i = 0, j = m_nMapHeight - 1; i < m_nMapHeight; i++, j--)
+	{
+		if(j == newPoint.y)
 		{
-			if(j == newPoint.y)
-			{
-				newPoint.y = i;
-				break;
-			}
+			newPoint.y = i;
+			break;
 		}
 	}
-	else
+
+	if(newPoint.x < m_nMapHeight && newPoint.y < m_nMapWidth && newPoint.x >= 0 && newPoint.y >= 0)
 	{
-		newPoint.x = 0;
-		newPoint.y = 0;
+		return newPoint;
 	}
-	return newPoint;
+	//newPoint.x = 0;
+	//newPoint.y = 0;
+
+	//return newPoint;
 }
