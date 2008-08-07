@@ -194,6 +194,8 @@ public:
 	POINT GetTileAnchor();
 	POINT GetAnchor(int x, int y) { return pTileArray[x][y].ptAnchor; }
 	void SetAnchor();
+	bool IsOccupied(int x, int y) { return pTileArray[x][y].bIsOccupied; }
+	void SetOccupy(int x, int y, bool bOccupy);
 
 	void Clear();
 };

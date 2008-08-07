@@ -473,3 +473,8 @@ void CTileEngine::Clear()
 
 	delete [] pTileArray;
 }
+
+void CTileEngine::SetOccupy(int x, int y, bool bOccupy)
+{
+	pTileArray[x][y].bIsOccupied = bOccupy;
+}
