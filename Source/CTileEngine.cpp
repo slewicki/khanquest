@@ -19,10 +19,12 @@ CTileEngine::CTileEngine()
 
 CTileEngine::~CTileEngine()
 {
-	for (int nDelCount = 0; nDelCount < m_nMapWidth; nDelCount++)
+	/*for (int nDelCount = 0; nDelCount < m_nMapWidth; nDelCount++)
 		delete pTileArray[nDelCount];
 
-	delete [] pTileArray;
+	delete [] pTileArray;*/
+
+	Clear();
 }
 
 CTileEngine* CTileEngine::GetInstance()
@@ -134,6 +136,9 @@ void CTileEngine::LoadFile(char* szFileName)
 	char* szBuffer = NULL;
 	string szTest;
 	bool bTempBool;
+
+	if(pTileArray)
+		Clear();
 
 	fin.open(szFileName, std::ios_base::in | std::ios_base::binary);
 
@@ -357,19 +362,24 @@ POINT CTileEngine::IsoMouse(int x, int y, int z)
 	newPoint.x = (floor(newPoint.x / 64.0f) * 64.0f);
 	newPoint.y = (floor(newPoint.y / 32.0f) * 32.0f);*/
 
-	newPoint.x = (m_nTileWidth * y + m_nTileHeight * x) / (64 * 32) - 10;
-	newPoint.y = (m_nTileWidth * y - m_nTileHeight * x) / (64 * 32);
+	//OLD SEMI-CORRECT VERSION
+	//newPoint.x = (m_nTileWidth * y + m_nTileHeight * x) / (m_nTileWidth * m_nTileHeight) - 10;
+	//newPoint.y = (m_nTileWidth * y - m_nTileHeight * x) / (m_nTileWidth * m_nTileHeight);
+
+	newPoint.y = (m_nTileWidth * y + m_nTileHeight * x) / (64 * 32) - 10;
+	newPoint.x = (m_nTileWidth * y - m_nTileHeight * x) / (64 * 32);
+
 
 	for(int i = 0, j = m_nMapHeight - 1; i < m_nMapHeight; i++, j--)
 	{
-		if(j == newPoint.y)
+		if(j == newPoint.x)
 		{
-			newPoint.y = i;
+			newPoint.x = i;
 			break;
 		}
 	}
 
-	if(newPoint.x < m_nMapHeight && newPoint.y < m_nMapWidth && newPoint.x >= 0 && newPoint.y >= 0)
+	if(newPoint.y < m_nMapHeight && newPoint.x < m_nMapWidth && newPoint.y >= 0 && newPoint.x >= 0)
 	{
 		MousePoint = newPoint;
 	}
@@ -399,4 +409,12 @@ POINT CTileEngine::GetTileAnchor()
 	TileAnchor.y = m_nTileHeight / 2;
 
 	return TileAnchor;
+}
+
+void CTileEngine::Clear()
+{
+	for (int nDelCount = 0; nDelCount < m_nMapWidth; nDelCount++)
+		delete pTileArray[nDelCount];
+
+	delete [] pTileArray;
 }

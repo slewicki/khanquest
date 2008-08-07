@@ -192,6 +192,8 @@ public:
 	CTile SetDestinationTile(int x, int y);
 	CTile MapToTile(int x, int y, int z);
 	POINT GetTileAnchor();
+
+	void Clear();
 };
 
 #endif
