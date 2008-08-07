@@ -246,6 +246,13 @@ void CTileEngine::Render()
 			}
 		}
 	}*/
+
+	//Anchor Point Testing
+	/*static int TempImage = 0;
+
+	if(TempImage == 0)
+		TempImage = m_pTM->LoadTexture("SeL_Bullet.PNG", D3DCOLOR_ARGB(255, 255, 0, 255));*/
+
 	for ( int nLayer = 0; nLayer < m_nLayer; nLayer++)
 	{
 		for (int Col = 0; Col < m_nMapHeight; Col++)
@@ -264,8 +271,20 @@ void CTileEngine::Render()
 				rTestCollision.right = rTestCollision.left + 64;
 				rTestCollision.bottom = rTestCollision.top + 32;
 
+				//Tile based Anchor Testing
+				/*RECT rAnchor;
+				rAnchor.left = 0;
+				rAnchor.top = 0;
+				rAnchor.right = 8;
+				rAnchor.bottom = 8;*/
+
 				//m_pD3D->DrawRect(rTestCollision, 255, 255, 255);
+				pTileArray[Row][Col].ptAnchor.x = (((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2)) + (m_nTileWidth / 2);
+				pTileArray[Row][Col].ptAnchor.y = (((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300) + (m_nTileHeight / 2);
+
 				m_pTM->Draw(m_nImageID, ((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2), ((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300, 1, 1, &rTile, 0, 0, 0); 
+				//Anchor Testing
+				//m_pTM->Draw(TempImage, pTileArray[Row][Col].ptAnchor.x, pTileArray[Row][Col].ptAnchor.y);
 			}
 		}
 	}
@@ -417,4 +436,11 @@ void CTileEngine::Clear()
 		delete pTileArray[nDelCount];
 
 	delete [] pTileArray;
+}
+
+POINT CTileEngine::TileToMap(int x, int y)
+{
+	POINT newPoint;
+
+	return newPoint;
 }

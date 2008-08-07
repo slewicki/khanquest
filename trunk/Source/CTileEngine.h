@@ -192,6 +192,7 @@ public:
 	CTile SetDestinationTile(int x, int y);
 	CTile MapToTile(int x, int y, int z);
 	POINT GetTileAnchor();
+	POINT TileToMap(int x, int y);
 
 	void Clear();
 };
