@@ -13,6 +13,8 @@ CTileEngine::CTileEngine()
 	m_pD3D = CSGD_Direct3D::GetInstance();
 	m_nImageID = -1;
 	m_nImageID = CSGD_TextureManager::GetInstance()->LoadTexture("Resource/KQ_GroundTemplate.bmp", D3DCOLOR_XRGB(255, 0, 255));
+	MousePoint.x = 0;
+	MousePoint.y = 0;
 }
 
 CTileEngine::~CTileEngine()
@@ -65,10 +67,10 @@ void CTileEngine::SetTileHeight(int nTileHeight)
 	m_nTileHeight = nTileHeight;
 }
 
-void CTileEngine::SetTile(CTile tile, int x, int y)
-{
-	pTileArray[x][y] = tile;
-}
+//void CTileEngine::SetTile(CTile tile, int x, int y)
+//{
+//	pTileArray[x][y] = tile;
+//}
 
 //Image
 void CTileEngine::SetImageID(int nImageID)
@@ -284,13 +286,13 @@ void CTileEngine::LoadTileSet(char *szFileName)
 	}
 }
 
-CTile CTileEngine::GetTile(int x, int y)
-{
-	int nTileWidth = x / m_nTileWidth;
-	int nTileHeight = y / m_nTileHeight;
-
-	return pTileArray[nTileWidth][nTileHeight];
-}
+//CTile CTileEngine::GetTile(int x, int y)
+//{
+//	int nTileWidth = x / m_nTileWidth;
+//	int nTileHeight = y / m_nTileHeight;
+//
+//	return pTileArray[nTileWidth][nTileHeight];
+//}
 
 void CTileEngine::MouseMapLoad(CMouseMap* pmm, char* szFileName)
 {
@@ -369,10 +371,24 @@ POINT CTileEngine::IsoMouse(int x, int y, int z)
 
 	if(newPoint.x < m_nMapHeight && newPoint.y < m_nMapWidth && newPoint.x >= 0 && newPoint.y >= 0)
 	{
-		return newPoint;
+		MousePoint = newPoint;
 	}
 	//newPoint.x = 0;
 	//newPoint.y = 0;
 
+	return MousePoint;
 	//return newPoint;
+}
+
+CTile CTileEngine::SetDestinationTile(int nX, int nY)
+{
+	return pTileArray[nX][nY];
+}
+
+CTile CTileEngine::MapToTile(int x, int y, int z)
+{
+	POINT newPoint;
+	newPoint = IsoMouse(x, y, z);
+
+	return pTileArray[newPoint.x][newPoint.y];
 }
