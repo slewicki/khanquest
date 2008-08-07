@@ -10,6 +10,7 @@
 CTileEngine::CTileEngine()
 {
 	m_pTM = CSGD_TextureManager::GetInstance();
+	m_pD3D = CSGD_Direct3D::GetInstance();
 	m_nImageID = -1;
 	m_nImageID = CSGD_TextureManager::GetInstance()->LoadTexture("Resource/KQ_GroundTemplate.bmp", D3DCOLOR_XRGB(255, 0, 255));
 }
@@ -250,6 +251,13 @@ void CTileEngine::Render()
 				rTile.right = rTile.left + m_nTileWidth;
 				rTile.bottom = rTile.top + m_nTileHeight;
 
+				RECT rTestCollision;
+				rTestCollision.left = ((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2);
+				rTestCollision.top = ((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300;
+				rTestCollision.right = rTestCollision.left + 64;
+				rTestCollision.bottom = rTestCollision.top + 32;
+
+				//m_pD3D->DrawRect(rTestCollision, 255, 255, 255);
 				m_pTM->Draw(m_nImageID, ((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2), ((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300, 1, 1, &rTile, 0, 0, 0); 
 			}
 		}
@@ -274,6 +282,14 @@ void CTileEngine::LoadTileSet(char *szFileName)
 			m_ptSelectedTile.y = pTileArray[x][y].ptPos.y; 
 		}
 	}
+}
+
+CTile CTileEngine::GetTile(int x, int y)
+{
+	int nTileWidth = x / m_nTileWidth;
+	int nTileHeight = y / m_nTileHeight;
+
+	return pTileArray[nTileWidth][nTileHeight];
 }
 
 void CTileEngine::MouseMapLoad(CMouseMap* pmm, char* szFileName)
@@ -315,4 +331,48 @@ void CTileEngine::MouseMapLoad(CMouseMap* pmm, char* szFileName)
 				pmm->SetDirection(MM_SE, x+y*pmm->GetSize().x);
 		}
 	}
+}
+
+POINT CTileEngine::IsoMouse(int x, int y, int z)
+{
+	static float isoCos = cos(0.46365f);
+	static float isoSin = sin(0.46365f);
+
+	POINT newPoint;
+
+	//newPoint.x = ((x)/isoCos-(y+z)/isoSin)/2;
+	//newPoint.y = (-((x)/isoCos+(y+z)/isoSin))/2;
+
+	//newPoint.x = floor(newPoint.x / 64.0f) * 64.0f;
+	//newPoint.y = floor(newPoint.y / 32.0f) * 32.0f;
+
+	/*newPoint.x = ((newPoint.x-newPoint.y)*isoCos);
+	newPoint.y = (-(z+(newPoint.x+newPoint.y)*isoSin));*/
+
+	/*newPoint.x = (x + z) * isoCos;
+	newPoint.y = (y + z) * isoCos;
+
+	newPoint.x = (floor(newPoint.x / 64.0f) * 64.0f);
+	newPoint.y = (floor(newPoint.y / 32.0f) * 32.0f);*/
+
+	if(x < m_nMapWidth && y < m_nMapHeight)
+	{
+		newPoint.x = (m_nTileWidth * y + m_nTileHeight * x) / (64 * 32) - 10;
+		newPoint.y = (m_nTileWidth * y - m_nTileHeight * x) / (64 * 32);
+
+		for(int i = 0, j = m_nMapHeight - 1; i < m_nMapHeight; i++, j--)
+		{
+			if(j == newPoint.y)
+			{
+				newPoint.y = i;
+				break;
+			}
+		}
+	}
+	else
+	{
+		newPoint.x = 0;
+		newPoint.y = 0;
+	}
+	return newPoint;
 }

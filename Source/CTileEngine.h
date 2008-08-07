@@ -9,6 +9,9 @@
 //	Purpose: TileEngine
 //////////////////////////////////////////////////////////
 #include "CSGD_TextureManager.h"
+#include "CSGD_Direct3D.h"
+
+#include "Math.h"
 
 #include <iostream>
 #include <string>
@@ -41,6 +44,7 @@ class CTileEngine
 {
 private:
 	CSGD_TextureManager* m_pTM;
+	CSGD_Direct3D* m_pD3D;
 	int m_nMapHeight;
 	int m_nMapWidth;
 	int m_nTileHeight;
@@ -54,6 +58,9 @@ private:
 	POINT m_ptWorldPosition;
 	RECT m_rTileRect;
 	int m_nLayer;
+
+	float x, y, z;
+	int isoX, isoY;
 
 	POINT m_ptSelectedTile;
 	int m_nTileSetHeight;
@@ -101,7 +108,7 @@ public:
 	//Tile
 	int GetTileWidth() { return m_nTileWidth; }
 	int GetTileHeight() { return m_nTileHeight; }
-	CTile GetTile(int x, int y) { return pTileArray[x][y]; }
+	CTile GetTile(int x, int y);// { return pTileArray[x][y]; }
 
 	//Image
 	int GetImageID() { return m_nImageID; }
@@ -173,6 +180,8 @@ public:
 	void MouseMapLoad(CMouseMap* pmm, char* szFileName);
 
 	static CTileEngine* GetInstance();
+
+	POINT IsoMouse(int x, int y, int z);
 };
 
 #endif
