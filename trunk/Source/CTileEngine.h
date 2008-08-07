@@ -68,6 +68,10 @@ private:
 	int m_nBitmapSizeHeight;
 	int m_nBitmapSizeWidth;
 
+	//Temp variables
+	POINT MousePoint;
+
+
 public:
 	CTileEngine();
 	~CTileEngine();
@@ -108,7 +112,7 @@ public:
 	//Tile
 	int GetTileWidth() { return m_nTileWidth; }
 	int GetTileHeight() { return m_nTileHeight; }
-	CTile GetTile(int x, int y);// { return pTileArray[x][y]; }
+	//CTile GetTile(int x, int y);// { return pTileArray[x][y]; }
 
 	//Image
 	int GetImageID() { return m_nImageID; }
@@ -150,7 +154,7 @@ public:
 	void SetTileSize(int nTileWidth, int nTileHeight);
 	void SetTileWidth(int nTileWidth);
 	void SetTileHeight(int nTileHeight);
-	void SetTile(CTile tile, int x, int y);
+	//void SetTile(CTile tile, int x, int y);
 
 	//Image
 	void SetImageID(int nImageID);
@@ -182,6 +186,10 @@ public:
 	static CTileEngine* GetInstance();
 
 	POINT IsoMouse(int x, int y, int z);
+
+	CTile GetTile(int x, int y) { return pTileArray[x][y]; }
+	CTile SetDestinationTile(int x, int y);
+	CTile MapToTile(int x, int y, int z);
 };
 
 #endif
