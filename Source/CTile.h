@@ -20,6 +20,7 @@ public:
 	bool bIsPlayerSpawn;
 	bool bIsEnemySpawn;
 	bool bIsCollision;
+	POINT ptAnchor;
 };
 
 #endif
