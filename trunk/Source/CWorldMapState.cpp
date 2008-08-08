@@ -7,9 +7,7 @@
 //////////////////////////////////////////////////////////
 
 #include "CWorldMapState.h"
-
 #include "CGame.h"
-
 #include "CUnitCreationState.h"
 #include "CCityInfoState.h"
 #include "CGamePlayState.h"
@@ -101,7 +99,6 @@ bool CWorldMapState::Input(float fElapsedTime)
 	if(m_bPaused)
 		return true;
 
-
 	// Exit game for now
 	//-----------------------------------------
 	if(m_pDI->GetBufferedKey(DIK_ESCAPE))
@@ -191,10 +188,8 @@ void CWorldMapState::Update(float fElapsedTime)
 
 void CWorldMapState::Render(float fElapsedTime)
 {
-
 	m_pTM->Draw(m_nWorldMapID, 0, 0);
 	POINT ptAttackSymbol;
-
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -203,7 +198,7 @@ void CWorldMapState::Render(float fElapsedTime)
 		if(!m_bPaused && CGame::GetInstance()->IsMouseInRect(m_pCities[i]->GetClickRect()) && m_pCities[i]->IsAttackable())
 		{
 			m_pTM->Draw(m_pCities[i]->GetImageID(), 0, 0, 1, 1, 0, 0, 0, 0, this->m_dwSelectedColor);
-			//			CGame::GetInstance()->SetCursorClick();
+			//CGame::GetInstance()->SetCursorClick();
 			switch(m_pCities[i]->GetOwner())
 			{
 			case XIA_CITY:

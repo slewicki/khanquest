@@ -7,11 +7,8 @@
 //////////////////////////////////////////////////////////
 
 #include "CGamePlayState.h"
-
 #include "CGame.h"
-
 #include "ObjectManager.h"
-
 #include "CWorldMapState.h"
 #include "CPausedState.h"
 #include "HUDState.h"
@@ -41,6 +38,7 @@ void CGamePlayState::Enter(void)
 	m_pWM = CSGD_WaveManager::GetInstance();
 	m_pDI = CSGD_DirectInput::GetInstance();
 	m_pES = CEventSystem::GetInstance();
+	m_pOM = ObjectManager::GetInstance();
 	m_pD3D = CSGD_Direct3D::GetInstance();
 	m_pHUD = CHUDState::GetInstance();
 	m_pES->RegisterClient("Play", ObjectManager::GetInstance());
@@ -49,11 +47,18 @@ void CGamePlayState::Enter(void)
 
 	// Register any Events with the GamePlayState
 	Map.LoadFile("Resource/Levels/KQ_Wawa.level");
+	m_pOM->UpdatePlayerUnitStartTile();
+
 	//---------------------------------
 	m_rVictoryButton.left = 100;
 	m_rVictoryButton.top = 500;
 	m_rVictoryButton.right = 230;
 	m_rVictoryButton.bottom = 560;
+
+	m_rRetreatButton.left = 600;
+	m_rRetreatButton.top = 500;
+	m_rRetreatButton.right = 730;
+	m_rRetreatButton.bottom = 560;
 
 	m_nHUD_ID = m_pTM->LoadTexture("Resource/KQ_HUD.png");
 	m_nButtonID = m_pTM->LoadTexture("Resource/KQ_ScrollButton.png");
@@ -77,6 +82,11 @@ void CGamePlayState::Exit(void)
 
 bool CGamePlayState::Input(float fElapsedTime)
 {
+	// set unit Dest
+	CTile dest = Map->GetTile(4,4);
+	if(m_pDI->GetBufferedKey(DIK_F1))
+		ObjectManager::GetInstance()->UpdatePlayerUnitDestTile(&dest);
+
 	if(m_pDI->GetBufferedKey(DIK_ESCAPE))
 	{
 		m_bIsPaused = !m_bIsPaused;
@@ -220,7 +230,6 @@ void CGamePlayState::Update(float fElapsedTime)
 
 void CGamePlayState::Render(float fElapsedTime)
 {
-
 	// Render units
 	// Temp for map changes
 	//-----------------------------------------------
