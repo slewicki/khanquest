@@ -104,11 +104,11 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 
 	m_pAM = CAnimationManager::GetInstance();
 	m_pAM->BinParse("Resource/KQ_Infantry.dat", "Resource/KQ_Infantry.png");
+	m_pAM->BinParse("Resource/KQ_Axmen.dat", "Resource/KQ_Axmen.png");
 	m_pAM->BinParse("Resource/KQ_Cavalry.dat", "Resource/KQ_Cavalry.png");
 	m_pAM->BinParse("Resource/KQ_Cavalry_Archer.dat", "Resource/KQ_CavalryArcher.png");
-	m_pAM->BinParse("Resource/KQ_Axmen.dat", "Resource/KQ_Axmen.png");
 	m_pAM->BinParse("Resource/KQ_Archer.dat", "Resource/KQ_Archer.png");
-	m_pAM->BinParse("Resource/KQ_War_Elephant.dat", "Resource/KQ_WarElephant.png");
+	m_pAM->BinParse("Resource/KQ_War_Elephant.dat", "Resource/KQ_War_Elephant.png");
 
 	ChangeState(CMainMenuState::GetInstance());
 	return false;

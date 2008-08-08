@@ -28,42 +28,14 @@ CAnimInstance::~CAnimInstance(void)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimInstance::Play(int Direction, int Action)
 {	
-	switch(Action)
-	{
-	case 0:
-		m_szAction = "Move";
-		break;
-	case 1:
-		m_szAction = "Attack";
-		break;
-	case 2:
-		m_szAction = "Dying";
-		break;
-	};
+	string name = GetName(Direction,Action);
 
-	switch(Direction)
-	{
-	case 0:
-		m_szDirection = "North";
-		break;
-	case 1:
-		m_szDirection = "South";
-		break;
-	case 2:
-		m_szDirection = "West";
-		break;
-	case 3:
-		m_szDirection = "North_West";
-		break;
-	case 7:
-		m_szDirection = "South_West";
-		break;
-	};
-
-	string name = m_szAction + "_" + m_szDirection;
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
 		if(name == m_Sheet.GetAnimations()[i].GetName())
+		{
 			m_Sheet.GetAnimations()[i].Play();
+			break;
+		}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 

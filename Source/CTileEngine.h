@@ -9,9 +9,6 @@
 //	Purpose: TileEngine
 //////////////////////////////////////////////////////////
 #include "CSGD_TextureManager.h"
-#include "CSGD_Direct3D.h"
-
-#include "Math.h"
 
 #include <iostream>
 #include <string>
@@ -44,7 +41,6 @@ class CTileEngine
 {
 private:
 	CSGD_TextureManager* m_pTM;
-	CSGD_Direct3D* m_pD3D;
 	int m_nMapHeight;
 	int m_nMapWidth;
 	int m_nTileHeight;
@@ -59,19 +55,11 @@ private:
 	RECT m_rTileRect;
 	int m_nLayer;
 
-	float x, y, z;
-	int isoX, isoY;
-
 	POINT m_ptSelectedTile;
 	int m_nTileSetHeight;
 	int m_nTileSetWidth;
 	int m_nBitmapSizeHeight;
 	int m_nBitmapSizeWidth;
-
-	//Temp variables
-	POINT MousePoint;
-	POINT TileAnchor;
-
 
 public:
 	CTileEngine();
@@ -113,7 +101,7 @@ public:
 	//Tile
 	int GetTileWidth() { return m_nTileWidth; }
 	int GetTileHeight() { return m_nTileHeight; }
-	//CTile GetTile(int x, int y);// { return pTileArray[x][y]; }
+	CTile GetTile(int x, int y) { return pTileArray[x][y]; }
 
 	//Image
 	int GetImageID() { return m_nImageID; }
@@ -155,7 +143,7 @@ public:
 	void SetTileSize(int nTileWidth, int nTileHeight);
 	void SetTileWidth(int nTileWidth);
 	void SetTileHeight(int nTileHeight);
-	//void SetTile(CTile tile, int x, int y);
+	void SetTile(CTile tile, int x, int y);
 
 	//Image
 	void SetImageID(int nImageID);
@@ -185,19 +173,6 @@ public:
 	void MouseMapLoad(CMouseMap* pmm, char* szFileName);
 
 	static CTileEngine* GetInstance();
-
-	POINT IsoMouse(int x, int y, int z);
-
-	CTile GetTile(int x, int y) { return pTileArray[x][y]; }
-	CTile SetDestinationTile(int x, int y);
-	CTile MapToTile(int x, int y, int z);
-	POINT GetTileAnchor();
-	POINT GetAnchor(int x, int y) { return pTileArray[x][y].ptAnchor; }
-	void SetAnchor();
-	bool IsOccupied(int x, int y) { return pTileArray[x][y].bIsOccupied; }
-	void SetOccupy(int x, int y, bool bOccupy);
-
-	void Clear();
 };
 
 #endif
