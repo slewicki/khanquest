@@ -17,7 +17,7 @@ class CAnimInstance
 	string m_szDirection;
 	CAnimationManager* m_pAM;
 	CSheet m_Sheet; 
-
+	bool m_bIsLooping;
 	int x; 
 	int y;
 	string GetName(int Direction,int Action);
@@ -34,7 +34,7 @@ public:
 	int GetY(){return y;}
 	int GetFrameWidth(int Direction, int Action);
 	int GetFrameHeight(int Direction, int Action);
-
+	void SetLooping(bool value);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 // Function: “Play” 
