@@ -96,7 +96,7 @@ bool CCityInfoState::Input(float fElapsedTime)
 	{
 		if(CGame::GetInstance()->IsMouseInRect(m_rInvade))
 		{
-			CGame::GetInstance()->SetCursorClick();
+//			CGame::GetInstance()->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 			{
 				// This function is used only if the city is conquered after battle
@@ -110,7 +110,7 @@ bool CCityInfoState::Input(float fElapsedTime)
 		}
 		else if(CGame::GetInstance()->IsMouseInRect(m_rCancel))
 		{
-			CGame::GetInstance()->SetCursorClick();
+//			CGame::GetInstance()->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 			{
 				m_bRetract = true;

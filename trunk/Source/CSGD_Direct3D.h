@@ -277,6 +277,21 @@ class CSGD_Direct3D
 		//	Purpose:	Draws a rectangle of a given color to the screen.
 		///////////////////////////////////////////////////////////////////
 		void DrawRect(RECT rRt, unsigned char cRed, unsigned char cGreen, unsigned char cBlue);
+		void DrawRect(RECT rRt, D3DCOLOR rColor);
+		
+		///////////////////////////////////////////////////////////////////
+		//	Function:	"DrawPrimitiveRect"
+		//
+		//	Last Modified:		5/25/2006
+		//
+		//	Input:		rRt		The region of the screen to fill.
+		//				rColor	The color to draw the rect with.
+		//
+		//	Return:		void
+		//
+		//	Purpose:	Draws a non-filled in rectangle of a given color to the screen.
+		///////////////////////////////////////////////////////////////////
+		void DrawPrimitiveRect(RECT rRt, D3DCOLOR rColor);
 
 		///////////////////////////////////////////////////////////////////
 		//	Function:	"DrawLine"

@@ -168,7 +168,7 @@ bool CUnitCreationState::Input(float fElapsedTime)
 		if(CGame::GetInstance()->IsMouseInRect(m_rMinusButtons[i]))
 		{
 			// Change cursor to click icon
-			CGame::GetInstance()->SetCursorClick();
+//			CGame::GetInstance()->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 			{
 				if(m_nNumUnits[i]>0)
@@ -181,7 +181,7 @@ bool CUnitCreationState::Input(float fElapsedTime)
 		}
 		if(CGame::GetInstance()->IsMouseInRect(m_rPlusButtons[i]))
 		{
-			CGame::GetInstance()->SetCursorClick();
+//			CGame::GetInstance()->SetCursorClick();
 			if(m_nFoodTotal > 0 && m_nTotalUnits < MAX_UNITS && m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 			{
 				
@@ -197,7 +197,7 @@ bool CUnitCreationState::Input(float fElapsedTime)
 	}
 	if(m_nTotalUnits && CGame::GetInstance()->IsMouseInRect(m_rAttackButton))
 	{
-		CGame::GetInstance()->SetCursorClick();
+//		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
 			
@@ -214,7 +214,7 @@ bool CUnitCreationState::Input(float fElapsedTime)
 	}
 	if(CGame::GetInstance()->IsMouseInRect(m_rBackButton))
 	{
-		CGame::GetInstance()->SetCursorClick();
+//		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
 			// Go back to the map
@@ -270,7 +270,7 @@ void CUnitCreationState::Render(float fElapsedTime)
 		"/Attack Speed: " + FloatToString(m_pPlayerUnitInfo[i].GetAttackSpeed()) +
 		"/Range: " + IntToString(m_pPlayerUnitInfo[i].GetRange()) +
 		"/Movement: " + FloatToString(m_pPlayerUnitInfo[i].GetSpeed()), nPosX, nPosY, .15f, .15f, D3DCOLOR_ARGB(255, 0, 0, 0));
-		m_cFont.DrawTextA("Food: " + IntToString(m_pPlayerUnitInfo[i].GetCost()), nPosX, nPosY - 25, .15f, .15f, D3DCOLOR_ARGB(255, 255, 0, 0));
+		m_cFont.DrawTextA("Food: " + IntToString(m_nUnitCosts[i]), nPosX, nPosY - 25, .15f, .15f, D3DCOLOR_ARGB(255, 255, 0, 0));
 		
 		nPosY += 170;
 	}

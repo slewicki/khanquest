@@ -402,7 +402,51 @@ void CSGD_Direct3D::DrawRect(RECT rRt, unsigned char cRed, unsigned char cGreen,
 
 	m_lpDirect3DDevice->Clear(1, &d3dRect, D3DCLEAR_TARGET, D3DCOLOR_XRGB(cRed, cGreen, cBlue), 1.0f, 0);
 }
+void CSGD_Direct3D::DrawRect(RECT rRt, D3DCOLOR rColor)
+{
+	D3DRECT d3dRect;
+	d3dRect.x1 = rRt.left;
+	d3dRect.y1 = rRt.top;
+	d3dRect.x2 = rRt.right;
+	d3dRect.y2 = rRt.bottom;
 
+	m_lpDirect3DDevice->Clear(1, &d3dRect, D3DCLEAR_TARGET, rColor, 1.0f, 0);
+}
+
+void CSGD_Direct3D::DrawPrimitiveRect(RECT rRt, D3DCOLOR rColor)
+{
+	
+	D3DXVECTOR2 verts[2];
+
+	//Top
+	verts[0].x = (float)rRt.left;
+	verts[0].y = (float)rRt.top;
+	verts[1].x = (float)rRt.right;
+	verts[1].y = (float)rRt.top;
+	m_lpLine->Draw(verts, 2, rColor);
+
+	//Bottom
+	verts[0].x = (float)rRt.left;
+	verts[0].y = (float)rRt.bottom;
+	verts[1].x = (float)rRt.right;
+	verts[1].y = (float)rRt.bottom;
+	m_lpLine->Draw(verts, 2, rColor);
+
+	//Left
+	verts[0].x = (float)rRt.left;
+	verts[0].y = (float)rRt.top;
+	verts[1].x = (float)rRt.left;
+	verts[1].y = (float)rRt.bottom;
+	m_lpLine->Draw(verts, 2, rColor);
+
+	//Right
+	verts[0].x = (float)rRt.right;
+	verts[0].y = (float)rRt.top;
+	verts[1].x = (float)rRt.right;
+	verts[1].y = (float)rRt.bottom;
+	m_lpLine->Draw(verts, 2, rColor);
+
+}
 ///////////////////////////////////////////////////////////////////
 //	Function:	"DrawLine"
 //
@@ -468,4 +512,7 @@ void CSGD_Direct3D::DrawText(char *lpzText, int nX, int nY, unsigned char cRed, 
 	// Release the Device Context.
 	d3dBackBuffer->ReleaseDC(hdc);
 	SAFE_RELEASE(d3dBackBuffer);
+	
 }
+
+

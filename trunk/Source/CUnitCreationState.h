@@ -141,6 +141,5 @@ public:
 	//	Last Modified: July 23, 2008
 	//  Purpose : Modifies the specified type.
 	///////////////////////////////////////////
-	
 
 };

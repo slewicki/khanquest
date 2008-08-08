@@ -13,35 +13,44 @@
 #include "CSGD_TextureManager.h"
 #include "CSGD_WaveManager.h"
 #include "CSGD_DirectInput.h"
+#include "CSGD_Direct3D.h"
 #include "CBitmapFont.h"
 #include "CTileEngine.h"
 #include "CEventSystem.h"
 #include "CCamera.h"
 
+class CHUDState;
 
 class CGamePlayState : public IGameState
 {
 private:
 
 	//	Wrappers
+	CSGD_Direct3D*							m_pD3D;
 	CSGD_WaveManager*						m_pWM;
 	CSGD_TextureManager*					m_pTM;
 	CSGD_DirectInput*						m_pDI;
 	CEventSystem*							m_pES;
 	CCamera*								m_pCamera;
 	bool									m_bIsPaused;
+	bool									m_bButtonDown;
+	CHUDState*								m_pHUD;
 
+	POINT									m_ptBoxLocation;
+	POINT									m_ptCurrentLocation;
+	RECT									m_rSelectionBox;
 	//Engines
 	CTileEngine Map;
 
 	// TEMP BUTTONS FOR DEMO - SHOW WORLD MAP AFTER WIN OR LOSS
 	// REMOVE AFTER DEMO
 	RECT									m_rVictoryButton;
-	RECT									m_rRetreatButton;
 	//------------------------------------------------------
 	int										m_nButtonID;
+	int										m_nHUD_ID;
 	CBitmapFont								m_cFont;
 	int										m_nLucidiaWhiteID;
+	int										m_nTerrorLevel;
 	// Create a vector of list of selected units (CUnit*) and make an accessor
 	// for the HUD to use.  The HUD should disply up to 8 units, the max that can be selected.
 
@@ -60,7 +69,13 @@ private:
 	//	Purpose:	Proper singleton
 	////////////////////////////////////////////
 	~CGamePlayState(void);
-
+	
+	//////////////////////////////////////////////
+	// Function:	"GetSelectionRect"
+	// Last Modified: August 05, 2008
+	// Purpose: Create a Selection box for Multiple Unit selection.
+	//////////////////////////////////////////////
+	RECT GetSelectionRect();
 public:
 	//////////////////////////////////////////////////////
 	//	Function: “GetInstance”
@@ -114,6 +129,7 @@ public:
 	//	Last Modified: July 23, 2008
 	//  Purpose : Returns the specified type.
 	///////////////////////////////////////////
+	int GetTerrorLevel() { return m_nTerrorLevel; }
 	
 
 	///////////////////////////////////////////
@@ -121,7 +137,8 @@ public:
 	//	Last Modified: July 23, 2008
 	//  Purpose : Modifies the specified type.
 	///////////////////////////////////////////
-
+	void SetTerrorLevel(int nTerrorLevel) { m_nTerrorLevel = nTerrorLevel; }
+	void SetPaused(bool bPaused)		  { m_bIsPaused = bPaused; }
 	//////////////////////////////////////////////////////
 	//	Function: “IntToString”
 	//	Last Modified: July 23, 2008
@@ -129,5 +146,4 @@ public:
 	//////////////////////////////////////////////////////
 	string IntToString(int nNum);
 	
-
 };

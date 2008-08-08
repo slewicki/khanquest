@@ -16,6 +16,8 @@
 #include "CBitmapFont.h"
 
 
+#define NUM_CHEATS 3
+
 class CWorldMapState : public IGameState
 {
 private:
@@ -38,8 +40,12 @@ private:
 	int								m_nAttackSymbolID;
 	int								m_nTitleID;
 	int								m_nLucidiaWhiteID;
-
+	
 	bool							m_bPaused;
+	
+	list<char> m_clistInputQueue;
+
+	list<char> m_clistCheatCode[NUM_CHEATS];
 	////////////////////////////////////////////
 	//	Function:	"CWorldMapState(Constructor)"
 	//	Last Modified: July 18, 2008
@@ -122,5 +128,18 @@ public:
 	///////////////////////////////////////////
 
 	
+	//////////////////////////////////////////////////////
+	//	Function: “IntToString”
+	//	Last Modified: July 23, 2008
+	//	Purpose: Helper function, turn float to string
+	//////////////////////////////////////////////////////
+	string IntToString(int nNum);
+	
 
+	
+	//////////////////////////////////////////////////////
+	//	Function: “CheckCheats”
+	//	Last Modified: August 06, 2008
+	//	Purpose: Helper function, returns the int of the cheat that was entered
+	//////////////////////////////////////////////////////
 };

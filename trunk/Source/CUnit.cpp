@@ -1,9 +1,9 @@
 #include "CUnit.h"
 #include "CCamera.h"
-
+#include "CSGD_Direct3D.h"
 CUnit::CUnit(int nType)
 {
-	m_nHP				= 0;			
+	m_nHP				= 100;			
 	m_nAttack			= 0;			
 	m_nRange			= 0;			
 	m_fAttackSpeed		= 0.f;		
@@ -27,6 +27,8 @@ CUnit::CUnit(int nType)
 
 	
 	SetType(nType);
+	m_pHealthBar = new CHealthBar();
+	m_pHealthBar->SetHealth(m_nHP);
 	m_pAnimInstance = new CAnimInstance(GetType());
 	m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 	
@@ -35,6 +37,7 @@ CUnit::CUnit(int nType)
 CUnit::~CUnit(void)
 {
 	delete m_pAnimInstance;
+	delete m_pHealthBar;
 }
 
 void CUnit::Update(float fElapsedTime)
@@ -43,9 +46,9 @@ void CUnit::Update(float fElapsedTime)
 
 	// Set Global Rect
 	//-------------------------------
-	m_rGlobalRect.left = (int)GetPosX();
-	m_rGlobalRect.top = (int)GetPosY();
-	m_rGlobalRect.right = m_rGlobalRect.left + m_pAnimInstance->GetFrameWidth(m_nDirectionFacing, m_nState);
+	m_rGlobalRect.left   = (int)GetPosX();
+	m_rGlobalRect.top    = (int)GetPosY();
+	m_rGlobalRect.right  = m_rGlobalRect.left + m_pAnimInstance->GetFrameWidth(m_nDirectionFacing, m_nState);
 	m_rGlobalRect.bottom = m_rGlobalRect.top + m_pAnimInstance->GetFrameHeight(m_nDirectionFacing, m_nState);
 	//-------------------------------
 
@@ -55,19 +58,52 @@ void CUnit::Update(float fElapsedTime)
 
 	// Set Local Rect
 	//-------------------------------
-	m_rLocalRect.left = ptPos.x;
-	m_rLocalRect.top = ptPos.y;
-	m_rLocalRect.right = m_rGlobalRect.left + m_pAnimInstance->GetFrameWidth(m_nDirectionFacing, m_nState);
-	m_rLocalRect.bottom = m_rGlobalRect.top + m_pAnimInstance->GetFrameHeight(m_nDirectionFacing, m_nState);
+	m_rLocalRect.left   = ptPos.x;
+	m_rLocalRect.top    = ptPos.y;
+	m_rLocalRect.right  = m_rLocalRect.left + m_pAnimInstance->GetFrameWidth(m_nDirectionFacing, m_nState);
+	m_rLocalRect.bottom = m_rLocalRect.top + m_pAnimInstance->GetFrameHeight(m_nDirectionFacing, m_nState);
+
+
+	// Set Health Rect
+	//-------------------------------
+	m_rHealthRect.left = ptPos.x;
+	m_rHealthRect.top = ptPos.y - 10;
+	m_rHealthRect.right = m_rHealthRect.left + 60;
+	m_rHealthRect.bottom = m_rHealthRect.top - 5;
+	int nSwap;
+	if(m_rHealthRect.top > m_rHealthRect.bottom)
+	{
+		nSwap = m_rHealthRect.top;
+		m_rHealthRect.top = m_rHealthRect.bottom;
+		m_rHealthRect.bottom = nSwap;
+	}
+	if(m_rHealthRect.left > m_rHealthRect.right)
+	{
+		nSwap = m_rHealthRect.left;
+		m_rHealthRect.left = m_rHealthRect.right;
+		m_rHealthRect.right = nSwap;
+	}
 	//-------------------------------
 	// AI
 }
 
 void CUnit::Render(float fElapsedTime)
 {
-	
+	if(m_bIsSelected)
+	{
+		CSGD_Direct3D::GetInstance()->SpriteEnd();
+		CSGD_Direct3D::GetInstance()->DeviceEnd();
+
+		CSGD_Direct3D::GetInstance()->DrawPrimitiveRect(m_rLocalRect,D3DCOLOR_ARGB(255,0,255,0));
+
+		CSGD_Direct3D::GetInstance()->DeviceBegin();
+		CSGD_Direct3D::GetInstance()->SpriteBegin();
+
+		m_pHealthBar->Render(m_rHealthRect);
+	}
 	if(CCamera::GetInstance()->IsOnScreen(GetGlobalRect()))
 		m_pAnimInstance->Render();
+	
 }
 
 bool CUnit::CheckCollisions(CBase* pBase)

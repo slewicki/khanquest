@@ -10,7 +10,7 @@
 #pragma once
 #include "CBase.h"
 #include "AnimInstance.h"
-
+#include "CHealthBar.h"
 enum	// Unit States
 {
 	//IDLE,
@@ -51,12 +51,14 @@ private:
 										// get to the destination
 
 	int				m_nState;			// The state the unit is in
-
+	CHealthBar*		m_pHealthBar;
+	
 	CAnimInstance*	m_pAnimInstance;
 
 	RECT			m_rLocalRect;
 	RECT			m_rGlobalRect;
-
+	RECT			m_rHealthRect;
+	
 public:
 	//////////////////////////////////////////////////////
 	//	Function:	"CUnit(Constructor)"
@@ -119,7 +121,7 @@ public:
 		m_nState = nState; 
 		m_pAnimInstance->Play(GetDirection(), GetState());	
 	}
-	
+
 	////////////////////////////////////////
 	//	Function:	"Update"
 	//	Last Modified: July 18, 2008
@@ -142,6 +144,6 @@ public:
 	//////////////////////////////////////////////////////
 	bool CheckCollisions(CBase* pBase);
 
+	inline void DamageUnit() { m_pHealthBar->DamageHealth(10); } 
 	
-
 };
