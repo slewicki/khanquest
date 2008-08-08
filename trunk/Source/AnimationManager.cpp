@@ -169,7 +169,7 @@ void CAnimationManager::BinParse(char* szFileName, char* szImageName)
 #pragma endregion
 
 #pragma region Cavalry
-		if(!strncmp(szUnitType,"Cavalry",nUnitTypeLength))
+		if(!strncmp(szUnitType,"Calvary",nUnitTypeLength))
 		{
 			//set the unit type
 			m_UnitSheets[UNIT_CAVALRY].SetUnitType(UNIT_CAVALRY);

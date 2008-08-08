@@ -46,7 +46,8 @@ void CFactory::CreatePlayerUnit(int nType)
 		xPos = 100;
 	}
 	
-	
+	unit->SetState(MOVEMENT);
+	unit->SetDirection(NORTH);
 	//unit->SetDirection(SOUTH_WEST);
 	//unit->SetState(MOVEMENT);
 	// Register Events

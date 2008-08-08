@@ -10,21 +10,16 @@
 CTileEngine::CTileEngine()
 {
 	m_pTM = CSGD_TextureManager::GetInstance();
-	m_pD3D = CSGD_Direct3D::GetInstance();
 	m_nImageID = -1;
 	m_nImageID = CSGD_TextureManager::GetInstance()->LoadTexture("Resource/KQ_GroundTemplate.bmp", D3DCOLOR_XRGB(255, 0, 255));
-	MousePoint.x = 0;
-	MousePoint.y = 0;
 }
 
 CTileEngine::~CTileEngine()
 {
-	/*for (int nDelCount = 0; nDelCount < m_nMapWidth; nDelCount++)
+	for (int nDelCount = 0; nDelCount < m_nMapWidth; nDelCount++)
 		delete pTileArray[nDelCount];
 
-	delete [] pTileArray;*/
-
-	Clear();
+	delete [] pTileArray;
 }
 
 CTileEngine* CTileEngine::GetInstance()
@@ -69,10 +64,10 @@ void CTileEngine::SetTileHeight(int nTileHeight)
 	m_nTileHeight = nTileHeight;
 }
 
-//void CTileEngine::SetTile(CTile tile, int x, int y)
-//{
-//	pTileArray[x][y] = tile;
-//}
+void CTileEngine::SetTile(CTile tile, int x, int y)
+{
+	pTileArray[x][y] = tile;
+}
 
 //Image
 void CTileEngine::SetImageID(int nImageID)
@@ -136,9 +131,6 @@ void CTileEngine::LoadFile(char* szFileName)
 	char* szBuffer = NULL;
 	string szTest;
 	bool bTempBool;
-
-	if(pTileArray)
-		Clear();
 
 	fin.open(szFileName, std::ios_base::in | std::ios_base::binary);
 
@@ -211,33 +203,19 @@ void CTileEngine::LoadFile(char* szFileName)
 					fin.read((char*)&bTempBool, sizeof(bTempBool));
 					if (bTempBool)
 						pTileArray[x][y].bIsEnemySpawn = true;
-					else
-						pTileArray[x][y].bIsEnemySpawn = false;
 
 					fin.read((char*)&bTempBool, sizeof(bTempBool));
 					if (bTempBool)
 						pTileArray[x][y].bIsPlayerSpawn = true;
-					else
-						pTileArray[x][y].bIsPlayerSpawn = false;
 
 					fin.read((char*)&bTempBool, sizeof(bTempBool));
 					if (bTempBool)
-					{
 						pTileArray[x][y].bIsCollision = true;
-						pTileArray[x][y].bIsOccupied = true;
-					}
-					else
-					{
-						pTileArray[x][y].bIsCollision = false;
-						pTileArray[x][y].bIsOccupied = false;
-					}
 				}
 			}
 		}
 
 		fin.close();
-
-		SetAnchor();
 }
 
 void CTileEngine::Render()
@@ -260,13 +238,6 @@ void CTileEngine::Render()
 			}
 		}
 	}*/
-
-	//Anchor Point Testing
-	/*static int TempImage = 0;
-
-	if(TempImage == 0)
-		TempImage = m_pTM->LoadTexture("SeL_Bullet.PNG", D3DCOLOR_ARGB(255, 255, 0, 255));*/
-
 	for ( int nLayer = 0; nLayer < m_nLayer; nLayer++)
 	{
 		for (int Col = 0; Col < m_nMapHeight; Col++)
@@ -279,54 +250,7 @@ void CTileEngine::Render()
 				rTile.right = rTile.left + m_nTileWidth;
 				rTile.bottom = rTile.top + m_nTileHeight;
 
-				RECT rTestCollision;
-				rTestCollision.left = ((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2);
-				rTestCollision.top = ((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300;
-				rTestCollision.right = rTestCollision.left + 64;
-				rTestCollision.bottom = rTestCollision.top + 32;
-
-				//Tile based Anchor Testing
-				/*RECT rAnchor;
-				rAnchor.left = 0;
-				rAnchor.top = 0;
-				rAnchor.right = 8;
-				rAnchor.bottom = 8;*/
-
-				//m_pD3D->DrawRect(rTestCollision, 255, 255, 255);
-				//pTileArray[Row][Col].ptAnchor.x = (((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2)) + (m_nTileWidth / 2);
-				//pTileArray[Row][Col].ptAnchor.y = (((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300) + (m_nTileHeight / 2);
-
 				m_pTM->Draw(m_nImageID, ((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2), ((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300, 1, 1, &rTile, 0, 0, 0); 
-				//Anchor Testing
-				//m_pTM->Draw(TempImage, pTileArray[Row][Col].ptAnchor.x, pTileArray[Row][Col].ptAnchor.y);
-			}
-		}
-	}
-}
-
-void CTileEngine::SetAnchor()
-{
-	for ( int nLayer = 0; nLayer < m_nLayer; nLayer++)
-	{
-		for (int Col = 0; Col < m_nMapHeight; Col++)
-		{
-			for(int Row = 0; Row < m_nMapWidth; Row++)
-			{
-
-				//Tile based Anchor Testing
-				/*RECT rAnchor;
-				rAnchor.left = 0;
-				rAnchor.top = 0;
-				rAnchor.right = 8;
-				rAnchor.bottom = 8;*/
-
-				//m_pD3D->DrawRect(rTestCollision, 255, 255, 255);
-				pTileArray[Row][Col].ptAnchor.x = (((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2)) + (m_nTileWidth / 2);
-				pTileArray[Row][Col].ptAnchor.y = (((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300) + (m_nTileHeight / 2);
-
-				//m_pTM->Draw(m_nImageID, ((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2), ((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300, 1, 1, &rTile, 0, 0, 0); 
-				//Anchor Testing
-				//m_pTM->Draw(TempImage, pTileArray[Row][Col].ptAnchor.x, pTileArray[Row][Col].ptAnchor.y);
 			}
 		}
 	}
@@ -351,14 +275,6 @@ void CTileEngine::LoadTileSet(char *szFileName)
 		}
 	}
 }
-
-//CTile CTileEngine::GetTile(int x, int y)
-//{
-//	int nTileWidth = x / m_nTileWidth;
-//	int nTileHeight = y / m_nTileHeight;
-//
-//	return pTileArray[nTileWidth][nTileHeight];
-//}
 
 void CTileEngine::MouseMapLoad(CMouseMap* pmm, char* szFileName)
 {
@@ -399,88 +315,4 @@ void CTileEngine::MouseMapLoad(CMouseMap* pmm, char* szFileName)
 				pmm->SetDirection(MM_SE, x+y*pmm->GetSize().x);
 		}
 	}
-}
-
-POINT CTileEngine::IsoMouse(int x, int y, int z)
-{
-	static float isoCos = cos(0.46365f);
-	static float isoSin = sin(0.46365f);
-
-	POINT newPoint;
-
-	//newPoint.x = ((x)/isoCos-(y+z)/isoSin)/2;
-	//newPoint.y = (-((x)/isoCos+(y+z)/isoSin))/2;
-
-	//newPoint.x = floor(newPoint.x / 64.0f) * 64.0f;
-	//newPoint.y = floor(newPoint.y / 32.0f) * 32.0f;
-
-	/*newPoint.x = ((newPoint.x-newPoint.y)*isoCos);
-	newPoint.y = (-(z+(newPoint.x+newPoint.y)*isoSin));*/
-
-	/*newPoint.x = (x + z) * isoCos;
-	newPoint.y = (y + z) * isoCos;
-
-	newPoint.x = (floor(newPoint.x / 64.0f) * 64.0f);
-	newPoint.y = (floor(newPoint.y / 32.0f) * 32.0f);*/
-
-	//OLD SEMI-CORRECT VERSION
-	//newPoint.x = (m_nTileWidth * y + m_nTileHeight * x) / (m_nTileWidth * m_nTileHeight) - 10;
-	//newPoint.y = (m_nTileWidth * y - m_nTileHeight * x) / (m_nTileWidth * m_nTileHeight);
-
-	newPoint.y = (m_nTileWidth * y + m_nTileHeight * x) / (64 * 32) - 10;
-	newPoint.x = (m_nTileWidth * y - m_nTileHeight * x) / (64 * 32);
-
-
-	for(int i = 0, j = m_nMapHeight - 1; i < m_nMapHeight; i++, j--)
-	{
-		if(j == newPoint.x)
-		{
-			newPoint.x = i;
-			break;
-		}
-	}
-
-	if(newPoint.y < m_nMapHeight && newPoint.x < m_nMapWidth && newPoint.y >= 0 && newPoint.x >= 0)
-	{
-		MousePoint = newPoint;
-	}
-	//newPoint.x = 0;
-	//newPoint.y = 0;
-
-	return MousePoint;
-	//return newPoint;
-}
-
-CTile CTileEngine::SetDestinationTile(int nX, int nY)
-{
-	return pTileArray[nX][nY];
-}
-
-CTile CTileEngine::MapToTile(int x, int y, int z)
-{
-	POINT newPoint;
-	newPoint = IsoMouse(x, y, z);
-
-	return pTileArray[newPoint.x][newPoint.y];
-}
-
-POINT CTileEngine::GetTileAnchor()
-{
-	TileAnchor.x = m_nTileWidth / 2;
-	TileAnchor.y = m_nTileHeight / 2;
-
-	return TileAnchor;
-}
-
-void CTileEngine::Clear()
-{
-	for (int nDelCount = 0; nDelCount < m_nMapWidth; nDelCount++)
-		delete pTileArray[nDelCount];
-
-	delete [] pTileArray;
-}
-
-void CTileEngine::SetOccupy(int x, int y, bool bOccupy)
-{
-	pTileArray[x][y].bIsOccupied = bOccupy;
 }

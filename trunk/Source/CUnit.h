@@ -16,10 +16,26 @@ enum	// Unit States
 	//IDLE,
 	MOVEMENT,
 	COMBAT,
+	DYING,
 	RETREAT,
 };
 
-enum { NORTH, SOUTH, EAST, WEST, NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST};
+//= "North";
+//
+//
+//= "South";
+//
+//
+//= "West";
+//
+//
+//= "North_West";
+//
+//
+//= "South_West";
+//
+
+enum { NORTH, SOUTH, WEST, NORTH_WEST, SOUTH_WEST};
 
 class CTile;
 class CUnit : public CBase
@@ -144,6 +160,6 @@ public:
 	//////////////////////////////////////////////////////
 	bool CheckCollisions(CBase* pBase);
 
-	inline void DamageUnit() { m_pHealthBar->DamageHealth(10); } 
+	inline void DamageUnit() { m_pHealthBar->DamageHealth(10); }
 	
 };
