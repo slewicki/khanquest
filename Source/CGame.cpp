@@ -11,7 +11,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "CWorldMapState.h"
+#include "MainMenuState.h"
 #include "irrXML.h"
 using namespace std;
 
@@ -100,7 +100,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	
 	InitCities();
 		
-	SetCursorNormal();
+//	SetCursorNormal();
 
 	m_pAM = CAnimationManager::GetInstance();
 	m_pAM->BinParse("Resource/KQ_Infantry.dat", "Resource/KQ_Infantry.png");
@@ -110,7 +110,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	m_pAM->BinParse("Resource/KQ_Archer.dat", "Resource/KQ_Archer.png");
 	m_pAM->BinParse("Resource/KQ_War_Elephant.dat", "Resource/KQ_WarElephant.png");
 
-	ChangeState(CWorldMapState::GetInstance());
+	ChangeState(CMainMenuState::GetInstance());
 	return false;
 }
 

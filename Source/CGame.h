@@ -155,6 +155,8 @@ public:
 	inline int IsAxmenUnlocked() { return m_chXiaCount>=3; }
 	inline POINT GetMousePos() { return m_ptMousePos; }
 	inline int IsWarElephantUnlocked() { return m_chKCount>=3; }
+	bool GetIsWindowed(){return m_bIsWindowed;}
+	HWND GetWindowHandle(){return m_hWnd;}
 	inline bool IsMouseInRect(RECT rIsMouseHere)
 	{
 		return (m_ptMousePos.x <= rIsMouseHere.right && m_ptMousePos.x >= rIsMouseHere.left &&
@@ -206,12 +208,13 @@ public:
 	inline void SetMusicVolume(int nMusicVolume) {m_nMusicVolume = nMusicVolume; }
 	inline void SetSFXVolume(int nSFXVolume) { m_nSFXVolume = nSFXVolume; }
 	inline void SetWindowOffset(int nX, int nY) { m_ptWindOffset.x = nX; m_ptWindOffset.y = nY; }
-	inline void SetCursorNormal() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_NORMAL))); }
-	inline void SetCursorClick() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_CLICK))); }
-	inline void SetCursorAttack() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_ATTACK))); }
+	//inline void SetCursorNormal() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_NORMAL))); }
+	//inline void SetCursorClick() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_CLICK))); }
+	//inline void SetCursorAttack() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_ATTACK))); }
 	inline void SetSelectedCity(CCity* pSelectedCity) { m_pSelectedCity = pSelectedCity; }
 	inline void SetTotalGold(int nTotalGold) { m_nGold = nTotalGold; }
 
+	inline void AddGold(int nGold)  { m_nGold += nGold; }
 
 
 	///////////////////////////////////////////

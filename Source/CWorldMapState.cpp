@@ -7,10 +7,12 @@
 //////////////////////////////////////////////////////////
 
 #include "CWorldMapState.h"
-#include "CUnitCreationState.h"
-#include "CCityInfoState.h"
+
 #include "CGame.h"
 
+#include "CUnitCreationState.h"
+#include "CCityInfoState.h"
+#include "CGamePlayState.h"
 // Temporary
 #include "CSGD_Direct3d.h"
 
@@ -21,11 +23,27 @@ CWorldMapState::CWorldMapState(void)
 	m_pSelectedCity = NULL;
 	m_nTitleID = -1;
 	m_bPaused = false;
+
+	m_clistCheatCode[0].push_back('k');
+	m_clistCheatCode[0].push_back('h');
+	m_clistCheatCode[0].push_back('a');
+	m_clistCheatCode[0].push_back('n');
+
+	m_clistCheatCode[1].push_back('m');
+	m_clistCheatCode[1].push_back('e');
+	m_clistCheatCode[1].push_back('a');
+	m_clistCheatCode[1].push_back('t');
+
+	m_clistCheatCode[2].push_back('l');
+	m_clistCheatCode[2].push_back('o');
+	m_clistCheatCode[2].push_back('r');
+	m_clistCheatCode[2].push_back('d');
+
 }
 
 CWorldMapState::~CWorldMapState(void)
 {
-	
+
 }
 
 
@@ -60,7 +78,6 @@ void CWorldMapState::Enter(void)
 			}
 		}
 	}
-
 	// Load textures
 	m_nWorldMapID = m_pTM->LoadTexture("Resource/KQ_WorldMap.png");
 	m_nAttackSymbolID = m_pTM->LoadTexture("Resource/KQ_AttackSymbol.png");
@@ -71,6 +88,7 @@ void CWorldMapState::Enter(void)
 
 void CWorldMapState::Exit(void)
 {
+
 	m_pTM->ReleaseTexture(m_nWorldMapID);
 	m_pTM->ReleaseTexture(m_nAttackSymbolID);
 	m_pTM->ReleaseTexture(m_nTitleID);
@@ -83,10 +101,39 @@ bool CWorldMapState::Input(float fElapsedTime)
 	if(m_bPaused)
 		return true;
 
+
 	// Exit game for now
 	//-----------------------------------------
 	if(m_pDI->GetBufferedKey(DIK_ESCAPE))
 		return false;
+	//-----------------------------------------
+
+	// Cheat Codes
+	//-----------------------------------------
+	char keyPressed = m_pDI->CheckBufferedKeys();
+
+	if(keyPressed)
+	{
+		m_clistInputQueue.push_back(keyPressed);
+
+		if(m_clistInputQueue.size() > 4) 
+			m_clistInputQueue.pop_front();
+
+		if(m_clistInputQueue == m_clistCheatCode[0])
+		{
+			CGamePlayState::GetInstance()->SetTerrorLevel(100);
+		}
+		else if(m_clistInputQueue == m_clistCheatCode[1])
+		{
+		}
+		else if (m_clistInputQueue == m_clistCheatCode[2])
+		{
+			CGame::GetInstance()->AddGold(500);
+		}
+	}
+	//-----------------------------------------
+
+	// Mouse Input
 	//-----------------------------------------
 
 	if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
@@ -101,9 +148,34 @@ bool CWorldMapState::Input(float fElapsedTime)
 				CGame::GetInstance()->SetSelectedCity(m_pCities[i]);
 				m_bPaused = true;
 
-				// Push on CCityInfoState
-				CGame::GetInstance()->PushState(CCityInfoState::GetInstance());
-				break;
+				if(CGamePlayState::GetInstance()->GetTerrorLevel() < 100)
+				{
+					// Push on CCityInfoState
+					CGame::GetInstance()->PushState(CCityInfoState::GetInstance());
+					break;
+				}
+				else
+				{
+					CGame::GetInstance()->SetCityConquered(m_pCities[i]);
+					
+					m_pPlayerOwnedCities.clear();
+					for (unsigned int i = 0; i < 10; i++)
+					{
+						if(m_pCities[i]->GetOwner() == PLAYER_CITY)
+						{
+							m_pPlayerOwnedCities.push_back(m_pCities[i]);
+							vector<int> vAdjacent = m_pCities[i]->GetAdjacent();
+							for (unsigned int i = 0; i < vAdjacent.size(); i++)
+							{
+								if(m_pCities[vAdjacent[i]]->GetOwner() != PLAYER_CITY)
+									m_pCities[vAdjacent[i]]->SetAttackable(true);
+							}
+						}
+					}
+					CGamePlayState::GetInstance()->SetTerrorLevel(0);
+					m_bPaused = false;
+					break;
+				}
 			}
 		}
 	}
@@ -121,9 +193,8 @@ void CWorldMapState::Render(float fElapsedTime)
 {
 
 	m_pTM->Draw(m_nWorldMapID, 0, 0);
-
 	POINT ptAttackSymbol;
-	
+
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -132,7 +203,7 @@ void CWorldMapState::Render(float fElapsedTime)
 		if(!m_bPaused && CGame::GetInstance()->IsMouseInRect(m_pCities[i]->GetClickRect()) && m_pCities[i]->IsAttackable())
 		{
 			m_pTM->Draw(m_pCities[i]->GetImageID(), 0, 0, 1, 1, 0, 0, 0, 0, this->m_dwSelectedColor);
-			CGame::GetInstance()->SetCursorClick();
+			//			CGame::GetInstance()->SetCursorClick();
 			switch(m_pCities[i]->GetOwner())
 			{
 			case XIA_CITY:
@@ -164,9 +235,19 @@ void CWorldMapState::Render(float fElapsedTime)
 	string szGold = "Gold:";
 	string szGoldVal = szG;
 	string szFoodVal = szF;
-	m_cFont.DrawTextA(szFood + szFoodVal, 50, 500, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+
+	string szTerrorLevel = "Terror: ";
+	m_cFont.DrawTextA(szTerrorLevel + IntToString(CGamePlayState::GetInstance()->GetTerrorLevel()) + "%", 50,550, 0.2f,0.2f, D3DCOLOR_ARGB(255,255,0,0));
+	m_cFont.DrawTextA(szFood + szFoodVal, 50, 500, .2f, .2f, D3DCOLOR_ARGB(255, 120, 60, 0));
 	m_cFont.DrawTextA(szGold + szGoldVal, 55, 525, .2f, .2f, D3DCOLOR_ARGB(255, 255, 255, 0));
 
 	//------------------------------------
 
+}
+string CWorldMapState::IntToString(int nNum)
+{
+	char szNumVal[10];
+	itoa(nNum, szNumVal, 10);
+	string szNum = szNumVal;
+	return szNum;
 }

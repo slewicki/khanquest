@@ -7,6 +7,9 @@
 /////////////////////////////////////////////////
 #include "ObjectManager.h"
 #include "Sheet.h"
+#include "CGamePlayState.h"
+#include "CEventSystem.h"
+#include "HUDState.h"
 
 ObjectManager::ObjectManager(void)
 {
@@ -122,4 +125,43 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 		
 
 	}
+}
+void ObjectManager::SetSelectedUnit(RECT toCheck)
+{
+	RECT rIntersect;
+	int nSelectedAmount = 0;
+	for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
+	{
+
+		if(IntersectRect(&rIntersect, &static_cast<CUnit*>(m_vObjectList[i])->GetLocalRect(), &toCheck))
+		{
+			static_cast<CUnit*>(m_vObjectList[i])->SetSelected(true);
+			++nSelectedAmount;
+
+		}
+		else
+		{
+			static_cast<CUnit*>(m_vObjectList[i])->SetSelected(false);
+		}
+		if(nSelectedAmount > 8)
+		{
+			for(unsigned int j = i; j < m_vObjectList.size(); j++)
+				static_cast<CUnit*>(m_vObjectList[j])->SetSelected(false);
+			
+			break;
+		}
+
+	}
+	CHUDState::GetInstance()->UpdateSelected();
+}
+
+vector<CBase*> ObjectManager::GetSelectedUnits()
+{
+	vector<CBase*> vSelectedUnits;
+	for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
+	{
+		if(static_cast<CUnit*>(m_vObjectList[i])->IsSelected())
+			vSelectedUnits.push_back(m_vObjectList[i]);
+	}	
+	return vSelectedUnits;
 }
