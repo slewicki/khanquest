@@ -222,9 +222,15 @@ void CTileEngine::LoadFile(char* szFileName)
 
 					fin.read((char*)&bTempBool, sizeof(bTempBool));
 					if (bTempBool)
+					{
 						pTileArray[x][y].bIsCollision = true;
+						pTileArray[x][y].bIsOccupied = true;
+					}
 					else
-						pTileArray[x][y].bIsEnemySpawn = false;
+					{
+						pTileArray[x][y].bIsCollision = false;
+						pTileArray[x][y].bIsOccupied = false;
+					}
 				}
 			}
 		}
