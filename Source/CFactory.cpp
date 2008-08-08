@@ -19,8 +19,8 @@ CFactory::~CFactory(void)
 
 void CFactory::CreatePlayerUnit(int nType)
 {
-	static float xPos = 100;
-	static float yPos = 50;
+	//static float xPos = 100;
+	//static float yPos = 50;
 	CUnit* unit = new CUnit(nType);
 
 	// Use default shallow copy since no dynamic info in creation
@@ -30,21 +30,22 @@ void CFactory::CreatePlayerUnit(int nType)
 	unit->SetHP(temp.GetHP());
 	unit->SetRange(temp.GetRange());
 	unit->SetSpeed(temp.GetSpeed());
+	
 	// For now give it a default position
-	unit->SetPosX(xPos);
-	unit->SetPosY(yPos);
-	// Row by Row
-	if(xPos >= 700.f)
-	{
-		xPos = 60.f;
-		yPos += 60.f;
-	}
-	xPos+=100.f;
-	if(yPos >= 500)
-	{
-		yPos = 50;
-		xPos = 100;
-	}
+	//unit->SetPosX(xPos);
+	//unit->SetPosY(yPos);
+	//// Row by Row
+	//if(xPos >= 700.f)
+	//{
+	//	xPos = 60.f;
+	//	yPos += 60.f;
+	//}
+	//xPos+=100.f;
+	//if(yPos >= 500)
+	//{
+	//	yPos = 50;
+	//	xPos = 100;
+	//}
 	
 	unit->SetState(MOVEMENT);
 	unit->SetDirection(NORTH);

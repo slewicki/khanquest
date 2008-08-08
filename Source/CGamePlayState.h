@@ -18,6 +18,7 @@
 #include "CTileEngine.h"
 #include "CEventSystem.h"
 #include "CCamera.h"
+#include "ObjectManager.h"
 
 class CHUDState;
 
@@ -32,6 +33,8 @@ private:
 	CSGD_DirectInput*						m_pDI;
 	CEventSystem*							m_pES;
 	CCamera*								m_pCamera;
+	ObjectManager*							m_pOM;
+
 	bool									m_bIsPaused;
 	bool									m_bButtonDown;
 	CHUDState*								m_pHUD;

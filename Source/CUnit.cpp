@@ -85,19 +85,33 @@ void CUnit::Update(float fElapsedTime)
 	}
 	//-------------------------------
 	// AI
+	if ( (m_pDestinationTile != NULL && m_pCurrentTile->ptAnchor.x != m_pDestinationTile->ptAnchor.x ) && ( m_pCurrentTile->ptAnchor.y != m_pDestinationTile->ptAnchor.y) )
+	{
+		if ( m_pCurrentTile->ptAnchor.x > m_pDestinationTile->ptAnchor.x)
+			SetPosY( GetPosX() + GetVelX() );
+		else if (m_pCurrentTile->ptAnchor.x < m_pDestinationTile->ptAnchor.x)
+			SetPosY( GetPosX() - GetVelX() );
+
+		if (m_pCurrentTile->ptAnchor.y > m_pDestinationTile->ptAnchor.y)
+			SetPosY( GetPosY() + GetVelY() );
+		else if (m_pCurrentTile->ptAnchor.x < m_pDestinationTile->ptAnchor.y)
+			SetPosY( GetPosY() - GetVelY() );
+	}
+	//-------------------------------
+
 }
 
 void CUnit::Render(float fElapsedTime)
 {
 	if(m_bIsSelected)
 	{
-		CSGD_Direct3D::GetInstance()->SpriteEnd();
-		CSGD_Direct3D::GetInstance()->DeviceEnd();
+		//CSGD_Direct3D::GetInstance()->SpriteEnd();
+		//CSGD_Direct3D::GetInstance()->DeviceEnd();
 
 		CSGD_Direct3D::GetInstance()->DrawPrimitiveRect(m_rLocalRect,D3DCOLOR_ARGB(255,0,255,0));
 
-		CSGD_Direct3D::GetInstance()->DeviceBegin();
-		CSGD_Direct3D::GetInstance()->SpriteBegin();
+		//CSGD_Direct3D::GetInstance()->DeviceBegin();
+		//CSGD_Direct3D::GetInstance()->SpriteBegin();
 
 		m_pHealthBar->Render(m_rHealthRect);
 	}

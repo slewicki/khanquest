@@ -5,7 +5,6 @@
 //
 //	Purpose: To contain functionality of the world map state
 //////////////////////////////////////////////////////////
-
 #pragma once
 #include <windows.h>
 #include "IGameState.h"
@@ -14,7 +13,6 @@
 #include "CSGD_DirectInput.h"
 #include "CCity.h"
 #include "CBitmapFont.h"
-
 
 #define NUM_CHEATS 3
 
@@ -43,9 +41,10 @@ private:
 	
 	bool							m_bPaused;
 	
+	// cheat codes
 	list<char> m_clistInputQueue;
-
 	list<char> m_clistCheatCode[NUM_CHEATS];
+
 	////////////////////////////////////////////
 	//	Function:	"CWorldMapState(Constructor)"
 	//	Last Modified: July 18, 2008
@@ -135,11 +134,10 @@ public:
 	//////////////////////////////////////////////////////
 	string IntToString(int nNum);
 	
-
-	
 	//////////////////////////////////////////////////////
 	//	Function: “CheckCheats”
 	//	Last Modified: August 06, 2008
 	//	Purpose: Helper function, returns the int of the cheat that was entered
 	//////////////////////////////////////////////////////
+
 };
