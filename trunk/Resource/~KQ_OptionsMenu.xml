@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Menu Name ="Options">
+      <Image>
+        <ImageLocationX>0</ImageLocationX>
+        <ImageLocationY>0</ImageLocationY>
+        <ImageName>Resource/PlaceHolder.png</ImageName>
+        <SizeX>800</SizeX>
+        <SizeY>600</SizeY>
+      </Image>
+
+      <Cursor>
+          <CursorName>Resource/KQ_AttackSymbol.png</CursorName>
+          <CursorScaleX>.5</CursorScaleX>
+          <CursorScaleY>.5</CursorScaleY>
+      </Cursor>
+
+      <NumButtons>5</NumButtons>
+          <Button>
+                  <ButtonPositionX>350</ButtonPositionX>
+                  <ButtonPositionY>50</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>255</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.3</TextScaleX>
+                  <TextScaleY>.3</TextScaleY>
+                  <ButtonText>Options</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>200</ButtonPositionX>
+                  <ButtonPositionY>150</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>100</TextColorR>
+                  <TextColorG>100</TextColorG>
+                  <TextColorB>100</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>1</Action>
+                  <ButtonText>Music Volume</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>200</ButtonPositionX>
+                  <ButtonPositionY>200</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>100</TextColorR>
+                  <TextColorG>100</TextColorG>
+                  <TextColorB>100</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>2</Action>
+                  <ButtonText>SFX Volume</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>200</ButtonPositionX>
+                  <ButtonPositionY>250</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>100</TextColorR>
+                  <TextColorG>100</TextColorG>
+                  <TextColorB>100</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>3</Action>
+                  <ButtonText>Back</ButtonText>
+          </Button>
+                    <Button>
+                  <ButtonPositionX>200</ButtonPositionX>
+                  <ButtonPositionY>300</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>255</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.3</TextScaleX>
+                  <TextScaleY>.3</TextScaleY>
+                  <ButtonText>Test</ButtonText>
+          </Button>
+</Menu>
