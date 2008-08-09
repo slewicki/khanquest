@@ -28,7 +28,7 @@ CUnit::CUnit(int nType)
 	SetType(nType);
 	m_pHealthBar = new CHealthBar();
 	m_pHealthBar->SetHealth(m_nHP);
-	m_pCAI = NULL;
+//	m_pCAI = NULL;
 	m_pAnimInstance = new CAnimInstance(GetType());
 	m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 	
