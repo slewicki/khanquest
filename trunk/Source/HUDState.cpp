@@ -49,7 +49,7 @@ void CHUDState::Render(float fElapsedTime)
 				InfIcon.top = 0; InfIcon.left = 200; InfIcon.right = 250; InfIcon.bottom = 50;
 				m_pTM->Draw(m_nIconID,225 + (i * 50),475,.75f,.75f,&InfIcon);
 				char idk[64];
-				sprintf(idk,"%d",m_vUnits[i]->GetHP());
+				sprintf_s(idk,"%d",m_vUnits[i]->GetHP());
 				m_BF.DrawTextA(idk, 225 + (i * 50), 500,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
 			}
 			break;
@@ -59,7 +59,7 @@ void CHUDState::Render(float fElapsedTime)
 				CavIcon.top = 100; CavIcon.left = 0; CavIcon.right = 50; CavIcon.bottom = 150;
 				m_pTM->Draw(m_nIconID,225 + (i * 50),475,.75f,.75f,&CavIcon);		
 				char idk[64];
-				sprintf(idk,"%d",m_vUnits[i]->GetHP());
+				sprintf_s(idk,"%d",m_vUnits[i]->GetHP());
 				m_BF.DrawTextA(idk, 225 + (i * 50), 500,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
 			}
 			break;
@@ -69,7 +69,7 @@ void CHUDState::Render(float fElapsedTime)
 				CAIcon.top = 100; CAIcon.left = 200; CAIcon.right = 250; CAIcon.bottom = 150;
 				m_pTM->Draw(m_nIconID,225 + (i * 50),475,.75f,.75f,&CAIcon);		
 				char idk[64];
-				sprintf(idk,"%d",m_vUnits[i]->GetHP());
+				sprintf_s(idk,"%d",m_vUnits[i]->GetHP());
 				m_BF.DrawTextA(idk, 225 + (i * 50), 500,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
 			}
 			break;
@@ -79,7 +79,7 @@ void CHUDState::Render(float fElapsedTime)
 				AXIcon.top = 0; AXIcon.left = 0; AXIcon.right = 50; AXIcon.bottom = 50;
 				m_pTM->Draw(m_nIconID,225 + (i * 50),475,.75f,.75f,&AXIcon);	
 				char idk[64];
-				sprintf(idk,"%d",m_vUnits[i]->GetHP());
+				sprintf_s(idk,"%d",m_vUnits[i]->GetHP());
 				m_BF.DrawTextA(idk, 225 + (i * 50), 500,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
 			}
 			break;
@@ -89,7 +89,7 @@ void CHUDState::Render(float fElapsedTime)
 				ArcIcon.top = 0; ArcIcon.left = 100; ArcIcon.right = 150; ArcIcon.bottom = 50;
 				m_pTM->Draw(m_nIconID,225 + (i * 50),475,.75f,.75f,&ArcIcon);	
 				char idk[64];
-				sprintf(idk,"%d",m_vUnits[i]->GetHP());
+				sprintf_s(idk,"%d",m_vUnits[i]->GetHP());
 				m_BF.DrawTextA(idk, 225 + (i * 50), 500,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
 			}
 			break;
@@ -99,7 +99,7 @@ void CHUDState::Render(float fElapsedTime)
 				EleIcon.top = 100; EleIcon.left = 100; EleIcon.right = 150; EleIcon.bottom = 150;
 				m_pTM->Draw(m_nIconID,225 + (i * 50),475,.75f,.75f,&EleIcon);	
 				char idk[64];
-				sprintf(idk,"%d",m_vUnits[i]->GetHP());
+				sprintf_s(idk,"%d",m_vUnits[i]->GetHP());
 				m_BF.DrawTextA(idk, 225 + (i * 50), 500,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
 			}
 			break;
@@ -118,6 +118,6 @@ void CHUDState::UpdateSelected()
 		m_vUnits.clear();
 		return;
 	}
-	for(int i = 0; i < ObjectManager::GetInstance()->GetSelectedUnits().size(); i++)
+	for(unsigned int i = 0; i < ObjectManager::GetInstance()->GetSelectedUnits().size(); i++)
 		m_vUnits.push_back(static_cast<CUnit*>(ObjectManager::GetInstance()->GetSelectedUnits()[i]));
 }

@@ -13,7 +13,7 @@ CUnit::CUnit(int nType)
 
 	m_nBonus			= 0;			
 
-	m_bIsPlayerUnit		= false;	
+	m_bIsPlayerUnit		= true;	
 	m_bIsGrouped		= false;		
 	m_bIsAlive			= true;
 	m_bIsSelected		= false;		
@@ -85,7 +85,7 @@ void CUnit::Update(float fElapsedTime)
 			m_rHealthRect.left = m_rHealthRect.right;
 			m_rHealthRect.right = nSwap;
 		}
-		if(m_pHealthBar->GetHealth() <= 0)
+		if(GetHP() <= 0)
 		{
 			m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 			m_bIsAlive = false;
@@ -96,6 +96,19 @@ void CUnit::Update(float fElapsedTime)
 	}
 	//-------------------------------
 	// AI
+	if ( (m_pDestinationTile != NULL && m_pCurrentTile->ptLocalAnchor.x != m_pDestinationTile->ptLocalAnchor.x ) && ( m_pCurrentTile->ptLocalAnchor.y != m_pDestinationTile->ptLocalAnchor.y) )
+	{
+		if ( m_pCurrentTile->ptLocalAnchor.x > m_pDestinationTile->ptLocalAnchor.x)
+			SetPosY( GetPosX() + GetVelX() );
+		else if (m_pCurrentTile->ptLocalAnchor.x < m_pDestinationTile->ptLocalAnchor.x)
+			SetPosY( GetPosX() - GetVelX() );
+
+		if (m_pCurrentTile->ptLocalAnchor.y > m_pDestinationTile->ptLocalAnchor.y)
+			SetPosY( GetPosY() + GetVelY() );
+		else if (m_pCurrentTile->ptLocalAnchor.x < m_pDestinationTile->ptLocalAnchor.y)
+			SetPosY( GetPosY() - GetVelY() );
+	}
+	//-------------------------------
 }
 
 void CUnit::Render(float fElapsedTime)
