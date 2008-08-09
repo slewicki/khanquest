@@ -37,13 +37,9 @@ private:
 	int m_nTileHeight;				//Tile Height
 	int m_nTileWidth;				//Tile Width
 	int m_nImageID;					//Image loaded through texture manager
-	//string m_szFileName;
 	string m_szImagePath;			//Name of the image to load
 	string m_szTileType;			//Type of the tile
 	CTile** pTileArray;				//2D array of tiles that make a map
-	//tTile pTileArray[4][4];
-	//POINT m_ptWorldPosition;
-	//RECT m_rTileRect;
 	int m_nLayer;					//Number of Map Layers
 	POINT m_ptMousePoint;			//Mouse Location
 
@@ -66,13 +62,6 @@ public:
 	/////////////////////////////////
 	void Render(int nCamPosX, int nCamPosY);
 
-	/////////////////////////////////
-	//	Function:	"Update"
-	//
-	//	Purpose: Updates values based on time
-	/////////////////////////////////
-	//void LoadTileSet(char* szFileName);
-
 	//Accessors
 	//Map
 #pragma region Map_Accessor
@@ -83,6 +72,12 @@ public:
 	/////////////////////////////////
 	int GetMapWidth() { return m_nMapWidth; }
 	int GetMapHeight() { return m_nMapHeight; }
+
+	//Tile
+	int GetTileWidth() { return m_nTileWidth; }
+	int GetTileHeight() { return m_nTileHeight; }
+
+	//Image
 	string GetImagePath() { return m_szImagePath; }
 #pragma endregion Map_Accessor
 
