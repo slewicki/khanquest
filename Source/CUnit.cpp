@@ -2,6 +2,8 @@
 #include "CCamera.h"
 #include "CSGD_Direct3D.h"
 #include "SGD_Math.h"
+
+
 CUnit::CUnit(int nType)
 {
 	m_nHP				= 100;			
@@ -18,19 +20,15 @@ CUnit::CUnit(int nType)
 	m_bIsAlive			= true;
 	m_bIsSelected		= false;		
 
-	//m_pCurrentTile		= NULL;		
-
-	//m_pDestinationTile	= NULL; 
-
 	m_pTarget			= NULL;		
 
 	m_nDirectionFacing	= SOUTH_WEST; 
 	m_nState			= IDLE;	
-
 	
 	SetType(nType);
 	m_pHealthBar = new CHealthBar();
 	m_pHealthBar->SetHealth(m_nHP);
+	m_pCAI = NULL;
 	m_pAnimInstance = new CAnimInstance(GetType());
 	m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 	
@@ -96,15 +94,18 @@ void CUnit::Update(float fElapsedTime)
 		}
 	}
 	//-------------------------------
-	// AI movment
+	// AI movement
 	if ( GetPosX() == GetDestTile().ptLocalAnchor.x  && GetPosY() == GetDestTile().ptLocalAnchor.y  )
 	{
 		SetCurrentTile( GetDestTile() );
 		SetDestTile( GetCurrentTile() );
-		SetState(DYING);
+		SetState(MOVEMENT);
 	}
 	else if( GetState() == MOVEMENT )
 	{
+		//m_pCAI = CAISystem::GetInstance();
+		//m_pCAI->FindPath(m_pCurrentTile, m_pDestinationTile);
+
 		if ( GetPosX() >  GetDestTile().ptLocalAnchor.x)
 			SetPosX(GetPosX() - GetVelX() );
 
@@ -117,7 +118,6 @@ void CUnit::Update(float fElapsedTime)
 		else if ( GetPosY() <  GetDestTile().ptLocalAnchor.y)
 			SetPosY( GetPosY() +  GetVelY() );
 	}
-
 	//-------------------------------
 }
 

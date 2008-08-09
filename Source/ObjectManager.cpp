@@ -53,7 +53,7 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 	for (int i = 0; i < m_vObjectList.size(); ++i)
 	{
 		m_vObjectList[i]->Update(fElapsedTime);
-		MoveUnit(i);
+		//MoveSelectedUnits()
 	}
 	pPE->Update(fElapsedTime);
 }
@@ -236,30 +236,4 @@ void ObjectManager::MoveSelectedUnits(POINT pMousePos)
 		}
 	}	
 }
-void ObjectManager::MoveUnit(int i)
-{
-	//for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
-	////{
-	//	if ( (static_cast<CUnit*>(m_vObjectList[i])->GetPosX() == static_cast<CUnit*>(m_vObjectList[i])->GetDestTile().ptLocalAnchor.x ) 
-	//		&& (static_cast<CUnit*>(m_vObjectList[i])->GetPosY() == static_cast<CUnit*>(m_vObjectList[i])->GetDestTile().ptLocalAnchor.y ) )
-	//	{
-	//		static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile( static_cast<CUnit*>(m_vObjectList[i])->GetDestTile() );
-	//		static_cast<CUnit*>(m_vObjectList[i])->SetDestTile( static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile() );
-	//		//			static_cast<CUnit*>(m_vObjectList[i])->SetState(IDLE);
-	//	}
-	//	else if( static_cast<CUnit*>(m_vObjectList[i])->GetState() == MOVEMENT )
-	//	{
-	//		if ( static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile().ptLocalAnchor.x >  static_cast<CUnit*>(m_vObjectList[i])->GetDestTile().ptLocalAnchor.x)
-	//			static_cast<CUnit*>(m_vObjectList[i])->SetPosX( static_cast<CUnit*>(m_vObjectList[i])->GetPosX() -  static_cast<CUnit*>(m_vObjectList[i])->GetVelX() );
 
-	//		else if ( static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile().ptLocalAnchor.x <  static_cast<CUnit*>(m_vObjectList[i])->GetDestTile().ptLocalAnchor.x)
-	//			static_cast<CUnit*>(m_vObjectList[i])->SetPosX( static_cast<CUnit*>(m_vObjectList[i])->GetPosX() +  static_cast<CUnit*>(m_vObjectList[i])->GetVelX() );
-
-	//		if ( static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile().ptLocalAnchor.y >  static_cast<CUnit*>(m_vObjectList[i])->GetDestTile().ptLocalAnchor.y)
-	//			static_cast<CUnit*>(m_vObjectList[i])->SetPosY( static_cast<CUnit*>(m_vObjectList[i])->GetPosY() - static_cast<CUnit*>(m_vObjectList[i])->GetVelY() );
-
-	//		else if (static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile().ptLocalAnchor.y <  static_cast<CUnit*>(m_vObjectList[i])->GetDestTile().ptLocalAnchor.y)
-	//			static_cast<CUnit*>(m_vObjectList[i])->SetPosY( static_cast<CUnit*>(m_vObjectList[i])->GetPosY() +  static_cast<CUnit*>(m_vObjectList[i])->GetVelY() );
-	//	}
-	//}
-}
