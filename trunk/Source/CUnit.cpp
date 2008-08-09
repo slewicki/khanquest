@@ -1,6 +1,7 @@
 #include "CUnit.h"
 #include "CCamera.h"
 #include "CSGD_Direct3D.h"
+#include "SGD_Math.h"
 CUnit::CUnit(int nType)
 {
 	m_nHP				= 100;			
@@ -14,7 +15,7 @@ CUnit::CUnit(int nType)
 
 	m_bIsPlayerUnit		= false;	
 	m_bIsGrouped		= false;		
-
+	m_bIsAlive			= true;
 	m_bIsSelected		= false;		
 
 	m_pDestinationTile	= NULL; 
@@ -62,65 +63,101 @@ void CUnit::Update(float fElapsedTime)
 	m_rLocalRect.top    = ptPos.y;
 	m_rLocalRect.right  = m_rLocalRect.left + m_pAnimInstance->GetFrameWidth(m_nDirectionFacing, m_nState);
 	m_rLocalRect.bottom = m_rLocalRect.top + m_pAnimInstance->GetFrameHeight(m_nDirectionFacing, m_nState);
-
-
-	// Set Health Rect
-	//-------------------------------
-	m_rHealthRect.left = ptPos.x;
-	m_rHealthRect.top = ptPos.y - 10;
-	m_rHealthRect.right = m_rHealthRect.left + 60;
-	m_rHealthRect.bottom = m_rHealthRect.top - 5;
-	int nSwap;
-	if(m_rHealthRect.top > m_rHealthRect.bottom)
+	
+	if(m_bIsAlive)
 	{
-		nSwap = m_rHealthRect.top;
-		m_rHealthRect.top = m_rHealthRect.bottom;
-		m_rHealthRect.bottom = nSwap;
-	}
-	if(m_rHealthRect.left > m_rHealthRect.right)
-	{
-		nSwap = m_rHealthRect.left;
-		m_rHealthRect.left = m_rHealthRect.right;
-		m_rHealthRect.right = nSwap;
+		// Set Health Rect
+		//-------------------------------
+		m_rHealthRect.left = ptPos.x;
+		m_rHealthRect.top = ptPos.y - 10;
+		m_rHealthRect.right = m_rHealthRect.left + 60;
+		m_rHealthRect.bottom = m_rHealthRect.top - 5;
+		int nSwap;
+		if(m_rHealthRect.top > m_rHealthRect.bottom)
+		{
+			nSwap = m_rHealthRect.top;
+			m_rHealthRect.top = m_rHealthRect.bottom;
+			m_rHealthRect.bottom = nSwap;
+		}
+		if(m_rHealthRect.left > m_rHealthRect.right)
+		{
+			nSwap = m_rHealthRect.left;
+			m_rHealthRect.left = m_rHealthRect.right;
+			m_rHealthRect.right = nSwap;
+		}
+		if(m_pHealthBar->GetHealth() <= 0)
+		{
+			m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+			m_bIsAlive = false;
+			m_nState = DYING;
+			m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
+			m_pAnimInstance->SetLooping(false);
+		}
 	}
 	//-------------------------------
 	// AI
-	if ( (m_pDestinationTile != NULL && m_pCurrentTile->ptAnchor.x != m_pDestinationTile->ptAnchor.x ) && ( m_pCurrentTile->ptAnchor.y != m_pDestinationTile->ptAnchor.y) )
-	{
-		if ( m_pCurrentTile->ptAnchor.x > m_pDestinationTile->ptAnchor.x)
-			SetPosY( GetPosX() + GetVelX() );
-		else if (m_pCurrentTile->ptAnchor.x < m_pDestinationTile->ptAnchor.x)
-			SetPosY( GetPosX() - GetVelX() );
-
-		if (m_pCurrentTile->ptAnchor.y > m_pDestinationTile->ptAnchor.y)
-			SetPosY( GetPosY() + GetVelY() );
-		else if (m_pCurrentTile->ptAnchor.x < m_pDestinationTile->ptAnchor.y)
-			SetPosY( GetPosY() - GetVelY() );
-	}
-	//-------------------------------
-
 }
 
 void CUnit::Render(float fElapsedTime)
 {
-	if(m_bIsSelected)
+	if(m_bIsAlive)
 	{
-		//CSGD_Direct3D::GetInstance()->SpriteEnd();
-		//CSGD_Direct3D::GetInstance()->DeviceEnd();
+		if(m_bIsSelected)
+		{
+			CSGD_Direct3D::GetInstance()->SpriteEnd();
+			CSGD_Direct3D::GetInstance()->DeviceEnd();
 
-		CSGD_Direct3D::GetInstance()->DrawPrimitiveRect(m_rLocalRect,D3DCOLOR_ARGB(255,0,255,0));
+			CSGD_Direct3D::GetInstance()->DrawPrimitiveRect(m_rLocalRect,D3DCOLOR_ARGB(255,0,255,0));
 
-		//CSGD_Direct3D::GetInstance()->DeviceBegin();
-		//CSGD_Direct3D::GetInstance()->SpriteBegin();
+			CSGD_Direct3D::GetInstance()->DeviceBegin();
+			CSGD_Direct3D::GetInstance()->SpriteBegin();
 
-		m_pHealthBar->Render(m_rHealthRect);
+			m_pHealthBar->Render(m_rHealthRect);
+		}
 	}
 	if(CCamera::GetInstance()->IsOnScreen(GetGlobalRect()))
 		m_pAnimInstance->Render();
-	
 }
 
 bool CUnit::CheckCollisions(CBase* pBase)
 {
 	return false;
+}
+void CUnit::ChangeDirection(POINT pMousePos)
+{
+	if(pMousePos.y < GetLocalRect().top && pMousePos.x < GetLocalRect().left)
+	{
+		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_nDirectionFacing = NORTH_WEST;
+		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
+		return;
+	}
+	else if(pMousePos.y > GetLocalRect().bottom && pMousePos.x < GetLocalRect().left)
+	{
+		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_nDirectionFacing = SOUTH_WEST;
+		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
+		return;
+	}
+	else if(pMousePos.x < GetLocalRect().left)
+	{
+		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_nDirectionFacing = WEST;
+		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
+		return;
+	}
+	else if(pMousePos.y < GetLocalRect().top)
+	{
+		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_nDirectionFacing = NORTH;
+		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
+		return;
+	}
+	else if(pMousePos.y > GetLocalRect().top)
+	{	
+		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_nDirectionFacing = SOUTH;
+		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
+		return;
+	}
 }
