@@ -89,8 +89,13 @@ bool CGamePlayState::Input(float fElapsedTime)
 
 		if(m_pDI->GetBufferedKey(DIK_F1))
 		{
-			CTile dest = Map->GetTile(4,4);
-			ObjectManager::GetInstance()->UpdatePlayerUnitDestTile(&dest);
+			//Tile  = &Map->GetTile(4,4);
+			m_pOM->UpdatePlayerUnitDestTile(Map->GetTile(2,4));
+		}
+		if(m_pDI->GetBufferedKey(DIK_F2))
+		{
+			//CTile dest = Map->GetTile(5,5);
+			m_pOM->MoveUnit(1);
 		}
 
 		POINT ptMousePos = CGame::GetInstance()->GetMousePos(); 
@@ -102,12 +107,14 @@ bool CGamePlayState::Input(float fElapsedTime)
 				m_ptCurrentLocation.x = m_ptBoxLocation.x + 1;
 				m_ptCurrentLocation.y = m_ptBoxLocation.y +1;
 				m_rSelectionBox = GetSelectionRect();
-				ObjectManager::GetInstance()->SetSelectedUnit(m_rSelectionBox);
-
+				m_pOM->SetSelectedUnit(m_rSelectionBox);
 			}
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_RIGHT))
 			{
-				ObjectManager::GetInstance()->MoveSelectedUnits(ptMousePos);
+				POINT globleMouse = m_pCamera->TransformToGlobal(ptMousePos.x, ptMousePos.y);
+				globleMouse = Map->IsoMouse(globleMouse.x, globleMouse.y, 0);
+				m_pOM->MoveSelectedUnits(globleMouse);
+				m_pOM->UpdatePlayerUnitDestTile(Map->GetTile(globleMouse.x, globleMouse.y));
 			}
 			else if(m_pDI->GetMouseButton(M_BUTTON_LEFT))
 			{
@@ -124,7 +131,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 			}
 			if(m_pDI->OnMouseButtonRelease(M_BUTTON_LEFT))
 			{
-				ObjectManager::GetInstance()->SetSelectedUnit(m_rSelectionBox);
+				m_pOM->SetSelectedUnit(m_rSelectionBox);
 				m_bButtonDown = false;
 				m_ptBoxLocation.x = m_ptBoxLocation.y = 0;
 				m_ptCurrentLocation.x = m_ptCurrentLocation.y = 0;;
@@ -221,7 +228,7 @@ void CGamePlayState::Update(float fElapsedTime)
 			return;
 		m_pCamera->Update(fElapsedTime);
 		// Update units
-		ObjectManager::GetInstance()->UpdateObjects(fElapsedTime);
+		m_pOM->UpdateObjects(fElapsedTime);
 
 		m_pHUD->Update(fElapsedTime);
 
@@ -274,7 +281,7 @@ void CGamePlayState::Render(float fElapsedTime)
 		m_cFont.DrawTextA(buffer5, 500, 120, .2f, .2f);
 	}
 
-	ObjectManager::GetInstance()->RenderObjects(fElapsedTime);
+	m_pOM->RenderObjects(fElapsedTime);
 
 	// Temp for demo
 	m_pTM->Draw(m_nButtonID, m_rVictoryButton.left, m_rVictoryButton.top, .4f, .3f);

@@ -18,13 +18,14 @@ CUnit::CUnit(int nType)
 	m_bIsAlive			= true;
 	m_bIsSelected		= false;		
 
-	m_pDestinationTile	= NULL; 
-	m_pCurrentTile		= NULL;		
+	//m_pCurrentTile		= NULL;		
+
+	//m_pDestinationTile	= NULL; 
 
 	m_pTarget			= NULL;		
 
 	m_nDirectionFacing	= SOUTH_WEST; 
-	m_nState			= MOVEMENT;	
+	m_nState			= IDLE;	
 
 	
 	SetType(nType);
@@ -95,19 +96,28 @@ void CUnit::Update(float fElapsedTime)
 		}
 	}
 	//-------------------------------
-	// AI
-	if ( (m_pDestinationTile != NULL && m_pCurrentTile->ptLocalAnchor.x != m_pDestinationTile->ptLocalAnchor.x ) && ( m_pCurrentTile->ptLocalAnchor.y != m_pDestinationTile->ptLocalAnchor.y) )
+	// AI movment
+	if ( GetPosX() == GetDestTile().ptLocalAnchor.x  && GetPosY() == GetDestTile().ptLocalAnchor.y  )
 	{
-		if ( m_pCurrentTile->ptLocalAnchor.x > m_pDestinationTile->ptLocalAnchor.x)
-			SetPosY( GetPosX() + GetVelX() );
-		else if (m_pCurrentTile->ptLocalAnchor.x < m_pDestinationTile->ptLocalAnchor.x)
-			SetPosY( GetPosX() - GetVelX() );
-
-		if (m_pCurrentTile->ptLocalAnchor.y > m_pDestinationTile->ptLocalAnchor.y)
-			SetPosY( GetPosY() + GetVelY() );
-		else if (m_pCurrentTile->ptLocalAnchor.x < m_pDestinationTile->ptLocalAnchor.y)
-			SetPosY( GetPosY() - GetVelY() );
+		SetCurrentTile( GetDestTile() );
+		SetDestTile( GetCurrentTile() );
+		SetState(DYING);
 	}
+	else if( GetState() == MOVEMENT )
+	{
+		if ( GetPosX() >  GetDestTile().ptLocalAnchor.x)
+			SetPosX(GetPosX() - GetVelX() );
+
+		else if ( GetPosX() < GetDestTile().ptLocalAnchor.x)
+			SetPosX( GetPosX() +  GetVelX() );
+
+		if ( GetPosY() >  GetDestTile().ptLocalAnchor.y)
+			SetPosY( GetPosY() - GetVelY() );
+
+		else if ( GetPosY() <  GetDestTile().ptLocalAnchor.y)
+			SetPosY( GetPosY() +  GetVelY() );
+	}
+
 	//-------------------------------
 }
 

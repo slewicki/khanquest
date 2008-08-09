@@ -103,7 +103,7 @@ public:
 	//
 	// Purpose: give units a start tile.
 	//////////////////////////////////////////////////////
-	void UpdatePlayerUnitDestTile(CTile* currentTile);
+	void UpdatePlayerUnitDestTile(CTile currentTile);
 
 	/////////////////////////////////////////////////////
 	// Function: "SetSeletedUnit"
@@ -126,5 +126,8 @@ public:
 	// Purpose: Move the selected Units in the direction of the mouse click.
 	/////////////////////////////////////////////////////
 	void MoveSelectedUnits(POINT pMousePos);
+
+	void MoveUnit(int i);
+
 
 };

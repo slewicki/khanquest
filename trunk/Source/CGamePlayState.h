@@ -43,7 +43,8 @@ private:
 	POINT									m_ptCurrentLocation;
 	RECT									m_rSelectionBox;
 	//Engines
-	CTileEngine* Map;
+	CTileEngine*							Map;
+	//CTile*									Tile;
 
 	// TEMP BUTTONS FOR DEMO - SHOW WORLD MAP AFTER WIN OR LOSS
 	// REMOVE AFTER DEMO

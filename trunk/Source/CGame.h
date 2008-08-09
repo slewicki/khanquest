@@ -34,7 +34,7 @@ private:
 	CSGD_WaveManager*		m_pWM;
 	CSGD_DirectInput*		m_pDI;
 	CAnimationManager*		m_pAM;
-	CTileEngine*			m_pMap;
+	//CTileEngine*			m_pMap;
 	// Time and Frame Variables
 	DWORD					m_dwPreviousTime;
 	int						m_nFrameCounter;	//counts number of frames per second
@@ -254,7 +254,7 @@ public:
 	//			  The stats of these units should
 	//			  reflect any upgrades purchased.
 	///////////////////////////////////////////
-	CUnit	GetPlayerUnitInfo	(int nType);
+	CUnit	GetUnitInfo	(int nType);
 
 	///////////////////////////////////////////
 	//  Function: GetCPUUnitInfo
