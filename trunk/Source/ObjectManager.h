@@ -127,7 +127,4 @@ public:
 	/////////////////////////////////////////////////////
 	void MoveSelectedUnits(POINT pMousePos);
 
-	void MoveUnit(int i);
-
-
 };

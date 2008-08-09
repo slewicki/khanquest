@@ -92,11 +92,6 @@ bool CGamePlayState::Input(float fElapsedTime)
 			//Tile  = &Map->GetTile(4,4);
 			m_pOM->UpdatePlayerUnitDestTile(Map->GetTile(2,4));
 		}
-		if(m_pDI->GetBufferedKey(DIK_F2))
-		{
-			//CTile dest = Map->GetTile(5,5);
-			m_pOM->MoveUnit(1);
-		}
 
 		POINT ptMousePos = CGame::GetInstance()->GetMousePos(); 
 		if(ptMousePos.y <= 450 && ((ptMousePos.x > 0 && ptMousePos.x < 800) && (ptMousePos.y > 0 && ptMousePos.y < 600)))
