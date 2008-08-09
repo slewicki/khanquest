@@ -13,17 +13,12 @@ CTileEngine::CTileEngine()
 	m_pD3D = CSGD_Direct3D::GetInstance();
 	m_nImageID = -1;
 	m_nImageID = CSGD_TextureManager::GetInstance()->LoadTexture("Resource/KQ_GroundTemplate.bmp", D3DCOLOR_XRGB(255, 0, 255));
-	MousePoint.x = 0;
-	MousePoint.y = 0;
+	m_ptMousePoint.x = 0;
+	m_ptMousePoint.y = 0;
 }
 
 CTileEngine::~CTileEngine()
 {
-	/*for (int nDelCount = 0; nDelCount < m_nMapWidth; nDelCount++)
-		delete pTileArray[nDelCount];
-
-	delete [] pTileArray;*/
-
 	Clear();
 }
 
@@ -32,102 +27,6 @@ CTileEngine* CTileEngine::GetInstance()
 	static CTileEngine Instance;
 	return &Instance;
 }
-
-//Mutators
-//Map
-#pragma region Map
-void CTileEngine::SetMapSize(int nMapWidth, int nMapHeight)
-{
-	m_nMapWidth = nMapWidth;
-	m_nMapHeight = nMapHeight;
-}
-
-void CTileEngine::SetMapWidth(int nMapWidth)
-{
-	m_nMapWidth = nMapWidth;
-}
-
-void CTileEngine::SetMapHeight(int nMapHeight)
-{
-	m_nMapHeight = nMapHeight;
-}
-
-//Tile
-void CTileEngine::SetTileSize(int nTileWidth, int nTileHeight)
-{
-	m_nTileWidth = nTileWidth;
-	m_nTileHeight = nTileHeight;
-}
-
-void CTileEngine::SetTileWidth(int nTileWidth)
-{
-	m_nTileWidth = nTileWidth;
-}
-
-void CTileEngine::SetTileHeight(int nTileHeight)
-{
-	m_nTileHeight = nTileHeight;
-}
-
-//void CTileEngine::SetTile(CTile tile, int x, int y)
-//{
-//	pTileArray[x][y] = tile;
-//}
-
-//Image
-void CTileEngine::SetImageID(int nImageID)
-{
-	m_nImageID = nImageID;
-}
-
-void CTileEngine::SetImagePath(string szImagePath)
-{
-	m_szImagePath = szImagePath;
-}
-
-void CTileEngine::SetTileType(string szTileType)
-{
-	m_szTileType = szTileType;
-}
-
-//File Name
-void CTileEngine::SetFileName(string szFileName)
-{
-	m_szImagePath = szFileName;
-}
-
-void CTileEngine::SetRectSize(int nLeft, int nTop, int nRight, int nBottom)
-{
-	m_rTileRect.left = nLeft;
-	m_rTileRect.top = nTop;
-	m_rTileRect.right = nRight;
-	m_rTileRect.bottom = nBottom;
-}
-
-#pragma endregion Map
-//Tile
-#pragma region TileSet
-void CTileEngine::SetSelectedTile(POINT ptSelectedTile)
-{
-}
-
-void CTileEngine::SetSelectedTileX(int nXPos)
-{
-}
-
-void CTileEngine::SetSelectedTileY(int nYPos)
-{
-}
-
-void CTileEngine::SetTileSetHeight(int nTileSetHeight)
-{
-}
-
-void CTileEngine::SetTileSetWidth(int nTileSetWidth)
-{
-}
-
-#pragma endregion TileSet
 
 void CTileEngine::LoadFile(char* szFileName)
 {
@@ -162,7 +61,6 @@ void CTileEngine::LoadFile(char* szFileName)
 			fin.read((char*)&m_nTileWidth, sizeof(m_nTileWidth));
 			fin.read((char*)&m_nTileHeight, sizeof(m_nTileHeight));
 
-			//pTileArray** = new tTile[m_nMapHeight][m_nMapWidth];
 			pTileArray = new CTile*[m_nMapWidth];
 
 			for(int i = 0; i < m_nMapWidth; i++)
@@ -197,8 +95,6 @@ void CTileEngine::LoadFile(char* szFileName)
 						pTileArray[x][y].nType = SHALLOW_WATER;
 					else if(m_szTileType == "DEEP_WATER")
 						pTileArray[x][y].nType = DEEP_WATER;
-					/*else if(m_szTileType == "COLLISION")
-						pTileArray[x][y].nType = COLLISION;*/
 
 					int nPosX = 0;
 					int nPosY = 0;
@@ -242,31 +138,6 @@ void CTileEngine::LoadFile(char* szFileName)
 
 void CTileEngine::Render(int nCamPosX, int nCamPosY)
 {
-	//Place inside Gamestates Render
-
-	/*for ( int nLayer = 0; nLayer < m_nLayer; nLayer++)
-	{
-		for (int Col = 0; Col < m_nMapHeight; Col++)
-		{
-			for(int Row = 0; Row < m_nMapWidth; Row++)
-			{
-				RECT rTile;
-				rTile.left = pTileArray[Row][Col].ptPos.X * m_nTileWidth;
-				rTile.top = pTileArray[Row][Col].ptPos.Y * m_nTileHeight;
-				rTile.right = rTile.left + m_nTileWidth;
-				rTile.bottom = rTile.top + m_nTileHeight;
-
-				m_pTM->Draw(Map.GetImageID(), ((Row * Map.GetTileWidth() / 2)) + (Col * Map.GetTileWidth() / 2) + m_fPosX, ((Row * -(Map.GetTileHeight() / 2)) + (Col * Map.GetTileHeight() / 2)) + m_fPosY, 1, 1, &rTile, 0, 0, 0); 
-			}
-		}
-	}*/
-
-	//Anchor Point Testing
-	/*static int TempImage = 0;
-
-	if(TempImage == 0)
-		TempImage = m_pTM->LoadTexture("SeL_Bullet.PNG", D3DCOLOR_ARGB(255, 255, 0, 255));*/
-
 	for ( int nLayer = 0; nLayer < m_nLayer; nLayer++)
 	{
 		for (int Col = 0; Col < m_nMapHeight; Col++)
@@ -279,28 +150,7 @@ void CTileEngine::Render(int nCamPosX, int nCamPosY)
 				rTile.right = rTile.left + m_nTileWidth;
 				rTile.bottom = rTile.top + m_nTileHeight;
 
-				RECT rTestCollision;
-				rTestCollision.left = ((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2);
-				rTestCollision.top = ((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300;
-				rTestCollision.right = rTestCollision.left + 64;
-				rTestCollision.bottom = rTestCollision.top + 32;
-
-				//pTileArray[Row][Col].ptGlobalAnchor = Loc;
-
-				//Tile based Anchor Testing
-				/*RECT rAnchor;
-				rAnchor.left = 0;
-				rAnchor.top = 0;
-				rAnchor.right = 8;
-				rAnchor.bottom = 8;*/
-
-				//m_pD3D->DrawRect(rTestCollision, 255, 255, 255);
-				//pTileArray[Row][Col].ptAnchor.x = (((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2)) + (m_nTileWidth / 2);
-				//pTileArray[Row][Col].ptAnchor.y = (((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300) + (m_nTileHeight / 2);
-
 				m_pTM->Draw(m_nImageID, (((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2)) - nCamPosX, (((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300) - nCamPosY, 1, 1, &rTile, 0, 0, 0); 
-				//Anchor Testing
-				//m_pTM->Draw(TempImage, pTileArray[Row][Col].ptAnchor.x, pTileArray[Row][Col].ptAnchor.y);
 			}
 		}
 	}
@@ -314,91 +164,9 @@ void CTileEngine::SetLocalAnchor()
 		{
 			for(int Row = 0; Row < m_nMapWidth; Row++)
 			{
-
-				//Tile based Anchor Testing
-				/*RECT rAnchor;
-				rAnchor.left = 0;
-				rAnchor.top = 0;
-				rAnchor.right = 8;
-				rAnchor.bottom = 8;*/
-
-				//m_pD3D->DrawRect(rTestCollision, 255, 255, 255);
 				pTileArray[Row][Col].ptLocalAnchor.x = (((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2)) + (m_nTileWidth / 2);
 				pTileArray[Row][Col].ptLocalAnchor.y = (((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300) + (m_nTileHeight / 2);
-
-				//m_pTM->Draw(m_nImageID, ((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2), ((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300, 1, 1, &rTile, 0, 0, 0); 
-				//Anchor Testing
-				//m_pTM->Draw(TempImage, pTileArray[Row][Col].ptAnchor.x, pTileArray[Row][Col].ptAnchor.y);
 			}
-		}
-	}
-}
-
-void CTileEngine::LoadTileSet(char *szFileName)
-{
-	m_nBitmapSizeHeight = 256;
-	m_nBitmapSizeWidth = 256;
-	m_nTileSetHeight = 8;
-	m_nTileSetWidth = 4;
-
-	for ( int x = 0; x < m_nMapHeight; x++)
-	{
-		for ( int y = 0; y < m_nMapWidth; y++)
-		{
-			if(m_ptSelectedTile.x == pTileArray[x][y].ptPos.x)
-				m_ptSelectedTile.x = pTileArray[x][y].ptPos.x; // / m_nBitmapSizeWidth;
-
-			if(m_ptSelectedTile.y == pTileArray[x][y].ptPos.y)
-			m_ptSelectedTile.y = pTileArray[x][y].ptPos.y; 
-		}
-	}
-}
-
-//CTile CTileEngine::GetTile(int x, int y)
-//{
-//	int nTileWidth = x / m_nTileWidth;
-//	int nTileHeight = y / m_nTileHeight;
-//
-//	return pTileArray[nTileWidth][nTileHeight];
-//}
-
-void CTileEngine::MouseMapLoad(CMouseMap* pmm, char* szFileName)
-{
-	//Create Canvas
-	CGDICanvas gdic;
-	//Load the file
-	gdic.Load(NULL, szFileName);
-	//Assign Width/Height
-	pmm->SetSize(gdic.GetWidth(), gdic.GetHeight());
-	//Allocate space for the LookUp Array
-	pmm->CreateLookUpArray(gdic.GetWidth()*gdic.GetHeight());
-
-	//Get color to check mouse movement
-	COLORREF crNW = GetPixel(gdic, 0, 0);
-	COLORREF crNE = GetPixel(gdic, gdic.GetWidth() - 1, 0);
-	COLORREF crSW = GetPixel(gdic, 0, gdic.GetHeight() - 1);
-	COLORREF crSE = GetPixel(gdic, gdic.GetWidth() - 1, gdic.GetHeight() - 1);
-	//Test pixel colors
-	COLORREF crTest;
-
-	//Scan bitmap into LookUp Array
-	for(int y = 0; y < gdic.GetHeight(); y++)
-	{
-		for(int x = 0; x < gdic.GetWidth(); x++)
-		{
-			//grab test pixel
-			crTest = GetPixel(gdic, x, y);
-			//Set LookUp to default
-			pmm->SetDirection(MM_CENTER, x+y*pmm->GetSize().x);
-			//Check Colors
-			if(crTest == crNW)
-				pmm->SetDirection(MM_NW, x+y*pmm->GetSize().x);
-			else if(crTest == crNE)
-				pmm->SetDirection(MM_NE, x+y*pmm->GetSize().x);
-			else if(crTest == crSW)
-				pmm->SetDirection(MM_SW, x+y*pmm->GetSize().x);
-			else if(crTest == crSE)
-				pmm->SetDirection(MM_SE, x+y*pmm->GetSize().x);
 		}
 	}
 }
@@ -409,25 +177,6 @@ POINT CTileEngine::IsoMouse(int x, int y, int z)
 	static float isoSin = sin(0.46365f);
 
 	POINT newPoint;
-
-	//newPoint.x = ((x)/isoCos-(y+z)/isoSin)/2;
-	//newPoint.y = (-((x)/isoCos+(y+z)/isoSin))/2;
-
-	//newPoint.x = floor(newPoint.x / 64.0f) * 64.0f;
-	//newPoint.y = floor(newPoint.y / 32.0f) * 32.0f;
-
-	/*newPoint.x = ((newPoint.x-newPoint.y)*isoCos);
-	newPoint.y = (-(z+(newPoint.x+newPoint.y)*isoSin));*/
-
-	/*newPoint.x = (x + z) * isoCos;
-	newPoint.y = (y + z) * isoCos;
-
-	newPoint.x = (floor(newPoint.x / 64.0f) * 64.0f);
-	newPoint.y = (floor(newPoint.y / 32.0f) * 32.0f);*/
-
-	//OLD SEMI-CORRECT VERSION
-	//newPoint.x = (m_nTileWidth * y + m_nTileHeight * x) / (m_nTileWidth * m_nTileHeight) - 10;
-	//newPoint.y = (m_nTileWidth * y - m_nTileHeight * x) / (m_nTileWidth * m_nTileHeight);
 
 	newPoint.y = (m_nTileWidth * y + m_nTileHeight * x) / (64 * 32) - 10;
 	newPoint.x = (m_nTileWidth * y - m_nTileHeight * x) / (64 * 32);
@@ -444,26 +193,10 @@ POINT CTileEngine::IsoMouse(int x, int y, int z)
 
 	if(newPoint.y < m_nMapHeight && newPoint.x < m_nMapWidth && newPoint.y >= 0 && newPoint.x >= 0)
 	{
-		MousePoint = newPoint;
+		m_ptMousePoint = newPoint;
 	}
-	//newPoint.x = 0;
-	//newPoint.y = 0;
 
-	return MousePoint;
-	//return newPoint;
-}
-
-CTile CTileEngine::SetDestinationTile(int nX, int nY)
-{
-	return pTileArray[nX][nY];
-}
-
-CTile CTileEngine::MapToTile(int x, int y, int z)
-{
-	POINT newPoint;
-	newPoint = IsoMouse(x, y, z);
-
-	return pTileArray[newPoint.x][newPoint.y];
+	return m_ptMousePoint;
 }
 
 void CTileEngine::Clear()
@@ -477,10 +210,4 @@ void CTileEngine::Clear()
 void CTileEngine::SetOccupy(int x, int y, bool bOccupy)
 {
 	pTileArray[x][y].bIsOccupied = bOccupy;
-}
-
-void CTileEngine::SetGlobalAnchor(int x, int y)
-{
-	GlobalAnchor.x = x;
-	GlobalAnchor.y = y;
 }

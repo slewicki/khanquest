@@ -27,51 +27,25 @@ using std::string;
 using std::ifstream;
 using std::ofstream;
 
-
-//enum TileType { PLAIN, MOUNTAIN, FOREST, SHALLOW_WATER, DEEP_WATER };
-
-
-//struct tTile
-//{
-//	TileType nType;
-//	tPoint ptPos;
-//	bool bIsPlayerSpawn;
-//	bool bIsEnemySpawn;
-//	bool bIsCollision;
-//};
-
 class CTileEngine
 {
 private:
-	CSGD_TextureManager* m_pTM;
-	CSGD_Direct3D* m_pD3D;
-	int m_nMapHeight;
-	int m_nMapWidth;
-	int m_nTileHeight;
-	int m_nTileWidth;
-	int m_nImageID;
-	string m_szFileName;
-	string m_szImagePath;
-	string m_szTileType;
-	CTile** pTileArray;
+	CSGD_TextureManager* m_pTM;		//Texture Manager Wrapper
+	CSGD_Direct3D* m_pD3D;			//Direct3D Wrapper
+	int m_nMapHeight;				//Map Height
+	int m_nMapWidth;				//Map Width
+	int m_nTileHeight;				//Tile Height
+	int m_nTileWidth;				//Tile Width
+	int m_nImageID;					//Image loaded through texture manager
+	//string m_szFileName;
+	string m_szImagePath;			//Name of the image to load
+	string m_szTileType;			//Type of the tile
+	CTile** pTileArray;				//2D array of tiles that make a map
 	//tTile pTileArray[4][4];
-	POINT m_ptWorldPosition;
-	RECT m_rTileRect;
-	int m_nLayer;
-
-	float x, y, z;
-	int isoX, isoY;
-
-	POINT m_ptSelectedTile;
-	int m_nTileSetHeight;
-	int m_nTileSetWidth;
-	int m_nBitmapSizeHeight;
-	int m_nBitmapSizeWidth;
-
-	//Temp variables
-	POINT MousePoint;
-	POINT TileAnchor;
-	POINT GlobalAnchor;
+	//POINT m_ptWorldPosition;
+	//RECT m_rTileRect;
+	int m_nLayer;					//Number of Map Layers
+	POINT m_ptMousePoint;			//Mouse Location
 
 
 public:
@@ -97,7 +71,7 @@ public:
 	//
 	//	Purpose: Updates values based on time
 	/////////////////////////////////
-	void LoadTileSet(char* szFileName);
+	//void LoadTileSet(char* szFileName);
 
 	//Accessors
 	//Map
@@ -109,94 +83,16 @@ public:
 	/////////////////////////////////
 	int GetMapWidth() { return m_nMapWidth; }
 	int GetMapHeight() { return m_nMapHeight; }
-	int GetLayer() { return m_nLayer; }
-
-	//Tile
-	int GetTileWidth() { return m_nTileWidth; }
-	int GetTileHeight() { return m_nTileHeight; }
-	//CTile GetTile(int x, int y);// { return pTileArray[x][y]; }
-
-	//Image
-	int GetImageID() { return m_nImageID; }
 	string GetImagePath() { return m_szImagePath; }
-	string GetTileType() { return m_szTileType; }
-
-	//File Name
-	string GetFileName() { return m_szFileName; }
-
-	RECT GetRectSize() { return m_rTileRect; }
 #pragma endregion Map_Accessor
-	
-	//TileSet
-#pragma region TileSet_Accessor
-	/////////////////////////////////
-	//	Function:	"Accessor"
-	//
-	//	Purpose: Gets the specified type
-	/////////////////////////////////
-	POINT GetSelectedTile() { return m_ptSelectedTile; }
-	int GetTileSetHeight() { return m_nTileSetHeight; }
-	int GetTileSetWidth() { return m_nTileSetWidth; }
-#pragma endregion TileSet_Accessor
-
-
-	//Mutators
-	//Map
-#pragma region Map_Mutator
-	/////////////////////////////////
-	//	Function:	"Mutators"
-	//
-	//	Purpose: Sets the specified value
-	/////////////////////////////////
-	void SetMapSize(int nMapWidth, int nMapHeight);
-	void SetMapWidth(int nMapWidth);
-	void SetMapHeight(int nMapHeight);
-
-	//Tile
-	void SetTileSize(int nTileWidth, int nTileHeight);
-	void SetTileWidth(int nTileWidth);
-	void SetTileHeight(int nTileHeight);
-	//void SetTile(CTile tile, int x, int y);
-
-	//Image
-	void SetImageID(int nImageID);
-	void SetImagePath(string szImagePath);
-	void SetTileType(string szTileType);
-
-	//File Name
-	void SetFileName(string szFileName);
-
-	void SetRectSize(int nLeft, int nTop, int nRight, int nBottom);
-#pragma endregion Map_Mutator
-	
-	//TileSet
-#pragma region TileSet_Mutator
-	/////////////////////////////////
-	//	Function:	"Mutators"
-	//
-	//	Purpose: Sets the specified value
-	/////////////////////////////////
-	void SetSelectedTile(POINT ptSelectedTile);
-	void SetSelectedTileX(int nXPos);
-	void SetSelectedTileY(int nYPos);
-	void SetTileSetHeight(int nTileSetHeight);
-	void SetTileSetWidth(int nTileSetWidth);
-#pragma endregion TileSet_Mutator
-
-	void MouseMapLoad(CMouseMap* pmm, char* szFileName);
 
 	static CTileEngine* GetInstance();
 
 	POINT IsoMouse(int x, int y, int z);
 
 	CTile GetTile(int x, int y) { return pTileArray[x][y]; }
-	CTile SetDestinationTile(int x, int y);
-	CTile MapToTile(int x, int y, int z);
 	POINT GetLocalAnchor(int x, int y) { return pTileArray[x][y].ptLocalAnchor; }
 	void SetLocalAnchor();
-	POINT GetGlobalAnchor(int x, int y) { return GlobalAnchor;}
-	void SetGlobalAnchor(int x, int y);
-	bool IsOccupied(int x, int y) { return pTileArray[x][y].bIsOccupied; }
 	void SetOccupy(int x, int y, bool bOccupy);
 
 	void Clear();
