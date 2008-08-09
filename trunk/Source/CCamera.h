@@ -75,6 +75,17 @@ public:
 	POINT TransformToScreen(POINT ptWorldPos);
 	POINT TransformToScreen(int nWorldPosX, int nWorldPosY);
 
+	//////////////////////////////////////////////////////
+	// Function: “TransformToGlobal”
+	//
+	// Purpose: Takes in the position of an object in screen
+	//			space and returns its position to world space
+	//////////////////////////////////////////////////////
+	tVector2D TransformToGlobal(tVector2D vCamPos);
+	tVector2D TransformToGlobal(float fCamPosX, float fCamPosY);
+	POINT TransformToGlobal(POINT ptCamPos);
+	POINT TransformToGlobal(int nCamPosX, int nCamPosY);
+
 
 	//////////////////////////////////////////////////////
 	// Function: “IsOnScreen”
