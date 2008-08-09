@@ -22,7 +22,7 @@ CGame::CGame(void)
 	m_pDS	= NULL;
 	m_pWM	= NULL;
 	m_pDI	= NULL;
-	m_pMap = NULL;
+//	m_pMap = NULL;
 	m_pSelectedCity = NULL;
 	m_dwPreviousTime = GetTickCount();
 	m_nFrameCounter = 0;
@@ -99,7 +99,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	// Remember how the window started
 	m_bIsWindowed = bIsWindowed;
 
-	m_pMap	= CTileEngine::GetInstance();
+	//m_pMap	= CTileEngine::GetInstance();
 
 	InitCities();
 		
@@ -413,7 +413,7 @@ bool CGame::ParseBinaryUnitInfo (const char* szFile)
 	return true;
 }
 
-CUnit CGame::GetPlayerUnitInfo (int nType)
+CUnit CGame::GetUnitInfo (int nType)
 {
 	if(nType >=0 && nType <=5)
 		return this->m_pPlayerUnitInfo[nType];

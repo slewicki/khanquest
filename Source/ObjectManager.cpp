@@ -42,12 +42,18 @@ ObjectManager* ObjectManager::GetInstance(void)
 
 void ObjectManager::UpdateObjects(float fElapsedTime)
 {
-	vector<CBase*>::iterator iter = m_vObjectList.begin();
+	//vector<CBase*>::iterator iter = m_vObjectList.begin();
+	//while(iter != m_vObjectList.end())
+	//{
+	//	(*iter)->Update(fElapsedTime);
 
-	while(iter != m_vObjectList.end())
+	//	iter++;
+	//}
+
+	for (int i = 0; i < m_vObjectList.size(); ++i)
 	{
-		(*iter)->Update(fElapsedTime);
-		iter++;
+		m_vObjectList[i]->Update(fElapsedTime);
+		MoveUnit(i);
 	}
 	pPE->Update(fElapsedTime);
 }
@@ -143,21 +149,17 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 				//check the map for spawn point
 				for (int j =0; j < Map->GetMapWidth(); ++j )
 				{
-					if (static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile() != NULL)
-						break;
-
 					for (int k =0; k < Map->GetMapHeight(); ++k )
 					{
-						if (static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile() != NULL)
-							break;
 						// if map loc is a spawn point set unit current loc there
-						else if (Map->GetTile(j,k).bIsPlayerSpawn && Map->GetTile(j,k).bIsOccupied == false)
+						if (Map->GetTile(j,k).bIsPlayerSpawn && Map->GetTile(j,k).bIsOccupied == false)
 						{
-							POINT spawn = Map->GetLocalAnchor( j, k);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosX(spawn.x);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosY(spawn.y);
+							//POINT spawn = Map->GetLocalAnchor( j, k);
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosX(Map->GetLocalAnchor( j, k).x);
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosY(Map->GetLocalAnchor( j, k).y);
 							Map->SetOccupy(j, k, true);
-							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(&Map->GetTile(j,k));
+							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(j,k));
+							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(j,k));
 							break;
 						}
 
@@ -168,13 +170,17 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 		}
 	}
 }
-void ObjectManager::UpdatePlayerUnitDestTile(CTile* destTile)
+void ObjectManager::UpdatePlayerUnitDestTile(CTile destTile)
 {
 	for (unsigned int i=0; i < m_vObjectList.size(); i++)
 	{
 		if (static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit() )
 		{
-			static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(destTile);
+			if (static_cast<CUnit*>(m_vObjectList[i])->IsSelected())
+			{
+				static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(destTile);
+				static_cast<CUnit*>(m_vObjectList[i])->SetState(MOVEMENT);
+			}
 		}
 	}
 }
@@ -202,10 +208,8 @@ void ObjectManager::SetSelectedUnit(RECT toCheck)
 		{
 			for(unsigned int j = i; j < m_vObjectList.size(); j++)
 				static_cast<CUnit*>(m_vObjectList[j])->SetSelected(false);
-			
 			break;
 		}
-
 	}
 	CHUDState::GetInstance()->UpdateSelected();
 }
@@ -231,4 +235,31 @@ void ObjectManager::MoveSelectedUnits(POINT pMousePos)
 			static_cast<CUnit*>(m_vObjectList[i])->ChangeDirection(pMousePos);
 		}
 	}	
+}
+void ObjectManager::MoveUnit(int i)
+{
+	//for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
+	////{
+	//	if ( (static_cast<CUnit*>(m_vObjectList[i])->GetPosX() == static_cast<CUnit*>(m_vObjectList[i])->GetDestTile().ptLocalAnchor.x ) 
+	//		&& (static_cast<CUnit*>(m_vObjectList[i])->GetPosY() == static_cast<CUnit*>(m_vObjectList[i])->GetDestTile().ptLocalAnchor.y ) )
+	//	{
+	//		static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile( static_cast<CUnit*>(m_vObjectList[i])->GetDestTile() );
+	//		static_cast<CUnit*>(m_vObjectList[i])->SetDestTile( static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile() );
+	//		//			static_cast<CUnit*>(m_vObjectList[i])->SetState(IDLE);
+	//	}
+	//	else if( static_cast<CUnit*>(m_vObjectList[i])->GetState() == MOVEMENT )
+	//	{
+	//		if ( static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile().ptLocalAnchor.x >  static_cast<CUnit*>(m_vObjectList[i])->GetDestTile().ptLocalAnchor.x)
+	//			static_cast<CUnit*>(m_vObjectList[i])->SetPosX( static_cast<CUnit*>(m_vObjectList[i])->GetPosX() -  static_cast<CUnit*>(m_vObjectList[i])->GetVelX() );
+
+	//		else if ( static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile().ptLocalAnchor.x <  static_cast<CUnit*>(m_vObjectList[i])->GetDestTile().ptLocalAnchor.x)
+	//			static_cast<CUnit*>(m_vObjectList[i])->SetPosX( static_cast<CUnit*>(m_vObjectList[i])->GetPosX() +  static_cast<CUnit*>(m_vObjectList[i])->GetVelX() );
+
+	//		if ( static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile().ptLocalAnchor.y >  static_cast<CUnit*>(m_vObjectList[i])->GetDestTile().ptLocalAnchor.y)
+	//			static_cast<CUnit*>(m_vObjectList[i])->SetPosY( static_cast<CUnit*>(m_vObjectList[i])->GetPosY() - static_cast<CUnit*>(m_vObjectList[i])->GetVelY() );
+
+	//		else if (static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile().ptLocalAnchor.y <  static_cast<CUnit*>(m_vObjectList[i])->GetDestTile().ptLocalAnchor.y)
+	//			static_cast<CUnit*>(m_vObjectList[i])->SetPosY( static_cast<CUnit*>(m_vObjectList[i])->GetPosY() +  static_cast<CUnit*>(m_vObjectList[i])->GetVelY() );
+	//	}
+	//}
 }

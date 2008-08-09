@@ -24,29 +24,13 @@ void CFactory::CreatePlayerUnit(int nType)
 	CUnit* unit = new CUnit(nType);
 
 	// Use default shallow copy since no dynamic info in creation
-	CUnit temp = CGame::GetInstance()->GetPlayerUnitInfo(nType);
+	CUnit temp = CGame::GetInstance()->GetUnitInfo(nType);
 	unit->SetAttackPower(temp.GetAttackPower());
 	unit->SetAttackSpeed(temp.GetAttackSpeed());
 	unit->SetHP(temp.GetHP());
 	unit->SetRange(temp.GetRange());
 	unit->SetSpeed(temp.GetSpeed());
-	
-	// For now give it a default position
-	//unit->SetPosX(xPos);
-	//unit->SetPosY(yPos);
-	//// Row by Row
-	//if(xPos >= 700.f)
-	//{
-	//	xPos = 60.f;
-	//	yPos += 60.f;
-	//}
-	//xPos+=100.f;
-	//if(yPos >= 500)
-	//{
-	//	yPos = 50;
-	//	xPos = 100;
-	//}
-	
+		
 	unit->SetState(MOVEMENT);
 	unit->SetDirection(NORTH);
 	//unit->SetDirection(SOUTH_WEST);

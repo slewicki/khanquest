@@ -43,8 +43,8 @@ private:
 	bool			m_bIsAlive;			// Is the unit alive
 	bool			m_bIsSelected;		// Is the unit selected by the player
 
-	CTile*			m_pDestinationTile; // Tile the unit is traveling to
-	CTile*			m_pCurrentTile;		// Current tile the unit is on
+	CTile			m_pDestinationTile; // Tile the unit is traveling to
+	CTile			m_pCurrentTile;		// Current tile the unit is on
 
 	CUnit*			m_pTarget;			// Enemy unit to attack, if any
 
@@ -90,8 +90,8 @@ public:
 	inline float  GetAttackSpeed		(void) const { return m_fAttackSpeed; }
 	inline float  GetSpeed			(void) const { return m_fMovementSpeed; }
 	inline int	  GetCost				(void) const { return m_nCost; }
-	inline CTile* GetDestTile		(void) const { return m_pDestinationTile; }
-	inline CTile* GetCurrentTile	(void) const { return m_pCurrentTile; }
+	inline CTile GetDestTile		(void) const { return m_pDestinationTile; }
+	inline CTile GetCurrentTile	(void) const { return m_pCurrentTile; }
 	inline bool IsPlayerUnit(void) {return m_bIsPlayerUnit;}
 
 	inline CUnit* GetTarget			(void) const { return m_pTarget; }
@@ -116,8 +116,8 @@ public:
 	inline void SetIsPlayerUnit (bool bIsPlayerUnit) {m_bIsPlayerUnit = bIsPlayerUnit;}
 	inline void SetAttackSpeed	(float fAttackSpeed)	{ m_fAttackSpeed = fAttackSpeed; }
 	inline void SetSpeed		(float fMovementSpeed){ m_fMovementSpeed = fMovementSpeed; }
-	inline void SetDestTile		(CTile* pDestTile)  { m_pDestinationTile = pDestTile; }
-	inline void SetCurrentTile	(CTile* pCurrentTile)  { m_pCurrentTile = pCurrentTile; }
+	inline void SetDestTile		(CTile pDestTile)  { m_pDestinationTile = pDestTile; }
+	inline void SetCurrentTile	(CTile pCurrentTile)  { m_pCurrentTile = pCurrentTile; }
 	inline void SetBonus		(int nBonus)		{ m_nBonus = nBonus; }
 	inline void SetSelected		(bool bIsSelected)	{ m_bIsSelected = bIsSelected; }
 	inline void SetGrouped		(bool bIsGrouped)	{ m_bIsGrouped = bIsGrouped; }

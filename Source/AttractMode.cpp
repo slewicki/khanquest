@@ -3,7 +3,6 @@
 #include "CSGD_DirectInput.h"
 #include "MainMenuState.h"
 #include "CGame.h"
-#include "vld.h"
 CAttractMode::CAttractMode(void)
 {
 
