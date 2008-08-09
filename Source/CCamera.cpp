@@ -41,6 +41,30 @@ POINT CCamera::TransformToScreen(POINT ptWorldPos)
 	return ptScreenPos;
 }
 
+tVector2D CCamera::TransformToGlobal(tVector2D vCamPos)
+{
+	tVector2D vGlobalPos = vCamPos + m_vPos;
+	return vGlobalPos;
+}
+
+tVector2D CCamera::TransformToGlobal(float fCamPosX, float fCamPosY)
+{
+	tVector2D vGlobalPos = {fCamPosX + m_vPos.fX, fCamPosY + m_vPos.fY};
+	return vGlobalPos;
+}
+
+POINT CCamera::TransformToGlobal(int nCamPosX, int nCamPosY)
+{
+	POINT ptGlobalPos = {nCamPosX + (int)m_vPos.fX, nCamPosY + (int)m_vPos.fY};
+	return ptGlobalPos;
+}
+
+POINT CCamera::TransformToGlobal(POINT ptCamPos)
+{
+	POINT ptGlobalPos = {ptCamPos.x + (int)m_vPos.fX, ptCamPos.y + (int)m_vPos.fY};
+	return ptGlobalPos;
+}
+
 void CCamera::Update(float fElapsedTime)
 {
 	m_vPos.fX += m_vVel.fX*fElapsedTime;
