@@ -112,8 +112,8 @@ bool CGamePlayState::Input(float fElapsedTime)
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_RIGHT))
 			{
 				POINT globleMouse = m_pCamera->TransformToGlobal(ptMousePos.x, ptMousePos.y);
-				globleMouse = Map->IsoMouse(globleMouse.x, globleMouse.y, 0);
 				m_pOM->MoveSelectedUnits(globleMouse);
+				globleMouse = Map->IsoMouse(globleMouse.x, globleMouse.y, 0);
 				m_pOM->UpdatePlayerUnitDestTile(Map->GetTile(globleMouse.x, globleMouse.y));
 			}
 			else if(m_pDI->GetMouseButton(M_BUTTON_LEFT))
