@@ -235,7 +235,37 @@ void CGamePlayState::Render(float fElapsedTime)
 	else if( m_pDI->GetBufferedKey(DIK_3))
 		Map.LoadFile("Resource/Levels/KQ_Tech_Demo1.level");
 
-	Map.Render();
+	POINT MapLoc = m_pCamera->TransformToGlobal(CGame::GetInstance()->GetCursorPosition().x, CGame::GetInstance()->GetCursorPosition().y);
+
+	Map.Render(m_pCamera->GetPosX(), m_pCamera->GetPosY());
+
+	if(m_pDI->GetMouseButton(M_BUTTON_RIGHT))
+	{
+		char buffer[32];	//Tile Pos
+		char buffer2[32];	//Tile Type
+		char buffer3[32];	//Player Spawn
+		char buffer4[32];	//Local Anchor
+		char buffer5[32];	//Global Anchor
+		POINT TileLoc = Map.IsoMouse(MapLoc.x, MapLoc.y, 0);
+
+		sprintf_s(buffer, 32, "Tile: %i, %i", TileLoc.x, TileLoc.y);
+		sprintf_s(buffer2, 32, "TileType: %i", Map.GetTile(TileLoc.x, TileLoc.y).nType);
+
+		if(Map.GetTile(TileLoc.x, TileLoc.y).bIsPlayerSpawn == true)
+			sprintf_s(buffer3, 32, "PlayerSpawn: True");
+		else
+			sprintf_s(buffer3, 32, "PlayerSpawn: False");
+
+		sprintf_s(buffer4, 32, "Local Anchor: %i, %i", Map.GetTile(TileLoc.x, TileLoc.y).ptLocalAnchor.x, Map.GetTile(TileLoc.x, TileLoc.y).ptLocalAnchor.y);
+		sprintf_s(buffer5, 32, "Global Anchor: %i, %i", MapLoc);
+
+		m_cFont.DrawTextA(buffer, 500, 0, .2f, .2f);
+		m_cFont.DrawTextA(buffer2, 500, 30, .2f, .2f);
+		m_cFont.DrawTextA(buffer3, 500, 60, .2f, .2f);
+		m_cFont.DrawTextA(buffer4, 500, 90, .2f, .2f);
+		m_cFont.DrawTextA(buffer5, 500, 120, .2f, .2f);
+	}
+
 	ObjectManager::GetInstance()->RenderObjects(fElapsedTime);
 
 	// Temp for demo
