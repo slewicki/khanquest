@@ -71,6 +71,7 @@ private:
 	//Temp variables
 	POINT MousePoint;
 	POINT TileAnchor;
+	POINT GlobalAnchor;
 
 
 public:
@@ -89,7 +90,7 @@ public:
 	//
 	//	Purpose: Updates values based on time
 	/////////////////////////////////
-	void Render(POINT Loc);
+	void Render(int nCamPosX, int nCamPosY);
 
 	/////////////////////////////////
 	//	Function:	"Update"
@@ -193,7 +194,7 @@ public:
 	CTile MapToTile(int x, int y, int z);
 	POINT GetLocalAnchor(int x, int y) { return pTileArray[x][y].ptLocalAnchor; }
 	void SetLocalAnchor();
-	POINT GetGlobalAnchor(int x, int y);
+	POINT GetGlobalAnchor(int x, int y) { return GlobalAnchor;}
 	void SetGlobalAnchor(int x, int y);
 	bool IsOccupied(int x, int y) { return pTileArray[x][y].bIsOccupied; }
 	void SetOccupy(int x, int y, bool bOccupy);
