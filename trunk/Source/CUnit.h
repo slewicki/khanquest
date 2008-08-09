@@ -12,7 +12,7 @@
 #include "AnimInstance.h"
 #include "CTile.h"
 #include "CHealthBar.h"
-#include "CAISystem.h"
+//#include "CAISystem.h"
 
 enum	// Unit States
 {
@@ -56,7 +56,7 @@ private:
 
 	int				m_nState;			// The state the unit is in
 	CHealthBar*		m_pHealthBar;
-	CAISystem*		m_pCAI;
+//	CAISystem*		m_pCAI;
 	CAnimInstance*	m_pAnimInstance;
 
 	RECT			m_rLocalRect;
