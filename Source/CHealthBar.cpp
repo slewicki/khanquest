@@ -26,18 +26,15 @@ void CHealthBar::SetBarColor(int nPercentHealth)
 
 void CHealthBar::DamageHealth(int nPercentHealth)
 {
-	int nDamage;
-	nDamage = m_nHealth * nPercentHealth / 100;
-
-	m_nHealth -= nDamage;
+	if(m_nHealth > 0 )
+		m_nHealth -= nPercentHealth;
 	
 	SetBarColor(m_nHealth);
 }
 
 void CHealthBar::Render(RECT toDraw)
 {	
-	toDraw.right += m_nHealth - 100; 
-
+	toDraw.right += (m_nHealth - 60);
 	m_pD3D->DrawRect(toDraw, m_currColor);
 	m_pD3D->DrawPrimitiveRect(toDraw, D3DCOLOR_ARGB(255,0,0,0));
 }
