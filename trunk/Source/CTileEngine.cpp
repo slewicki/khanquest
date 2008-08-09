@@ -240,7 +240,7 @@ void CTileEngine::LoadFile(char* szFileName)
 		SetLocalAnchor();
 }
 
-void CTileEngine::Render(POINT Loc)
+void CTileEngine::Render(int nCamPosX, int nCamPosY)
 {
 	//Place inside Gamestates Render
 
@@ -285,7 +285,7 @@ void CTileEngine::Render(POINT Loc)
 				rTestCollision.right = rTestCollision.left + 64;
 				rTestCollision.bottom = rTestCollision.top + 32;
 
-				pTileArray[Row][Col].ptGlobalAnchor = Loc;
+				//pTileArray[Row][Col].ptGlobalAnchor = Loc;
 
 				//Tile based Anchor Testing
 				/*RECT rAnchor;
@@ -298,7 +298,7 @@ void CTileEngine::Render(POINT Loc)
 				//pTileArray[Row][Col].ptAnchor.x = (((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2)) + (m_nTileWidth / 2);
 				//pTileArray[Row][Col].ptAnchor.y = (((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300) + (m_nTileHeight / 2);
 
-				m_pTM->Draw(m_nImageID, (((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2)) + Loc.x, (((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300) + Loc.y, 1, 1, &rTile, 0, 0, 0); 
+				m_pTM->Draw(m_nImageID, (((Row * m_nTileWidth / 2)) + (Col * m_nTileWidth / 2)) - nCamPosX, (((Row * -(m_nTileHeight / 2)) + (Col * m_nTileHeight / 2)) + 300) - nCamPosY, 1, 1, &rTile, 0, 0, 0); 
 				//Anchor Testing
 				//m_pTM->Draw(TempImage, pTileArray[Row][Col].ptAnchor.x, pTileArray[Row][Col].ptAnchor.y);
 			}
@@ -479,13 +479,8 @@ void CTileEngine::SetOccupy(int x, int y, bool bOccupy)
 	pTileArray[x][y].bIsOccupied = bOccupy;
 }
 
-POINT CTileEngine::GetGlobalAnchor(int x, int y)
-{
-	POINT newPoint;
-	
-	return newPoint;
-}
-
 void CTileEngine::SetGlobalAnchor(int x, int y)
 {
+	GlobalAnchor.x = x;
+	GlobalAnchor.y = y;
 }
