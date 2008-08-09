@@ -10,8 +10,6 @@
 #include <vector>
 #include "CParticleEngine.h"
 #include "IListener.h"
-#include "CTile.h"
-#include "CTileEngine.h"
 using std::vector;
 
 class ObjectManager : public IListener
@@ -19,8 +17,7 @@ class ObjectManager : public IListener
 private:
 	vector<CBase*> m_vObjectList;
 	CParticleEngine* pPE;
-	int m_nEmitterID;
-	CTileEngine* Map;
+
 	////////////////////////////////////////////
 	//	Function:	"ObjectManager(Constructor)"
 	////////////////////////////////////////////
@@ -104,17 +101,12 @@ public:
 	/////////////////////////////////////////////////////
 	vector<CBase*> GetSelectedUnits();
 
-	//////////////////////////////////////////////////////
-	// Function: “UpdatePlayerUnitStartTile”
+	
+	/////////////////////////////////////////////////////
+	// Function: "GetSeletedUnit"
 	//
-	// Purpose: give units a start tile.
-	//////////////////////////////////////////////////////
-	void UpdatePlayerUnitStartTile(void);
+	// Purpose: Move the selected Units in the direction of the mouse click.
+	/////////////////////////////////////////////////////
+	void MoveSelectedUnits(POINT pMousePos);
 
-	//////////////////////////////////////////////////////
-	// Function: “UpdatePlayerUnitDestTile”
-	//
-	// Purpose: give units a start tile.
-	//////////////////////////////////////////////////////
-	void UpdatePlayerUnitDestTile(CTile* currentTile);
 };
