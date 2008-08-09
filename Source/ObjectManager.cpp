@@ -7,6 +7,7 @@
 /////////////////////////////////////////////////
 #include "ObjectManager.h"
 #include "Sheet.h"
+#include "CUnit.h"
 #include "CGamePlayState.h"
 #include "CEventSystem.h"
 #include "HUDState.h"
@@ -15,6 +16,7 @@ ObjectManager::ObjectManager(void)
 {
 	pPE = CParticleEngine::GetInstance();
 	pPE->LoadBineryEmitter("Resource/KQ_DustCload.dat", 128, 128);
+	Map = CTileEngine::GetInstance();
 }
 
 ObjectManager::~ObjectManager(void)
@@ -124,6 +126,56 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 		}
 		
 
+	}
+}
+void ObjectManager::UpdatePlayerUnitStartTile(void)
+{
+
+	// go through
+	for (unsigned int i=0; i < m_vObjectList.size(); i++)
+	{
+		// check if object is a player unit
+		if (static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit() )
+		{
+			// check to see if it has a location already
+			if (static_cast<CUnit*>(m_vObjectList[i])->GetPosX() <= 0 && static_cast<CUnit*>(m_vObjectList[i])->GetPosY() <= 0)
+			{
+				//check the map for spawn point
+				for (int j =0; j < Map->GetMapWidth(); ++j )
+				{
+					if (static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile() != NULL)
+						break;
+
+					for (int k =0; k < Map->GetMapHeight(); ++k )
+					{
+						if (static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile() != NULL)
+							break;
+						// if map loc is a spawn point set unit current loc there
+						else if (Map->GetTile(j,k).bIsPlayerSpawn && Map->GetTile(j,k).bIsOccupied == false)
+						{
+							POINT spawn = Map->GetLocalAnchor( j, k);
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosX(spawn.x);
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosY(spawn.y);
+							Map->SetOccupy(j, k, true);
+							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(&Map->GetTile(j,k));
+							break;
+						}
+
+					}
+
+				}
+			}
+		}
+	}
+}
+void ObjectManager::UpdatePlayerUnitDestTile(CTile* destTile)
+{
+	for (unsigned int i=0; i < m_vObjectList.size(); i++)
+	{
+		if (static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit() )
+		{
+			static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(destTile);
+		}
 	}
 }
 void ObjectManager::SetSelectedUnit(RECT toCheck)

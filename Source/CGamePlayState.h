@@ -43,7 +43,7 @@ private:
 	POINT									m_ptCurrentLocation;
 	RECT									m_rSelectionBox;
 	//Engines
-	CTileEngine Map;
+	CTileEngine* Map;
 
 	// TEMP BUTTONS FOR DEMO - SHOW WORLD MAP AFTER WIN OR LOSS
 	// REMOVE AFTER DEMO
@@ -142,6 +142,7 @@ public:
 	///////////////////////////////////////////
 	void SetTerrorLevel(int nTerrorLevel) { m_nTerrorLevel = nTerrorLevel; }
 	void SetPaused(bool bPaused)		  { m_bIsPaused = bPaused; }
+
 	//////////////////////////////////////////////////////
 	//	Function: “IntToString”
 	//	Last Modified: July 23, 2008

@@ -22,6 +22,7 @@ CGame::CGame(void)
 	m_pDS	= NULL;
 	m_pWM	= NULL;
 	m_pDI	= NULL;
+	m_pMap = NULL;
 	m_pSelectedCity = NULL;
 	m_dwPreviousTime = GetTickCount();
 	m_nFrameCounter = 0;
@@ -97,7 +98,9 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 
 	// Remember how the window started
 	m_bIsWindowed = bIsWindowed;
-	
+
+	m_pMap	= CTileEngine::GetInstance();
+
 	InitCities();
 		
 //	SetCursorNormal();

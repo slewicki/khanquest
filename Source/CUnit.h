@@ -10,14 +10,17 @@
 #pragma once
 #include "CBase.h"
 #include "AnimInstance.h"
+#include "CTile.h"
 #include "CHealthBar.h"
+
 enum	// Unit States
 {
-	//IDLE,
 	MOVEMENT,
 	COMBAT,
 	DYING,
 	RETREAT,
+	IDLE,
+
 };
 enum { NORTH, SOUTH, WEST, NORTH_WEST, SOUTH_WEST};
 
@@ -81,21 +84,24 @@ public:
 	//	Purpose: Gets the specified type
 	//////////////////////////////////////////////////////
 	// Get unit stats
-	inline int	 GetHP				(void) const { return m_nHP; }
-	inline int	 GetAttackPower		(void) const { return m_nAttack; }
-	inline int	 GetRange			(void) const { return m_nRange; }
-	inline float GetAttackSpeed		(void) const { return m_fAttackSpeed; }
-	inline float GetSpeed			(void) const { return m_fMovementSpeed; }
-	inline int GetCost				(void) const { return m_nCost; }
+	inline int	  GetHP				(void) const { return m_nHP; }
+	inline int	  GetAttackPower		(void) const { return m_nAttack; }
+	inline int	  GetRange			(void) const { return m_nRange; }
+	inline float  GetAttackSpeed		(void) const { return m_fAttackSpeed; }
+	inline float  GetSpeed			(void) const { return m_fMovementSpeed; }
+	inline int	  GetCost				(void) const { return m_nCost; }
 	inline CTile* GetDestTile		(void) const { return m_pDestinationTile; }
+	inline CTile* GetCurrentTile	(void) const { return m_pCurrentTile; }
+	inline bool IsPlayerUnit(void) {return m_bIsPlayerUnit;}
+
 	inline CUnit* GetTarget			(void) const { return m_pTarget; }
 	inline bool	  IsSelected		(void) const { return m_bIsSelected; }
 	inline bool	  IsAlive			(void) const { return m_bIsAlive; }
 	inline bool	  IsGrouped			(void) const { return m_bIsGrouped; }
 	inline int    GetState			(void) const { return m_nState; }
 	inline int    GetDirection		(void) const { return m_nDirectionFacing; }
-	inline RECT    GetLocalRect	    (void) const { return m_rLocalRect; }
-	inline RECT    GetGlobalRect	(void) const { return m_rGlobalRect; }
+	inline RECT   GetLocalRect	    (void) const { return m_rLocalRect; }
+	inline RECT   GetGlobalRect	(void) const { return m_rGlobalRect; }
 
 
 	//////////////////////////////////////////////////////
@@ -107,8 +113,11 @@ public:
 	inline void SetAttackPower	(int nAttack)		{ m_nAttack = nAttack; }
 	inline void SetRange		(int nRange)		{ m_nRange = nRange; }
 	inline void SetCost		(int nCost)		{ m_nCost = nCost; }
+	inline void SetIsPlayerUnit (bool bIsPlayerUnit) {m_bIsPlayerUnit = bIsPlayerUnit;}
 	inline void SetAttackSpeed	(float fAttackSpeed)	{ m_fAttackSpeed = fAttackSpeed; }
 	inline void SetSpeed		(float fMovementSpeed){ m_fMovementSpeed = fMovementSpeed; }
+	inline void SetDestTile		(CTile* pDestTile)  { m_pDestinationTile = pDestTile; }
+	inline void SetCurrentTile	(CTile* pCurrentTile)  { m_pCurrentTile = pCurrentTile; }
 	inline void SetBonus		(int nBonus)		{ m_nBonus = nBonus; }
 	inline void SetSelected		(bool bIsSelected)	{ m_bIsSelected = bIsSelected; }
 	inline void SetGrouped		(bool bIsGrouped)	{ m_bIsGrouped = bIsGrouped; }
@@ -122,6 +131,8 @@ public:
 		m_nState = nState; 
 		m_pAnimInstance->Play(GetDirection(), GetState());	
 	}
+
+	inline void DamageUnit() { m_pHealthBar->DamageHealth(2); }
 
 	////////////////////////////////////////
 	//	Function:	"Update"
@@ -145,7 +156,11 @@ public:
 	//////////////////////////////////////////////////////
 	bool CheckCollisions(CBase* pBase);
 
-	inline void DamageUnit() { m_pHealthBar->DamageHealth(2); }
+	//////////////////////////////////////////////////////
+	// Function: “ChangeDirection”
+	//	Last Modified: July 18, 2008
+	// Purpose: Change the direction the unit is facing
+	//////////////////////////////////////////////////////
 	void ChangeDirection(POINT pMousePos);
 	
 };

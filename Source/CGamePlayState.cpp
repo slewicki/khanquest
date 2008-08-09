@@ -7,11 +7,8 @@
 //////////////////////////////////////////////////////////
 
 #include "CGamePlayState.h"
-
-#include "CGame.h"
-
 #include "ObjectManager.h"
-
+#include "CGame.h"
 #include "CWorldMapState.h"
 #include "CPausedState.h"
 #include "HUDState.h"
@@ -41,6 +38,8 @@ void CGamePlayState::Enter(void)
 	m_pWM = CSGD_WaveManager::GetInstance();
 	m_pDI = CSGD_DirectInput::GetInstance();
 	m_pES = CEventSystem::GetInstance();
+	m_pOM = ObjectManager::GetInstance();
+	Map = CTileEngine::GetInstance();
 	m_pD3D = CSGD_Direct3D::GetInstance();
 	m_pHUD = CHUDState::GetInstance();
 	m_pES->RegisterClient("Play", ObjectManager::GetInstance());
@@ -48,7 +47,9 @@ void CGamePlayState::Enter(void)
 	m_pCamera->InitCamera(0.f,0.f);
 
 	// Register any Events with the GamePlayState
-	Map.LoadFile("Resource/Levels/KQ_Wawa.level");
+	Map->LoadFile("Resource/Levels/KQ_Wawa.level");
+	m_pOM->UpdatePlayerUnitStartTile();
+
 	//---------------------------------
 	m_rVictoryButton.left = 100;
 	m_rVictoryButton.top = 500;
@@ -85,6 +86,13 @@ bool CGamePlayState::Input(float fElapsedTime)
 
 	if(!m_bIsPaused)
 	{
+
+		if(m_pDI->GetBufferedKey(DIK_F1))
+		{
+			CTile dest = Map->GetTile(4,4);
+			ObjectManager::GetInstance()->UpdatePlayerUnitDestTile(&dest);
+		}
+
 		POINT ptMousePos = CGame::GetInstance()->GetMousePos(); 
 		if(ptMousePos.y <= 450 && ((ptMousePos.x > 0 && ptMousePos.x < 800) && (ptMousePos.y > 0 && ptMousePos.y < 600)))
 		{
@@ -229,15 +237,15 @@ void CGamePlayState::Render(float fElapsedTime)
 	// Temp for map changes
 	//-----------------------------------------------
 	if( m_pDI->GetBufferedKey(DIK_1))
-		Map.LoadFile("Resource/Levels/KQ_Wawa.level");
+		Map->LoadFile("Resource/Levels/KQ_Wawa.level");
 	else if( m_pDI->GetBufferedKey(DIK_2))
-		Map.LoadFile("Resource/Levels/KQ_Wee.level");
+		Map->LoadFile("Resource/Levels/KQ_Wee.level");
 	else if( m_pDI->GetBufferedKey(DIK_3))
-		Map.LoadFile("Resource/Levels/KQ_Tech_Demo1.level");
+		Map->LoadFile("Resource/Levels/KQ_Tech_Demo1.level");
 
 	POINT MapLoc = m_pCamera->TransformToGlobal(CGame::GetInstance()->GetCursorPosition().x, CGame::GetInstance()->GetCursorPosition().y);
 
-	Map.Render(m_pCamera->GetPosX(), m_pCamera->GetPosY());
+	Map->Render((int)m_pCamera->GetPosX(), (int)m_pCamera->GetPosY());
 
 	if(m_pDI->GetMouseButton(M_BUTTON_RIGHT))
 	{
@@ -246,18 +254,18 @@ void CGamePlayState::Render(float fElapsedTime)
 		char buffer3[32];	//Player Spawn
 		char buffer4[32];	//Local Anchor
 		char buffer5[32];	//Global Anchor
-		POINT TileLoc = Map.IsoMouse(MapLoc.x, MapLoc.y, 0);
+		POINT TileLoc = Map->IsoMouse(MapLoc.x, MapLoc.y, 0);
 
 		sprintf_s(buffer, 32, "Tile: %i, %i", TileLoc.x, TileLoc.y);
-		sprintf_s(buffer2, 32, "TileType: %i", Map.GetTile(TileLoc.x, TileLoc.y).nType);
+		sprintf_s(buffer2, 32, "TileType: %i", Map->GetTile(TileLoc.x, TileLoc.y).nType);
 
-		if(Map.GetTile(TileLoc.x, TileLoc.y).bIsPlayerSpawn == true)
+		if(Map->GetTile(TileLoc.x, TileLoc.y).bIsPlayerSpawn == true)
 			sprintf_s(buffer3, 32, "PlayerSpawn: True");
 		else
 			sprintf_s(buffer3, 32, "PlayerSpawn: False");
 
-		sprintf_s(buffer4, 32, "Local Anchor: %i, %i", Map.GetTile(TileLoc.x, TileLoc.y).ptLocalAnchor.x, Map.GetTile(TileLoc.x, TileLoc.y).ptLocalAnchor.y);
-		sprintf_s(buffer5, 32, "Global Anchor: %i, %i", MapLoc);
+		sprintf_s(buffer4, 32, "Local Anchor: %i, %i", Map->GetTile(TileLoc.x, TileLoc.y).ptLocalAnchor.x, Map->GetTile(TileLoc.x, TileLoc.y).ptLocalAnchor.y);
+		sprintf_s(buffer5, 32, "Global Anchor: %i, %c", MapLoc);
 
 		m_cFont.DrawTextA(buffer, 500, 0, .2f, .2f);
 		m_cFont.DrawTextA(buffer2, 500, 30, .2f, .2f);

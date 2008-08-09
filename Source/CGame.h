@@ -15,7 +15,7 @@
 #include "CSGD_WaveManager.h"
 #include "CSGD_DirectInput.h"
 #include "AnimationManager.h"
-
+#include "CTileEngine.h"
 #include "IGameState.h"
 #include <windows.h>
 #include "CUnit.h"
@@ -34,6 +34,7 @@ private:
 	CSGD_WaveManager*		m_pWM;
 	CSGD_DirectInput*		m_pDI;
 	CAnimationManager*		m_pAM;
+	CTileEngine*			m_pMap;
 	// Time and Frame Variables
 	DWORD					m_dwPreviousTime;
 	int						m_nFrameCounter;	//counts number of frames per second
