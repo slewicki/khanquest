@@ -43,6 +43,7 @@ public:
 	//////////////////////////////////////////////////////
 	float GetPosX() { return m_vPos.fX; }
 	float GetPosY() { return m_vPos.fY; }
+	RECT GetScreenArea() { return m_rScreenArea; }
 
 
 	//////////////////////////////////////////////////////
