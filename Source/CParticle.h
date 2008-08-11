@@ -54,6 +54,9 @@ public:
 	float 	m_fCurrentScaleY;
 	float 	m_fEndScaleY;
 
+	float	m_fGravityX;
+	float	m_fGravityY;
+
 	string	m_szSourceBlend;
 	string	m_szDestBlend;
 
@@ -121,6 +124,9 @@ public:
 	float 	GetCurrentScaleY(void)	{return m_fCurrentScaleY;}
 	float 	GetEndScaleY(void)		{return m_fEndScaleY;}
 
+	float	GetGravityX(void)		{return m_fGravityX;}
+	float	GetGravityY(void)		{return m_fGravityY;}
+
 	string	GetSourceBlend(void)	{return m_szSourceBlend;}
 	string	GetDestBlend(void)		{return m_szDestBlend;}
 
@@ -169,6 +175,10 @@ public:
 	void 	SetStartScaleY(float StartScaleY)		{m_fStartScaleY = StartScaleY ;}
 	void 	SetCurrentScaleY(float CurrentScaleY)	{m_fCurrentScaleY =  CurrentScaleY;}
 	void 	SetEndScaleY(float EndScaleY)			{m_fEndScaleY =  EndScaleY;}
+
+	float	SetGravityX(float GravityX)				{m_fGravityX = GravityX;}
+	float	SetGravityY(float GravityY)				{m_fGravityX = GravityY;}
+
 
 	void	SetSourceBlend(string SourceBlend)	    {m_szSourceBlend =  SourceBlend;}
 	void	SetDestBlend(string DestBlend)			{m_szDestBlend =  DestBlend;}

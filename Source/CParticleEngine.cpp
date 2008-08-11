@@ -213,8 +213,11 @@ void CParticleEngine::UpdateScale(int i, int j)
 
 void CParticleEngine::UpdateLoc(int i, int j)
 {
-	vEmitterList[i].vParticleList[j].m_fPartLocX += vEmitterList[i].vParticleList[j].m_fVelX;
-	vEmitterList[i].vParticleList[j].m_fPartLocY += vEmitterList[i].vParticleList[j].m_fVelY;
+	// update location
+	m_fPercentGravity = (vEmitterList[i].vParticleList[j].m_fAge / vEmitterList[i].vParticleList[j].m_fLife) ;
+
+	vEmitterList[i].vParticleList[j].m_fPartLocX += (vEmitterList[i].vParticleList[j].m_fVelX + Lerp(0, vEmitterList[i].vParticleList[j].m_fGravityY, m_fPercentGravity));
+	vEmitterList[i].vParticleList[j].m_fPartLocY += (vEmitterList[i].vParticleList[j].m_fVelY + Lerp(0, vEmitterList[i].vParticleList[j].m_fGravityY, m_fPercentGravity));
 }
 
 int CParticleEngine::GetBlendMode(string mode)

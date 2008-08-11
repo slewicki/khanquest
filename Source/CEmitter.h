@@ -37,6 +37,9 @@ public:
 	float					m_fPercentXScale;
 	float					m_fPercentYScale;
 
+	float					m_fPercentGravityX;
+	float					m_fPercentGravityY;
+
 	float					m_fUpdateFloat;	
 	float					m_fUpdateQuarter;
 	int						m_nImageID;
@@ -120,7 +123,6 @@ public:
 	//  Purpose: Loads the particle emitter information from a XML file
 	//////////////////////////////////////////////////////////////////////////
 	void LoadXMLEmitter(char* emitterFileName, float locX, float locY);
-
 
 	//////////////////////////////////////////////////////////////////////////
 	// Function: LoadXMLParicle
