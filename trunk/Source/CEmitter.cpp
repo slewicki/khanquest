@@ -29,6 +29,9 @@ CEmitter::CEmitter(void)
 	m_fPercentXScale = 0;
 	m_fPercentYScale = 0;
 
+	m_fPercentGravityX = 0;
+	m_fPercentGravityY = 0;
+
 	m_fUpdateFloat		= .25f;
 	m_fUpdateQuarter	= .25f;
 
@@ -151,6 +154,12 @@ void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY)
 	fin.read((char*)&nDouble, sizeof(nDouble));
 	particle.m_fEndScaleY = (float)nDouble;
 
+	fin.read((char*)&nDouble, sizeof(nDouble));
+	particle.m_fGravityX = (float)nDouble;
+
+	fin.read((char*)&nDouble, sizeof(nDouble));
+	particle.m_fGravityY = (float)nDouble;
+
 	fin.read((char*)&nStringSize, sizeof(int));
 	fin.read(szBuffer,nStringSize);
 	szBuffer[nStringSize] = 0;
@@ -238,6 +247,10 @@ void CEmitter::LoadXMLEmitter(char* emitterFileName, float locX, float locY)
 				particle.m_fEndScaleX	 = xml->getAttributeValueAsFloat("EndScaleX");
 				particle.m_fStartScaleY	 = xml->getAttributeValueAsFloat("StartScaleY");
 				particle.m_fEndScaleY	 = xml->getAttributeValueAsFloat("EndScaleY");
+
+				particle.m_fGravityX	= xml->getAttributeValueAsFloat("GravityX");
+				particle.m_fGravityY	= xml->getAttributeValueAsFloat("GravityY");
+
 				particle.m_szTrigger	 = xml->getAttributeValue("Trigger");
 				particle.m_szFileName = xml->getAttributeValue("FileName");
 				}

@@ -29,12 +29,12 @@ class CParticleEngine
 	float 					m_fPercentBlue;	
 
 	float					m_fPercentScale;
+	float					m_fPercentGravity;
 
 	float					m_fUpdateFloat;	
 	float					m_fUpdateQuarter;
 	int						m_nImageID;
-	//float					m_fLocX;
-	//float					m_fLocY;
+
 	//	For calculating elapsed time
 	DWORD				m_dwPreviousTime;	//	Time stamp of the last frame
 	float				m_dElapsedTime;		//	Time elapsed (in seconds) since the previous frame.

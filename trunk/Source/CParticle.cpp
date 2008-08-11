@@ -47,10 +47,13 @@ CParticle::CParticle(void)
 	m_fCurrentScaleY =  1;
 	m_fEndScaleY =  1;
 
+	m_fGravityX = 0;
+	m_fGravityY = 0;
+
 	m_szSourceBlend =  "";
 	m_szDestBlend =  "";
 
-	m_szFileName =  "Resource/ParticleEmitters/KQ_puff.png";
+	m_szFileName =  "Resource/KQ_puff.png";
 	m_nImageID =  -1;
 
 	m_szTrigger = "";
