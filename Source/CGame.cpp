@@ -106,12 +106,12 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 //	SetCursorNormal();
 
 	m_pAM = CAnimationManager::GetInstance();
-	m_pAM->BinParse("Resource/KQ_Infantry.dat", "Resource/KQ_Infantry.png");
-	m_pAM->BinParse("Resource/KQ_Axmen.dat", "Resource/KQ_Axmen.png");
-	m_pAM->BinParse("Resource/KQ_Cavalry.dat", "Resource/KQ_Cavalry.png");
-	m_pAM->BinParse("Resource/KQ_Cavalry_Archer.dat", "Resource/KQ_CavalryArcher.png");
-	m_pAM->BinParse("Resource/KQ_Archer.dat", "Resource/KQ_Archer.png");
-	m_pAM->BinParse("Resource/KQ_War_Elephant.dat", "Resource/KQ_War_Elephant.png");
+	m_pAM->BinParse("Resource/KQ_Infantry.dat", "Resource/KQ_Player_Infantry.png","Resource/Enemies/KQ_AI_Infantry.png");
+	m_pAM->BinParse("Resource/KQ_Axmen.dat", "Resource/KQ_Player_Axmen.png","Resource/Enemies/KQ_AI_Axmen.png");
+	m_pAM->BinParse("Resource/KQ_Cavalry.dat", "Resource/KQ_Player_Cavalry.png","Resource/Enemies/KQ_AI_Cavalry.png");
+	m_pAM->BinParse("Resource/KQ_Cavalry_Archer.dat", "Resource/KQ_Player_CavalryArcher.png","Resource/Enemies/KQ_AI_CavalryArcher.png");
+	m_pAM->BinParse("Resource/KQ_Archer.dat", "Resource/KQ_Player_Archer.png","Resource/Enemies/KQ_AI_Archer.png");
+	m_pAM->BinParse("Resource/KQ_War_Elephant.dat", "Resource/KQ_Player_War_Elephant.png","Resource/Enemies/KQ_AI_War_Elephant.png");
 
 	ChangeState(CMainMenuState::GetInstance());
 	return false;

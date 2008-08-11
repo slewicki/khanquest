@@ -36,7 +36,8 @@ class COptionsMenuState : public IGameState
 	
 	enum
 	{
-		MUSIC = 1,
+		KEYBIND = 0,
+		MUSIC,
 		SFX,
 		BACK,
 	};

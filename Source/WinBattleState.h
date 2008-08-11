@@ -13,6 +13,8 @@ class CWinBattleState : public IGameState
 	CSGD_WaveManager*		m_pWM;
 	CBitmapFont				m_BF;
 	
+	int m_nVolume;
+	int m_nMaxVolume;
 	float m_fEscTimer;
 	float m_fTimer;
 	bool m_bAlpha;

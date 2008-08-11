@@ -98,6 +98,10 @@ bool COptionsMenuState::Input(float fElapsedTime)
 	}
 	if(m_pDI->GetBufferedKey(DIK_RETURN))
 	{
+		if(Buttons[m_nCurrentButton].Action == KEYBIND)
+		{
+			//Switch States;
+		}
 		if(Buttons[m_nCurrentButton].Action == BACK)
 		{
 			CGame::GetInstance()->PopCurrentState();

@@ -20,6 +20,8 @@ class CWinGameState : public IGameState
 	int m_nImageID;
 	bool m_bAlpha;
 	bool m_bEsc;
+	int m_nVolume;
+	int m_nMaxVolume;
 	POINT m_ptImageLoc, m_ptImageSize;
 	string m_szImageFile;
 

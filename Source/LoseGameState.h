@@ -13,6 +13,8 @@ class CLoseGameState: public IGameState
 	CSGD_WaveManager*		m_pWM;
 	CBitmapFont				m_BF;
 	
+	int m_nVolume;
+	int m_nMaxVolume;
 	float m_fTimer;
 	float m_fEscTimer;
 	bool m_bAlpha;

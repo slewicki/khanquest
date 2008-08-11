@@ -18,10 +18,11 @@ class CAnimInstance
 	CAnimationManager* m_pAM;
 	CSheet m_Sheet; 
 	bool m_bIsLooping;
+	bool m_bisFliped;
 	int x; 
 	int y;
 	string GetName(int Direction,int Action);
-
+	bool m_bisPlayer;
 
 public:
 	CAnimInstance(int UnitType);
@@ -35,6 +36,8 @@ public:
 	int GetFrameWidth(int Direction, int Action);
 	int GetFrameHeight(int Direction, int Action);
 	void SetLooping(bool value);
+	void SetFlip(bool value){m_bisFliped = value;}
+	void SetPlayer(bool value);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 // Function: “Play” 

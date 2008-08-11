@@ -152,6 +152,15 @@ void CUnit::ChangeDirection(POINT pMousePos)
 	{
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nDirectionFacing = NORTH_WEST;
+		m_pAnimInstance->SetFlip(false);
+		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
+		return;
+	}
+	else if(pMousePos.y < GetLocalRect().top && pMousePos.x > GetLocalRect().right)
+	{
+		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_nDirectionFacing = NORTH_WEST;
+		m_pAnimInstance->SetFlip(true);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 		return;
 	}
@@ -159,6 +168,15 @@ void CUnit::ChangeDirection(POINT pMousePos)
 	{
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nDirectionFacing = SOUTH_WEST;
+		m_pAnimInstance->SetFlip(false);
+		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
+		return;
+	}
+	else if(pMousePos.y > GetLocalRect().bottom && pMousePos.x > GetLocalRect().right)
+	{
+		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_nDirectionFacing = SOUTH_WEST;
+		m_pAnimInstance->SetFlip(true);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 		return;
 	}
@@ -166,6 +184,15 @@ void CUnit::ChangeDirection(POINT pMousePos)
 	{
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nDirectionFacing = WEST;
+		m_pAnimInstance->SetFlip(false);
+		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
+		return;
+	}
+	else if(pMousePos.x > GetLocalRect().right)
+	{
+		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_nDirectionFacing = WEST;
+		m_pAnimInstance->SetFlip(true);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 		return;
 	}
@@ -173,6 +200,7 @@ void CUnit::ChangeDirection(POINT pMousePos)
 	{
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nDirectionFacing = NORTH;
+		m_pAnimInstance->SetFlip(false);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 		return;
 	}
@@ -180,6 +208,7 @@ void CUnit::ChangeDirection(POINT pMousePos)
 	{	
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nDirectionFacing = SOUTH;
+		m_pAnimInstance->SetFlip(false);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 		return;
 	}
