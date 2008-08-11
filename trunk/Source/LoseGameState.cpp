@@ -27,7 +27,10 @@ void CLoseGameState::Enter()
 	m_fEscTimer = 0;
 	m_fTimer = 0;
 	m_nAlpha = 0;
-	m_pWM->SetVolume(m_nSongID,CGame::GetInstance()->GetMusicVolume());
+	m_nVolume = 0;
+	m_nMaxVolume = CGame::GetInstance()->GetMusicVolume();
+
+	m_pWM->SetVolume(m_nSongID,m_nVolume);
 	m_pWM->Play(m_nSongID);
 }
 
@@ -56,7 +59,7 @@ bool CLoseGameState::Input(float fElapsedTime)
 void CLoseGameState::Render(float fElapsedTime)
 {	
 	CSGD_Direct3D::GetInstance()->Clear(160,80,0);
-	m_pTM->Draw(m_nImageID,0,25,.80,.80f,0,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
+	m_pTM->Draw(m_nImageID,0,25,.80f,.80f,0,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 	m_BF.DrawTextA("The War Is Over!/Unfortunatly, You Lost.",25,25,.30f,.30f,D3DCOLOR_ARGB(m_nAlpha,0,0,0));	
 	
 }
@@ -72,6 +75,12 @@ void CLoseGameState::Update(float fElapsedTime)
 		{
 			m_fTimer = 0;
 			m_nAlpha++;
+
+			if(m_nVolume < m_nMaxVolume)
+				m_pWM->SetVolume(m_nSongID,m_nVolume++);
+			else
+				m_pWM->SetVolume(m_nSongID,m_nMaxVolume);
+
 			if(m_nAlpha == 255)
 				m_bAlpha = true;
 		}
@@ -82,6 +91,12 @@ void CLoseGameState::Update(float fElapsedTime)
 			{
 				m_nAlpha--;
 				m_fTimer = 0;
+
+				if(m_nVolume >= 0)
+					m_pWM->SetVolume(m_nSongID,m_nVolume--);
+				else 
+					m_pWM->SetVolume(m_nSongID,0);
+	
 				if(m_nAlpha == 0)
 					CGame::GetInstance()->PopCurrentState();
 			}
@@ -93,6 +108,12 @@ void CLoseGameState::StartEsc()
 	{
 		m_nAlpha--;
 		m_fEscTimer = 0;
+
+		if(m_nVolume >= 0)
+			m_pWM->SetVolume(m_nSongID,m_nVolume--);
+		else 
+			m_pWM->SetVolume(m_nSongID,0);
+
 		if(m_nAlpha == 0)
 		{
 				CGame::GetInstance()->PopCurrentState();

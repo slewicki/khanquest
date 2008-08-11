@@ -21,13 +21,14 @@ void CLoseBattleState::Enter()
 	m_nImageID = m_pTM->LoadTexture("Resource/KQ_LoseBattle.png");
 	CMainMenuState::GetInstance()->SetPause(true);
 	m_BF.InitBitmapFont(m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png"),' ',16,128,128);
-	
+	m_nVolume = 0;
 	m_bAlpha = false;
 	m_bEsc = false;
 	m_fEscTimer = 0;
 	m_fTimer = 0;
 	m_nAlpha = 0;
-	m_pWM->SetVolume(m_nSongID,CGame::GetInstance()->GetMusicVolume());
+	m_nMaxVolume = CGame::GetInstance()->GetMusicVolume();
+	m_pWM->SetVolume(m_nSongID,m_nVolume);
 	m_pWM->Play(m_nSongID);
 }
 
@@ -66,12 +67,17 @@ void CLoseBattleState::Update(float fElapsedTime)
 	if(m_bEsc)
 		return;
 	m_fTimer += fElapsedTime;
-	m_fEscTimer += fElapsedTime;
 	if(!m_bAlpha)
 		if(m_fTimer > .002f && m_nAlpha < 255)
 		{
 			m_fTimer = 0;
 			m_nAlpha++;
+
+			if(m_nVolume < m_nMaxVolume)
+				m_pWM->SetVolume(m_nSongID,m_nVolume++);
+			else
+				m_pWM->SetVolume(m_nSongID,m_nMaxVolume);
+
 			if(m_nAlpha == 255)
 				m_bAlpha = true;
 		}
@@ -81,7 +87,13 @@ void CLoseBattleState::Update(float fElapsedTime)
 			if(m_fTimer > 6.f)
 			{
 				m_nAlpha--;
-				m_fTimer = 0;
+				m_fTimer;
+
+				if(m_nVolume >= 0)
+					m_pWM->SetVolume(m_nSongID,m_nVolume--);
+				else 
+					m_pWM->SetVolume(m_nSongID,0);
+
 				if(m_nAlpha == 0)
 					CGame::GetInstance()->PopCurrentState();
 			}
@@ -93,6 +105,12 @@ void CLoseBattleState::StartEsc()
 	{
 		m_nAlpha--;
 		m_fEscTimer = 0;
+		
+		if(m_nVolume >= 0)
+			m_pWM->SetVolume(m_nSongID,m_nVolume--);
+		else 
+			m_pWM->SetVolume(m_nSongID,0);
+		
 		if(m_nAlpha == 0)
 		{
 				CGame::GetInstance()->PopCurrentState();

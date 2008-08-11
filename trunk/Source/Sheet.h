@@ -19,10 +19,15 @@ public:
 	//Accessors and Mutators
 	int GetUnitType(){return m_szUnitType;}
 	void SetUnitType(int value){m_szUnitType = value;}
-	void SetImageID(int value)
+	void SetPlayerImageID(int value)
 	{
 		for(unsigned int i = 0; i < m_vAnimations.size();i++)
-			m_vAnimations[i].SetAnimationID(value);
+			m_vAnimations[i].SetPlayerAnimationID(value);
+	}
+	void SetAIImageID(int value)
+	{
+		for(unsigned int i = 0; i < m_vAnimations.size(); i++)
+			m_vAnimations[i].SetAIAnimationID(value);
 	}
 	// Last Modified: July 27, 2008 
 	vector<CAnimation>& GetAnimations(){return m_vAnimations;}

@@ -39,8 +39,12 @@ class CAnimation
 	vector<Frame> m_vFrames;
 	float	m_fSpeed;
 	float	m_fFrameTimer;
-	int		m_nAnimationID;
+	
+	int		m_nPlayerAnimationID;
+	int		m_nAIAnimationID;
+
 	unsigned int m_nCurrentFrame;
+	bool	m_bIsPlayer;
 	bool	m_bIsPlaying;
 	bool	m_bIsLooping;
 
@@ -65,7 +69,9 @@ public:
 	int GetCurrentFrame(){return m_nCurrentFrame;}
 	void IsLooping(bool ToLoop){m_bIsLooping = ToLoop;}
 	bool IsPlaying(){return m_bIsPlaying;}
-	void SetAnimationID(int nAnimationID) {m_nAnimationID = nAnimationID;}
+	void SetPlayer(bool value){m_bIsPlayer = value;}
+	void SetPlayerAnimationID(int nPlayerAnimationID) {m_nPlayerAnimationID = nPlayerAnimationID;}
+	void SetAIAnimationID(int nAIAnimationID){m_nAIAnimationID = nAIAnimationID;}
 	void SetDurration(float fDurr){m_vFrames[m_nCurrentFrame].fDuration = fDurr;}
 #pragma endregion
 

@@ -14,6 +14,8 @@ CAnimInstance::CAnimInstance(int UnitType)
 	m_nUnitType = UnitType;
 	x = 0;
 	y = 0;
+	m_bisFliped = false;
+
 }
 
 CAnimInstance::~CAnimInstance(void)
@@ -29,7 +31,6 @@ CAnimInstance::~CAnimInstance(void)
 void CAnimInstance::Play(int Direction, int Action)
 {	
 	string name = GetName(Direction,Action);
-
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
 		if(name == m_Sheet.GetAnimations()[i].GetName())
 		{
@@ -67,7 +68,7 @@ void CAnimInstance::Render()
 	{
 		string name = m_szAction + "_" + m_szDirection;
 		if(name == m_Sheet.GetAnimations()[i].GetName())
-			m_Sheet.GetAnimations()[i].Render(x,y,1,0,false,0);
+			m_Sheet.GetAnimations()[i].Render(x,y,1,0,m_bisFliped,0);
 	}
 }
 
@@ -117,7 +118,19 @@ void CAnimInstance::SetLooping(bool value)
 		}
 	}
 }
-
+void CAnimInstance::SetPlayer(bool value)
+{
+	m_bisPlayer = value;
+	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size(); i++)
+	{
+		string name = m_szAction + "_" + m_szDirection;
+		if(m_Sheet.GetAnimations()[i].IsPlaying())
+		{
+			if(name == m_Sheet.GetAnimations()[i].GetName())
+				m_Sheet.GetAnimations()[i].SetPlayer(value);
+		}
+	}
+}
 
 string CAnimInstance::GetName(int Direction, int Action)
 {

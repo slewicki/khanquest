@@ -11,6 +11,7 @@ CAnimation::CAnimation(void)
 	m_fFrameTimer = 0;
 	m_bIsLooping = true;
 	m_bIsPlaying = false;
+	m_bIsPlayer = true;
 }
 
 CAnimation::~CAnimation(void)
@@ -59,8 +60,32 @@ bool CAnimation::Update(float fElapsedTime)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimation::Render( int x, int y, float scale, DWORD color,  bool  isfliped, float rotation)
 {
-	CSGD_TextureManager::GetInstance()->Draw(m_nAnimationID, x - m_vFrames[m_nCurrentFrame].ptAnchorX, y - m_vFrames[m_nCurrentFrame].ptAnchorY,
-															scale, scale, &m_vFrames[m_nCurrentFrame].rRender, rotation, rotation, rotation, -1);
+	int width, height;
+	width = m_vFrames[m_nCurrentFrame].rRender.right - m_vFrames[m_nCurrentFrame].rRender.left;
+	height = m_vFrames[m_nCurrentFrame].rRender.bottom - m_vFrames[m_nCurrentFrame].rRender.top;
+	
+	if(!isfliped)
+	{
+		if(m_bIsPlayer)
+			CSGD_TextureManager::GetInstance()->Draw(m_nPlayerAnimationID, x+width/2 - m_vFrames[m_nCurrentFrame].ptAnchorX,
+													 y- m_vFrames[m_nCurrentFrame].ptAnchorY,
+													 scale, scale, &m_vFrames[m_nCurrentFrame].rRender,
+													 rotation, rotation, rotation, -1);
+		else
+			CSGD_TextureManager::GetInstance()->Draw(m_nAIAnimationID, x+width/2- m_vFrames[m_nCurrentFrame].ptAnchorX,
+													 y-m_vFrames[m_nCurrentFrame].ptAnchorY,
+													 scale, scale, &m_vFrames[m_nCurrentFrame].rRender,
+													 rotation, rotation, rotation, -1);
+	}
+	else
+	{
+		if(m_bIsPlayer)
+			CSGD_TextureManager::GetInstance()->Draw(m_nPlayerAnimationID, x+width/2 - m_vFrames[m_nCurrentFrame].ptAnchorX, y - m_vFrames[m_nCurrentFrame].ptAnchorY,-scale,scale,
+													 &m_vFrames[m_nCurrentFrame].rRender,rotation,rotation,rotation, -1);
+		else
+			CSGD_TextureManager::GetInstance()->Draw(m_nAIAnimationID, x+width/2 - m_vFrames[m_nCurrentFrame].ptAnchorX, y - m_vFrames[m_nCurrentFrame].ptAnchorY,-scale,scale,
+													 &m_vFrames[m_nCurrentFrame].rRender,rotation,rotation,rotation, -1);
+	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 // Function: “Play” 

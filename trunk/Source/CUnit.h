@@ -23,7 +23,7 @@ enum	// Unit States
 	IDLE,
 
 };
-enum { NORTH, SOUTH, WEST, NORTH_WEST, SOUTH_WEST};
+enum { NORTH, SOUTH, WEST, NORTH_WEST, SOUTH_WEST, EAST, NORTH_EAST, SOUTH_EAST};
 
 class CTile;
 class CUnit : public CBase
@@ -114,7 +114,7 @@ public:
 	inline void SetAttackPower	(int nAttack)		{ m_nAttack = nAttack; }
 	inline void SetRange		(int nRange)		{ m_nRange = nRange; }
 	inline void SetCost		(int nCost)		{ m_nCost = nCost; }
-	inline void SetIsPlayerUnit (bool bIsPlayerUnit) {m_bIsPlayerUnit = bIsPlayerUnit;}
+	inline void SetIsPlayerUnit (bool bIsPlayerUnit) {m_bIsPlayerUnit = bIsPlayerUnit; m_pAnimInstance->SetPlayer(m_bIsPlayerUnit);}
 	inline void SetAttackSpeed	(float fAttackSpeed)	{ m_fAttackSpeed = fAttackSpeed; }
 	inline void SetSpeed		(float fMovementSpeed){ m_fMovementSpeed = fMovementSpeed; }
 	inline void SetDestTile		(CTile pDestTile)  { m_pDestinationTile = pDestTile; }
