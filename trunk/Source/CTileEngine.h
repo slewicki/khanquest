@@ -39,7 +39,7 @@ private:
 	int m_nImageID;					//Image loaded through texture manager
 	string m_szImagePath;			//Name of the image to load
 	string m_szTileType;			//Type of the tile
-	CTile** pTileArray;				//2D array of tiles that make a map
+	CTile*** pTileArray;			//3D array of tiles that make a map
 	int m_nLayer;					//Number of Map Layers
 	POINT m_ptMousePoint;			//Mouse Location
 
@@ -60,7 +60,7 @@ public:
 	//
 	//	Purpose: Updates values based on time
 	/////////////////////////////////
-	void Render(int nCamPosX, int nCamPosY);
+	void Render(RECT nCamPos);
 
 	//Accessors
 	//Map
@@ -85,10 +85,10 @@ public:
 
 	POINT IsoMouse(int x, int y, int z);
 
-	CTile GetTile(int x, int y) { return pTileArray[x][y]; }
-	POINT GetLocalAnchor(int x, int y) { return pTileArray[x][y].ptLocalAnchor; }
+	CTile GetTile(int Layer, int x, int y) { return pTileArray[Layer][x][y]; }
+	POINT GetLocalAnchor(int Layer, int x, int y) { return pTileArray[Layer][x][y].ptLocalAnchor; }
 	void SetLocalAnchor();
-	void SetOccupy(int x, int y, bool bOccupy);
+	void SetOccupy(int Layer, int x, int y, bool bOccupy);
 
 	void Clear();
 };

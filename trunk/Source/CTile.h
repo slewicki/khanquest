@@ -21,8 +21,8 @@ public:
 	bool bIsEnemySpawn;
 	bool bIsCollision;
 	POINT ptLocalAnchor;
-	POINT ptGlobalAnchor;
 	bool bIsOccupied;
+	bool bIsVisible;
 };
 
 #endif
