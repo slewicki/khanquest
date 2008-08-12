@@ -88,7 +88,7 @@ public:
 	CTile GetTile(int Layer, int x, int y) { return pTileArray[Layer][x][y]; }
 	POINT GetLocalAnchor(int Layer, int x, int y) { return pTileArray[Layer][x][y].ptLocalAnchor; }
 	void SetLocalAnchor();
-	void SetOccupy(int Layer, int x, int y, bool bOccupy);
+	void SetOccupy(int x, int y, bool bOccupy);
 
 	void Clear();
 
