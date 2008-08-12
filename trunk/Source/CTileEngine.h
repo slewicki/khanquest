@@ -91,6 +91,8 @@ public:
 	void SetOccupy(int Layer, int x, int y, bool bOccupy);
 
 	void Clear();
+
+	void ParalaxScroll(bool bIsScrollable, const char* szFileName, RECT rCamPos);
 };
 
 #endif

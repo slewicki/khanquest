@@ -133,6 +133,8 @@ void CTileEngine::LoadFile(char* szFileName)
 					}
 
 					pTileArray[nLayer][x][y].bIsVisible = false;
+					pTileArray[nLayer][x][y].ptTileLoc.x = x;
+					pTileArray[nLayer][x][y].ptTileLoc.y = y;
 				}
 			}
 		}
@@ -223,4 +225,12 @@ void CTileEngine::Clear()
 void CTileEngine::SetOccupy(int Layer, int x, int y, bool bOccupy)
 {
 	pTileArray[Layer][x][y].bIsOccupied = bOccupy;
+}
+
+void CTileEngine::ParalaxScroll(bool bIsScrollable, const char* szFileName, RECT rCamPos)
+{
+	if(!bIsScrollable)
+		return;
+
+	//m_pTM->Draw(m_pTM->LoadTexture(szFileName), 0, 0, 1, 1, rCamPos
 }
