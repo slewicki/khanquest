@@ -24,7 +24,7 @@ private:
 public:
 
 	void					SetHealth(int nHealth) { m_nHealth = nHealth; }
-
+	int						GetHealth()			   { return m_nHealth; }
 	void					DamageHealth(int nPercentHealth);
 
 	CHealthBar();
