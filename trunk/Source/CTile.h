@@ -9,20 +9,27 @@
 //	Purpose: Class to store tile values
 //////////////////////////////////////////////////////////
 #include <windows.h>
-
 enum TileType { PLAIN, MOUNTAIN, FOREST, SHALLOW_WATER, DEEP_WATER };
 
 class CTile
 {
 public:
+
+
 	TileType nType;
 	POINT ptPos;
 	bool bIsPlayerSpawn;
 	bool bIsEnemySpawn;
 	bool bIsCollision;
 	POINT ptLocalAnchor;
+	POINT ptGlobalAnchor;
 	bool bIsOccupied;
-	bool bIsVisible;
-};
+	int nUnitIndex;
+	CTile()
+	{
+		ptPos.x = ptPos.y = 0;
+		nUnitIndex = -1;
+	}
+};	
 
 #endif
