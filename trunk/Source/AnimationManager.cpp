@@ -25,7 +25,7 @@ CAnimationManager::~CAnimationManager(void)
 // Last Modified: July 25, 2008
 // Purpose: Parse a binary file.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-void CAnimationManager::BinParse(char* szFileName, char* szImageName)
+void CAnimationManager::BinParse(char* szFileName, char* szPlayerImageName, char* szAIImageName)
 {
 	ifstream toRead;
 	toRead.open(szFileName,ios::in | ios::binary);
@@ -162,8 +162,8 @@ void CAnimationManager::BinParse(char* szFileName, char* szImageName)
 					AnimationToAdd.AddFrame(FrameToAdd);
 				}
 				m_UnitSheets[UNIT_INFANTRY].AddAnimation(AnimationToAdd);
-				m_UnitSheets[UNIT_INFANTRY].SetImageID(TM->LoadTexture(szImageName));
-
+				m_UnitSheets[UNIT_INFANTRY].SetPlayerImageID(TM->LoadTexture(szPlayerImageName));
+				m_UnitSheets[UNIT_INFANTRY].SetAIImageID(TM->LoadTexture(szAIImageName));
 			}
 		}
 #pragma endregion
@@ -273,7 +273,8 @@ void CAnimationManager::BinParse(char* szFileName, char* szImageName)
 					AnimationToAdd.AddFrame(FrameToAdd);
 				}
 				m_UnitSheets[UNIT_CAVALRY].AddAnimation(AnimationToAdd);
-				m_UnitSheets[UNIT_CAVALRY].SetImageID(TM->LoadTexture(szImageName));
+				m_UnitSheets[UNIT_CAVALRY].SetPlayerImageID(TM->LoadTexture(szPlayerImageName));
+				m_UnitSheets[UNIT_CAVALRY].SetAIImageID(TM->LoadTexture(szAIImageName));
 			}
 		}
 #pragma endregion
@@ -383,7 +384,8 @@ void CAnimationManager::BinParse(char* szFileName, char* szImageName)
 					AnimationToAdd.AddFrame(FrameToAdd);
 				}
 				m_UnitSheets[UNIT_ARCHER].AddAnimation(AnimationToAdd);
-				m_UnitSheets[UNIT_ARCHER].SetImageID(TM->LoadTexture(szImageName));
+				m_UnitSheets[UNIT_ARCHER].SetPlayerImageID(TM->LoadTexture(szPlayerImageName));
+				m_UnitSheets[UNIT_ARCHER].SetAIImageID(TM->LoadTexture(szAIImageName));
 			}
 		}
 #pragma endregion
@@ -493,8 +495,8 @@ void CAnimationManager::BinParse(char* szFileName, char* szImageName)
 					AnimationToAdd.AddFrame(FrameToAdd);
 				}
 				m_UnitSheets[UNIT_AXMEN].AddAnimation(AnimationToAdd);
-				m_UnitSheets[UNIT_AXMEN].SetImageID(TM->LoadTexture(szImageName));
-
+				m_UnitSheets[UNIT_AXMEN].SetPlayerImageID(TM->LoadTexture(szPlayerImageName));
+				m_UnitSheets[UNIT_AXMEN].SetAIImageID(TM->LoadTexture(szAIImageName));
 			}
 		}
 #pragma endregion
@@ -604,7 +606,8 @@ void CAnimationManager::BinParse(char* szFileName, char* szImageName)
 					AnimationToAdd.AddFrame(FrameToAdd);
 				}
 				m_UnitSheets[UNIT_CAVALRY_ARCHER].AddAnimation(AnimationToAdd);
-				m_UnitSheets[UNIT_CAVALRY_ARCHER].SetImageID(TM->LoadTexture(szImageName));
+				m_UnitSheets[UNIT_CAVALRY_ARCHER].SetPlayerImageID(TM->LoadTexture(szPlayerImageName));
+				m_UnitSheets[UNIT_CAVALRY_ARCHER].SetAIImageID(TM->LoadTexture(szAIImageName));
 			}
 		}
 #pragma endregion
@@ -714,7 +717,8 @@ void CAnimationManager::BinParse(char* szFileName, char* szImageName)
 					AnimationToAdd.AddFrame(FrameToAdd);
 				}
 				m_UnitSheets[UNIT_WAR_ELEPHANT].AddAnimation(AnimationToAdd);
-				m_UnitSheets[UNIT_WAR_ELEPHANT].SetImageID(TM->LoadTexture(szImageName));
+				m_UnitSheets[UNIT_WAR_ELEPHANT].SetPlayerImageID(TM->LoadTexture(szPlayerImageName));
+				m_UnitSheets[UNIT_WAR_ELEPHANT].SetAIImageID(TM->LoadTexture(szAIImageName));
 			}
 		}
 #pragma endregion
