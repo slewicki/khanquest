@@ -12,7 +12,6 @@
 #include "AnimInstance.h"
 #include "CTile.h"
 #include "CHealthBar.h"
-//#include "CAISystem.h"
 
 enum	// Unit States
 {
@@ -23,7 +22,7 @@ enum	// Unit States
 	IDLE,
 
 };
-enum { NORTH, SOUTH, WEST, NORTH_WEST, SOUTH_WEST, EAST, NORTH_EAST, SOUTH_EAST};
+enum { NORTH, SOUTH, WEST, NORTH_WEST, SOUTH_WEST};
 
 class CTile;
 class CUnit : public CBase
@@ -56,7 +55,7 @@ private:
 
 	int				m_nState;			// The state the unit is in
 	CHealthBar*		m_pHealthBar;
-//	CAISystem*		m_pCAI;
+	
 	CAnimInstance*	m_pAnimInstance;
 
 	RECT			m_rLocalRect;
@@ -110,15 +109,15 @@ public:
 	//	Last Modified: July 18, 2008
 	//	Purpose: Sets the specified type
 	//////////////////////////////////////////////////////
-	inline void SetHP			(int nHP)			{ m_nHP = nHP; }
-	inline void SetAttackPower	(int nAttack)		{ m_nAttack = nAttack; }
-	inline void SetRange		(int nRange)		{ m_nRange = nRange; }
-	inline void SetCost		(int nCost)		{ m_nCost = nCost; }
-	inline void SetIsPlayerUnit (bool bIsPlayerUnit) {m_bIsPlayerUnit = bIsPlayerUnit; m_pAnimInstance->SetPlayer(m_bIsPlayerUnit);}
+	inline void SetHP			(int nHP)				{ m_nHP = nHP; }
+	inline void SetAttackPower	(int nAttack)			{ m_nAttack = nAttack; }
+	inline void SetRange		(int nRange)			{ m_nRange = nRange; }
+	inline void SetCost			(int nCost)				{ m_nCost = nCost; }
+	inline void SetIsPlayerUnit (bool bIsPlayerUnit)	{m_bIsPlayerUnit = bIsPlayerUnit; m_pAnimInstance->SetPlayer(m_bIsPlayerUnit);}
 	inline void SetAttackSpeed	(float fAttackSpeed)	{ m_fAttackSpeed = fAttackSpeed; }
-	inline void SetSpeed		(float fMovementSpeed){ m_fMovementSpeed = fMovementSpeed; }
-	inline void SetDestTile		(CTile pDestTile)  { m_pDestinationTile = pDestTile; }
-	inline void SetCurrentTile	(CTile pCurrentTile)  { m_pCurrentTile = pCurrentTile; }
+	inline void SetSpeed		(float fMovementSpeed)	{m_fMovementSpeed = fMovementSpeed; }
+	inline void SetDestTile		(CTile pDestTile)		{ m_pDestinationTile = pDestTile; }
+	inline void SetCurrentTile	(CTile pCurrentTile)	{ m_pCurrentTile = pCurrentTile; }
 	inline void SetBonus		(int nBonus)		{ m_nBonus = nBonus; }
 	inline void SetSelected		(bool bIsSelected)	{ m_bIsSelected = bIsSelected; }
 	inline void SetGrouped		(bool bIsGrouped)	{ m_bIsGrouped = bIsGrouped; }
@@ -133,7 +132,7 @@ public:
 		m_pAnimInstance->Play(GetDirection(), GetState());	
 	}
 
-	inline void DamageUnit() { m_pHealthBar->DamageHealth(2); }
+	inline void DamageUnit(int nDamage) { m_pHealthBar->DamageHealth(nDamage); }
 
 	////////////////////////////////////////
 	//	Function:	"Update"
@@ -163,5 +162,6 @@ public:
 	// Purpose: Change the direction the unit is facing
 	//////////////////////////////////////////////////////
 	void ChangeDirection(POINT pMousePos);
-	
+
+
 };
