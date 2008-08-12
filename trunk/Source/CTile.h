@@ -25,6 +25,7 @@ public:
 	POINT ptLocalAnchor;
 	POINT ptGlobalAnchor;
 	bool bIsOccupied;
+	bool bIsVisible;
 	int nUnitIndex;
 	CTile()
 	{
