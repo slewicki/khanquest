@@ -17,6 +17,7 @@ public:
 
 
 	TileType nType;
+	POINT ptTileLoc;
 	POINT ptPos;
 	bool bIsPlayerSpawn;
 	bool bIsEnemySpawn;
