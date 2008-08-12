@@ -152,14 +152,14 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 					for (int k =0; k < Map->GetMapHeight(); ++k )
 					{
 						// if map loc is a spawn point set unit current loc there
-						if (Map->GetTile(j,k).bIsPlayerSpawn && Map->GetTile(j,k).bIsOccupied == false)
+						if (Map->GetTile(0,j,k).bIsPlayerSpawn && Map->GetTile(0,j,k).bIsOccupied == false)
 						{
 							//POINT spawn = Map->GetLocalAnchor( j, k);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosX(Map->GetLocalAnchor( j, k).x);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosY(Map->GetLocalAnchor( j, k).y);
-							Map->SetOccupy(j, k, true);
-							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(j,k));
-							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(j,k));
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosX(Map->GetLocalAnchor(0, j, k).x);
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosY(Map->GetLocalAnchor(0, j, k).y);
+							Map->SetOccupy(0,j, k, true);
+							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
+							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
 							break;
 						}
 
@@ -235,5 +235,15 @@ void ObjectManager::MoveSelectedUnits(POINT pMousePos)
 			static_cast<CUnit*>(m_vObjectList[i])->ChangeDirection(pMousePos);
 		}
 	}	
+}
+
+vector<CBase*> ObjectManager::GetUnits()
+{
+	vector<CBase*> vSelectedUnits;
+	for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
+	{
+		vSelectedUnits.push_back(static_cast<CUnit*>(m_vObjectList[i]));
+	}	
+	return vSelectedUnits;
 }
 

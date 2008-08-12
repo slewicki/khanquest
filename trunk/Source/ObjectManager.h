@@ -121,10 +121,17 @@ public:
 
 	
 	/////////////////////////////////////////////////////
-	// Function: "GetSeletedUnit"
+	// Function: "MoveSeletedUnit"
 	//
 	// Purpose: Move the selected Units in the direction of the mouse click.
 	/////////////////////////////////////////////////////
 	void MoveSelectedUnits(POINT pMousePos);
+
+	/////////////////////////////////////////////////////
+	// Function: "GetUnits"
+	//
+	// Purpose: Gets units from the object manager
+	/////////////////////////////////////////////////////
+	vector<CBase*> GetUnits();
 
 };
