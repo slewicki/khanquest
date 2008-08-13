@@ -2,6 +2,7 @@
 #include "CGame.h"
 #include "CGamePlayState.h"
 #include "CWorldMapState.h"
+#include "MainMenuState.h"
 CPausedState::CPausedState(void)
 {
 	m_nButtonID = -1;
@@ -69,7 +70,7 @@ bool CPausedState::Input(float fElapsedTime)
 	{
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
-			return false;
+			CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
 		}
 	}
 	return true;
