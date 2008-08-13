@@ -55,6 +55,9 @@ void COutroState::Exit()
 {
 	m_pWM->Stop(m_nSongID);
 	m_pWM->UnloadWave(m_nSongID);
+
+	if(Buttons)
+		delete [] Buttons;
 }
 
 bool COutroState::Input(float fElapsedTime)
