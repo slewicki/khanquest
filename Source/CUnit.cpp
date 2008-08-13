@@ -1,3 +1,11 @@
+//////////////////////////////////////////////////////
+//	File	:	"CUnit.cpp"
+//
+//	Author	:	Sean Hamstra (SH)
+//
+//	Purpose	:	Store all information and functionality
+//				of a unit.
+//////////////////////////////////////////////////////
 #include "CUnit.h"
 #include "CCamera.h"
 #include "CSGD_Direct3D.h"

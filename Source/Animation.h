@@ -61,7 +61,11 @@ public:
 	~CAnimation(void);
 	
 #pragma region Accessors / Mutators
-	//Accessors and Mutators
+	//////////////////////////////////////////////////////////////////////////
+	//  Function: Accessors
+	//	Last Modified: August 04, 2008
+	//  Purpose : Returns the specified type.
+	//////////////////////////////////////////////////////////////////////////
 	string GetName(){return m_szName;}
 	void SetName(string value){m_szName = value;}
 	float GetSpeed(){return m_fSpeed;}
@@ -70,6 +74,12 @@ public:
 	int GetCurrentFrame(){return m_nCurrentFrame;}
 	void IsLooping(bool ToLoop){m_bIsLooping = ToLoop;}
 	bool IsPlaying(){return m_bIsPlaying;}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Function: Modifiers
+	//	Last Modified: August 04, 2008
+	//  Purpose: Modifies the specified type.
+	//////////////////////////////////////////////////////////////////////////
 	void SetPlayer(bool value){m_bIsPlayer = value;}
 	void SetPlayerAnimationID(int nPlayerAnimationID) {m_nPlayerAnimationID = nPlayerAnimationID;}
 	void SetAIAnimationID(int nAIAnimationID){m_nAIAnimationID = nAIAnimationID;}

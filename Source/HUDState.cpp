@@ -1,3 +1,10 @@
+//////////////////////////////////////////////////////////
+//	File:	"CHUDState.h"
+//
+//	Author:	Dennis Wallace (DW)
+//
+//	Purpose: To contain functionality of the CHUDState state
+//////////////////////////////////////////////////////////
 #include "HUDState.h"
 #include "CUnit.h"
 #include "ObjectManager.h"

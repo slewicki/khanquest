@@ -1,3 +1,10 @@
+//////////////////////////////////////////////////////////
+//	File:	"CHUDState.h"
+//
+//	Author:	Dennis Wallace (DW)
+//
+//	Purpose: To contain functionality of the CHUDState state
+//////////////////////////////////////////////////////////
 #pragma once
 #include "IGameState.h"
 #include "CSGD_TextureManager.h"

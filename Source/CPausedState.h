@@ -1,3 +1,10 @@
+//////////////////////////////////////////////////////////
+//	File:	"CPausedState.h"
+//
+//	Author:	Dennis Wallace (DW)
+//
+//	Purpose: To contain functionality of the CPausedState state
+//////////////////////////////////////////////////////////
 #ifndef _CPAUSEDSTATE_H_
 #define _CPAUSEDSTATE_H_
 #include "IGameState.h"

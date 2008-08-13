@@ -1,3 +1,11 @@
+//////////////////////////////////////////////////////
+//	File	:	"CHealthBar.h"
+//
+//	Author	:	Tom (TI)
+//
+//	Purpose	:	Store all information and functionality
+//				for the unit health bar.
+//////////////////////////////////////////////////////
 #ifndef _CHEALTHBAR_H_
 #define _CHEALTHBAR_H_
 
@@ -23,14 +31,32 @@ private:
 
 public:
 
-	void					SetHealth(int nHealth) { m_nHealth = nHealth; }
-	int						GetHealth()			   { return m_nHealth; }
-	void					DamageHealth(int nPercentHealth);
 
 	CHealthBar();
 	~CHealthBar();
 
-	void					Render(RECT toDraw);
+	//////////////////////////////////////////////////////////////////////////
+	//  Function: Accessors
+	//	Last Modified: August 04, 2008
+	//  Purpose : Returns the specified type.
+	//////////////////////////////////////////////////////////////////////////
+	void					SetHealth(int nHealth) { m_nHealth = nHealth; }
+
+	//////////////////////////////////////////////////////////////////////////
+	// Function: Modifiers
+	//	Last Modified: August 04, 2008
+	//  Purpose: Modifies the specified type.
+	//////////////////////////////////////////////////////////////////////////
+	int						GetHealth()			   { return m_nHealth; }
+	void					DamageHealth(int nPercentHealth);
+
+
+	////////////////////////////////////////////////////////////////////////// 
+	// Function: “Render” 
+	// Last Modified: July 27, 2008
+	// Purpose: Renders the animation
+	////////////////////////////////////////////////////////////////////////// 
+	void	Render(RECT toDraw);
 };
 
 #endif
