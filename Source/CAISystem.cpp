@@ -23,28 +23,27 @@ CAISystem::CAISystem(void)
 
 CAISystem::~CAISystem(void)
 {
-	Exit();
 }
 
 void CAISystem::Exit(void)
 {
-	for (int i = 0; i < m_nMapWidth; ++i)
-	{
-		delete Map[i];
-	}
-	delete [] Map;
+	//for (int i = 0; i < m_nMapWidth; ++i)
+	//{
+	//	delete Map[i];
+	//}
+	//delete [] Map;
 
-	for (int i = 0; i < m_nMapWidth; ++i)
-	{
-		delete MapMark[i];
-	}
-	delete [] MapMark;
+	//for (int i = 0; i < m_nMapWidth; ++i)
+	//{
+	//	delete MapMark[i];
+	//}
+	//delete [] MapMark;
 
-	for (int i = 0; i < m_nMapWidth; ++i)
-	{
-		delete MapPath[i];
-	}
-	delete [] MapPath;
+	//for (int i = 0; i < m_nMapWidth; ++i)
+	//{
+	//	delete MapPath[i];
+	//}
+	//delete [] MapPath;
 }
 void CAISystem::UpdateState(void)
 {
@@ -53,9 +52,6 @@ void CAISystem::UpdateState(void)
 
 list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 {
-	m_nMapWidth  =	m_pTE->GetMapWidth();
-	m_nMapHeight =	m_pTE->GetMapHeight();
-
 	m_vPath.clear();
 
 	if (destination.bIsCollision || destination.bIsOccupied)
@@ -64,34 +60,12 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 	POINT ptStart	= m_pTE->IsoMouse(current.ptLocalAnchor.x, current.ptLocalAnchor.y, 0);
 	POINT ptEnd		= m_pTE->IsoMouse(destination.ptLocalAnchor.x, destination.ptLocalAnchor.y, 0);
 	POINT ptPath;
-
-
-	//////////////////////////////////////////////////////////////////////////
-	// array to hold the map tile data
-	Map = new int*[m_nMapWidth];
-	for (int i = 0; i < m_nMapWidth; ++i)
-	{
-		Map[i] = new int[m_nMapHeight];
-	}
-	// array to hold the map collision data
-	MapMark = new bool*[m_nMapWidth];
-	for (int i = 0; i < m_nMapWidth; ++i)
-	{
-		MapMark[i] = new bool[m_nMapHeight];
-	}
-	// array to hold the path
-	MapPath = new int*[m_nMapWidth];
-	for (int i = 0; i < m_nMapWidth; ++i)
-	{
-		MapPath[i] = new int[m_nMapHeight];
-	}
-
 	//set initial start and end points
-	for (int i = 0; i < m_nMapWidth; ++i)
+	for (int i = 0; i < MAPWIDTH; ++i)
 	{
 
 		// Stock the row with -1 for open tile.
-		for (int j = 0; j < m_nMapHeight ; ++j)
+		for (int j = 0; j < MAPHEIGHT ; ++j)
 			if (!m_pTE->GetTile(0,i,j).bIsCollision)
 			{
 				Map[i][j] = -1; 
@@ -108,6 +82,7 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 	MapPath[ptStart.x][ptStart.y] =0;
 	Map[ptEnd.x][ptEnd.y]=TILEEND;
 
+
 	ptStart.x=-1;
 	ptEnd.x=-1;
 	int x;
@@ -116,12 +91,10 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 	int ny;
 	bool found;
 	int lowvalue;
-
-
 	//find the start
-	for(x=0;x<m_nMapWidth;x++)
+	for(x=0;x<MAPWIDTH;x++)
 	{
-		for(y=0;y<m_nMapHeight;y++)
+		for(y=0;y<MAPHEIGHT;y++)
 		{
 			//check for the start
 			if(Map[x][y]==TILESTART)
@@ -132,9 +105,9 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 		}
 	}
 	//find the end
-	for(x=0;x<m_nMapWidth;x++)
+	for(x=0;x<MAPWIDTH;x++)
 	{
-		for(y=0;y<m_nMapHeight;y++)
+		for(y=0;y<MAPHEIGHT;y++)
 		{
 			//check for the end
 			if(Map[x][y]==TILEEND)
@@ -146,7 +119,7 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 	}
 	//if no start or end, exit function
 	if(ptStart.x==-1 || ptEnd.x==-1) return m_vPath;
-	
+
 
 	//scan for path-able tiles
 	do
@@ -154,9 +127,9 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 		//havent found one yet
 		found=false;
 		//scan the map
-		for(x=0;x<m_nMapWidth;x++)
+		for(x=0;x<MAPWIDTH;x++)
 		{
-			for(y=0;y<m_nMapHeight;y++)
+			for(y=0;y<MAPHEIGHT;y++)
 			{
 				MapMark[x][y]=false;
 				//make sure this is a "-1" square
@@ -168,7 +141,7 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 						for(ny=y-1;ny<=y+1;ny++)
 						{
 							//make sure the neighbor is on the map
-							if(nx>=0 && ny>=0 && nx<m_nMapWidth && ny<m_nMapHeight && !(nx==x && ny==y))
+							if(nx>=0 && ny>=0 && nx<MAPWIDTH && ny<MAPHEIGHT && !(nx==x && ny==y))
 							{
 								//check against negatives and 999
 								if(MapPath[nx][ny]>=0 && MapPath[nx][ny]!=999)
@@ -185,9 +158,9 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 			}
 		}
 		//now scan the marks
-		for(x=0;x<m_nMapWidth;x++)
+		for(x=0;x<MAPWIDTH;x++)
 		{
-			for(y=0;y<m_nMapHeight;y++)
+			for(y=0;y<MAPHEIGHT;y++)
 			{
 				//if this square is marked
 				if(MapMark[x][y])
@@ -200,7 +173,7 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 						for(ny=y-1;ny<=y+1;ny++)
 						{
 							//make sure the neighbor is on the map
-							if(nx>=0 && ny>=0 && nx<m_nMapWidth && ny<m_nMapHeight)
+							if(nx>=0 && ny>=0 && nx<MAPWIDTH && ny<MAPHEIGHT)
 							{
 								if(MapPath[nx][ny]>=0)//must be a non-negative value
 								{
@@ -235,7 +208,7 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 					//pick a random neighbor
 					nx=rand()%3-1;
 					ny=rand()%3-1;
-				}while((nx==0 && ny==0) || (ptPath.x+nx)<0 || (ptPath.x+nx)>=m_nMapWidth || (ptPath.y+ny)<0 || (ptPath.y+ny)>=m_nMapHeight);
+				}while((nx==0 && ny==0) || (ptPath.x+nx)<0 || (ptPath.x+nx)>=MAPWIDTH || (ptPath.y+ny)<0 || (ptPath.y+ny)>=MAPHEIGHT);
 				//check to see if the value is lower
 				if(MapPath[ptPath.x+nx][ptPath.y+ny]<lowvalue)
 				{
@@ -255,10 +228,10 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 		Map[ptEnd.x][ptEnd.y]=TILEEND;
 	}
 
-	for (int i = 0; i < m_nMapWidth ; ++i)
+	for (int i = 0; i < MAPWIDTH ; ++i)
 	{
 		// Stock the row with -1 for open tile.
-		for (int j = 0; j < m_nMapHeight; ++j)
+		for (int j = 0; j < MAPHEIGHT; ++j)
 			if (Map[i][j] == 4)
 			{
 				POINT path;
