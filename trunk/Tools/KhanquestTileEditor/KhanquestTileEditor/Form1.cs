@@ -117,6 +117,15 @@ namespace KhanquestTileEditor
             map1.mMap.Layer[map1.mMap.CurrentLayer].MapSize = new Size((int)numMapWidth.Value, (int)numMapHeight.Value);
             map1.mMap.Once = true;
             this.Refresh();
+
+            for (int x = 0; x < (int)numMapWidth.Value; x++)
+            {
+                for (int y = 0; y < (int)numMapHeight.Value; y++)
+                {
+                    if (map1.mMap.Layer[map1.mMap.CurrentLayer].Tiles[x, y].m_szTileID == null)
+                        map1.mMap.Layer[map1.mMap.CurrentLayer].Tiles[x, y].m_szTileID = "Plains";
+                }
+            }
         }
 
         private void numMapWidth_ValueChanged(object sender, EventArgs e)
@@ -124,6 +133,15 @@ namespace KhanquestTileEditor
             map1.mMap.Layer[map1.mMap.CurrentLayer].MapSize = new Size((int)numMapWidth.Value, (int)numMapHeight.Value);
             map1.mMap.Once = true;
             this.Refresh();
+
+            for (int x = 0; x < (int)numMapWidth.Value; x++)
+            {
+                for (int y = 0; y < (int)numMapHeight.Value; y++)
+                {
+                    if (map1.mMap.Layer[map1.mMap.CurrentLayer].Tiles[x, y].m_szTileID == null)
+                        map1.mMap.Layer[map1.mMap.CurrentLayer].Tiles[x, y].m_szTileID = "Plains";
+                }
+            }
         }
 
         private Point IsoMouse(int x, int y)
@@ -185,9 +203,6 @@ namespace KhanquestTileEditor
 
                 if(chkTrigger.Checked == true)
                     map1.mMap.Layer[map1.mMap.CurrentLayer].Tiles[nTileWidth, nTileHeight].m_szTileID = cmbTrigger.SelectedItem.ToString();
-                else
-                    map1.mMap.Layer[map1.mMap.CurrentLayer].Tiles[nTileWidth, nTileHeight].m_szTileID = "Plains";
-
             }
 
             else if (e.X > -1 && rdoPlayerSpawn.Checked == true)
@@ -342,7 +357,7 @@ namespace KhanquestTileEditor
                 FileInfo fi = new FileInfo(dlg.FileName);
                 if (!fi.Name.StartsWith("KQ_"))
                 {
-                    string szFilename = fi.DirectoryName + "//" + "KQ_" + fi.Name;
+                    string szFilename = fi.DirectoryName + "\\" + "KQ_" + fi.Name;
                     dlg.FileName = szFilename;
                 }
 
@@ -358,9 +373,9 @@ namespace KhanquestTileEditor
 
                 for (int nLayer = 0; nLayer < map1.mMap.Layer.Count; nLayer++)
                 {
-                    for (int x = 0; x < map1.mMap.Layer[nLayer].MapSize.Height; x++)
+                    for (int x = 0; x < map1.mMap.Layer[0].MapSize.Height; x++)
                     {
-                        for (int y = 0; y < map1.mMap.Layer[nLayer].MapSize.Width; y++)
+                        for (int y = 0; y < map1.mMap.Layer[0].MapSize.Width; y++)
                         {
                             bw.Write(map1.mMap.Layer[nLayer].Tiles[x, y].m_szTileID.Length);
                             bw.Write(map1.mMap.Layer[nLayer].Tiles[x, y].m_szTileID.ToCharArray());
@@ -386,7 +401,7 @@ namespace KhanquestTileEditor
             map1.mMap.Layer.Clear();
 
             map1.mMap.NewLayer(new Size(10, 10));
-            map1.mMap.Layer[map1.mMap.CurrentLayer].Visible = true;
+            map1.mMap.Layer[0].Visible = true;
 
             numMapHeight.Value = 10;
             numMapWidth.Value = 10;
@@ -419,15 +434,19 @@ namespace KhanquestTileEditor
                 string szFileName = new string(br.ReadChars(nStringSize));
                 int nTempLayer = br.ReadInt32();
 
+                map1.mMap.Layer.Add(new CLayer(br.ReadInt32(), br.ReadInt32()));
+                map1.mMap.Layer[0].TileSize = new Size(br.ReadInt32(), br.ReadInt32());
+
                 for (int nLayer = 0; nLayer < nTempLayer; nLayer++)
                 {
                     cmbLayer.Items.Add(nLayer + 1);
-                    map1.mMap.Layer.Add(new CLayer(br.ReadInt32(), br.ReadInt32()));
-                    map1.mMap.Layer[nLayer].TileSize = new Size(br.ReadInt32(), br.ReadInt32());
 
-                    for (int x = 0; x < map1.mMap.Layer[nLayer].MapSize.Height; x++)
+                    if (nLayer > 0)
+                        map1.mMap.Layer.Add(new CLayer(map1.mMap.Layer[0].MapSize.Width, map1.mMap.Layer[0].MapSize.Height));
+
+                    for (int x = 0; x < map1.mMap.Layer[0].MapSize.Height; x++)
                     {
-                        for (int y = 0; y < map1.mMap.Layer[nLayer].MapSize.Width; y++)
+                        for (int y = 0; y < map1.mMap.Layer[0].MapSize.Width; y++)
                         {
                             nStringSize = br.ReadInt32();
                             string szType = new string(br.ReadChars(nStringSize));

@@ -12,7 +12,7 @@ CTileEngine::CTileEngine()
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pD3D = CSGD_Direct3D::GetInstance();
 	m_nImageID = -1;
-	m_nImageID = m_pTM->LoadTexture("Resource/KQ_GroundTemplate.bmp", D3DCOLOR_XRGB(255, 0, 255));
+	m_nImageID = m_pTM->LoadTexture("Resource/KQ_Terrain.png", D3DCOLOR_XRGB(255, 0, 255));
 	m_nScrollImage = m_pTM->LoadTexture("Resource/KQ_Clouds.png");
 	m_ptMousePoint.x = 0;
 	m_ptMousePoint.y = 0;
@@ -59,20 +59,27 @@ void CTileEngine::LoadFile(char* szFileName)
 
 	pTileArray = new CTile**[m_nLayer];
 
-		for(int nLayer = 0; nLayer < m_nLayer; nLayer++)
-		{
-			fin.read((char*)&m_nMapWidth, sizeof(m_nMapWidth));
-			fin.read((char*)&m_nMapHeight, sizeof(m_nMapHeight));
-			fin.read((char*)&m_nTileWidth, sizeof(m_nTileWidth));
-			fin.read((char*)&m_nTileHeight, sizeof(m_nTileHeight));
+	fin.read((char*)&m_nMapWidth, sizeof(m_nMapWidth));
+	fin.read((char*)&m_nMapHeight, sizeof(m_nMapHeight));
+	fin.read((char*)&m_nTileWidth, sizeof(m_nTileWidth));
+	fin.read((char*)&m_nTileHeight, sizeof(m_nTileHeight));
+
+	for(int nLayer = 0; nLayer < m_nLayer; nLayer++)
+	{
+		/*fin.read((char*)&m_nMapWidth, sizeof(m_nMapWidth));
+		fin.read((char*)&m_nMapHeight, sizeof(m_nMapHeight));
+		fin.read((char*)&m_nTileWidth, sizeof(m_nTileWidth));
+		fin.read((char*)&m_nTileHeight, sizeof(m_nTileHeight));*/
 
 			//pTileArray = new CTile**[m_nLayer];
 
-			pTileArray[nLayer] = new CTile*[m_nMapWidth];
+			//if(nLayer < 1)
+				pTileArray[nLayer] = new CTile*[m_nMapWidth];
 
 			for(int i = 0; i < m_nMapWidth; i++)
 			{
-				pTileArray[nLayer][i] = new CTile[m_nMapHeight];
+				//if(nLayer < 1)
+					pTileArray[nLayer][i] = new CTile[m_nMapHeight];
 			}
 
 			for(int x = 0; x < m_nMapHeight; x++)
@@ -92,15 +99,15 @@ void CTileEngine::LoadFile(char* szFileName)
 
 					delete szBuffer;
 
-					if(m_szTileType == "PLAIN")
+					if(m_szTileType == "Plains")
 						pTileArray[nLayer][x][y].nType = PLAIN;
-					else if(m_szTileType == "MOUNTAIN")
+					else if(m_szTileType == "Mountains")
 						pTileArray[nLayer][x][y].nType = MOUNTAIN;
-					else if(m_szTileType == "FOREST")
+					else if(m_szTileType == "Forest")
 						pTileArray[nLayer][x][y].nType = FOREST;
-					else if(m_szTileType == "SHALLOW_WATER")
+					else if(m_szTileType == "Shallow Water")
 						pTileArray[nLayer][x][y].nType = SHALLOW_WATER;
-					else if(m_szTileType == "DEEP_WATER")
+					else if(m_szTileType == "Deep Water")
 						pTileArray[nLayer][x][y].nType = DEEP_WATER;
 
 					int nPosX = 0;
