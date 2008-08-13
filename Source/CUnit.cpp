@@ -115,6 +115,7 @@ void CUnit::Update(float fElapsedTime)
 			SetDestTile( GetCurrentTile() );
 			SetNextTile(GetCurrentTile() );
 			m_pTE->SetOccupy(GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y, true, unitIndex); 
+			m_pTE->SetVisible(GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y, true, unitIndex);
 
 		}
 
@@ -151,7 +152,8 @@ void CUnit::Update(float fElapsedTime)
 				int unitIndex = m_pTE->GetTile(0, GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y).nUnitIndex;
 				m_pTE->SetOccupy(GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y, false, -1); 
 				SetCurrentTile( GetNextTile());
-				m_pTE->SetOccupy(GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y, true, unitIndex); 
+				m_pTE->SetOccupy(GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y, true, unitIndex);
+				m_pTE->SetVisible(GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y, true, unitIndex);
 				POINT& path = m_vPath.front();
 				SetNextTile( m_pTE->GetTile(0, path.x, path.y )  ); 
 				m_vPath.pop_front();
