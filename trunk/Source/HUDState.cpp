@@ -31,7 +31,7 @@ bool CHUDState::Input(float fElapsedTime)
 
 void CHUDState::Update(float fElapsedTime)
 {
-	
+
 }
 
 void CHUDState::Render(float fElapsedTime)

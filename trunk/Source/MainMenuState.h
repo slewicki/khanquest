@@ -132,6 +132,7 @@ public:
 	///////////////////////////////////////////
 	void SetPause(bool value){m_bPaused = value;}
 
+
 	bool Parse(char* szFileName);
 
 	void FadeIn(float fElpasedTime);

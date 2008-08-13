@@ -94,6 +94,7 @@ public:
 	//////////////////////////////////////////////////////
 	// Get unit stats
 	inline int	  GetHP				(void) const { return m_nHP; }
+	inline int	  GetHealth			(void) const {return m_pHealthBar->GetHealth();}
 	inline int	  GetAttackPower	(void) const { return m_nAttack; }
 	inline int	  GetRange			(void) const { return m_nRange; }
 	inline float  GetAttackSpeed	(void) const { return m_fAttackSpeed; }
@@ -106,7 +107,8 @@ public:
 
 	inline CUnit* GetTarget			(void) const { return m_pTarget; }
 	inline bool	  IsSelected		(void) const { return m_bIsSelected; }
-	inline bool	  IsAlive			(void) const { return m_bIsAlive; }
+	inline bool	  IsAlive			(void) const { if(this == NULL) return false;
+													else return m_bIsAlive; }
 	inline bool	  IsGrouped			(void) const { return m_bIsGrouped; }
 	inline int    GetState			(void) const { return m_nState; }
 	inline int    GetDirection		(void) const { return m_nDirectionFacing; }
@@ -120,6 +122,7 @@ public:
 	//	Purpose: Sets the specified type
 	//////////////////////////////////////////////////////
 	inline void SetHP			(int nHP)				{ m_nHP = nHP; }
+	inline void SetHealthBarHP	(void)					{m_pHealthBar->SetHealth(m_nHP);}
 	inline void SetAttackPower	(int nAttack)			{ m_nAttack = nAttack; }
 	inline void SetRange		(int nRange)			{ m_nRange = nRange; }
 	inline void SetCost			(int nCost)				{ m_nCost = nCost; }

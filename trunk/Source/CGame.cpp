@@ -11,8 +11,12 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "IntroState.h"
 #include "MainMenuState.h"
 #include "irrXML.h"
+#include "WinGameState.h"
+#include "LoseGameState.h"
+
 using namespace std;
 
 CGame::CGame(void)
@@ -33,7 +37,9 @@ CGame::CGame(void)
 	m_nMusicVolume = 50;
 	*m_pCities = NULL;
 	m_nGold = 0;
-	
+	m_nWins = 1;
+	m_nLoses = 0;
+	m_nFood = 0;
 	m_chJinCount = m_chKCount = m_chXiaCount = 0;
 }
 
@@ -51,6 +57,7 @@ CGame* CGame::GetInstance(void)
 bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 					   int nScreenWidth, int nScreenHeight, bool bIsWindowed)
 {
+	srand(GetTickCount());
 	//	Do game initialization here.
 	m_hWnd = hWnd;
 	m_hInstance = hInstance;
@@ -119,8 +126,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	m_pAM->BinParse("Resource/KQ_Archer.dat", "Resource/KQ_Player_Archer.png","Resource/Enemies/KQ_AI_Archer.png");
 	m_pAM->BinParse("Resource/KQ_War_Elephant.dat", "Resource/KQ_Player_War_Elephant.png","Resource/Enemies/KQ_AI_War_Elephant.png");
 
-	ChangeState(CMainMenuState::GetInstance());
-	
+	ChangeState(CIntroState::GetInstance());
 	//	Create the render target.
 	// D3DUSAGE_RENDERTARGET can only be used with D3DPOOL_DEFAULT
 	m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pRenderTarget, NULL);
@@ -323,7 +329,7 @@ bool CGame::Main(void)
 		//process shader
 		m_PixelShader.SetConstantFloat("Pos.x",ObjectManager::GetInstance()->GetUnits()[0]->GetPosX());
 		m_PixelShader.SetConstantFloat("Pos.Y", ObjectManager::GetInstance()->GetUnits()[0]->GetPosX());
-		m_PixelShader.SetConstantFloat("texture1", m_pTM->LoadTexture("Resource/KQ_Circle.bmp"));
+		//m_PixelShader.SetConstantFloat("texture1", m_pTM->LoadTexture("Resource/KQ_Circle.bmp"));
 		m_PixelShader.Begin();
 
 		//Draw to the backbuffer
@@ -557,6 +563,10 @@ void CGame::InitCities()
 {
 	for (int i = 0; i < 10; i++)
 	{
+		if(m_pCities[i])
+		{
+			delete m_pCities[i];
+		}
 		m_pCities[i] = new CCity();
 		m_pCities[i]->SetID(i);
 
@@ -753,27 +763,28 @@ int CGame::GetTotalFoodTribute()
 	switch(GetNumConquered())
 	{
 	case 0:
-		return 1000;
+		m_nFood = 1000;
 		break;
 	case 1:
-		return 1250;
+		m_nFood = 1250;
 		break;
 	case 2:
-		return 1550;
+		m_nFood = 1550;
 		break;
 	case 3:
-		return 1850;
+		m_nFood = 1850;
 		break;
 	case 4:
-		return 2200;
+		m_nFood = 2200;
 		break;
 	case 5:
-		return 2600;
+		m_nFood = 2600;
 		break;
 	default:
-		return 3000;
+		m_nFood = 3000;
 		break;
 	}
+	return m_nFood;
 }
 
 void CGame::SetCityConquered(CCity* pCity)
@@ -802,7 +813,7 @@ void CGame::SetCityConquered(CCity* pCity)
 
 	// This city can no longer be sacked for gold
 	pCity->SetGoldTribute(0);
-
+	AddWins();
 }
 
 void CGame::LoseLastCity()
@@ -828,4 +839,38 @@ void CGame::LoseLastCity()
 			m_chKCount--;
 		break;
 	};
+	if(m_nWins > 1)
+		--m_nWins;
+}
+void CGame::AddWins()
+{
+	++m_nWins;
+	if(m_nLoses > 0)
+		--m_nLoses;
+	if(m_nWins == TOTAL_CITIES)
+	{
+		while(m_vStates.size() > 0)
+			PopCurrentState();
+		PushState(CMainMenuState::GetInstance());
+		PushState(CWinGameState::GetInstance());
+		InitCities();
+		m_nGold = 0;
+		m_nWins = 1;
+	}
+}
+void CGame::AddLoses()
+{
+	++m_nLoses;
+	LoseLastCity();
+	if(m_nLoses == 2)
+	{	
+		while(m_vStates.size() > 0)
+			PopCurrentState();
+	
+		PushState(CMainMenuState::GetInstance());
+		PushState(CLoseGameState::GetInstance());
+		InitCities();
+		m_nGold = 0;
+		m_nLoses = 0;
+	}
 }

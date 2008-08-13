@@ -73,13 +73,11 @@ void CTileEngine::LoadFile(char* szFileName)
 
 			//pTileArray = new CTile**[m_nLayer];
 
-			//if(nLayer < 1)
-				pTileArray[nLayer] = new CTile*[m_nMapWidth];
+			pTileArray[nLayer] = new CTile*[m_nMapWidth];
 
 			for(int i = 0; i < m_nMapWidth; i++)
 			{
-				//if(nLayer < 1)
-					pTileArray[nLayer][i] = new CTile[m_nMapHeight];
+				pTileArray[nLayer][i] = new CTile[m_nMapHeight];
 			}
 
 			for(int x = 0; x < m_nMapHeight; x++)
