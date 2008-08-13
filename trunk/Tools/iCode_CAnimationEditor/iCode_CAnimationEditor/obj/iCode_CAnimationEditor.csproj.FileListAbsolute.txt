@@ -1,0 +1,48 @@
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Debug\iCode_CAnimationEditor.Form1.resources
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Debug\iCode_CAnimationEditor.Properties.Resources.resources
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Debug\iCode_CAnimationEditor.csproj.GenerateResource.Cache
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\bin\Debug\iCode_CAnimationEditor.exe
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\bin\Debug\iCode_CAnimationEditor.pdb
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Debug\iCode_CAnimationEditor.exe
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Debug\iCode_CAnimationEditor.pdb
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.Form1.resources
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.Properties.Resources.resources
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.csproj.GenerateResource.Cache
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\bin\Release\iCode_CAnimationEditor.exe
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\bin\Release\iCode_CAnimationEditor.pdb
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.exe
+C:\Documents and Settings\Administrator\Desktop\SGP\Ghangis\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.pdb
+C:\Documents and Settings\Administrator\Desktop\SGP\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.exe
+C:\Documents and Settings\Administrator\Desktop\SGP\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.pdb
+C:\Documents and Settings\Administrator\Desktop\SGP\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\Desktop\SGP\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.Form1.resources
+C:\Documents and Settings\Administrator\Desktop\SGP\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.Properties.Resources.resources
+C:\Documents and Settings\Administrator\Desktop\SGP\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.csproj.GenerateResource.Cache
+C:\Documents and Settings\Administrator\Desktop\SGP\iCode_CAnimationEditor\iCode_CAnimationEditor\bin\Release\iCode_CAnimationEditor.exe
+C:\Documents and Settings\Administrator\Desktop\SGP\iCode_CAnimationEditor\iCode_CAnimationEditor\bin\Release\iCode_CAnimationEditor.pdb
+C:\Documents and Settings\Administrator\Desktop\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.exe
+C:\Documents and Settings\Administrator\Desktop\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.pdb
+C:\Documents and Settings\Administrator\Desktop\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\bin\Release\iCode_CAnimationEditor.exe
+C:\Documents and Settings\Administrator\Desktop\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\bin\Release\iCode_CAnimationEditor.pdb
+C:\Documents and Settings\Administrator\Desktop\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\Desktop\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.Form1.resources
+C:\Documents and Settings\Administrator\Desktop\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.Properties.Resources.resources
+C:\Documents and Settings\Administrator\Desktop\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.csproj.GenerateResource.Cache
+C:\Documents and Settings\Administrator\Desktop\TehDemo\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.exe
+C:\Documents and Settings\Administrator\Desktop\TehDemo\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.pdb
+C:\Documents and Settings\Administrator\Desktop\TehDemo\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\bin\Release\iCode_CAnimationEditor.exe
+C:\Documents and Settings\Administrator\Desktop\TehDemo\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\bin\Release\iCode_CAnimationEditor.pdb
+C:\Documents and Settings\Administrator\Desktop\TehDemo\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\Desktop\TehDemo\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.Form1.resources
+C:\Documents and Settings\Administrator\Desktop\TehDemo\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.Properties.Resources.resources
+C:\Documents and Settings\Administrator\Desktop\TehDemo\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.csproj.GenerateResource.Cache
+C:\Documents and Settings\Administrator\Desktop\TehDemo\Working\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.exe
+C:\Documents and Settings\Administrator\Desktop\TehDemo\Working\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.pdb
+C:\Documents and Settings\Administrator\Desktop\TehDemo\Working\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\bin\Release\iCode_CAnimationEditor.exe
+C:\Documents and Settings\Administrator\Desktop\TehDemo\Working\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\bin\Release\iCode_CAnimationEditor.pdb
+C:\Documents and Settings\Administrator\Desktop\TehDemo\Working\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\Desktop\TehDemo\Working\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.Form1.resources
+C:\Documents and Settings\Administrator\Desktop\TehDemo\Working\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.Properties.Resources.resources
+C:\Documents and Settings\Administrator\Desktop\TehDemo\Working\iCode Games Demo\Tools\iCode_CAnimationEditor\iCode_CAnimationEditor\obj\Release\iCode_CAnimationEditor.csproj.GenerateResource.Cache
