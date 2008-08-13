@@ -12,7 +12,7 @@
 #include "CWorldMapState.h"
 #include "CPausedState.h"
 #include "HUDState.h"
-
+#include "CFactory.h"
 CGamePlayState::CGamePlayState(void)
 {
 	m_pCamera = NULL;
@@ -21,7 +21,6 @@ CGamePlayState::CGamePlayState(void)
 
 	m_bButtonDown = false;
 	m_nTerrorLevel = 0;
-
 }
 
 
@@ -44,17 +43,13 @@ void CGamePlayState::Enter(void)
 	m_pD3D = CSGD_Direct3D::GetInstance();
 	m_pHUD = CHUDState::GetInstance();
 	m_pES->RegisterClient("Play", ObjectManager::GetInstance());
+	m_pES->RegisterClient("Remove", ObjectManager::GetInstance());
 	m_pCamera = CCamera::GetInstance();
 	m_pCamera->InitCamera(0.f,0.f);
 
-	m_pPE = CParticleEngine::GetInstance();
-	m_nTestEmitter = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_DustCload.dat", 128, 128);
-
 	// Register any Events with the GamePlayState
 	Map->LoadFile("Resource/Levels/KQ_Wawa.level");
-
 	m_pOM->UpdatePlayerUnitStartTile();
-
 
 	//---------------------------------
 	m_rVictoryButton.left = 100;
@@ -92,17 +87,8 @@ bool CGamePlayState::Input(float fElapsedTime)
 
 	if(!m_bIsPaused)
 	{
-
-		if(m_pDI->GetBufferedKey(DIK_F1))
-		{
-			//Tile  = &Map->GetTile(4,4);
-			m_pOM->UpdatePlayerUnitDestTile(Map->GetTile(0,2,4));
-		}
-		if(m_pDI->GetBufferedKey(DIK_F2))
-		{
-			m_pPE->SetPostion(200, 200, m_nTestEmitter);
-			m_pPE->SetIsRunning(m_nTestEmitter, true);
-		}
+		if(m_pDI->GetBufferedKey(DIK_0))
+			CFactory::CreateComputerUnit(UNIT_INFANTRY);
 
 		POINT ptMousePos = CGame::GetInstance()->GetMousePos(); 
 		if(ptMousePos.y <= 450 && ((ptMousePos.x > 0 && ptMousePos.x < 800) && (ptMousePos.y > 0 && ptMousePos.y < 600)))
@@ -118,9 +104,10 @@ bool CGamePlayState::Input(float fElapsedTime)
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_RIGHT))
 			{
 				POINT globleMouse = m_pCamera->TransformToGlobal(ptMousePos.x, ptMousePos.y);
-				globleMouse = Map->IsoMouse(globleMouse.x, globleMouse.y, 0);
-				m_pOM->UpdatePlayerUnitDestTile(Map->GetTile(0,globleMouse.x, globleMouse.y));
 				m_pOM->MoveSelectedUnits(globleMouse);
+		
+				globleMouse = Map->IsoMouse(globleMouse.x, globleMouse.y, 0);
+				m_pOM->UpdatePlayerUnitDestTile(Map->GetTile(globleMouse.x, globleMouse.y));
 			}
 			else if(m_pDI->GetMouseButton(M_BUTTON_LEFT))
 			{
@@ -258,7 +245,7 @@ void CGamePlayState::Render(float fElapsedTime)
 
 	POINT MapLoc = m_pCamera->TransformToGlobal(CGame::GetInstance()->GetCursorPosition().x, CGame::GetInstance()->GetCursorPosition().y);
 
-	Map->Render(m_pCamera->GetScreenArea());
+	Map->Render((int)m_pCamera->GetPosX(), (int)m_pCamera->GetPosY());
 
 	if(m_pDI->GetMouseButton(M_BUTTON_RIGHT))
 	{
@@ -270,14 +257,14 @@ void CGamePlayState::Render(float fElapsedTime)
 		POINT TileLoc = Map->IsoMouse(MapLoc.x, MapLoc.y, 0);
 
 		sprintf_s(buffer, 32, "Tile: %i, %i", TileLoc.x, TileLoc.y);
-		sprintf_s(buffer2, 32, "TileType: %i", Map->GetTile(0,TileLoc.x, TileLoc.y).nType);
+		sprintf_s(buffer2, 32, "TileType: %i", Map->GetTile(TileLoc.x, TileLoc.y).nType);
 
-		if(Map->GetTile(0,TileLoc.x, TileLoc.y).bIsPlayerSpawn == true)
+		if(Map->GetTile(TileLoc.x, TileLoc.y).bIsPlayerSpawn == true)
 			sprintf_s(buffer3, 32, "PlayerSpawn: True");
 		else
 			sprintf_s(buffer3, 32, "PlayerSpawn: False");
 
-		sprintf_s(buffer4, 32, "Local Anchor: %i, %i", Map->GetTile(0,TileLoc.x, TileLoc.y).ptLocalAnchor.x, Map->GetTile(0,TileLoc.x, TileLoc.y).ptLocalAnchor.y);
+		sprintf_s(buffer4, 32, "Local Anchor: %i, %i", Map->GetTile(TileLoc.x, TileLoc.y).ptLocalAnchor.x, Map->GetTile(TileLoc.x, TileLoc.y).ptLocalAnchor.y);
 		sprintf_s(buffer5, 32, "Global Anchor: %i, %i", MapLoc);
 
 		m_cFont.DrawTextA(buffer, 500, 0, .2f, .2f);

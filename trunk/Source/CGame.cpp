@@ -467,8 +467,13 @@ void CGame::InitCities()
 {
 	for (int i = 0; i < 10; i++)
 	{
+		if(m_pCities[i])
+		{
+			delete m_pCities[i];
+		}
 		m_pCities[i] = new CCity();
 		m_pCities[i]->SetID(i);
+
 
 	}
 

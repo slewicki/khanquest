@@ -60,12 +60,12 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 					CheckCollisions();
 					fTime = 0;
 				}
+			}
 				if(m_vObjectList.size() <= 0)
 					break;
 
 				m_vObjectList[i]->Update(fElapsedTime);
 				
-			}
 		}
 	}
 	pPE->Update(fElapsedTime);
@@ -170,8 +170,15 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 				return;
 			}
 		}
-		
-
+	}
+	if(pEvent->GetEventID() == "Remove")
+	{
+		for(unsigned int i = 0; i < m_vObjectList.size(); i++)
+			if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() == false)
+			{
+				RemoveObject(m_vObjectList[i]);
+				break;
+			}
 	}
 }
 void ObjectManager::UpdatePlayerUnitStartTile(void)
@@ -277,4 +284,6 @@ void ObjectManager::MoveSelectedUnits(POINT pMousePos)
 		}
 	}	
 }
+
+
 
