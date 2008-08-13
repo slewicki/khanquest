@@ -55,7 +55,7 @@ void CMainMenuState::Enter(void)
 	m_nAlpha = 0;
 	
 	m_nVolume = 0;
-	m_nMaxVolume = CGame::GetInstance()->GetMusicVolume();
+	m_nMaxVolume = 0;
 
 	m_pWM->SetVolume(m_nSongID,m_nVolume);
 	m_pWM->Play(m_nSongID);
@@ -191,6 +191,8 @@ void CMainMenuState::Render(float fElapsedTime)
 
 void CMainMenuState::FadeIn(float fElapsedTime)
 {
+	m_nMaxVolume = CGame::GetInstance()->GetMusicVolume();
+
 	m_fTimer += fElapsedTime;
 	
 	if(!m_pWM->IsWavePlaying(m_nSongID))

@@ -3,6 +3,7 @@
 #include "CGame.h"
 #include "CSGD_DirectInput.h"
 #include "CSGD_TextureManager.h"
+#include "CSGD_WaveManager.h"
 #include "irrXML.h"
 #include <fstream>
 #include <iostream>
@@ -22,10 +23,14 @@ void COptionsMenuState::Enter()
 {
 	m_pDI = CSGD_DirectInput::GetInstance();
 	m_pTM = CSGD_TextureManager::GetInstance();
-
+	m_pWM = CSGD_WaveManager::GetInstance();
 	int nFontID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_BF.InitBitmapFont(nFontID,' ',16,128,128);
 	Parse("Resource/KQ_OptionsMenu.xml");
+	m_nClick = m_pWM->LoadWave("Resource/KQ_Chainsaw.wav");
+
+	m_pWM->SetVolume(m_nSongID,CGame::GetInstance()->GetMusicVolume());
+	m_pWM->SetVolume(m_nClick,CGame::GetInstance()->GetSFXVolume());
 
 	char image[128];
 	strncpy(image,m_szImageFile.c_str(),m_szImageFile.length());
@@ -42,12 +47,20 @@ void COptionsMenuState::Enter()
 }
 void COptionsMenuState::Exit()
 {
+	if(m_pWM->IsWavePlaying(m_nClick))
+		m_pWM->Stop(m_nClick);
+	if(m_pWM->IsWavePlaying(m_nSongID))
+		m_pWM->Stop(m_nSongID);	
+	m_pWM->UnloadWave(m_nClick);
+	m_pWM->UnloadWave(m_nSongID);
+
 }
 
 bool COptionsMenuState::Input(float fElapsedTime)
 {
 	if(m_pDI->GetBufferedKey(DIK_UP))
 	{
+		m_pWM->Stop(m_nSongID);
 		m_nCurrentButton--;
 		m_ptCursorPosition.y = Buttons[m_nCurrentButton].ptPosition.y;
 		if(m_ptCursorPosition.y < Buttons[1].ptPosition.y)
@@ -55,9 +68,13 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			m_ptCursorPosition.y = Buttons[m_nNumButtons-1].ptPosition.y;
 			m_nCurrentButton = m_nNumButtons-1;
 		}
+		if(Buttons[m_nCurrentButton].Action == MUSIC)
+			m_pWM->Play(m_nSongID);
+		
 	}
 	if(m_pDI->GetBufferedKey(DIK_DOWN))
 	{
+		m_pWM->Stop(m_nSongID);
 		m_nCurrentButton++;
 		m_ptCursorPosition.y = Buttons[m_nCurrentButton].ptPosition.y;
 		if(m_nCurrentButton > m_nNumButtons-1)
@@ -65,6 +82,9 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			m_ptCursorPosition.y = Buttons[1].ptPosition.y;
 			m_nCurrentButton = 1;
 		}
+		if(Buttons[m_nCurrentButton].Action == MUSIC)
+			m_pWM->Play(m_nSongID);
+		
 	}
 	if(m_pDI->GetBufferedKey(DIK_LEFT))
 	{
@@ -79,6 +99,8 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			CGame::GetInstance()->SetSFXVolume(CGame::GetInstance()->GetSFXVolume() - 1);
 			if(CGame::GetInstance()->GetSFXVolume() < 0)
 				CGame::GetInstance()->SetSFXVolume(0);
+	
+			m_pWM->Play(m_nClick);
 		}
 	}
 	if(m_pDI->GetBufferedKey(DIK_RIGHT))
@@ -94,16 +116,19 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			CGame::GetInstance()->SetSFXVolume(CGame::GetInstance()->GetSFXVolume() + 1);
 			if(CGame::GetInstance()->GetSFXVolume() > 100)
 				CGame::GetInstance()->SetSFXVolume(100);
+			m_pWM->Play(m_nClick);
 		}
 	}
 	if(m_pDI->GetBufferedKey(DIK_RETURN))
 	{
 		if(Buttons[m_nCurrentButton].Action == KEYBIND)
 		{
+			m_pWM->Play(m_nClick);
 			//Switch States;
 		}
 		if(Buttons[m_nCurrentButton].Action == BACK)
 		{
+			m_pWM->Play(m_nClick);
 			CGame::GetInstance()->PopCurrentState();
 			CMainMenuState::GetInstance()->SetPause(false);
 		}		
@@ -142,7 +167,8 @@ void COptionsMenuState::Render(float fElapsedTime)
 }
 void COptionsMenuState::Update(float fElapsedTime)
 {
-
+	m_pWM->SetVolume(m_nClick,CGame::GetInstance()->GetSFXVolume());
+	m_pWM->SetVolume(m_nSongID,CGame::GetInstance()->GetMusicVolume());
 }
 bool COptionsMenuState::Parse(char* szFileName)
 {
@@ -194,6 +220,15 @@ bool COptionsMenuState::Parse(char* szFileName)
 				else if(!strcmp("CursorScaleY",szName.c_str()))
 				{
 					m_fCurScaleY = float(atof(xml->getNodeName()));
+				}
+				else if(!strcmp("Song",szName.c_str()))
+				{
+					char buffer[64];
+					string idk = xml->getNodeName();
+					strncpy(buffer,idk.c_str(),idk.length());
+					buffer[idk.length()] = 0;
+					m_nSongID = m_pWM->LoadWave(buffer);
+
 				}
 				else if (!strcmp("NumButtons", szName.c_str()))
 				{

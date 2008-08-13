@@ -4,19 +4,21 @@
 
 class CSGD_TextureManager;
 class CSGD_DirectInput;
+class CSGD_WaveManager;
 
 class COptionsMenuState : public IGameState
 {
 	CSGD_TextureManager*	m_pTM;
 	CSGD_DirectInput*		m_pDI;
 	CBitmapFont				m_BF;
-	
+	CSGD_WaveManager*		m_pWM;	
 	int m_nImageID;
 	POINT m_ptImageLoc, m_ptImageSize;
 	string m_szImageFile;
-
+	int m_nClick;
+	int m_nSongID;
 	bool					m_bPaused;
-
+	float m_fPlayTimer;
 	int m_nCursorID;
 	POINT m_ptCursorPosition;
 	int m_nCurrentButton;

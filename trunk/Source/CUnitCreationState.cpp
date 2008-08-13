@@ -8,7 +8,7 @@
 
 #include "CUnitCreationState.h"
 #include "CWorldMapState.h"
-#include "CGamePlayState.h"
+#include "UpgradeMenuState.h"
 #include "CGame.h"
 #include "CFactory.h"
 
@@ -66,6 +66,10 @@ void CUnitCreationState::Enter(void)
 	m_nBackgroundID = m_pTM->LoadTexture("Resource/KQ_PageBkg3.png");
 	m_nScrollButtonID = m_pTM->LoadTexture("Resource/KQ_ScrollButton.png");
 
+	m_nSongID = m_pWM->LoadWave("Resource/KQ_CitySelect.wav");
+	m_nClick =  m_pWM->LoadWave("Resource/KQ_Click.wav");
+	m_pWM->SetVolume(m_nSongID,CGame::GetInstance()->GetMusicVolume());
+	m_pWM->SetVolume(m_nClick,CGame::GetInstance()->GetSFXVolume());
 
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
 	m_pPlayerUnitInfo = CGame::GetInstance()->GetPlayerUnitInfo();
@@ -135,11 +139,20 @@ void CUnitCreationState::Enter(void)
 	m_rBackButton.top = 515;
 	m_rBackButton.right = 745;
 	m_rBackButton.bottom = 575;
+
+	m_pWM->Play(m_nSongID);
 	
 }
 
 void CUnitCreationState::Exit(void)
 {
+	if(m_pWM->IsWavePlaying(m_nSongID))
+		m_pWM->Stop(m_nSongID);
+	if(m_pWM->IsWavePlaying(m_nClick))
+		m_pWM->Stop(m_nClick);
+	m_pWM->UnloadWave(m_nSongID);
+	m_pWM->UnloadWave(m_nClick);
+
 	m_pTM->ReleaseTexture(m_nPlusButtonID);
 	m_pTM->ReleaseTexture(m_nMinusButtonID);
 	m_pTM->ReleaseTexture(m_nLucidiaWhiteID);
@@ -173,6 +186,8 @@ bool CUnitCreationState::Input(float fElapsedTime)
 			{
 				if(m_nNumUnits[i]>0)
 				{
+					m_pWM->Play(m_nClick);
+
 					m_nNumUnits[i]--;
 					m_nTotalUnits--;
 					m_nFoodTotal += m_nUnitCosts[i];
@@ -187,6 +202,8 @@ bool CUnitCreationState::Input(float fElapsedTime)
 				
 				if(m_nFoodTotal >= m_nUnitCosts[i])
 				{
+					m_pWM->Play(m_nClick);
+
 					m_nFoodTotal -= m_nUnitCosts[i];
 					m_nNumUnits[i]++;
 					m_nTotalUnits++;
@@ -203,11 +220,13 @@ bool CUnitCreationState::Input(float fElapsedTime)
 			
 			if(m_nTotalUnits > 0)
 			{
+				m_pWM->Play(m_nClick);
+
 				// Ask if they are sure...?
 				
 				// Figure out map and enemy units (call factory enemycreates)
 				// Change to on GamePlayState
-				CGame::GetInstance()->ChangeState(CGamePlayState::GetInstance());
+				CGame::GetInstance()->ChangeState(CUpgradeMenuState::GetInstance());
 				
 			}
 		}
@@ -217,6 +236,8 @@ bool CUnitCreationState::Input(float fElapsedTime)
 //		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
+			m_pWM->Play(m_nClick);
+
 			// Go back to the map
 			CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
 		}

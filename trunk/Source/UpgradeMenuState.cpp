@@ -46,11 +46,15 @@ void CUpgradeMenuState::Enter()
 	m_nMinusButtonID = m_pTM->LoadTexture("Resource/KQ_MinusButton.png");
 	m_nBackgroundID = m_pTM->LoadTexture("Resource/KQ_PageBkg3.png");
 	m_nScrollButtonID = m_pTM->LoadTexture("Resource/KQ_ScrollButton.png");
-
+	m_nCheckBoxID = m_pTM->LoadTexture("Resource/KQ_CheckBox.png");
+	m_nCheckMarkID = m_pTM->LoadTexture("Resource/KQ_CheckMark.png");
+	m_nClick = m_pWM->LoadWave("Resource/KQ_Click.wav");
+	m_nSongID = m_pWM->LoadWave("Resource/KQ_CitySelect.wav");
+	m_pWM->SetVolume(m_nSongID,CGame::GetInstance()->GetMusicVolume());
+	m_pWM->SetVolume(m_nClick,CGame::GetInstance()->GetSFXVolume());
 
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
 	m_pPlayerUnitInfo = CGame::GetInstance()->GetPlayerUnitInfo();
-
 	m_nUnitCosts[UNIT_INFANTRY] = 65;
 	m_nUnitCosts[UNIT_CAVALRY] = 150;
 	m_nUnitCosts[UNIT_CAVALRY_ARCHER] = 150;
@@ -116,17 +120,23 @@ void CUpgradeMenuState::Enter()
 	m_rBackButton.top = 515;
 	m_rBackButton.right = 745;
 	m_rBackButton.bottom = 575;
-	
+	m_pWM->Play(m_nSongID);	
 }
 
 void CUpgradeMenuState::Exit()
 {	
+	if(m_pWM->IsWavePlaying(m_nSongID))
+		m_pWM->Stop(m_nSongID);
+	if(m_pWM->IsWavePlaying(m_nClick))
+		m_pWM->Stop(m_nClick);
+	m_pWM->UnloadWave(m_nSongID);
+	m_pWM->UnloadWave(m_nClick);
+
 	m_pTM->ReleaseTexture(m_nPlusButtonID);
 	m_pTM->ReleaseTexture(m_nMinusButtonID);
 	m_pTM->ReleaseTexture(m_nLucidiaWhiteID);
 	m_pTM->ReleaseTexture(m_nBackgroundID);
 	m_pTM->ReleaseTexture(m_nScrollButtonID);
-
 //ToDo: Upgrade Units
 
 }
@@ -144,6 +154,8 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 			{
 				if(m_nNumUnits[i]>0)
 				{
+					m_pWM->Play(m_nClick);
+
 					m_nNumUnits[i]--;
 					m_nTotalUnits--;
 					m_nFoodTotal += m_nUnitCosts[i];
@@ -158,6 +170,8 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 				
 				if(m_nFoodTotal >= m_nUnitCosts[i])
 				{
+					m_pWM->Play(m_nClick);
+
 					m_nFoodTotal -= m_nUnitCosts[i];
 					m_nNumUnits[i]++;
 					m_nTotalUnits++;
@@ -175,6 +189,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 			
 			// Figure out map and enemy units (call factory enemycreates)
 			// Change to on GamePlayState
+			m_pWM->Play(m_nClick);
 			CGame::GetInstance()->ChangeState(CGamePlayState::GetInstance());
 		}
 	}
@@ -184,6 +199,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
 			// Go back to the map
+			m_pWM->Play(m_nClick);
 			CGame::GetInstance()->ChangeState(CUnitCreationState::GetInstance());
 		}
 	}
@@ -194,89 +210,82 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 void CUpgradeMenuState::Render(float fElapsedTime)
 {
 	m_pTM->Draw(m_nBackgroundID, -20, -10);
-
-	int nPosY = 40;
-	int nPosX = 200;
-	for (int i = 0; i < 6; i++)
+	m_cFont.DrawTextA("Upgrades",225,0,.5,.5,D3DCOLOR_ARGB(255,255,0,0));
+	for(int i = 0; i < 6; ++i)
 	{
-		string szType;
 		switch(i)
-		{
-		case 0:
-			szType = "Infantry";
-			break;
-		case 1:
-			szType = "Cavalry";
-			break;
-		case 2:
-			szType = "Cavalry Archer";
-			break;
-		case 3:
-			szType = "Axmen";
-			nPosX = 590;
-			nPosY = 40;
-			break;
-		case 4:
-			nPosX = 590;
-			szType = "Archer";
-			break;
-		case 5:
-			nPosX = 590;
-			szType = "War Elephant";
-			break;
+		{	
+			case 0:
+				{
+					m_cFont.DrawTextA("Infantry:",		10,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,305,100+i*50);
+					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,525,100+i*50);
+					m_cFont.DrawTextA("Range:",575,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,675,100+i*50);
+				}
+				break;
+			case 1:
+				{
+					m_cFont.DrawTextA("Cavalry:",		10,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,305,100+i*50);
+					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,525,100+i*50);
+					m_cFont.DrawTextA("Range:",575,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,675,100+i*50);
+				}
+				break;
+			case 2:
+				{
+					m_cFont.DrawTextA("Cavalry Archer:",		10,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,305,100+i*50);
+					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,525,100+i*50);
+					m_cFont.DrawTextA("Range:",575,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,675,100+i*50);
+				}
+				break;
+			case 3:
+				{
+					m_cFont.DrawTextA("Axmen:",		10,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,305,100+i*50);
+					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,525,100+i*50);
+					m_cFont.DrawTextA("Range:",575,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,675,100+i*50);
+				}
+				break;
+			case 4:
+				{
+					m_cFont.DrawTextA("Archer:",		10,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,305,100+i*50);
+					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,525,100+i*50);
+					m_cFont.DrawTextA("Range:",575,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,675,100+i*50);
+				}
+				break;
+			case 5:
+				{
+					m_cFont.DrawTextA("War Elephant:",		10,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,305,100+i*50);
+					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,525,100+i*50);
+					m_cFont.DrawTextA("Range:",575,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_pTM->Draw(m_nCheckBoxID,675,100+i*50);
+				}
+				break;
 		}
 
-		m_cFont.DrawTextA(szType + "/HP: " + IntToString(m_pPlayerUnitInfo[i].GetHP()) +
-			"    Attack: " + IntToString(m_pPlayerUnitInfo[i].GetAttackPower()) +
-			"/Attack Speed: " + FloatToString(m_pPlayerUnitInfo[i].GetAttackSpeed()) +
-			"/Range: " + IntToString(m_pPlayerUnitInfo[i].GetRange()) +
-			"/Movement: " + FloatToString(m_pPlayerUnitInfo[i].GetSpeed()), nPosX, nPosY, .15f, .15f, D3DCOLOR_ARGB(255, 0, 0, 0));
-		m_cFont.DrawTextA("Food: " + IntToString(m_nUnitCosts[i]), nPosX, nPosY - 25, .15f, .15f, D3DCOLOR_ARGB(255, 255, 0, 0));
-
-		nPosY += 170;
 	}
 
-
-	for (int i = 0; i < 3; i++)
-	{
-		m_pTM->Draw(m_nMinusButtonID, m_rMinusButtons[i].left, m_rMinusButtons[i].top, .5f, .5f);
-
-		// Draw unit picture or animation
-
-		m_cFont.DrawTextA(IntToString(m_nNumUnits[i]), m_rMinusButtons[i].right + 40, m_rMinusButtons[i].bottom, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
-
-		m_pTM->Draw(m_nPlusButtonID, m_rPlusButtons[i].left, m_rPlusButtons[i].top, .5f, .5f);
-	}
-	if(CGame::GetInstance()->IsAxmenUnlocked())
-	{
-		m_pTM->Draw(m_nMinusButtonID, m_rMinusButtons[3].left, m_rMinusButtons[3].top, .5f, .5f);
-		// Draw unit picture or animation
-		m_cFont.DrawTextA(IntToString(m_nNumUnits[3]), m_rMinusButtons[3].right + 40, m_rMinusButtons[3].bottom, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
-		m_pTM->Draw(m_nPlusButtonID, m_rPlusButtons[3].left, m_rPlusButtons[3].top, .5f, .5f);
-	}
-	else
-		m_cFont.DrawTextA("Locked", 400+40, 70, .25f, .25f, D3DCOLOR_ARGB(255, 150, 0,0));
-	if(CGame::GetInstance()->IsArcherUnlocked())
-	{
-		m_pTM->Draw(m_nMinusButtonID, m_rMinusButtons[4].left, m_rMinusButtons[4].top, .5f, .5f);
-		// Draw unit picture or animation
-		m_cFont.DrawTextA(IntToString(m_nNumUnits[4]), m_rMinusButtons[4].right + 40, m_rMinusButtons[4].bottom, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
-		m_pTM->Draw(m_nPlusButtonID, m_rPlusButtons[4].left, m_rPlusButtons[4].top, .5f, .5f);
-	}
-	else
-		m_cFont.DrawTextA("Locked", 400+40, 240, .25f, .25f, D3DCOLOR_ARGB(255, 150, 0,0));
-
-	if(CGame::GetInstance()->IsWarElephantUnlocked())
-	{
-		m_pTM->Draw(m_nMinusButtonID, m_rMinusButtons[5].left, m_rMinusButtons[5].top, .5f, .5f);
-		// Draw unit picture or animation
-		m_cFont.DrawTextA(IntToString(m_nNumUnits[5]), m_rMinusButtons[5].right + 40, m_rMinusButtons[5].bottom, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
-		m_pTM->Draw(m_nPlusButtonID, m_rPlusButtons[5].left, m_rPlusButtons[5].top, .5f, .5f);
-	}
-	else
-		m_cFont.DrawTextA("Locked", 400+40, 410, .25f, .25f, D3DCOLOR_ARGB(255, 150, 0,0));
-
-	m_cFont.DrawTextA("Food:        " + IntToString(m_nFoodTotal), 50, 500, .25f, .25f, D3DCOLOR_ARGB(255, 255, 0, 0));
+	m_cFont.DrawTextA("Gold:        " + IntToString(CGame::GetInstance()->GetTotalGold()), 50, 500, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));
 	m_cFont.DrawTextA("Army Size: " + IntToString(m_nTotalUnits), 50, 530, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 255));
 	m_cFont.DrawTextA("Max Size:   " + IntToString(MAX_UNITS), 50, 560, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
 

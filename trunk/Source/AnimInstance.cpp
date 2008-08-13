@@ -31,7 +31,6 @@ CAnimInstance::~CAnimInstance(void)
 void CAnimInstance::Play(int Direction, int Action)
 {	
 	string name = GetName(Direction,Action);
-
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
 		if(name == m_Sheet.GetAnimations()[i].GetName())
 		{
@@ -145,6 +144,9 @@ string CAnimInstance::GetName(int Direction, int Action)
 		break;
 	case 2:
 		m_szAction = "Dying";
+		break;
+	case 3:
+		m_szAction = "Idle";
 		break;
 	};
 
