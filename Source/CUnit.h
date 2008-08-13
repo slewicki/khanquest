@@ -6,12 +6,15 @@
 //	Purpose	:	Store all information and functionality
 //				of a unit.
 //////////////////////////////////////////////////////
-
 #pragma once
+#include <vector>
 #include "CBase.h"
 #include "AnimInstance.h"
 #include "CTile.h"
 #include "CHealthBar.h"
+#include "CAISystem.h"
+#include "CTileEngine.h"
+using std::vector;
 
 enum	// Unit States
 {
@@ -45,6 +48,7 @@ private:
 
 	CTile			m_pDestinationTile; // Tile the unit is traveling to
 	CTile			m_pCurrentTile;		// Current tile the unit is on
+	CTile			m_pNextTile;		// next tile to move to
 
 	CUnit*			m_pTarget;			// Enemy unit to attack, if any
 
@@ -57,10 +61,15 @@ private:
 	CHealthBar*		m_pHealthBar;
 	
 	CAnimInstance*	m_pAnimInstance;
+	CTileEngine*	m_pTE;
+
+	CAISystem*		m_pCAI;
 
 	RECT			m_rLocalRect;
 	RECT			m_rGlobalRect;
 	RECT			m_rHealthRect;
+
+	list<POINT>	m_vPath;				// unit path
 	
 public:
 	//////////////////////////////////////////////////////
@@ -85,13 +94,14 @@ public:
 	//////////////////////////////////////////////////////
 	// Get unit stats
 	inline int	  GetHP				(void) const { return m_nHP; }
-	inline int	  GetAttackPower		(void) const { return m_nAttack; }
+	inline int	  GetAttackPower	(void) const { return m_nAttack; }
 	inline int	  GetRange			(void) const { return m_nRange; }
-	inline float  GetAttackSpeed		(void) const { return m_fAttackSpeed; }
+	inline float  GetAttackSpeed	(void) const { return m_fAttackSpeed; }
 	inline float  GetSpeed			(void) const { return m_fMovementSpeed; }
-	inline int	  GetCost				(void) const { return m_nCost; }
+	inline int	  GetCost			(void) const { return m_nCost; }
 	inline CTile GetDestTile		(void) const { return m_pDestinationTile; }
-	inline CTile GetCurrentTile	(void) const { return m_pCurrentTile; }
+	inline CTile GetCurrentTile		(void) const { return m_pCurrentTile; }
+	inline CTile GetNextTile		(void) const {return m_pNextTile;}
 	inline bool IsPlayerUnit(void) {return m_bIsPlayerUnit;}
 
 	inline CUnit* GetTarget			(void) const { return m_pTarget; }
@@ -115,13 +125,16 @@ public:
 	inline void SetCost			(int nCost)				{ m_nCost = nCost; }
 	inline void SetIsPlayerUnit (bool bIsPlayerUnit)	{m_bIsPlayerUnit = bIsPlayerUnit; m_pAnimInstance->SetPlayer(m_bIsPlayerUnit);}
 	inline void SetAttackSpeed	(float fAttackSpeed)	{ m_fAttackSpeed = fAttackSpeed; }
-	inline void SetSpeed		(float fMovementSpeed)	{m_fMovementSpeed = fMovementSpeed; }
-	inline void SetDestTile		(CTile pDestTile)		{ m_pDestinationTile = pDestTile; }
-	inline void SetCurrentTile	(CTile pCurrentTile)	{ m_pCurrentTile = pCurrentTile; }
+	inline void SetSpeed		(float fMovementSpeed){ m_fMovementSpeed = fMovementSpeed; }
+	inline void SetDestTile		(CTile pDestTile)  { m_pDestinationTile = pDestTile; }
+	inline void SetCurrentTile	(CTile pCurrentTile)  { m_pCurrentTile = pCurrentTile; }
+	inline void SetNextTile		(CTile pNextTile)  { m_pNextTile = pNextTile; }
 	inline void SetBonus		(int nBonus)		{ m_nBonus = nBonus; }
 	inline void SetSelected		(bool bIsSelected)	{ m_bIsSelected = bIsSelected; }
 	inline void SetGrouped		(bool bIsGrouped)	{ m_bIsGrouped = bIsGrouped; }
-	inline void SetDirection (int nDirectionFacing)	
+	inline void SetPath(list<POINT> vPath)		{m_vPath = vPath;}
+	inline void ClearPath		(void)			{m_vPath.clear();}
+	inline void SetDirection	(int nDirectionFacing)	
 	{ 
 		m_nDirectionFacing = nDirectionFacing; 
 		m_pAnimInstance->Play(GetDirection(), GetState());	
@@ -162,6 +175,5 @@ public:
 	// Purpose: Change the direction the unit is facing
 	//////////////////////////////////////////////////////
 	void ChangeDirection(POINT pMousePos);
-
-
+	
 };
