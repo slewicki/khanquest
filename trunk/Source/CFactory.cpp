@@ -28,6 +28,7 @@ void CFactory::CreatePlayerUnit(int nType)
 	unit->SetAttackPower(temp.GetAttackPower());
 	unit->SetAttackSpeed(temp.GetAttackSpeed());
 	unit->SetHP(temp.GetHP());
+	unit->SetHealthBarHP();
 	unit->SetRange(temp.GetRange());
 	unit->SetSpeed(temp.GetSpeed());
 		
@@ -56,6 +57,7 @@ void CFactory::CreateComputerUnit(int nType)
 	unit->SetAttackPower(temp.GetAttackPower());
 	unit->SetAttackSpeed(temp.GetAttackSpeed());
 	unit->SetHP(temp.GetHP());
+	unit->SetHealthBarHP();
 	unit->SetRange(temp.GetRange());
 	unit->SetSpeed(temp.GetSpeed());
 

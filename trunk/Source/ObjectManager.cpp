@@ -19,6 +19,7 @@ ObjectManager::ObjectManager(void)
 	m_nEmitterID = pPE->LoadBineryEmitter("Resource/KQ_DustCload.dat", 128, 128);
 	Map = CTileEngine::GetInstance();
 	m_pCAI = CAISystem::GetInstance();
+	ftime = GetTickCount();
 }
 
 ObjectManager::~ObjectManager(void)
@@ -31,7 +32,8 @@ void ObjectManager::CheckCollisions()
 		for(unsigned int j=0; j < m_vObjectList.size(); j++)
 			// Don't check it against itself
 			if(m_vObjectList[i]!=m_vObjectList[j])
- 				m_vObjectList[i]->CheckCollisions(m_vObjectList[j]);
+ 				if (m_vObjectList[i]->CheckCollisions(m_vObjectList[j]))
+				break;
 	}
 }
 
@@ -44,20 +46,17 @@ ObjectManager* ObjectManager::GetInstance(void)
 
 void ObjectManager::UpdateObjects(float fElapsedTime)
 {
-	//vector<CBase*>::iterator iter = m_vObjectList.begin();
-	//while(iter != m_vObjectList.end())
-	//{
-	//	(*iter)->Update(fElapsedTime);
-
-	//	iter++;
-	//}
-
+	
 	for (int i = 0; i < m_vObjectList.size(); ++i)
 	{
 		m_vObjectList[i]->Update(fElapsedTime);
+		if ( GetTickCount() - ftime > 1000)
+		{
+			CheckCollisions();
+			ftime = GetTickCount();
+		}
 	}
 	pPE->Update(fElapsedTime);
-	CheckCollisions();
 }
 
 void ObjectManager::RenderObjects(float fElapsedTime)
