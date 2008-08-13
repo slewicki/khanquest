@@ -10,16 +10,17 @@
 #include "CUnit.h"
 #include "CGamePlayState.h"
 #include "CEventSystem.h"
+
 #include "HUDState.h"
-#include "CFactory.h"
+#include "CGame.h"
+#include "WinBattleState.h"
+#include "LoseBattleState.h"
 
 ObjectManager::ObjectManager(void)
 {
 	pPE = CParticleEngine::GetInstance();
-	m_nEmitterID = pPE->LoadBineryEmitter("Resource/KQ_DustCload.dat", 128, 128);
+	pPE->LoadBineryEmitter("Resource/KQ_DustCload.dat", 128, 128);
 	Map = CTileEngine::GetInstance();
-	m_pCAI = CAISystem::GetInstance();
-	ftime = GetTickCount();
 }
 
 ObjectManager::~ObjectManager(void)
@@ -32,8 +33,8 @@ void ObjectManager::CheckCollisions()
 		for(unsigned int j=0; j < m_vObjectList.size(); j++)
 			// Don't check it against itself
 			if(m_vObjectList[i]!=m_vObjectList[j])
- 				if (m_vObjectList[i]->CheckCollisions(m_vObjectList[j]))
-				break;
+ 				if(m_vObjectList[i]->CheckCollisions(m_vObjectList[j]))
+					break;
 	}
 }
 
@@ -46,14 +47,25 @@ ObjectManager* ObjectManager::GetInstance(void)
 
 void ObjectManager::UpdateObjects(float fElapsedTime)
 {
-	
-	for (int i = 0; i < m_vObjectList.size(); ++i)
+	static float fTime = 0;
+	fTime += fElapsedTime;
+	if(m_vObjectList.size() > 0)
 	{
-		m_vObjectList[i]->Update(fElapsedTime);
-		if ( GetTickCount() - ftime > 1000)
+		for (unsigned int i = 0; i < m_vObjectList.size(); ++i)
 		{
-			CheckCollisions();
-			ftime = GetTickCount();
+			if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() == true)
+			{
+				if(static_cast<CUnit*>(m_vObjectList[i])->GetAttackSpeed() <= fTime)
+				{
+					CheckCollisions();
+					fTime = 0;
+				}
+				if(m_vObjectList.size() <= 0)
+					break;
+
+				m_vObjectList[i]->Update(fElapsedTime);
+				
+			}
 		}
 	}
 	pPE->Update(fElapsedTime);
@@ -103,6 +115,33 @@ void ObjectManager::RemoveObject(CBase* pObject)
 			break;
 		}
 	}
+	int nPlayerUnits = 0;
+	int nEnemyUnits = 0;
+	for(vector<CBase*>::iterator iter = m_vObjectList.begin();
+		 iter != m_vObjectList.end();
+		 iter++)
+	{
+		if(static_cast<CUnit*>((*iter))->IsPlayerUnit())
+			++nPlayerUnits;
+		else
+			++nEnemyUnits;
+
+		
+	}
+	if(nEnemyUnits <=0)
+	{
+		CGame::GetInstance()->PopCurrentState();
+		CGame::GetInstance()->PushState(CWinBattleState::GetInstance());
+		CGame::GetInstance()->AddWins();
+
+	}
+	if(nPlayerUnits <= 0)
+	{
+		CGame::GetInstance()->PopCurrentState();
+		CGame::GetInstance()->PushState(CLoseBattleState::GetInstance());
+		CGame::GetInstance()->AddLoses();
+
+	}
 }
 
 void ObjectManager::RemoveAllObjects(void)
@@ -126,8 +165,8 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 		{
 			if(m_vObjectList[i]->GetType() == UNIT_CAVALRY)
 			{
-				pPE->SetPostion((int)m_vObjectList[i]->GetPosX() - pFrame->ptAnchorX + pFrame->ptAccessories[0].x, (int)m_vObjectList[i]->GetPosY() - pFrame->ptAnchorY + pFrame->ptAccessories[0].y, m_nEmitterID);
-				pPE->SetIsRunning(m_nEmitterID, true);
+				//pPE->SetPostion((int)m_vObjectList[i]->GetPosX() - pFrame->ptAnchorX + pFrame->ptAccessories[0].x, (int)m_vObjectList[i]->GetPosY() - pFrame->ptAnchorY + pFrame->ptAccessories[0].y);
+				//pPE->SetIsRunning(true);
 				return;
 			}
 		}
@@ -137,16 +176,6 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 }
 void ObjectManager::UpdatePlayerUnitStartTile(void)
 {
-	for (int i = 0; i < Map->GetMapWidth(); ++i)
-	{
-		for (int j = 0; j < Map->GetMapWidth(); ++j)
-		{
-			if (Map->GetTile(0, i, j).bIsEnemySpawn)
-			{
-				CFactory::CreateComputerUnit(rand()%6);
-			}
-		}
-	}
 
 	// go through
 	for (unsigned int i=0; i < m_vObjectList.size(); i++)
@@ -163,40 +192,14 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 					for (int k =0; k < Map->GetMapHeight(); ++k )
 					{
 						// if map loc is a spawn point set unit current loc there
-						if (Map->GetTile(0,j,k).bIsPlayerSpawn && Map->GetTile(0,j,k).bIsOccupied == false)
+						if (Map->GetTile(j,k).bIsPlayerSpawn && Map->GetTile(j,k).bIsOccupied == false)
 						{
 							//POINT spawn = Map->GetLocalAnchor( j, k);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosX(Map->GetLocalAnchor(0, j, k).x);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosY(Map->GetLocalAnchor(0, j, k).y);
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosX((float)Map->GetLocalAnchor( j, k).x);
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosY((float)Map->GetLocalAnchor( j, k).y);
 							Map->SetOccupy(j, k, true, i);
-							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
-							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
-							break;
-						}
-
-					}
-
-				}
-			}
-		}
-		else
-		{
-			if (static_cast<CUnit*>(m_vObjectList[i])->GetPosX() <= 0 && static_cast<CUnit*>(m_vObjectList[i])->GetPosY() <= 0)
-			{
-				//check the map for spawn point
-				for (int j =0; j < Map->GetMapWidth(); ++j )
-				{
-					for (int k =0; k < Map->GetMapHeight(); ++k )
-					{
-						// if map loc is a spawn point set unit current loc there
-						if (Map->GetTile(0,j,k).bIsEnemySpawn && Map->GetTile(0,j,k).bIsOccupied == false)
-						{
-							//POINT spawn = Map->GetLocalAnchor( j, k);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosX(Map->GetLocalAnchor(0, j, k).x);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosY(Map->GetLocalAnchor(0, j, k).y);
-							Map->SetOccupy(j, k, true, i);
-							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
-							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
+							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(j,k));
+							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(j,k));
 							break;
 						}
 
@@ -230,7 +233,7 @@ void ObjectManager::SetSelectedUnit(RECT toCheck)
 
 		if(IntersectRect(&rIntersect, &static_cast<CUnit*>(m_vObjectList[i])->GetLocalRect(), &toCheck))
 		{
-			if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() && static_cast<CUnit*>(m_vObjectList[i])->IsSelected() == false)
+			if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() && static_cast<CUnit*>(m_vObjectList[i])->IsSelected() == false && static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
 			{
 				static_cast<CUnit*>(m_vObjectList[i])->SetSelected(true);
 				++nSelectedAmount;
@@ -269,20 +272,9 @@ void ObjectManager::MoveSelectedUnits(POINT pMousePos)
 	{
 		if(static_cast<CUnit*>(m_vObjectList[i])->IsSelected())
 		{
+			static_cast<CUnit*>(m_vObjectList[i])->SetState(MOVEMENT);
 			static_cast<CUnit*>(m_vObjectList[i])->ChangeDirection(pMousePos);
-			static_cast<CUnit*>(m_vObjectList[i])->ClearPath();
-			static_cast<CUnit*>(m_vObjectList[i])->SetPath(m_pCAI->FindPath(static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile(), static_cast<CUnit*>(m_vObjectList[i])->GetDestTile()));
 		}
 	}	
-}
-
-vector<CBase*> ObjectManager::GetUnits()
-{
-	vector<CBase*> vSelectedUnits;
-	for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
-	{
-		vSelectedUnits.push_back(static_cast<CUnit*>(m_vObjectList[i]));
-	}	
-	return vSelectedUnits;
 }
 
