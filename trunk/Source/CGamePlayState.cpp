@@ -280,7 +280,7 @@ void CGamePlayState::Render(float fElapsedTime)
 			sprintf_s(buffer3, 32, "PlayerSpawn: False");
 
 		sprintf_s(buffer4, 32, "Local Anchor: %i, %i", Map->GetTile(0,TileLoc.x, TileLoc.y).ptLocalAnchor.x, Map->GetTile(0,TileLoc.x, TileLoc.y).ptLocalAnchor.y);
-		sprintf_s(buffer5, 32, "Global Anchor: %i, %i", MapLoc);
+		sprintf_s(buffer5, 32, "Global Anchor: %i, %i", MapLoc.x, MapLoc.y);
 
 		m_cFont.DrawTextA(buffer, 500, 0, .2f, .2f);
 		m_cFont.DrawTextA(buffer2, 500, 30, .2f, .2f);
