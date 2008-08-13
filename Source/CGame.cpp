@@ -39,6 +39,7 @@ CGame::CGame(void)
 	m_nGold = 0;
 	m_nWins = 1;
 	m_nLoses = 0;
+	m_nFood = 0;
 	m_chJinCount = m_chKCount = m_chXiaCount = 0;
 }
 
@@ -662,27 +663,28 @@ int CGame::GetTotalFoodTribute()
 	switch(GetNumConquered())
 	{
 	case 0:
-		return 1000;
+		m_nFood = 1000;
 		break;
 	case 1:
-		return 1250;
+		m_nFood = 1250;
 		break;
 	case 2:
-		return 1550;
+		m_nFood = 1550;
 		break;
 	case 3:
-		return 1850;
+		m_nFood = 1850;
 		break;
 	case 4:
-		return 2200;
+		m_nFood = 2200;
 		break;
 	case 5:
-		return 2600;
+		m_nFood = 2600;
 		break;
 	default:
-		return 3000;
+		m_nFood = 3000;
 		break;
 	}
+	return m_nFood;
 }
 
 void CGame::SetCityConquered(CCity* pCity)
@@ -751,6 +753,9 @@ void CGame::AddWins()
 			PopCurrentState();
 		PushState(CMainMenuState::GetInstance());
 		PushState(CWinGameState::GetInstance());
+		InitCities();
+		m_nGold = 0;
+		m_nWins = 1;
 	}
 }
 void CGame::AddLoses()
@@ -764,6 +769,8 @@ void CGame::AddLoses()
 	
 		PushState(CMainMenuState::GetInstance());
 		PushState(CLoseGameState::GetInstance());
+		InitCities();
+		m_nGold = 0;
 		m_nLoses = 0;
 	}
 }
