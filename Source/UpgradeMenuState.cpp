@@ -217,67 +217,67 @@ void CUpgradeMenuState::Render(float fElapsedTime)
 		{	
 			case 0:
 				{
-					m_cFont.DrawTextA("Infantry:",		10,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
-					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Infantry:",		10, 100 + (i*50),.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,305,100+i*50);
-					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,525,100+i*50);
-					m_cFont.DrawTextA("Range:",575,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Range:",575,100+i*50,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,675,100+i*50);
 				}
 				break;
 			case 1:
 				{
-					m_cFont.DrawTextA("Cavalry:",		10,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
-					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Cavalry:",		10,100 + (i*50),.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,305,100+i*50);
-					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,525,100+i*50);
-					m_cFont.DrawTextA("Range:",575,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Range:",575,100+i*50,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,675,100+i*50);
 				}
 				break;
 			case 2:
 				{
-					m_cFont.DrawTextA("Cavalry Archer:",		10,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
-					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Cavalry Archer:",		10,100 + (i*50),.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,305,100+i*50);
-					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,525,100+i*50);
-					m_cFont.DrawTextA("Range:",575,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Range:",575,100+i*50,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,675,100+i*50);
 				}
 				break;
 			case 3:
 				{
-					m_cFont.DrawTextA("Axmen:",		10,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
-					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Axmen:",		10,100 + (i*50),.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,305,100+i*50);
-					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,525,100+i*50);
-					m_cFont.DrawTextA("Range:",575,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Range:",575,100+i*50,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,675,100+i*50);
 				}
 				break;
 			case 4:
 				{
-					m_cFont.DrawTextA("Archer:",		10,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
-					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Archer:",		10,100 + (i*50),.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,305,100+i*50);
-					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,525,100+i*50);
-					m_cFont.DrawTextA("Range:",575,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Range:",575,100+i*50,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,675,100+i*50);
 				}
 				break;
 			case 5:
 				{
-					m_cFont.DrawTextA("War Elephant:",		10,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
-					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("War Elephant:",		10,100 + (i*50),.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("HP:",250,100 + (i*50),.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,305,100+i*50);
-					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Attack Speed:",350,100+i*50,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,525,100+i*50);
-					m_cFont.DrawTextA("Range:",575,100+i*50,.2,.2,D3DCOLOR_ARGB(255,0,0,0));
+					m_cFont.DrawTextA("Range:",575,100+i*50,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 					m_pTM->Draw(m_nCheckBoxID,675,100+i*50);
 				}
 				break;
