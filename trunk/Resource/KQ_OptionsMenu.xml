@@ -13,6 +13,10 @@
           <CursorScaleX>.5</CursorScaleX>
           <CursorScaleY>.5</CursorScaleY>
       </Cursor>
+      
+      <Songs>
+        <Song>Resource/KQ_CitySelect.wav</Song>
+      </Songs>
 
       <NumButtons>5</NumButtons>
           <Button>
@@ -30,9 +34,9 @@
                   <ButtonPositionX>200</ButtonPositionX>
                   <ButtonPositionY>100</ButtonPositionY>
                   <TextColorA>200</TextColorA>
-                  <TextColorR>100</TextColorR>
-                  <TextColorG>100</TextColorG>
-                  <TextColorB>100</TextColorB>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
                   <TextScaleX>.2</TextScaleX>
                   <TextScaleY>.2</TextScaleY>
                   <Action>0</Action>
@@ -42,9 +46,9 @@
                   <ButtonPositionX>200</ButtonPositionX>
                   <ButtonPositionY>150</ButtonPositionY>
                   <TextColorA>200</TextColorA>
-                  <TextColorR>100</TextColorR>
-                  <TextColorG>100</TextColorG>
-                  <TextColorB>100</TextColorB>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
                   <TextScaleX>.2</TextScaleX>
                   <TextScaleY>.2</TextScaleY>
                   <Action>1</Action>
@@ -54,9 +58,9 @@
                   <ButtonPositionX>200</ButtonPositionX>
                   <ButtonPositionY>200</ButtonPositionY>
                   <TextColorA>200</TextColorA>
-                  <TextColorR>100</TextColorR>
-                  <TextColorG>100</TextColorG>
-                  <TextColorB>100</TextColorB>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
                   <TextScaleX>.2</TextScaleX>
                   <TextScaleY>.2</TextScaleY>
                   <Action>2</Action>
@@ -66,9 +70,9 @@
                   <ButtonPositionX>200</ButtonPositionX>
                   <ButtonPositionY>250</ButtonPositionY>
                   <TextColorA>200</TextColorA>
-                  <TextColorR>100</TextColorR>
-                  <TextColorG>100</TextColorG>
-                  <TextColorB>100</TextColorB>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
                   <TextScaleX>.2</TextScaleX>
                   <TextScaleY>.2</TextScaleY>
                   <Action>3</Action>
@@ -76,4 +80,7 @@
           </Button>
 
 </Menu>
+
+
+
 
