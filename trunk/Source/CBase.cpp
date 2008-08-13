@@ -14,8 +14,8 @@ CBase::CBase(void)
 	m_unRefCount = 1;	//	Always start with a reference to yourself
 	SetPosX( 0.0f );
 	SetPosY( 0.0f );
-	SetVelX( 0.0f );
-	SetVelY( 0.0f );
+	SetVelX( 1.0f );
+	SetVelY( 1.0f );
 }
 
 
@@ -30,8 +30,8 @@ CBase::~CBase(void)
 
 void CBase::Update(float fElapsedTime)
 {
-	SetPosX( GetPosX() + (GetVelX() * fElapsedTime));
-	SetPosY( GetPosY() + (GetVelY() * fElapsedTime));
+	//SetPosX( GetPosX() + (GetVelX() * fElapsedTime));
+	//SetPosY( GetPosY() + (GetVelY() * fElapsedTime));
 }
 
 void CBase::Render(float fElapsedTime)

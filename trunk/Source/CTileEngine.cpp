@@ -222,10 +222,15 @@ void CTileEngine::Clear()
 	delete [] pTileArray;
 }
 
-void CTileEngine::SetOccupy(int x, int y, bool bOccupy)
+void CTileEngine::SetOccupy(int x, int y, bool bOccupy, int nUnit)
 {
 	for(int i = 0; i < m_nLayer; i++)
+	{
 		pTileArray[i][x][y].bIsOccupied = bOccupy;
+		pTileArray[i][x][y].nUnitIndex = nUnit;
+
+
+	}
 }
 
 void CTileEngine::ParalaxScroll(bool bIsScrollable, const char* szFileName, RECT rCamPos)

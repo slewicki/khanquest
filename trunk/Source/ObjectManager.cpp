@@ -11,12 +11,14 @@
 #include "CGamePlayState.h"
 #include "CEventSystem.h"
 #include "HUDState.h"
+#include "CFactory.h"
 
 ObjectManager::ObjectManager(void)
 {
 	pPE = CParticleEngine::GetInstance();
-	pPE->LoadBineryEmitter("Resource/KQ_DustCload.dat", 128, 128);
+	m_nEmitterID = pPE->LoadBineryEmitter("Resource/KQ_DustCload.dat", 128, 128);
 	Map = CTileEngine::GetInstance();
+	m_pCAI = CAISystem::GetInstance();
 }
 
 ObjectManager::~ObjectManager(void)
@@ -53,9 +55,9 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 	for (int i = 0; i < m_vObjectList.size(); ++i)
 	{
 		m_vObjectList[i]->Update(fElapsedTime);
-		//MoveSelectedUnits()
 	}
 	pPE->Update(fElapsedTime);
+	CheckCollisions();
 }
 
 void ObjectManager::RenderObjects(float fElapsedTime)
@@ -125,8 +127,8 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 		{
 			if(m_vObjectList[i]->GetType() == UNIT_CAVALRY)
 			{
-				//pPE->SetPostion((int)m_vObjectList[i]->GetPosX() - pFrame->ptAnchorX + pFrame->ptAccessories[0].x, (int)m_vObjectList[i]->GetPosY() - pFrame->ptAnchorY + pFrame->ptAccessories[0].y);
-				//pPE->SetIsRunning(true);
+				pPE->SetPostion((int)m_vObjectList[i]->GetPosX() - pFrame->ptAnchorX + pFrame->ptAccessories[0].x, (int)m_vObjectList[i]->GetPosY() - pFrame->ptAnchorY + pFrame->ptAccessories[0].y, m_nEmitterID);
+				pPE->SetIsRunning(m_nEmitterID, true);
 				return;
 			}
 		}
@@ -136,6 +138,16 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 }
 void ObjectManager::UpdatePlayerUnitStartTile(void)
 {
+	for (int i = 0; i < Map->GetMapWidth(); ++i)
+	{
+		for (int j = 0; j < Map->GetMapWidth(); ++j)
+		{
+			if (Map->GetTile(0, i, j).bIsEnemySpawn)
+			{
+				CFactory::CreateComputerUnit(rand()%6);
+			}
+		}
+	}
 
 	// go through
 	for (unsigned int i=0; i < m_vObjectList.size(); i++)
@@ -157,7 +169,33 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 							//POINT spawn = Map->GetLocalAnchor( j, k);
 							static_cast<CUnit*>(m_vObjectList[i])->SetPosX(Map->GetLocalAnchor(0, j, k).x);
 							static_cast<CUnit*>(m_vObjectList[i])->SetPosY(Map->GetLocalAnchor(0, j, k).y);
-							Map->SetOccupy(0,j, k, true);
+							Map->SetOccupy(j, k, true, i);
+							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
+							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
+							break;
+						}
+
+					}
+
+				}
+			}
+		}
+		else
+		{
+			if (static_cast<CUnit*>(m_vObjectList[i])->GetPosX() <= 0 && static_cast<CUnit*>(m_vObjectList[i])->GetPosY() <= 0)
+			{
+				//check the map for spawn point
+				for (int j =0; j < Map->GetMapWidth(); ++j )
+				{
+					for (int k =0; k < Map->GetMapHeight(); ++k )
+					{
+						// if map loc is a spawn point set unit current loc there
+						if (Map->GetTile(0,j,k).bIsEnemySpawn && Map->GetTile(0,j,k).bIsOccupied == false)
+						{
+							//POINT spawn = Map->GetLocalAnchor( j, k);
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosX(Map->GetLocalAnchor(0, j, k).x);
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosY(Map->GetLocalAnchor(0, j, k).y);
+							Map->SetOccupy(j, k, true, i);
 							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
 							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
 							break;
@@ -233,6 +271,8 @@ void ObjectManager::MoveSelectedUnits(POINT pMousePos)
 		if(static_cast<CUnit*>(m_vObjectList[i])->IsSelected())
 		{
 			static_cast<CUnit*>(m_vObjectList[i])->ChangeDirection(pMousePos);
+			static_cast<CUnit*>(m_vObjectList[i])->ClearPath();
+			static_cast<CUnit*>(m_vObjectList[i])->SetPath(m_pCAI->FindPath(static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile(), static_cast<CUnit*>(m_vObjectList[i])->GetDestTile()));
 		}
 	}	
 }

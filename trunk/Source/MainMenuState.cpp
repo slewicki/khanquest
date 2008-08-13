@@ -3,10 +3,6 @@
 #include "CWorldMapState.h"
 #include "OptionsMenuState.h"
 #include "AttractMode.h"
-#include "WinBattleState.h"
-#include "WinGameState.h"
-#include "LoseBattleState.h"
-#include "LoseGameState.h"
 
 #include "irrXML.h"
 #include <fstream>
@@ -61,27 +57,7 @@ bool CMainMenuState::Input(float fElapsedTime)
 		m_bPaused = true;
 		CGame::GetInstance()->PushState(CAttractMode::GetInstance());
 	}
-	if(m_pDI->GetBufferedKey(DIK_2))
-	{
-		m_bPaused = true;
-		CGame::GetInstance()->PushState(CWinGameState::GetInstance());
-	}
-	if(m_pDI->GetBufferedKey(DIK_3))
-	{
-		m_bPaused = true;
-		CGame::GetInstance()->PushState(CLoseBattleState::GetInstance());
-	}
-	if(m_pDI->GetBufferedKey(DIK_4))
-	{
-		m_bPaused = true;
-		CGame::GetInstance()->PushState(CWinBattleState::GetInstance());
-	}
-	if(m_pDI->GetBufferedKey(DIK_5))
-	{
-		m_bPaused = true;
-		CGame::GetInstance()->PushState(CLoseGameState::GetInstance());
-	}
-
+	
 	if(m_pDI->GetBufferedKey(DIK_UP))
 	{
 		m_nCurrentButton--;

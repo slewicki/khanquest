@@ -68,7 +68,7 @@ public:
 	/////////////////////////////////
 	//	Function:	"Accessors"
 	//
-	//	Purpose: Gets the sepcified Type
+	//	Purpose: Gets the specified Type
 	/////////////////////////////////
 	int GetMapWidth() { return m_nMapWidth; }
 	int GetMapHeight() { return m_nMapHeight; }
@@ -88,7 +88,7 @@ public:
 	CTile GetTile(int Layer, int x, int y) { return pTileArray[Layer][x][y]; }
 	POINT GetLocalAnchor(int Layer, int x, int y) { return pTileArray[Layer][x][y].ptLocalAnchor; }
 	void SetLocalAnchor();
-	void SetOccupy(int x, int y, bool bOccupy);
+	void SetOccupy(int x, int y, bool bOccupy, int nUnit);
 
 	void Clear();
 

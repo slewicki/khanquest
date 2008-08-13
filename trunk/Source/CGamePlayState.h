@@ -19,7 +19,7 @@
 #include "CEventSystem.h"
 #include "CCamera.h"
 #include "ObjectManager.h"
-
+#include "CParticleEngine.h"
 class CHUDState;
 
 class CGamePlayState : public IGameState
@@ -34,6 +34,9 @@ private:
 	CEventSystem*							m_pES;
 	CCamera*								m_pCamera;
 	ObjectManager*							m_pOM;
+
+	CParticleEngine*						m_pPE;
+	int m_nTestEmitter;
 
 	bool									m_bIsPaused;
 	bool									m_bButtonDown;

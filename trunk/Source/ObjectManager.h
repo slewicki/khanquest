@@ -12,6 +12,7 @@
 #include "IListener.h"
 #include "CTile.h"
 #include "CTileEngine.h"
+#include "CAISystem.h"
 using std::vector;
 
 class ObjectManager : public IListener
@@ -21,6 +22,7 @@ private:
 	CParticleEngine* pPE;
 	int m_nEmitterID;
 	CTileEngine* Map;
+	CAISystem*		m_pCAI;
 
 	////////////////////////////////////////////
 	//	Function:	"ObjectManager(Constructor)"
@@ -121,7 +123,7 @@ public:
 
 	
 	/////////////////////////////////////////////////////
-	// Function: "MoveSelectedUnits"
+	// Function: "MoveSeletedUnit"
 	//
 	// Purpose: Move the selected Units in the direction of the mouse click.
 	/////////////////////////////////////////////////////
@@ -134,6 +136,9 @@ public:
 		else
 			return 0;
 	}
+	//
+	// Purpose: Gets units from the object manager
+	/////////////////////////////////////////////////////
+	vector<CBase*> GetUnits();
 
-
-}; 
+};

@@ -33,8 +33,7 @@ void CFactory::CreatePlayerUnit(int nType)
 		
 	unit->SetState(MOVEMENT);
 	unit->SetDirection(NORTH);
-	//unit->SetDirection(SOUTH_WEST);
-	//unit->SetState(MOVEMENT);
+	unit->SetIsPlayerUnit(true);
 	// Register Events
 
 
@@ -48,15 +47,29 @@ void CFactory::CreatePlayerUnit(int nType)
 
 void CFactory::CreateComputerUnit(int nType)
 {
+	//static float xPos = 100;
+	//static float yPos = 50;
 	CUnit* unit = new CUnit(nType);
-	*(unit) = CGame::GetInstance()->GetCPUUnitInfo(nType);
-	
+
+	// Use default shallow copy since no dynamic info in creation
+	CUnit temp = CGame::GetInstance()->GetUnitInfo(nType);
+	unit->SetAttackPower(temp.GetAttackPower());
+	unit->SetAttackSpeed(temp.GetAttackSpeed());
+	unit->SetHP(temp.GetHP());
+	unit->SetRange(temp.GetRange());
+	unit->SetSpeed(temp.GetSpeed());
+
+	unit->SetState(MOVEMENT);
+	unit->SetDirection(NORTH);
+	unit->SetIsPlayerUnit(false);
 	// Register Events
-	
+
+
 	// Add to manager
 	ObjectManager::GetInstance()->AddObject(unit);
 
 	// Let it know we aren't hanging on to it
 	unit->Release();
+
 
 }
