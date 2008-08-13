@@ -25,11 +25,15 @@ CUnit::CUnit(int nType)
 	m_nDirectionFacing	= SOUTH_WEST; 
 	m_nState			= IDLE;	
 
+
 	SetType(nType);
 	m_pHealthBar = new CHealthBar();
 	m_pHealthBar->SetHealth(m_nHP);
 	m_pAnimInstance = new CAnimInstance(GetType());
 	m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
+
+	m_pTE = CTileEngine::GetInstance();
+	m_pCAI = CAISystem::GetInstance();
 
 }
 
@@ -98,25 +102,65 @@ void CUnit::Update(float fElapsedTime)
 		}
 	}
 	//-------------------------------
-	// AI movment
-	if ( GetPosX() == GetDestTile().ptLocalAnchor.x  && GetPosY() == GetDestTile().ptLocalAnchor.y  )
+	// AI movement
+	// if current position is == to dest position set current to to dest, dest to current and next to current
+	if (GetState() == MOVEMENT)
 	{
-		SetCurrentTile( GetDestTile() );
-		SetDestTile( GetCurrentTile() );
-	}	
-	else if( GetState() == MOVEMENT )
-	{
-		if ( GetPosX() >  GetDestTile().ptLocalAnchor.x)
-			SetPosX(GetPosX() - GetVelX() );
 
-		else if ( GetPosX() < GetDestTile().ptLocalAnchor.x)
-			SetPosX( GetPosX() +  GetVelX() );
+		// if your at dest
+		if ( GetPosX() == GetDestTile().ptLocalAnchor.x  && GetPosY() == GetDestTile().ptLocalAnchor.y  )
+		{
+			int unitIndex = m_pTE->GetTile(0, GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y).nUnitIndex;
+			m_pTE->SetOccupy(GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y, false , -1); 
+			SetCurrentTile( GetDestTile() );
+			SetDestTile( GetCurrentTile() );
+			SetNextTile(GetCurrentTile() );
+			m_pTE->SetOccupy(GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y, true, unitIndex); 
+			m_pTE->SetVisible(GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y, true, unitIndex);
 
-		if ( GetPosY() >  GetDestTile().ptLocalAnchor.y)
-			SetPosY( GetPosY() - GetVelY() );
+		}
 
-		else if ( GetPosY() <  GetDestTile().ptLocalAnchor.y)
-			SetPosY( GetPosY() +  GetVelY() );
+		if (GetNextTile().ptLocalAnchor.x < 0)
+		{
+			if (m_vPath.size() > 0)
+			{
+				POINT& path = m_vPath.front();
+				SetNextTile( m_pTE->GetTile(0, path.x, path.y )  ); 
+				m_vPath.pop_front();
+			}
+		}
+
+		// if moving & current position is != dest position & current position != next position then move to next
+		if( GetPosX() != GetNextTile().ptLocalAnchor.x || GetPosY() != GetNextTile().ptLocalAnchor.y )
+		{
+			if ( GetPosX() >  GetNextTile().ptLocalAnchor.x)
+				SetPosX(GetPosX() - GetVelX() );
+
+			else if ( GetPosX() < GetNextTile().ptLocalAnchor.x)
+				SetPosX( GetPosX() +  GetVelX() );
+
+			if ( GetPosY() >  GetNextTile().ptLocalAnchor.y)
+				SetPosY( GetPosY() - GetVelY() );
+
+			else if ( GetPosY() <  GetNextTile().ptLocalAnchor.y)
+				SetPosY( GetPosY() +  GetVelY() );
+		}
+		// if your at next your next
+		if (  GetPosX() == GetNextTile().ptLocalAnchor.x && GetNextTile().ptLocalAnchor.y == GetPosY()  )
+		{
+			if (m_vPath.size() > 0)
+			{
+				int unitIndex = m_pTE->GetTile(0, GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y).nUnitIndex;
+				m_pTE->SetOccupy(GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y, false, -1); 
+				SetCurrentTile( GetNextTile());
+				m_pTE->SetOccupy(GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y, true, unitIndex);
+				m_pTE->SetVisible(GetCurrentTile().ptTileLoc.x, GetCurrentTile().ptTileLoc.y, true, unitIndex);
+				POINT& path = m_vPath.front();
+				SetNextTile( m_pTE->GetTile(0, path.x, path.y )  ); 
+				m_vPath.pop_front();
+			}
+		}
+
 	}
 
 	//-------------------------------
@@ -149,41 +193,43 @@ bool CUnit::CheckCollisions(CBase* pBase)
 	if(m_bIsAlive)
 	{
 		CTileEngine* Map = CTileEngine::GetInstance();
-		POINT nMapPoint = Map->IsoMouse(GetCurrentTile().ptPos.x, GetCurrentTile().ptPos.y, 0);
+		POINT nMapPoint = Map->IsoMouse(this->GetCurrentTile().ptLocalAnchor.x, this->GetCurrentTile().ptLocalAnchor.y, 0);
 		int nDistanceX = 3 * m_nRange + nMapPoint.x;
 		int nDistanceY = 3 * m_nRange + nMapPoint.y;
 		for(int i = nMapPoint.x - m_nRange; i < nDistanceX; ++i)
 		{
 			for(int j = nMapPoint.y - m_nRange; j < nDistanceY; ++j)
 			{
-				if(i > Map->GetMapWidth() || i < 0)
+				if(i >= Map->GetMapWidth() || i < 0)
 					continue;
-				if(j > Map->GetMapHeight() || j < 0)
+				if(j >= Map->GetMapHeight() || j < 0)
 					continue;
-		
-				if(Map->GetTile(i,j).bIsOccupied)
-				{
-					if(Map->GetTile(i,j).nUnitIndex > -1)
-					{
-						if(m_bIsPlayerUnit == static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(i,j).nUnitIndex))->IsPlayerUnit())
-							return false;
 
-						if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(i,j).nUnitIndex)) != this)
-							if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(i,j).nUnitIndex))->IsAlive())
+				if(Map->GetTile(0,i,j).bIsOccupied)
+				{
+					if(Map->GetTile(0,i,j).nUnitIndex > -1)
+					{
+						if (m_bIsAlive && static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->IsAlive())
+						{
+							if(m_bIsPlayerUnit == static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->IsPlayerUnit())
+								break;
+						}
+						if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex)) != this)
+							if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->IsAlive())
 							{
 
 								if(m_nState != COMBAT)
 								{
-									ChangeDirection(Map->GetTile(i,j).ptPos);
+									ChangeDirection(Map->GetTile(0,i,j).ptPos);
 									m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 									m_nState = COMBAT;
 									m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 									m_pAnimInstance->SetPlayer(IsPlayerUnit());
 
 								}	
-								if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(i,j).nUnitIndex)) != 0)
+								if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex)) != 0)
 								{
-									static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(i,j).nUnitIndex))->DamageUnit( GetAttackPower() );
+									static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->DamageUnit( GetAttackPower() );
 									return true;
 								}
 							}
@@ -191,8 +237,7 @@ bool CUnit::CheckCollisions(CBase* pBase)
 				}
 
 			}
-		
-	
+
 		}
 	}
 	return false;
@@ -279,5 +324,3 @@ void CUnit::ChangeDirection(POINT pMousePos)
 		return;
 	}
 }
-
-

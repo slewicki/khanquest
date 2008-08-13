@@ -216,14 +216,14 @@ void CWorldMapState::Render(float fElapsedTime)
 			//CGame::GetInstance()->SetCursorClick();
 			switch(m_pCities[i]->GetOwner())
 			{
-			case XIA_CITY:
-				m_cFont.DrawTextA("Xia Territoy", 20, 20, .25f, .25f, D3DCOLOR_ARGB(255, 255, 128, 0));
+			case XIA_CITY: // Xia Territory"
+				m_cFont.DrawTextA("Xia Territory", 20, 20, .25f, .25f, D3DCOLOR_ARGB(255, 255, 128, 0));
 				break;
 			case JIN_CITY:
-				m_cFont.DrawTextA("Jin Territoy", 20, 20, .25f, .25f, D3DCOLOR_ARGB(255, 178, 0, 255));
+				m_cFont.DrawTextA("Jin Territory", 20, 20, .25f, .25f, D3DCOLOR_ARGB(255, 178, 0, 255));
 				break;
 			case K_CITY:
-				m_cFont.DrawTextA("Khwarezmian Territoy", 20, 20, .25f, .25f, D3DCOLOR_ARGB(255, 0, 255, 0));
+				m_cFont.DrawTextA("Khwarezmian Territory", 20, 20, .25f, .25f, D3DCOLOR_ARGB(255, 0, 255, 0));
 				break;
 			}
 		}

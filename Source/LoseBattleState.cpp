@@ -4,6 +4,7 @@
 #include "CSGD_WaveManager.h"
 #include "CGame.h"
 #include "MainMenuState.h"
+#include "CWorldMapState.h"
 
 CLoseBattleState::CLoseBattleState(void)
 {
@@ -36,7 +37,7 @@ void CLoseBattleState::Exit()
 {
 	m_pWM->Stop(m_nSongID);
 	m_pWM->UnloadWave(m_nSongID);
-	CMainMenuState::GetInstance()->SetPause(false);
+//	CWorldMapState::GetInstance()->SetPause(false);
 }
 
 bool CLoseBattleState::Input(float fElapsedTime)
@@ -93,7 +94,10 @@ void CLoseBattleState::Update(float fElapsedTime)
 					m_pWM->SetVolume(m_nSongID,0);
 
 				if(m_nAlpha == 0)
+				{
 					CGame::GetInstance()->PopCurrentState();
+					CGame::GetInstance()->PushState(CWorldMapState::GetInstance());
+				}
 			}
 	}
 }
@@ -112,6 +116,8 @@ void CLoseBattleState::StartEsc()
 		if(m_nAlpha == 0)
 		{
 				CGame::GetInstance()->PopCurrentState();
+				CGame::GetInstance()->PushState(CWorldMapState::GetInstance());
+
 		}
 	}
 }

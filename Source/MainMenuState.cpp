@@ -3,10 +3,6 @@
 #include "CWorldMapState.h"
 #include "OptionsMenuState.h"
 #include "AttractMode.h"
-#include "WinBattleState.h"
-#include "WinGameState.h"
-#include "LoseBattleState.h"
-#include "LoseGameState.h"
 #include "CSGD_WaveManager.h"
 #include "OutroState.h"
 
@@ -33,7 +29,6 @@ void CMainMenuState::Enter(void)
 	int nFontID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_BF.InitBitmapFont(nFontID,' ',16,128,128);
 	Parse("Resource/KQ_MainMenu.xml");
-	
 	char image[128];
 	strncpy(image,m_szImageFile.c_str(),m_szImageFile.length());
 	image[m_szImageFile.length()]= 0;
@@ -80,32 +75,8 @@ bool CMainMenuState::Input(float fElapsedTime)
 	{
 		m_bPaused = true;
 		CGame::GetInstance()->PushState(CAttractMode::GetInstance());
-		
 	}
-	if(m_pDI->GetBufferedKey(DIK_2))
-	{
-		m_bPaused = true;
-		CGame::GetInstance()->PushState(CWinGameState::GetInstance());
-		
-	}
-	if(m_pDI->GetBufferedKey(DIK_3))
-	{
-		m_bPaused = true;
-		CGame::GetInstance()->PushState(CLoseBattleState::GetInstance());
-		
-	}
-	if(m_pDI->GetBufferedKey(DIK_4))
-	{
-		m_bPaused = true;
-		CGame::GetInstance()->PushState(CWinBattleState::GetInstance());
-		
-	}
-	if(m_pDI->GetBufferedKey(DIK_5))
-	{
-		m_bPaused = true;
-		CGame::GetInstance()->PushState(CLoseGameState::GetInstance());
-	}
-
+	
 	if(m_pDI->GetBufferedKey(DIK_UP))
 	{
 		m_nCurrentButton--;
@@ -140,7 +111,6 @@ bool CMainMenuState::Input(float fElapsedTime)
 		case Load:
 			{
 				//TODO: Make Loading State
-
 			}
 			break;
 		case Options:
@@ -182,7 +152,6 @@ void CMainMenuState::Render(float fElapsedTime)
 
 	for(int i = 0; i < m_nNumButtons; i++)
 	{
-
 		m_BF.DrawTextA(Buttons[i].Text,Buttons[i].ptPosition.x, Buttons[i].ptPosition.y, Buttons[i].fscalex, Buttons[i].fscaley,
 			D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
 	}

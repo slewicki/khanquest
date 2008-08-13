@@ -3,6 +3,8 @@
 #include "CSGD_TextureManager.h"
 #include "CSGD_WaveManager.h"
 #include "MainMenuState.h"
+#include "CWorldMapState.h"
+#include "CGamePlayState.h"
 #include "CGame.h"
 
 CWinBattleState::CWinBattleState(void)
@@ -21,17 +23,23 @@ void CWinBattleState::Enter()
 	//TODO: Look for better wav
 	m_nSongID = m_pWM->LoadWave("Resource/KQ_WonBattle.wav");
 	m_nImageID = m_pTM->LoadTexture("Resource/KQ_WonBattle.png");
-	
-	m_BF.InitBitmapFont(m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png"),' ',16,128,128);
-	
 
+	m_BF.InitBitmapFont(m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png"),' ',16,128,128);
+
+	// Go back to the map
+	// Call this function if the user wins the battle
+	if(CGamePlayState::GetInstance()->GetTerrorLevel() < 100)
+	{
+		CGamePlayState::GetInstance()->SetTerrorLevel(CGamePlayState::GetInstance()->GetTerrorLevel() + 25);
+	}
+	CGame::GetInstance()->SetCityConquered(CGame::GetInstance()->GetSelectedCity());
 
 	m_bAlpha = false;
 	m_bEsc = false;
 	m_fEscTimer = 0;
 	m_fTimer = 0;
 	m_nAlpha = 0;
-	
+
 	m_nVolume = 0;
 	m_nMaxVolume = CGame::GetInstance()->GetMusicVolume();
 
@@ -57,7 +65,7 @@ bool CWinBattleState::Input(float fElapsedTime)
 	{	
 		m_bEsc = true;
 	}
-	
+
 	return true;
 }
 
@@ -86,23 +94,27 @@ void CWinBattleState::Update(float fElapsedTime)
 			if(m_nAlpha == 255)
 				m_bAlpha = true;
 		}
-	if(m_bAlpha)
-	{
-		if(m_fTimer > 2.f)
-			if(m_fTimer > 6.f)
-			{
-				m_nAlpha--;
-				m_fTimer;
+		if(m_bAlpha)
+		{
+			if(m_fTimer > 2.f)
+				if(m_fTimer > 6.f)
+				{
+					m_nAlpha--;
+					m_fTimer;
 
-				if(m_nVolume >= 0)
-					m_pWM->SetVolume(m_nSongID,m_nVolume--);
-				else 
-					m_pWM->SetVolume(m_nSongID,0);
+					if(m_nVolume >= 0)
+						m_pWM->SetVolume(m_nSongID,m_nVolume--);
+					else 
+						m_pWM->SetVolume(m_nSongID,0);
 
-				if(m_nAlpha == 0)
-					CGame::GetInstance()->PopCurrentState();
-			}
-	}
+					if(m_nAlpha == 0)
+					{
+						CGame::GetInstance()->PopCurrentState();
+						CGame::GetInstance()->PushState(CWorldMapState::GetInstance());
+					}
+
+				}
+		}
 }
 
 void CWinBattleState::StartEsc()
@@ -119,7 +131,8 @@ void CWinBattleState::StartEsc()
 
 		if(m_nAlpha == 0)
 		{
-				CGame::GetInstance()->PopCurrentState();
+			CGame::GetInstance()->PopCurrentState();
+			CGame::GetInstance()->PushState(CWorldMapState::GetInstance());
 		}
 	}
 }

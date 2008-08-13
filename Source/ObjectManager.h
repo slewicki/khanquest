@@ -23,7 +23,6 @@ private:
 	int m_nEmitterID;
 	CTileEngine* Map;
 	CAISystem*		m_pCAI;
-	DWORD ftime;
 
 	////////////////////////////////////////////
 	//	Function:	"ObjectManager(Constructor)"
@@ -132,7 +131,7 @@ public:
 
 	CBase* GetSelectedUnit(unsigned int nIndex) 
 	{ 
-		if(nIndex >= 0 && nIndex <= m_vObjectList.size())
+		if(nIndex >= 0 && nIndex < m_vObjectList.size())
 			return m_vObjectList[nIndex];
 		else
 			return 0;
