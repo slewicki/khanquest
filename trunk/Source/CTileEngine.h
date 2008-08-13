@@ -67,7 +67,7 @@ public:
 
 	//Accessors
 	//Map
-#pragma region Map_Accessor
+#pragma region Accessor
 	/////////////////////////////////
 	//	Function:	"Accessors"
 	//
@@ -79,23 +79,51 @@ public:
 	//Tile
 	int GetTileWidth() { return m_nTileWidth; }
 	int GetTileHeight() { return m_nTileHeight; }
+	CTile GetTile(int Layer, int x, int y) { return pTileArray[Layer][x][y]; }
+	POINT GetLocalAnchor(int Layer, int x, int y) { return pTileArray[Layer][x][y].ptLocalAnchor; }
 
 	//Image
 	string GetImagePath() { return m_szImagePath; }
-#pragma endregion Map_Accessor
+#pragma endregion Accessor
 
-	static CTileEngine* GetInstance();
-
-	POINT IsoMouse(int x, int y, int z);
-
-	CTile GetTile(int Layer, int x, int y) { return pTileArray[Layer][x][y]; }
-	POINT GetLocalAnchor(int Layer, int x, int y) { return pTileArray[Layer][x][y].ptLocalAnchor; }
+#pragma region Mutator
+	/////////////////////////////////
+	//	Function:	"Mutators"
+	//
+	//	Purpose: Sets the specified Type
+	/////////////////////////////////
 	void SetLocalAnchor();
 	void SetOccupy(int x, int y, bool bOccupy, int nUnit);
 	void SetVisible(int x, int y, bool Visible, int nUnit);
 
+#pragma endregion Mutator
+
+	/////////////////////////////////
+	//	Function:	"GetInstance"
+	//
+	//	Purpose: Returns the instance of the Tile Engine
+	/////////////////////////////////
+	static CTileEngine* GetInstance();
+
+	/////////////////////////////////
+	//	Function:	"IsoMouse"
+	//
+	//	Purpose: Returns the tile location based on Screen coordinates
+	/////////////////////////////////
+	POINT IsoMouse(int x, int y, int z);
+
+	/////////////////////////////////
+	//	Function:	"Clear"
+	//
+	//	Purpose: Clears all dynamic memory
+	/////////////////////////////////
 	void Clear();
 
+	/////////////////////////////////
+	//	Function:	"ParallaxScroll"
+	//
+	//	Purpose: Scrolls the image along the camera's view
+	/////////////////////////////////
 	void ParalaxScroll(bool bIsScrollable, RECT rCamPos);
 };
 
