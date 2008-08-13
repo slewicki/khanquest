@@ -87,8 +87,16 @@ namespace KhanquestTileEditor
 
         public CMap()
         {
-            NewLayer(new Size(10, 10));
+            NewLayer(new Size(100, 100));
             m_lLayer[m_nCurrentLayer].Visible = true;
+
+            for (int x = 0; x < m_lLayer[m_nCurrentLayer].MapSize.Width; x++)
+            {
+                for (int y = 0; y < m_lLayer[m_nCurrentLayer].MapSize.Height; y++)
+                {
+                    m_lLayer[m_nCurrentLayer].Tiles[x, y].m_szTileID = "Plains";
+                }
+            }
         }
 
         public void NewLayer(Size sMapSize)
