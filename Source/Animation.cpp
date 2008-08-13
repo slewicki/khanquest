@@ -9,9 +9,11 @@ CAnimation::CAnimation(void)
 {
 	m_nCurrentFrame = 0;
 	m_fFrameTimer = 0;
+	m_nAlpha = 255;
 	m_bIsLooping = true;
 	m_bIsPlaying = false;
 	m_bIsPlayer = true;
+	m_bIsFading = false;
 }
 
 CAnimation::~CAnimation(void)
@@ -42,6 +44,10 @@ bool CAnimation::Update(float fElapsedTime)
 				Stop();
 			}
 		}
+		if(m_nCurrentFrame == ((int)m_vFrames.size() - 1) && m_bIsLooping == false)
+		{
+			m_bIsFading = true;
+		}
 		if(m_vFrames[m_nCurrentFrame].szTriggerName != "")
 		{
 			if(m_vFrames[m_nCurrentFrame].ptAccessories.size())
@@ -51,6 +57,7 @@ bool CAnimation::Update(float fElapsedTime)
 			}
 		}
 	}
+
 	return true;
 }	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -64,27 +71,35 @@ void CAnimation::Render( int x, int y, float scale, DWORD color,  bool  isfliped
 	width = m_vFrames[m_nCurrentFrame].rRender.right - m_vFrames[m_nCurrentFrame].rRender.left;
 	height = m_vFrames[m_nCurrentFrame].rRender.bottom - m_vFrames[m_nCurrentFrame].rRender.top;
 	
+
+	if(m_bIsFading)
+		m_nAlpha--;
+	if(m_nAlpha == 0)
+	{
+		CEventSystem::GetInstance()->SendEvent("Remove");
+	}
+
 	if(!isfliped)
 	{
 		if(m_bIsPlayer)
 			CSGD_TextureManager::GetInstance()->Draw(m_nPlayerAnimationID, x+width/2 - m_vFrames[m_nCurrentFrame].ptAnchorX,
 													 y- m_vFrames[m_nCurrentFrame].ptAnchorY,
 													 scale, scale, &m_vFrames[m_nCurrentFrame].rRender,
-													 rotation, rotation, rotation, -1);
+													 rotation, rotation, rotation, D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 		else
 			CSGD_TextureManager::GetInstance()->Draw(m_nAIAnimationID, x+width/2- m_vFrames[m_nCurrentFrame].ptAnchorX,
 													 y-m_vFrames[m_nCurrentFrame].ptAnchorY,
 													 scale, scale, &m_vFrames[m_nCurrentFrame].rRender,
-													 rotation, rotation, rotation, -1);
+													 rotation, rotation, rotation, D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 	}
 	else
 	{
 		if(m_bIsPlayer)
 			CSGD_TextureManager::GetInstance()->Draw(m_nPlayerAnimationID, x+width/2 - m_vFrames[m_nCurrentFrame].ptAnchorX, y - m_vFrames[m_nCurrentFrame].ptAnchorY,-scale,scale,
-													 &m_vFrames[m_nCurrentFrame].rRender,rotation,rotation,rotation, -1);
+													 &m_vFrames[m_nCurrentFrame].rRender,rotation,rotation,rotation, D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 		else
 			CSGD_TextureManager::GetInstance()->Draw(m_nAIAnimationID, x+width/2 - m_vFrames[m_nCurrentFrame].ptAnchorX, y - m_vFrames[m_nCurrentFrame].ptAnchorY,-scale,scale,
-													 &m_vFrames[m_nCurrentFrame].rRender,rotation,rotation,rotation, -1);
+													 &m_vFrames[m_nCurrentFrame].rRender,rotation,rotation,rotation, D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 

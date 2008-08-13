@@ -42,8 +42,9 @@ class CAnimation
 	
 	int		m_nPlayerAnimationID;
 	int		m_nAIAnimationID;
-
+	int		m_nAlpha;
 	unsigned int m_nCurrentFrame;
+	bool	m_bIsFading;
 	bool	m_bIsPlayer;
 	bool	m_bIsPlaying;
 	bool	m_bIsLooping;
