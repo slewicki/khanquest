@@ -21,9 +21,14 @@
 #include "CUnit.h"
 #include "CCity.h"
 #include "resource.h"	//  For icon/cursor ID
+#include "CGamePlayState.h"
+#include "ObjectManager.h"
+
+//Pixel Shader Testing
+#include "CPixelShader.h"
 
 using std::string;
-#define TOTAL_CITIES 10
+
 class CGame	
 {
 private:
@@ -51,16 +56,14 @@ private:
 	CUnit					m_pCPUUnitInfo[6];		// Info for CPU's units
 
 	int						m_nGold;				// The player's current gold amount
-	int						m_nFood;				// The player's current food amount.
-	int						m_nWins;				// The player's current wins.
-	int						m_nLoses;				// The player's current loses.
+
 	HWND					m_hWnd;
 	HINSTANCE				m_hInstance;
 
 	POINT					m_ptWindOffset;
 	POINT					m_ptMousePos;
 
-	CCity*					m_pCities[TOTAL_CITIES];
+	CCity*					m_pCities[10];
 	CCity*					m_pSelectedCity;
 
 	char					m_chXiaCount;
@@ -68,6 +71,19 @@ private:
 	char					m_chJinCount;
 
 	vector<int>				m_vConqueredCities;
+
+	//Pixel Shader Test variables
+	CPixelShader			m_PixelShader;
+	LPDIRECT3DTEXTURE9		m_pRenderTarget;
+	LPDIRECT3DTEXTURE9		m_pVisibleTarget;
+	LPDIRECT3DSURFACE9		m_pBackBuffer;
+	int						m_nScreenWidth;
+	int						m_nScreenHeight;
+	D3DXMATRIX				m_ViewMatrix;
+	D3DXMATRIX				m_WorldMatrix;
+	D3DXMATRIX				m_ProjectionMatrix;
+
+
 	//	Proper singleton:
 
 	////////////////////////////////////////////
@@ -282,6 +298,4 @@ public:
 	///////////////////////////////////////////
 	void LoseLastCity();
 
-	void AddWins();
-	void AddLoses();
 };

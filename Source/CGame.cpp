@@ -13,9 +13,6 @@
 #include <string>
 #include "MainMenuState.h"
 #include "irrXML.h"
-#include "WinGameState.h"
-#include "LoseGameState.h"
-
 using namespace std;
 
 CGame::CGame(void)
@@ -36,9 +33,7 @@ CGame::CGame(void)
 	m_nMusicVolume = 50;
 	*m_pCities = NULL;
 	m_nGold = 0;
-	m_nWins = 1;
-	m_nLoses = 0;
-	m_nFood = 0;
+	
 	m_chJinCount = m_chKCount = m_chXiaCount = 0;
 }
 
@@ -56,7 +51,6 @@ CGame* CGame::GetInstance(void)
 bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 					   int nScreenWidth, int nScreenHeight, bool bIsWindowed)
 {
-	srand(GetTickCount());
 	//	Do game initialization here.
 	m_hWnd = hWnd;
 	m_hInstance = hInstance;
@@ -73,7 +67,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 
 	//	Call initialize on each wrapper:
 	#pragma region WrapperInit
-	if (!m_pD3D->InitDirect3D(hWnd, nScreenWidth, nScreenHeight, bIsWindowed, true))
+	if (!m_pD3D->InitDirect3D(hWnd, nScreenWidth, nScreenHeight, bIsWindowed, false))
 	{
 		MessageBox(0, "InitDirect3D Failed", " Error", MB_OK);
 		return false;
@@ -102,6 +96,12 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	} 
 #pragma endregion
 
+	// Init the Pixel Shader
+	if (!m_PixelShader.Create("Resource/KQ_FoW.fx", m_pD3D->GetDirect3DDevice()))
+		MessageBox(hWnd, "Failed to load Pixel Shader", "Error", MB_OK);
+	m_nScreenWidth = nScreenWidth;
+	m_nScreenHeight = nScreenHeight;
+
 	// Remember how the window started
 	m_bIsWindowed = bIsWindowed;
 
@@ -120,7 +120,13 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	m_pAM->BinParse("Resource/KQ_War_Elephant.dat", "Resource/KQ_Player_War_Elephant.png","Resource/Enemies/KQ_AI_War_Elephant.png");
 
 	ChangeState(CMainMenuState::GetInstance());
-	return false;
+	
+	//	Create the render target.
+	// D3DUSAGE_RENDERTARGET can only be used with D3DPOOL_DEFAULT
+	m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pRenderTarget, NULL);
+	//m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pVisibleTarget, NULL);
+	
+	return true;
 }
 
 void CGame::Shutdown(void)
@@ -207,10 +213,68 @@ bool CGame::Main(void)
 	}
 	
 	//	3.	Draw
+	// Check for Device
+	bool bDevice = m_pD3D->GetDirect3DDevice()->TestCooperativeLevel() == D3DERR_DEVICENOTRESET;
+	if(bDevice)
+	{
+		m_pRenderTarget->Release();
+		//m_pVisibleTarget->Release();
+
+		HRESULT hr = m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pRenderTarget, NULL);
+		if(hr != D3D_OK)
+		{
+			if(hr == D3DERR_INVALIDCALL)
+				int i = 1;
+			else if(hr == D3DERR_OUTOFVIDEOMEMORY)
+				int i = 1;
+			else if(hr == D3DERR_NOTAVAILABLE)
+				int i = 1;
+			else if (hr == E_OUTOFMEMORY)
+				int i = 1;
+
+			MessageBox(m_hWnd, "Failed to load texture", "Error", MB_OK);
+		}
+
+		/*hr = m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pVisibleTarget, NULL);
+		if(hr != D3D_OK)
+		{
+			if(hr == D3DERR_INVALIDCALL)
+				int i = 1;
+			else if(hr == D3DERR_OUTOFVIDEOMEMORY)
+				int i = 1;
+			else if(hr == D3DERR_NOTAVAILABLE)
+				int i = 1;
+			else if (hr == E_OUTOFMEMORY)
+				int i = 1;
+
+			MessageBox(m_hWnd, "Failed to load texture", "Error", MB_OK);
+		}*/
+	}
+
 	m_pD3D->Clear(0, 0, 0);
 	m_pD3D->DeviceBegin();
 	m_pD3D->LineBegin();
 	m_pD3D->SpriteBegin();
+
+	//grab the backbuffer
+	m_pD3D->GetDirect3DDevice()->GetRenderTarget(0, &m_pBackBuffer);
+
+	if(m_vStates[0] == CGamePlayState::GetInstance())
+	{
+		//Set Render Target
+		LPDIRECT3DSURFACE9 pSurface = NULL;
+		m_pRenderTarget->GetSurfaceLevel(0, &pSurface);
+		m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, pSurface);
+		pSurface->Release();
+
+		//LPDIRECT3DTEXTURE9 pVisible = NULL;
+		//D3DXCreateTextureFromFile(m_pD3D->GetDirect3DDevice(), "Resource/KQ_Circle.bmp", &pVisible);
+		//m_pVisibleTarget = pVisible;
+		////m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, pVisible);
+		//pVisible->Release();
+	}
+
+	m_pD3D->Clear(0, 0, 0);
 
 	// Print Frames Per Second
 	char buffer[128];
@@ -243,7 +307,33 @@ bool CGame::Main(void)
 		m_nFrameCounter = 0;		// reset frame counter
 		m_dwFrameTimer = GetTickCount();
 	}
-	m_pD3D->Present();
+	if(m_vStates[0] != CGamePlayState::GetInstance())
+		m_pD3D->Present();
+	else if (ObjectManager::GetInstance()->GetUnits().size() > 0)
+	{
+		//Setup Pixel shader for second loop
+		m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, m_pBackBuffer);
+		m_pBackBuffer->Release();
+
+		//Pixel Shader Render
+		m_pD3D->Clear(0, 0, 0);
+		m_pD3D->DeviceBegin();
+		m_pD3D->SpriteBegin();
+
+		//process shader
+		m_PixelShader.SetConstantFloat("Pos.x",ObjectManager::GetInstance()->GetUnits()[0]->GetPosX());
+		m_PixelShader.SetConstantFloat("Pos.Y", ObjectManager::GetInstance()->GetUnits()[0]->GetPosX());
+		m_PixelShader.SetConstantFloat("texture1", m_pTM->LoadTexture("Resource/KQ_Circle.bmp"));
+		m_PixelShader.Begin();
+
+		//Draw to the backbuffer
+		m_pD3D->GetSprite()->Draw(m_pRenderTarget, 0, 0, 0, D3DCOLOR_XRGB(255, 255, 255));
+
+		m_pD3D->SpriteEnd();
+		m_PixelShader.End();
+		m_pD3D->DeviceEnd();
+		m_pD3D->Present();
+	}
 	
 	return true;
 }
@@ -467,13 +557,8 @@ void CGame::InitCities()
 {
 	for (int i = 0; i < 10; i++)
 	{
-		if(m_pCities[i])
-		{
-			delete m_pCities[i];
-		}
 		m_pCities[i] = new CCity();
 		m_pCities[i]->SetID(i);
-
 
 	}
 
@@ -668,28 +753,27 @@ int CGame::GetTotalFoodTribute()
 	switch(GetNumConquered())
 	{
 	case 0:
-		m_nFood = 1000;
+		return 1000;
 		break;
 	case 1:
-		m_nFood = 1250;
+		return 1250;
 		break;
 	case 2:
-		m_nFood = 1550;
+		return 1550;
 		break;
 	case 3:
-		m_nFood = 1850;
+		return 1850;
 		break;
 	case 4:
-		m_nFood = 2200;
+		return 2200;
 		break;
 	case 5:
-		m_nFood = 2600;
+		return 2600;
 		break;
 	default:
-		m_nFood = 3000;
+		return 3000;
 		break;
 	}
-	return m_nFood;
 }
 
 void CGame::SetCityConquered(CCity* pCity)
@@ -718,7 +802,7 @@ void CGame::SetCityConquered(CCity* pCity)
 
 	// This city can no longer be sacked for gold
 	pCity->SetGoldTribute(0);
-	AddWins();
+
 }
 
 void CGame::LoseLastCity()
@@ -744,38 +828,4 @@ void CGame::LoseLastCity()
 			m_chKCount--;
 		break;
 	};
-	if(m_nWins > 1)
-		--m_nWins;
-}
-void CGame::AddWins()
-{
-	++m_nWins;
-	if(m_nLoses > 0)
-		--m_nLoses;
-	if(m_nWins == TOTAL_CITIES)
-	{
-		while(m_vStates.size() > 0)
-			PopCurrentState();
-		PushState(CMainMenuState::GetInstance());
-		PushState(CWinGameState::GetInstance());
-		InitCities();
-		m_nGold = 0;
-		m_nWins = 1;
-	}
-}
-void CGame::AddLoses()
-{
-	++m_nLoses;
-	LoseLastCity();
-	if(m_nLoses == 2)
-	{	
-		while(m_vStates.size() > 0)
-			PopCurrentState();
-	
-		PushState(CMainMenuState::GetInstance());
-		PushState(CLoseGameState::GetInstance());
-		InitCities();
-		m_nGold = 0;
-		m_nLoses = 0;
-	}
 }
