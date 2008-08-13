@@ -72,7 +72,7 @@ void CUnit::Update(float fElapsedTime)
 		m_rHealthRect.bottom = m_rHealthRect.top - 5;
 		int nSwap;
 		if(m_rHealthRect.top > m_rHealthRect.bottom)
-		
+		{
 			nSwap = m_rHealthRect.top;
 			m_rHealthRect.top = m_rHealthRect.bottom;
 			m_rHealthRect.bottom = nSwap;
@@ -166,6 +166,7 @@ bool CUnit::CheckCollisions(CBase* pBase)
 					{
 						if(m_bIsPlayerUnit == static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(i,j).nUnitIndex))->IsPlayerUnit())
 							return false;
+
 						if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(i,j).nUnitIndex)) != this)
 							if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(i,j).nUnitIndex))->IsAlive())
 							{
