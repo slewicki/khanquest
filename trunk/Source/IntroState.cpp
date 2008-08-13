@@ -1,3 +1,10 @@
+//////////////////////////////////////////////////////////
+//	File:	"CIntroState.h"
+//
+//	Author:	Dennis Wallace (DW)
+//
+//	Purpose: To contain functionality of the CIntroState state
+//////////////////////////////////////////////////////////
 #include "IntroState.h"
 #include "CSGD_DirectInput.h"
 #include "CSGD_TextureManager.h"

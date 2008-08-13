@@ -1,6 +1,12 @@
+//////////////////////////////////////////////////////
+//	File	:	"CCamera.cpp"
+//
+//	Author	:	Sean Hamstra (SH)
+//
+//	Purpose	:	The base object for our class hierarchy
+//				and implements our base interface.
+//////////////////////////////////////////////////////
 #include "CCamera.h"
-
-
 
 
 void CCamera::InitCamera(float fStartPosX, float fStartPosY)
