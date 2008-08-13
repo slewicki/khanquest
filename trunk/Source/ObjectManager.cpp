@@ -217,8 +217,8 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 						if (Map->GetTile(0,j,k).bIsPlayerSpawn && Map->GetTile(0,j,k).bIsOccupied == false)
 						{
 							//POINT spawn = Map->GetLocalAnchor( j, k);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosX(Map->GetLocalAnchor(0, j, k).x);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosY(Map->GetLocalAnchor(0, j, k).y);
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosX((float)Map->GetLocalAnchor(0, j, k).x);
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosY((float)Map->GetLocalAnchor(0, j, k).y);
 							Map->SetOccupy(j, k, true, i);
 							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
 							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
@@ -243,8 +243,8 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 						if (Map->GetTile(0,j,k).bIsEnemySpawn && Map->GetTile(0,j,k).bIsOccupied == false)
 						{
 							//POINT spawn = Map->GetLocalAnchor( j, k);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosX(Map->GetLocalAnchor(0, j, k).x);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosY(Map->GetLocalAnchor(0, j, k).y);
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosX((float)Map->GetLocalAnchor(0, j, k).x);
+							static_cast<CUnit*>(m_vObjectList[i])->SetPosY((float)Map->GetLocalAnchor(0, j, k).y);
 							Map->SetOccupy(j, k, true, i);
 							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
 							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
