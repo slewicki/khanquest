@@ -79,5 +79,9 @@ void CCamera::Update(float fElapsedTime)
 bool CCamera::IsOnScreen(RECT rObjectArea)
 {
 	RECT rBuffer;
-	return IntersectRect(&rBuffer, &m_rScreenArea, &rObjectArea);
+
+	if(IntersectRect(&rBuffer, &m_rScreenArea, &rObjectArea))
+		return true;
+	else
+		return false;
 }
