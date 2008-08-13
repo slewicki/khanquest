@@ -23,7 +23,7 @@
 #include "resource.h"	//  For icon/cursor ID
 
 using std::string;
-
+#define TOTAL_CITIES 10
 class CGame	
 {
 private:
@@ -51,14 +51,15 @@ private:
 	CUnit					m_pCPUUnitInfo[6];		// Info for CPU's units
 
 	int						m_nGold;				// The player's current gold amount
-
+	int						m_nWins;				// The player's current wins.
+	int						m_nLoses;				// The player's current loses.
 	HWND					m_hWnd;
 	HINSTANCE				m_hInstance;
 
 	POINT					m_ptWindOffset;
 	POINT					m_ptMousePos;
 
-	CCity*					m_pCities[10];
+	CCity*					m_pCities[TOTAL_CITIES];
 	CCity*					m_pSelectedCity;
 
 	char					m_chXiaCount;
@@ -280,4 +281,6 @@ public:
 	///////////////////////////////////////////
 	void LoseLastCity();
 
+	void AddWins();
+	void AddLoses();
 };

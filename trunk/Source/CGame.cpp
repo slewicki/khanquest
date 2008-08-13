@@ -13,10 +13,14 @@
 #include <string>
 #include "MainMenuState.h"
 #include "irrXML.h"
+#include "WinGameState.h"
+#include "LoseGameState.h"
+
 using namespace std;
 
 CGame::CGame(void)
 {
+
 	m_pD3D	= NULL;
 	m_pTM	= NULL;
 	m_pDS	= NULL;
@@ -33,7 +37,8 @@ CGame::CGame(void)
 	m_nMusicVolume = 50;
 	*m_pCities = NULL;
 	m_nGold = 0;
-	
+	m_nWins = 1;
+	m_nLoses = 0;
 	m_chJinCount = m_chKCount = m_chXiaCount = 0;
 }
 
@@ -106,12 +111,12 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 //	SetCursorNormal();
 
 	m_pAM = CAnimationManager::GetInstance();
-	m_pAM->BinParse("Resource/KQ_Infantry.dat", "Resource/KQ_Player_Infantry.png","Resource/Enemies/KQ_AI_Infantry.png");
-	m_pAM->BinParse("Resource/KQ_Axmen.dat", "Resource/KQ_Player_Axmen.png","Resource/Enemies/KQ_AI_Axmen.png");
-	m_pAM->BinParse("Resource/KQ_Cavalry.dat", "Resource/KQ_Player_Cavalry.png","Resource/Enemies/KQ_AI_Cavalry.png");
-	m_pAM->BinParse("Resource/KQ_Cavalry_Archer.dat", "Resource/KQ_Player_CavalryArcher.png","Resource/Enemies/KQ_AI_CavalryArcher.png");
-	m_pAM->BinParse("Resource/KQ_Archer.dat", "Resource/KQ_Player_Archer.png","Resource/Enemies/KQ_AI_Archer.png");
-	m_pAM->BinParse("Resource/KQ_War_Elephant.dat", "Resource/KQ_Player_War_Elephant.png","Resource/Enemies/KQ_AI_War_Elephant.png");
+	m_pAM->BinParse("Resource/KQ_Infantry.dat", "Resource/KQ_Infantry.png", "Resource/Enemies/KQ_AI_Infantry.png");
+	m_pAM->BinParse("Resource/KQ_Axmen.dat", "Resource/KQ_Axmen.png", "Resource/Enemies/KQ_AI_Axmen.png");
+	m_pAM->BinParse("Resource/KQ_Cavalry.dat", "Resource/KQ_Cavalry.png", "Resource/Enemies/KQ_AI_Cavalry.png");
+	m_pAM->BinParse("Resource/KQ_Cavalry_Archer.dat", "Resource/KQ_CavalryArcher.png", "Resource/Enemies/KQ_AI_CavalryArcher.png");
+	m_pAM->BinParse("Resource/KQ_Archer.dat", "Resource/KQ_Archer.png", "Resource/Enemies/KQ_AI_Archer.png");
+	m_pAM->BinParse("Resource/KQ_War_Elephant.dat", "Resource/KQ_War_Elephant.png", "Resource/Enemies/KQ_AI_War_Elephant.png");
 
 	ChangeState(CMainMenuState::GetInstance());
 	return false;
@@ -706,7 +711,7 @@ void CGame::SetCityConquered(CCity* pCity)
 
 	// This city can no longer be sacked for gold
 	pCity->SetGoldTribute(0);
-
+	AddWins();
 }
 
 void CGame::LoseLastCity()
@@ -732,4 +737,33 @@ void CGame::LoseLastCity()
 			m_chKCount--;
 		break;
 	};
+	if(m_nWins > 1)
+		--m_nWins;
+}
+void CGame::AddWins()
+{
+	++m_nWins;
+	if(m_nLoses > 0)
+		--m_nLoses;
+	if(m_nWins == TOTAL_CITIES)
+	{
+		while(m_vStates.size() > 0)
+			PopCurrentState();
+		PushState(CMainMenuState::GetInstance());
+		PushState(CWinGameState::GetInstance());
+	}
+}
+void CGame::AddLoses()
+{
+	++m_nLoses;
+	LoseLastCity();
+	if(m_nLoses == 2)
+	{	
+		while(m_vStates.size() > 0)
+			PopCurrentState();
+	
+		PushState(CMainMenuState::GetInstance());
+		PushState(CLoseGameState::GetInstance());
+		m_nLoses = 0;
+	}
 }
