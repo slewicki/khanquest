@@ -11,6 +11,7 @@
 #include "CUnitCreationState.h"
 #include "CCityInfoState.h"
 #include "CGamePlayState.h"
+#include "MainMenuState.h"
 // Temporary
 #include "CSGD_Direct3d.h"
 
@@ -116,7 +117,7 @@ bool CWorldMapState::Input(float fElapsedTime)
 	// Exit game for now
 	//-----------------------------------------
 	if(m_pDI->GetBufferedKey(DIK_ESCAPE))
-		return false;
+		CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
 	//-----------------------------------------
 
 	// Cheat Codes
