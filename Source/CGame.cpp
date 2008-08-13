@@ -20,7 +20,6 @@ using namespace std;
 
 CGame::CGame(void)
 {
-
 	m_pD3D	= NULL;
 	m_pTM	= NULL;
 	m_pDS	= NULL;
@@ -57,6 +56,7 @@ CGame* CGame::GetInstance(void)
 bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 					   int nScreenWidth, int nScreenHeight, bool bIsWindowed)
 {
+	srand(GetTickCount());
 	//	Do game initialization here.
 	m_hWnd = hWnd;
 	m_hInstance = hInstance;
