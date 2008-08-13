@@ -98,6 +98,10 @@ bool COptionsMenuState::Input(float fElapsedTime)
 	}
 	if(m_pDI->GetBufferedKey(DIK_RETURN))
 	{
+		if(Buttons[m_nCurrentButton].Action == KEYBIND)
+		{
+			//Switch States;
+		}
 		if(Buttons[m_nCurrentButton].Action == BACK)
 		{
 			CGame::GetInstance()->PopCurrentState();
@@ -109,7 +113,8 @@ bool COptionsMenuState::Input(float fElapsedTime)
 
 void COptionsMenuState::Render(float fElapsedTime)
 {
-	m_pTM->Draw(m_nImageID,m_ptImageLoc.x,m_ptImageLoc.y);
+	CSGD_Direct3D::GetInstance()->Clear(128,60,0);
+	//m_pTM->Draw(m_nImageID,m_ptImageLoc.x,m_ptImageLoc.y);
 
 	for(int i = 0; i < m_nNumButtons; i++)
 	{
