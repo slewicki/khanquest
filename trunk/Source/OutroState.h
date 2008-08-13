@@ -1,15 +1,13 @@
 #pragma once
+#include "CBitmapfont.h"
 #include "IGameState.h"
-#include "CBitmapFont.h"
-#include <string>
-using namespace std;
 
+class CSGD_WaveManager;
 class CSGD_TextureManager;
 class CSGD_DirectInput;
-class CSGD_WaveManager;
 
-class CMainMenuState : public IGameState
-{	
+class COutroState : public IGameState
+{
 	CSGD_TextureManager*	m_pTM;
 	CSGD_DirectInput*		m_pDI;
 	CBitmapFont				m_BF;
@@ -41,45 +39,23 @@ class CMainMenuState : public IGameState
 	TextToHold* Buttons;
 	int m_nNumButtons;
 	int m_nSongID;
-
-
 	bool m_bAlpha;
 	int m_nAlpha;
-	
-	
+
 	enum
 	{
-		WorldMapState = 1,
-		Load,
-		Options,
-		ExitGame,
+		YES = 1,
+		NO,
 	};
 
-	////////////////////////////////////////////
-	//	Function:	"CHUDState(Constructor)"
-	//	Last Modified: Aug 2, 2008
-	//	Purpose:	Proper singleton
-	////////////////////////////////////////////
-	CMainMenuState(void);
-	CMainMenuState(const CMainMenuState&);
-	CMainMenuState& operator=(const CMainMenuState&);
-
-	////////////////////////////////////////////
-	//	Function:	"~CHUDState(Destructor)"
-	//	Last Modified: Aug 2, 2008
-	//	Purpose:	Proper singleton
-	////////////////////////////////////////////
-	~CMainMenuState(void);
-
+	COutroState(void);
+	COutroState(const COutroState&);
+	COutroState& operator=(const COutroState&);
+	~COutroState(void);
 public:
-	//////////////////////////////////////////////////////
-	// Function: “GetInstance”
-	// Last Modified: Aug 2, 2008
-	// Purpose: To return an instance of the class
-	//////////////////////////////////////////////////////
-	static CMainMenuState* GetInstance(void)
+static COutroState* GetInstance(void)
 	{
-		static CMainMenuState instance;						
+		static COutroState instance;						
 		return &instance;
 	}
 
@@ -118,23 +94,7 @@ public:
 	//	 Purpose: To render our information to the screen
 	//////////////////////////////////////////////////////
 	void Render(float fElapsedTime);
-
-	///////////////////////////////////////////
-	//  Function: Accessors
-	//	Last Modified: Aug 2, 2008
-	//  Purpose : Returns the specified type.
-	///////////////////////////////////////////
 	
-	///////////////////////////////////////////
-	//  Function: Modifiers
-	//	Last Modified: Aug 2, 2008
-	//  Purpose : Modifies the specified type.
-	///////////////////////////////////////////
-	void SetPause(bool value){m_bPaused = value;}
-
-	bool Parse(char* szFileName);
-
-	void FadeIn(float fElpasedTime);
-	void FadeOut(float fElpasedTime);
-
+	bool Parse(char* szFilename);
+	void FadeOut(float fElapsedTime);
 };

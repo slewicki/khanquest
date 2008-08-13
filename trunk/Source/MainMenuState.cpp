@@ -3,6 +3,12 @@
 #include "CWorldMapState.h"
 #include "OptionsMenuState.h"
 #include "AttractMode.h"
+#include "WinBattleState.h"
+#include "WinGameState.h"
+#include "LoseBattleState.h"
+#include "LoseGameState.h"
+#include "CSGD_WaveManager.h"
+#include "OutroState.h"
 
 #include "irrXML.h"
 #include <fstream>
@@ -23,9 +29,11 @@ void CMainMenuState::Enter(void)
 {
 	m_pDI = CSGD_DirectInput::GetInstance();
 	m_pTM = CSGD_TextureManager::GetInstance();
+	m_pWM = CSGD_WaveManager::GetInstance();
 	int nFontID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_BF.InitBitmapFont(nFontID,' ',16,128,128);
 	Parse("Resource/KQ_MainMenu.xml");
+	
 	char image[128];
 	strncpy(image,m_szImageFile.c_str(),m_szImageFile.length());
 	image[m_szImageFile.length()]= 0;
@@ -35,29 +43,69 @@ void CMainMenuState::Enter(void)
 	image[m_szCursorName.length()] = 0;
 	m_nCursorID = m_pTM->LoadTexture(image);
 
-	m_ptCursorPosition.x = Buttons[1].ptPosition.x - 50;
+	m_ptCursorPosition.x = Buttons[1].ptPosition.x;
 	m_ptCursorPosition.y = Buttons[1].ptPosition.y;
 	m_nCurrentButton = 1;
 	m_bPaused = false;
 
+	m_bAlpha = false;
+
+	m_fEscTimer = 0;
+	m_fTimer = 0;
+	m_nAlpha = 0;
+	
+	m_nVolume = 0;
+	m_nMaxVolume = CGame::GetInstance()->GetMusicVolume();
+
+	m_pWM->SetVolume(m_nSongID,m_nVolume);
+	m_pWM->Play(m_nSongID);
+	m_pToSwitchTo = NULL;
 }
 
 void CMainMenuState::Exit(void)
 {
+	m_pWM->UnloadWave(m_nSongID);
 	delete [] Buttons;
 }
 
 bool CMainMenuState::Input(float fElapsedTime)
 {
-	if(	m_bPaused )
+	if(m_pToSwitchTo != NULL)
+		FadeOut(fElapsedTime);
+
+	if(m_bPaused)
 		return true;
 
 	if(m_pDI->GetBufferedKey(DIK_1))
 	{
 		m_bPaused = true;
 		CGame::GetInstance()->PushState(CAttractMode::GetInstance());
+		
 	}
-	
+	if(m_pDI->GetBufferedKey(DIK_2))
+	{
+		m_bPaused = true;
+		CGame::GetInstance()->PushState(CWinGameState::GetInstance());
+		
+	}
+	if(m_pDI->GetBufferedKey(DIK_3))
+	{
+		m_bPaused = true;
+		CGame::GetInstance()->PushState(CLoseBattleState::GetInstance());
+		
+	}
+	if(m_pDI->GetBufferedKey(DIK_4))
+	{
+		m_bPaused = true;
+		CGame::GetInstance()->PushState(CWinBattleState::GetInstance());
+		
+	}
+	if(m_pDI->GetBufferedKey(DIK_5))
+	{
+		m_bPaused = true;
+		CGame::GetInstance()->PushState(CLoseGameState::GetInstance());
+	}
+
 	if(m_pDI->GetBufferedKey(DIK_UP))
 	{
 		m_nCurrentButton--;
@@ -86,24 +134,26 @@ bool CMainMenuState::Input(float fElapsedTime)
 		case WorldMapState:
 			{
 				m_bPaused = true;
-				CGame::GetInstance()->PushState(CWorldMapState::GetInstance());
+				m_pToSwitchTo = CWorldMapState::GetInstance();
 			}
 			break;
 		case Load:
 			{
 				//TODO: Make Loading State
+
 			}
 			break;
 		case Options:
 			{
 				m_bPaused = true;
-				CGame::GetInstance()->PushState(COptionsMenuState::GetInstance());
+				m_pToSwitchTo = COptionsMenuState::GetInstance();
 			}
 			break;
 		case ExitGame:
 			{
 				//TODO: ExitGameState
-				return false;
+				m_bPaused = true;
+				m_pToSwitchTo = COutroState::GetInstance();
 			}
 			break;
 		default:
@@ -121,18 +171,72 @@ void CMainMenuState::Update(float fElapsedTime)
 {
 	if(m_bPaused)
 		return;
+	
+	FadeIn(fElapsedTime);
 }
 
 void CMainMenuState::Render(float fElapsedTime)
 {
-	m_pTM->Draw(m_nImageID,m_ptImageLoc.x,m_ptImageLoc.y);
+	CSGD_Direct3D::GetInstance()->Clear(128,60,0);
+	//m_pTM->Draw(m_nImageID,m_ptImageLoc.x,m_ptImageLoc.y);
 
 	for(int i = 0; i < m_nNumButtons; i++)
 	{
+
 		m_BF.DrawTextA(Buttons[i].Text,Buttons[i].ptPosition.x, Buttons[i].ptPosition.y, Buttons[i].fscalex, Buttons[i].fscaley,
-					   D3DCOLOR_ARGB(Buttons[i].alpha, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
+			D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
 	}
-	m_pTM->Draw(m_nCursorID,m_ptCursorPosition.x,m_ptCursorPosition.y,m_fCurScaleX,m_fCurScaleY);
+	m_pTM->Draw(m_nCursorID,m_ptCursorPosition.x-50,m_ptCursorPosition.y,m_fCurScaleX,m_fCurScaleY,0,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
+}
+
+void CMainMenuState::FadeIn(float fElapsedTime)
+{
+	m_fTimer += fElapsedTime;
+	
+	if(!m_pWM->IsWavePlaying(m_nSongID))
+		m_pWM->Play(m_nSongID);
+
+
+	if(!m_bAlpha)
+		if(m_fTimer > .002f && m_nAlpha < 255)
+		{
+			m_fTimer = 0;
+			m_nAlpha++;
+
+			if(m_nVolume < m_nMaxVolume)
+				m_pWM->SetVolume(m_nSongID,m_nVolume++);
+			else
+				m_pWM->SetVolume(m_nSongID,m_nMaxVolume);
+
+			if(m_nAlpha == 255)
+				m_bAlpha = true;
+		}
+}
+void CMainMenuState::FadeOut(float fElapsedTime)
+{
+	m_fEscTimer += fElapsedTime;
+	if(m_fEscTimer > .001)
+	{
+		m_nAlpha--;
+		m_fEscTimer = 0;
+
+		if(m_nVolume >= 0)
+			m_pWM->SetVolume(m_nSongID,m_nVolume--);
+		else 
+			m_pWM->SetVolume(m_nSongID,0);
+
+		if(m_nAlpha == 0)
+		{	
+			m_pWM->Stop(m_nSongID);
+			m_nAlpha = 0;
+			m_ptCursorPosition  = Buttons[1].ptPosition;
+			m_nCurrentButton = 1;
+			m_nVolume = 0;
+			CGame::GetInstance()->PushState(m_pToSwitchTo);
+			m_pToSwitchTo = NULL;
+			m_bAlpha = false;
+		}
+	}
 }
 
 bool CMainMenuState::Parse(char* szFileName)
@@ -185,6 +289,15 @@ bool CMainMenuState::Parse(char* szFileName)
 				else if(!strcmp("CursorScaleY",szName.c_str()))
 				{
 					m_fCurScaleY = float(atof(xml->getNodeName()));
+				}
+				else if(!strcmp("Song",szName.c_str()))
+				{
+					char buffer[64];
+					string idk = xml->getNodeName();
+					strncpy(buffer,idk.c_str(),idk.length());
+					buffer[idk.length()] = 0;
+					m_nSongID = m_pWM->LoadWave(buffer);
+
 				}
 				else if (!strcmp("NumButtons", szName.c_str()))
 				{

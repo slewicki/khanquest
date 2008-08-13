@@ -41,8 +41,6 @@ void CLoseBattleState::Exit()
 
 bool CLoseBattleState::Input(float fElapsedTime)
 {
-	m_fEscTimer += fElapsedTime;
-
 	if(m_bEsc)
 		StartEsc();
 
