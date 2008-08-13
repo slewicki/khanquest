@@ -144,5 +144,5 @@ public:
 	// Purpose: Updates the video 
 	//				
 	////////////////////////////////
-	void Update();
+	void Update(float fElapsedTime);
 };
