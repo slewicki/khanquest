@@ -51,6 +51,7 @@ private:
 	CUnit					m_pCPUUnitInfo[6];		// Info for CPU's units
 
 	int						m_nGold;				// The player's current gold amount
+	int						m_nFood;				// The player's current food amount.
 	int						m_nWins;				// The player's current wins.
 	int						m_nLoses;				// The player's current loses.
 	HWND					m_hWnd;
