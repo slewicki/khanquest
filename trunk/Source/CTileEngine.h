@@ -37,11 +37,14 @@ private:
 	int m_nTileHeight;				//Tile Height
 	int m_nTileWidth;				//Tile Width
 	int m_nImageID;					//Image loaded through texture manager
+	int m_nScrollImage;				//Image scrolling on the camera;
 	string m_szImagePath;			//Name of the image to load
 	string m_szTileType;			//Type of the tile
 	CTile*** pTileArray;			//3D array of tiles that make a map
 	int m_nLayer;					//Number of Map Layers
 	POINT m_ptMousePoint;			//Mouse Location
+	int m_nScrollX;					//Scroll by X value
+	int m_nScrollY;					//Scroll by Y value
 
 
 public:
@@ -89,10 +92,11 @@ public:
 	POINT GetLocalAnchor(int Layer, int x, int y) { return pTileArray[Layer][x][y].ptLocalAnchor; }
 	void SetLocalAnchor();
 	void SetOccupy(int x, int y, bool bOccupy, int nUnit);
+	void SetVisible(int x, int y, bool Visible, int nUnit);
 
 	void Clear();
 
-	void ParalaxScroll(bool bIsScrollable, const char* szFileName, RECT rCamPos);
+	void ParalaxScroll(bool bIsScrollable, RECT rCamPos);
 };
 
 #endif

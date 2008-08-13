@@ -12,9 +12,12 @@ CTileEngine::CTileEngine()
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pD3D = CSGD_Direct3D::GetInstance();
 	m_nImageID = -1;
-	m_nImageID = CSGD_TextureManager::GetInstance()->LoadTexture("Resource/KQ_GroundTemplate.bmp", D3DCOLOR_XRGB(255, 0, 255));
+	m_nImageID = m_pTM->LoadTexture("Resource/KQ_GroundTemplate.bmp", D3DCOLOR_XRGB(255, 0, 255));
+	m_nScrollImage = m_pTM->LoadTexture("Resource/KQ_Clouds.png");
 	m_ptMousePoint.x = 0;
 	m_ptMousePoint.y = 0;
+	m_nScrollX = 800;
+	m_nScrollY = 0;
 }
 
 CTileEngine::~CTileEngine()
@@ -236,10 +239,52 @@ void CTileEngine::SetOccupy(int x, int y, bool bOccupy, int nUnit)
 	}
 }
 
-void CTileEngine::ParalaxScroll(bool bIsScrollable, const char* szFileName, RECT rCamPos)
+void CTileEngine::SetVisible(int x, int y, bool Visible, int nUnit)
+{
+	for(int i = 0; i < m_nLayer; i++)
+	{
+		pTileArray[i][x][y].bIsVisible = true;
+
+		if(x - 1 > -1 && y > -1 && x < m_nMapWidth && y + 1 < m_nMapHeight)
+			pTileArray[i][x - 1][y + 1].bIsVisible = true;
+
+		if(x > -1 && y > -1 && x < m_nMapWidth && y + 1< m_nMapHeight)
+			pTileArray[i][x][y + 1].bIsVisible = true;
+
+		if(x > -1 && y > -1 && x + 1< m_nMapWidth && y + 1< m_nMapHeight)
+			pTileArray[i][x + 1][y + 1].bIsVisible = true;
+
+		if(x - 1 > -1 && y > -1 && x < m_nMapWidth && y < m_nMapHeight)
+			pTileArray[i][x - 1][y].bIsVisible = true;
+		
+		if(x > -1 && y > -1 && x + 1< m_nMapWidth && y < m_nMapHeight)
+			pTileArray[i][x + 1][y].bIsVisible = true;
+
+		if(x - 1> -1 && y - 1> -1 && x < m_nMapWidth && y < m_nMapHeight)
+			pTileArray[i][x - 1][y - 1].bIsVisible = true;
+
+		if(x > -1 && y - 1> -1 && x < m_nMapWidth && y < m_nMapHeight)
+			pTileArray[i][x][y - 1].bIsVisible = true;
+
+		if(x > -1 && y - 1> -1 && x + 1< m_nMapWidth && y < m_nMapHeight)
+			pTileArray[i][x + 1][y - 1].bIsVisible = true;
+	}
+}
+
+void CTileEngine::ParalaxScroll(bool bIsScrollable, RECT rCamPos)
 {
 	if(!bIsScrollable)
 		return;
 
-	//m_pTM->Draw(m_pTM->LoadTexture(szFileName), 0, 0, 1, 1, rCamPos
+	m_pTM->Draw(m_nScrollImage, m_nScrollX, m_nScrollY);
+	if(m_pTM->GetTextureWidth(m_nScrollImage) > 0) 
+		m_pTM->Draw(m_nScrollImage, m_pTM->GetTextureWidth(m_nScrollImage) - (1820 - m_nScrollX), 0);
+
+	m_nScrollX += 1;
+
+	if(m_nScrollX >= rCamPos.right)
+		m_nScrollX = rCamPos.left;
+	else if(m_nScrollX <= rCamPos.left)
+		m_nScrollX = rCamPos.right;
+	//m_nScrollY += 1;
 }
