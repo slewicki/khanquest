@@ -22,11 +22,28 @@ CAISystem::CAISystem(void)
 
 CAISystem::~CAISystem(void)
 {
+	Exit();
 }
 
 void CAISystem::Exit(void)
 {
+	for (int i = 0; i < m_nMapWidth; ++i)
+	{
+		delete Map[i];
+	}
+	delete [] Map;
 
+	for (int i = 0; i < m_nMapWidth; ++i)
+	{
+		delete MapMark[i];
+	}
+	delete [] MapMark;
+
+	for (int i = 0; i < m_nMapWidth; ++i)
+	{
+		delete MapPath[i];
+	}
+	delete [] MapPath;
 }
 void CAISystem::UpdateState(void)
 {
