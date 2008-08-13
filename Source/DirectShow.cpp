@@ -2,6 +2,14 @@
 #include "CGame.h"
 CDirectShow::CDirectShow(void)
 {
+	
+}
+
+CDirectShow::~CDirectShow(void)
+{
+}
+void CDirectShow::Init()
+{
 	//initialize the graph manager
 	pGB = NULL;
 	//initialize the media controller
@@ -10,27 +18,7 @@ CDirectShow::CDirectShow(void)
 	pVW = NULL;
 	//intiaize the video event handler
 	pME = NULL;
-}
 
-CDirectShow::~CDirectShow(void)
-{
-}
-void CDirectShow::Init()
-{
-	//initialize the com interface
-	CoInitialize(NULL);
-
-	//This creates the filter graph manager
-	CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC,
-	IID_IGraphBuilder, (void **)&pGB);
-
-	//Query COM interface
-	pGB->QueryInterface(IID_IMediaControl, (void **)&pMC);
-	pGB->QueryInterface(IID_IVideoWindow, (void **)&pVW);
-	
-	//set is playing to true
-	m_bIsPlaying = true;
-	
 	//set fullscreen to false
 	m_bIsFullScreen = false;
 	
@@ -40,7 +28,7 @@ void CDirectShow::ShutDown()
 	//pVW->SetWindowForeground(0);
 	pMC->Stop();
 	//set the window to play behind the game window
-	pVW->SetWindowForeground(0);
+	//pVW->SetWindowForeground(0);
 	//set playing to false;
 	m_bIsPlaying = false;
 
@@ -77,7 +65,21 @@ void CDirectShow::ShutDown()
 }
 
 void CDirectShow::Play(LPCWSTR lstrFilename)
-{
+{	
+	//initialize the com interface
+	CoInitialize(NULL);
+
+	//This creates the filter graph manager
+	CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC,
+	IID_IGraphBuilder, (void **)&pGB);
+
+	//Query COM interface
+	pGB->QueryInterface(IID_IMediaControl, (void **)&pMC);
+	pGB->QueryInterface(IID_IVideoWindow, (void **)&pVW);
+	
+	//set is playing to true
+	m_bIsPlaying = true;
+
 	//build the streming video file
 	pGB->RenderFile(lstrFilename,NULL);
 	//Set the parent window
@@ -102,7 +104,7 @@ void CDirectShow::Play(LPCWSTR lstrFilename)
 	//hide the cursor while video plays
 	pVW->HideCursor(OATRUE);
 	//set the video to play on top of the game window
-	pVW->SetWindowForeground(-1);
+	//pVW->SetWindowForeground(-1);
 	//query the graph builder for the event its sending
 	pGB->QueryInterface(IID_IMediaEventEx, (void**)&pME);
 	//send the message to the parent window
@@ -112,45 +114,60 @@ void CDirectShow::Play(LPCWSTR lstrFilename)
 	//play the video
 	pMC->Run();
 }
-void CDirectShow::Update()
+void CDirectShow::Update(float fElapsedTime)
 {
-	//if the video is playing
-	if(m_bIsPlaying)
+	////if the video is playing
+	//if(m_bIsPlaying)
+	//{
+	//	//set the window to play on top of the game window
+	//	//pVW->SetWindowForeground(OATRUE);
+	//	//set the window handle
+	//	g_hwnd = CGame::GetInstance()->GetWindowHandle();
+	//	//make a rect to store the parent window info
+	//	RECT vwrect;	
+	//	//get the size of the Parent
+	//	GetClientRect(g_hwnd,&vwrect);
+	//	//get an set the actual position in the window to display at
+	//	POINT actual;
+	//	actual.x = 0;
+	//	actual.y = 0;
+	//	ScreenToClient(g_hwnd, &actual);
+	//	actual.x *= -1;
+	//	actual.y *= -1;
+	//	//if not in fullscreen
+	//	if(!m_bIsFullScreen)
+	//		//set the screen to fit nside the game window
+	//		pVW->SetWindowPosition(actual.x,actual.y, vwrect.right,vwrect.bottom);//actual.x + 120,actual.y + 182);//648, 515);
+	//	else
+	//		//if in fullscreen set to the resolution of the screen 
+	//		pVW->SetWindowPosition(0,0, GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
+
+	//}
+
+	if(CSGD_DirectInput::GetInstance()->GetBufferedKey(DIK_RETURN))
 	{
-		//set the window to play on top of the game window
-		pVW->SetWindowForeground(OATRUE);
-		//set the window handle
-		g_hwnd = CGame::GetInstance()->GetWindowHandle();
-		//make a rect to store the parent window info
-		RECT vwrect;	
-		//get the size of the Parent
-		GetClientRect(g_hwnd,&vwrect);
-		//get an set the actual position in the window to display at
-		POINT actual;
-		actual.x = 0;
-		actual.y = 0;
-		ScreenToClient(g_hwnd, &actual);
-		actual.x *= -1;
-		actual.y *= -1;
-		//if not in fullscreen
-		if(!m_bIsFullScreen)
-			//set the screen to fit nside the game window
-			pVW->SetWindowPosition(actual.x,actual.y, vwrect.right,vwrect.bottom);//actual.x + 120,actual.y + 182);//648, 515);
-		else
-			//if in fullscreen set to the resolution of the screen 
-			pVW->SetWindowPosition(0,0, GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
-		//right mouse button is clicked stop the video and shutdown the manager
-		//if(CSGD_DirectInput::GetInstance()->GetBufferedMouseButton(M_BUTTON_RIGHT))// OnMouseButtonRelease())M_BUTTON_LEFT = 0, M_BUTTON_RIGHT, M_BUTTON_MIDDLE, M_BUTTON_BACK
-		//{
-		//	pVW->SetWindowForeground(0);
-		//	pMC->Stop();
-		//	ShutDown();
-		//	m_bIsPlaying = false;
-		//}
+		pVW->put_Visible(OAFALSE);
+		Stop();
+		ShowWindow(g_hwnd,SW_SHOW);
+		SetFocus(g_hwnd);
+		m_bIsPlaying = false;
 	}
+
+
 }
 void CDirectShow::Stop()
 {
+
 	//stop the video
-	pMC->Stop();
+	//pMC->Stop();
+	
+	
+	//initialize the graph manager
+	pGB = NULL;
+	//initialize the media controller
+	pMC = NULL;
+	//initialize the video window
+	pVW = NULL;
+	//intiaize the video event handler
+	pME = NULL;
 }
