@@ -1,0 +1,16 @@
+bin\Debug\Khanquest.exe
+bin\Debug\Khanquest.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\Khanquest.Form1.resources
+obj\Debug\Khanquest.Properties.Resources.resources
+obj\Debug\Khanquest.csproj.GenerateResource.Cache
+obj\Debug\Khanquest.exe
+obj\Debug\Khanquest.pdb
+bin\Release\Khanquest.exe
+bin\Release\Khanquest.pdb
+obj\Release\ResolveAssemblyReference.cache
+obj\Release\Khanquest.Form1.resources
+obj\Release\Khanquest.Properties.Resources.resources
+obj\Release\Khanquest.csproj.GenerateResource.Cache
+obj\Release\Khanquest.exe
+obj\Release\Khanquest.pdb
