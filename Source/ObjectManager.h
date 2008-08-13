@@ -23,6 +23,7 @@ private:
 	int m_nEmitterID;
 	CTileEngine* Map;
 	CAISystem*		m_pCAI;
+	DWORD ftime;
 
 	////////////////////////////////////////////
 	//	Function:	"ObjectManager(Constructor)"
