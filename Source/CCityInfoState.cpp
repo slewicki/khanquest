@@ -34,7 +34,10 @@ void CCityInfoState::Enter(void)
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pWM = CSGD_WaveManager::GetInstance();
 	m_pDI = CSGD_DirectInput::GetInstance();
-
+	m_nSongID = m_pWM->LoadWave("Resource/KQ_CitySelect.wav");
+	m_nClick = m_pWM->LoadWave("Resource/KQ_Click.wav");
+	m_pWM->SetVolume(m_nSongID, CGame::GetInstance()->GetMusicVolume());
+	m_pWM->SetVolume(m_nClick, CGame::GetInstance()->GetSFXVolume());
 	// Invade Button Rectangle
 	m_rInvade.left = 357;
 	m_rInvade.top = 470;
@@ -84,6 +87,13 @@ void CCityInfoState::Enter(void)
 
 void CCityInfoState::Exit(void)
 {
+	if(m_pWM->IsWavePlaying(m_nSongID))
+		m_pWM->Stop(m_nSongID);
+	if(m_pWM->IsWavePlaying(m_nClick))
+		m_pWM->Stop(m_nClick);
+	m_pWM->UnloadWave(m_nSongID);
+	m_pWM->UnloadWave(m_nClick);
+
 	m_pTM->ReleaseTexture(m_nDisplayID);
 	m_pTM->ReleaseTexture(m_nButtonID);
 	m_pTM->ReleaseTexture(m_nFontID);
@@ -99,6 +109,7 @@ bool CCityInfoState::Input(float fElapsedTime)
 //			CGame::GetInstance()->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 			{
+				m_pWM->Play(m_nClick);
 				// This function is used only if the city is conquered after battle
 				//--------------------
 				//CGame::GetInstance()->SetCityConquered(m_pSelectedCity);
@@ -113,6 +124,8 @@ bool CCityInfoState::Input(float fElapsedTime)
 //			CGame::GetInstance()->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 			{
+				m_pWM->Play(m_nClick);
+
 				m_bRetract = true;
 				// This function is used only if the player lost 2 battles
 				//--------------------

@@ -22,16 +22,13 @@ void CAttractMode::Enter()
 
 bool CAttractMode::Input(float fElapsedTime)
 {
-	if(CSGD_DirectInput::GetInstance()->GetBufferedKey(DIK_RETURN))
-	{
-		CGame::GetInstance()->PopCurrentState();
-	}
+
 	return true;
 }
 
 void CAttractMode::Exit()
 {
-	m_pDS->ShutDown();
+
 	CMainMenuState::GetInstance()->SetPause(false);
 }
 
@@ -41,6 +38,12 @@ void CAttractMode::Render(float fElapsedTime)
 
 void CAttractMode::Update(float fElapsedTime)
 {
-	Sleep(10);
-	m_pDS->Update();
+	if(!m_pDS->GetIsPlaying())
+	{
+
+		CGame::GetInstance()->PopCurrentState();
+	}
+	
+	//Sleep(10);
+	//m_pDS->Update(fElapsedTime);
 }
