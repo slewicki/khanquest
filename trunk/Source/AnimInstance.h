@@ -34,6 +34,8 @@ public:
 	int GetX(){return x;}
 	int GetY(){return y;}
 	int GetFrameWidth(int Direction, int Action);
+	int GetOffsetX(int Direction, int Action);
+	int GetOffsetY(int Direction, int Action);
 	int GetFrameHeight(int Direction, int Action);
 	void SetLooping(bool value);
 	void SetFlip(bool value){m_bisFliped = value;}

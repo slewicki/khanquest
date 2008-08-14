@@ -228,9 +228,9 @@ public:
 	inline void SetMusicVolume(int nMusicVolume) {m_nMusicVolume = nMusicVolume; }
 	inline void SetSFXVolume(int nSFXVolume) { m_nSFXVolume = nSFXVolume; }
 	inline void SetWindowOffset(int nX, int nY) { m_ptWindOffset.x = nX; m_ptWindOffset.y = nY; }
-	//inline void SetCursorNormal() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_NORMAL))); }
-	//inline void SetCursorClick() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_CLICK))); }
-	//inline void SetCursorAttack() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_ATTACK))); }
+	inline void SetCursorNormal() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_NORMAL))); }
+	inline void SetCursorClick() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_CLICK))); }
+	inline void SetCursorAttack() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_ATTACK))); }
 	inline void SetSelectedCity(CCity* pSelectedCity) { m_pSelectedCity = pSelectedCity; }
 	inline void SetTotalGold(int nTotalGold) { m_nGold = nTotalGold; }
 
@@ -299,17 +299,6 @@ public:
 	///////////////////////////////////////////
 	void LoseLastCity();
 
-	///////////////////////////////////////////
-	//  Function: AddWins
-	//	Last Modified: July 24, 2008
-	//  Purpose : adds a win
-	///////////////////////////////////////////
 	void AddWins();
-
-	///////////////////////////////////////////
-	//  Function: AddLoses
-	//	Last Modified: July 24, 2008
-	//  Purpose : adds a loss
-	///////////////////////////////////////////
 	void AddLoses();
 };

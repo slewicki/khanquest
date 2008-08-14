@@ -107,6 +107,26 @@ int CAnimInstance::GetFrameWidth(int Direction, int Action)
 	return -1;
 }
 
+int CAnimInstance::GetOffsetX(int Direction, int Action)
+{
+	string name = GetName(Direction,Action);
+
+	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
+		if(name == m_Sheet.GetAnimations()[i].GetName())
+			return m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].ptAnchorX;
+	return -1;
+}
+
+int CAnimInstance::GetOffsetY(int Direction, int Action)
+{
+	string name = GetName(Direction,Action);
+
+	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
+		if(name == m_Sheet.GetAnimations()[i].GetName())
+			return m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].ptAnchorY;
+	return -1;
+}
+
 void CAnimInstance::SetLooping(bool value)
 {
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size(); i++)
