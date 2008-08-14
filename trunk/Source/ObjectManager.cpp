@@ -222,9 +222,11 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 							Map->SetOccupy(j, k, true, i);
 							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
 							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
-							break;
+							i++;
+							j = 0;
+							k = 0;
+							//break;
 						}
-
 					}
 
 				}
