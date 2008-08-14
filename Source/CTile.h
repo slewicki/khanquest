@@ -9,6 +9,8 @@
 //	Purpose: Class to store tile values
 //////////////////////////////////////////////////////////
 #include <windows.h>
+
+class CUnit;
 enum TileType { PLAIN, MOUNTAIN, FOREST, SHALLOW_WATER, DEEP_WATER };
 
 class CTile
@@ -25,12 +27,7 @@ public:
 	POINT ptLocalAnchor;	//Used to determine the center of the tile based on world space
 	bool bIsOccupied;		//Used to see if there is a player or enemy unit
 	bool bIsVisible;		//Used to see if the tile had been explored
-	int nUnitIndex;			//Used to check which unit is on a tile
-	CTile()
-	{
-		ptPos.x = ptPos.y = 0;
-		nUnitIndex = -1;
-	}
+	CUnit* pUnit;			//Used to allow the tile to know what type of unit is occupying it
 };	
 
 #endif

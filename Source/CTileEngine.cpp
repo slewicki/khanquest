@@ -233,18 +233,18 @@ void CTileEngine::Clear()
 	delete [] pTileArray;
 }
 
-void CTileEngine::SetOccupy(int x, int y, bool bOccupy, int nUnit)
+void CTileEngine::SetOccupy(int x, int y, bool bOccupy, CUnit* Unit)
 {
 	for(int i = 0; i < m_nLayer; i++)
 	{
 		pTileArray[i][x][y].bIsOccupied = bOccupy;
-		pTileArray[i][x][y].nUnitIndex = nUnit;
+		pTileArray[i][x][y].pUnit = Unit;
 
 
 	}
 }
 
-void CTileEngine::SetVisible(int x, int y, bool Visible, int nUnit)
+void CTileEngine::SetVisible(int x, int y, bool Visible, CUnit* Unit)
 {
 	for(int i = 0; i < m_nLayer; i++)
 	{
