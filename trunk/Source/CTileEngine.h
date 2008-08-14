@@ -90,8 +90,8 @@ public:
 	CTile MapToTile(int Layer, int x, int y);
 	POINT GetLocalAnchor(int Layer, int x, int y) { return pTileArray[Layer][x][y].ptLocalAnchor; }
 	void SetLocalAnchor();
-	void SetOccupy(int x, int y, bool bOccupy, int nUnit);
-	void SetVisible(int x, int y, bool Visible, int nUnit);
+	void SetOccupy(int x, int y, bool bOccupy, CUnit* nUnit);
+	void SetVisible(int x, int y, bool Visible, CUnit* nUnit);
 
 	void Clear();
 
