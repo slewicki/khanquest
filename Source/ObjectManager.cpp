@@ -31,11 +31,7 @@ void ObjectManager::CheckCollisions()
 {
 	for (unsigned int i=0; i < m_vObjectList.size(); i++)
 	{
-		for(unsigned int j=0; j < m_vObjectList.size(); j++)
-			// Don't check it against itself
-			if(m_vObjectList[i]!=m_vObjectList[j])
- 				if(m_vObjectList[i]->CheckCollisions(m_vObjectList[j]))
-					break;
+ 		m_vObjectList[i]->CheckCollisions();
 	}
 }
 
