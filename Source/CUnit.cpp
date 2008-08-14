@@ -61,7 +61,7 @@ void CUnit::Update(float fElapsedTime)
 
 	// Set Local Rect
 	//-------------------------------
-	m_rLocalRect.left   = ptPos.x; + m_pAnimInstance->GetOffsetX(m_nDirectionFacing, m_nState);
+	m_rLocalRect.left   = ptPos.x + m_pAnimInstance->GetOffsetX(m_nDirectionFacing, m_nState);
 	m_rLocalRect.top    = ptPos.y - m_pAnimInstance->GetOffsetY(m_nDirectionFacing, m_nState);
 	m_rLocalRect.right  = m_rLocalRect.left + m_pAnimInstance->GetFrameWidth(m_nDirectionFacing, m_nState);
 	m_rLocalRect.bottom = m_rLocalRect.top + m_pAnimInstance->GetFrameHeight(m_nDirectionFacing, m_nState);
