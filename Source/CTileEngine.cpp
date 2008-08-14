@@ -293,3 +293,11 @@ void CTileEngine::ParalaxScroll(bool bIsScrollable, RECT rCamPos)
 		m_nScrollX = rCamPos.right;
 	//m_nScrollY += 1;
 }
+
+CTile CTileEngine::MapToTile(int Layer, int x, int y)
+{
+	POINT ptNewPoint;
+	ptNewPoint = IsoMouse(x, y, 0);
+
+	return pTileArray[Layer][ptNewPoint.x][ptNewPoint.y];
+}
