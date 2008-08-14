@@ -19,7 +19,6 @@
 #include <windows.h>
 
 #include "CTile.h"
-#include "CGDICanvas.h"
 
 using std::iostream;
 using std::string;
@@ -88,6 +87,7 @@ public:
 	POINT IsoMouse(int x, int y, int z);
 
 	CTile GetTile(int Layer, int x, int y) { return pTileArray[Layer][x][y]; }
+	CTile MapToTile(int Layer, int x, int y);
 	POINT GetLocalAnchor(int Layer, int x, int y) { return pTileArray[Layer][x][y].ptLocalAnchor; }
 	void SetLocalAnchor();
 	void SetOccupy(int x, int y, bool bOccupy, int nUnit);
