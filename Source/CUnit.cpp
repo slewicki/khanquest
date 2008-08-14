@@ -1,11 +1,3 @@
-//////////////////////////////////////////////////////
-//	File	:	"CUnit.cpp"
-//
-//	Author	:	Sean Hamstra (SH)
-//
-//	Purpose	:	Store all information and functionality
-//				of a unit.
-//////////////////////////////////////////////////////
 #include "CUnit.h"
 #include "CCamera.h"
 #include "CSGD_Direct3D.h"
@@ -69,8 +61,8 @@ void CUnit::Update(float fElapsedTime)
 
 	// Set Local Rect
 	//-------------------------------
-	m_rLocalRect.left   = ptPos.x;
-	m_rLocalRect.top    = ptPos.y;
+	m_rLocalRect.left   = ptPos.x; + m_pAnimInstance->GetOffsetX(m_nDirectionFacing, m_nState);
+	m_rLocalRect.top    = ptPos.y - m_pAnimInstance->GetOffsetY(m_nDirectionFacing, m_nState);
 	m_rLocalRect.right  = m_rLocalRect.left + m_pAnimInstance->GetFrameWidth(m_nDirectionFacing, m_nState);
 	m_rLocalRect.bottom = m_rLocalRect.top + m_pAnimInstance->GetFrameHeight(m_nDirectionFacing, m_nState);
 
@@ -198,56 +190,57 @@ void CUnit::Render(float fElapsedTime)
 bool CUnit::CheckCollisions(CBase* pBase)
 {
 	ObjectManager* pOM = ObjectManager::GetInstance();
-	if(m_bIsAlive)
+	if(!m_bIsAlive)
+		return false;
+	
+	CTileEngine* Map = CTileEngine::GetInstance();
+	POINT nMapPoint = Map->IsoMouse(this->GetCurrentTile().ptLocalAnchor.x, this->GetCurrentTile().ptLocalAnchor.y, 0);
+	int nDistanceX = 3 * m_nRange + nMapPoint.x;
+	int nDistanceY = 3 * m_nRange + nMapPoint.y;
+	for(int i = nMapPoint.x - m_nRange; i < nDistanceX; ++i)
 	{
-		CTileEngine* Map = CTileEngine::GetInstance();
-		POINT nMapPoint = Map->IsoMouse(this->GetCurrentTile().ptLocalAnchor.x, this->GetCurrentTile().ptLocalAnchor.y, 0);
-		int nDistanceX = 3 * m_nRange + nMapPoint.x;
-		int nDistanceY = 3 * m_nRange + nMapPoint.y;
-		for(int i = nMapPoint.x - m_nRange; i < nDistanceX; ++i)
+		for(int j = nMapPoint.y - m_nRange; j < nDistanceY; ++j)
 		{
-			for(int j = nMapPoint.y - m_nRange; j < nDistanceY; ++j)
+			if(i >= Map->GetMapWidth() || i < 0)
+				continue;
+			if(j >= Map->GetMapHeight() || j < 0)
+				continue;
+
+			if(Map->GetTile(0,i,j).bIsOccupied)
 			{
-				if(i >= Map->GetMapWidth() || i < 0)
-					continue;
-				if(j >= Map->GetMapHeight() || j < 0)
-					continue;
-
-				if(Map->GetTile(0,i,j).bIsOccupied)
+				if(Map->GetTile(0,i,j).nUnitIndex > -1)
 				{
-					if(Map->GetTile(0,i,j).nUnitIndex > -1)
+					if (static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->IsAlive())
 					{
-						if (m_bIsAlive && static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->IsAlive())
-						{
-							if(m_bIsPlayerUnit == static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->IsPlayerUnit())
-								break;
-						}
-						if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex)) != this)
-							if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->IsAlive())
-							{
-
-								if(m_nState != COMBAT)
-								{
-									ChangeDirection(Map->GetTile(0,i,j).ptPos);
-									m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
-									m_nState = COMBAT;
-									m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
-									m_pAnimInstance->SetPlayer(IsPlayerUnit());
-
-								}	
-								if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex)) != 0)
-								{
-									static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->DamageUnit( GetAttackPower() );
-									return true;
-								}
-							}
+						if(m_bIsPlayerUnit == static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->IsPlayerUnit())
+							break;
 					}
-				}
+					if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex)) != this)
+						if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->IsAlive())
+						{
 
+							if(m_nState != COMBAT)
+							{
+								ChangeDirection(Map->GetTile(0,i,j).ptPos);
+								m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+								m_nState = COMBAT;
+								m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
+								m_pAnimInstance->SetPlayer(IsPlayerUnit());
+
+							}	
+							if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex)) != 0)
+							{
+								static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->DamageUnit( GetAttackPower() );
+								return true;
+							}
+						}
+				}
 			}
 
 		}
+
 	}
+	
 	return false;
 }
 void CUnit::ChangeDirection(POINT pMousePos)
