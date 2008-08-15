@@ -103,6 +103,6 @@ public:
 	//	Last Modified: August 06, 2008
 	//	Purpose: To find the path to the dest
 	//////////////////////////////////////////////////////
-	list<POINT> FindPath(CTile current, CTile destination);
+	list<POINT> FindPath(CTile* current, CTile* destination);
 
 };
