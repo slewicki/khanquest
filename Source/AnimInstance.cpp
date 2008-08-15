@@ -107,6 +107,17 @@ int CAnimInstance::GetFrameWidth(int Direction, int Action)
 	return -1;
 }
 
+RECT CAnimInstance::GetRenderRect(int Direction, int Action)
+{
+	string name = GetName(Direction,Action);
+	RECT r = {0,0,0,0};
+	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
+		if(name == m_Sheet.GetAnimations()[i].GetName())
+			r = m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].rRender;
+
+	return r;
+}
+
 int CAnimInstance::GetOffsetX(int Direction, int Action)
 {
 	string name = GetName(Direction,Action);

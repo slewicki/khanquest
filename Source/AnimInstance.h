@@ -40,6 +40,8 @@ public:
 	void SetLooping(bool value);
 	void SetFlip(bool value){m_bisFliped = value;}
 	void SetPlayer(bool value);
+	RECT GetRenderRect(int Direction, int Action);
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 // Function: “Play” 
