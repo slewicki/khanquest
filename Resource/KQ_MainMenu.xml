@@ -3,7 +3,7 @@
       <Image>
         <ImageLocationX>0</ImageLocationX>
         <ImageLocationY>0</ImageLocationY>
-        <ImageName>Resource/PlaceHolder.png</ImageName>
+        <ImageName>Resource/KQ_PageBkg3.png</ImageName>
         <SizeX>800</SizeX>
         <SizeY>600</SizeY>
       </Image>
@@ -79,6 +79,7 @@
                   <ButtonText>Exit Game</ButtonText>
           </Button>
 </Menu>
+
 
 
 
