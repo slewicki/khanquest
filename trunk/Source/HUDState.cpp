@@ -16,6 +16,8 @@ void CHUDState::Enter(void)
 	m_BF.InitBitmapFont(nFontID,' ',16,128,128);
 	m_nHUDID = m_pTM->LoadTexture("Resource/KQ_HUD.png");
 	m_nIconID = m_pTM->LoadTexture("Resource/KQ_UnitIcons.png");
+	m_nInfantry = m_nCavalry = m_nCavalryArcher = m_nAxmen = m_nArcher = m_nWarElephant = 0;
+
 }
 
 void CHUDState::Exit(void)
@@ -31,12 +33,88 @@ bool CHUDState::Input(float fElapsedTime)
 
 void CHUDState::Update(float fElapsedTime)
 {
-
+	m_nInfantry = m_nCavalry = m_nCavalryArcher = m_nAxmen = m_nArcher = m_nWarElephant = 0;
+	for(unsigned int i = 0; i < ObjectManager::GetInstance()->GetUnits().size(); ++i)
+	{
+		if(static_cast<CUnit*>(ObjectManager::GetInstance()->GetUnits()[i])->IsPlayerUnit())
+		{
+			switch(ObjectManager::GetInstance()->GetUnits()[i]->GetType())
+			{
+			case UNIT_INFANTRY:
+				{
+					m_nInfantry++;
+				}break;
+			case UNIT_CAVALRY:
+				{
+					m_nCavalry++;
+				}break;
+			case UNIT_CAVALRY_ARCHER:
+				{
+					m_nCavalryArcher++;
+				}break;
+			case UNIT_AXMEN:
+				{
+					m_nAxmen++;
+				}break;
+			case UNIT_ARCHER:
+				{
+					m_nArcher++;
+				}break;
+			case UNIT_WAR_ELEPHANT:
+				{
+					m_nWarElephant++;
+				}break;
+			}
+		}
+	}
 }
 
 void CHUDState::Render(float fElapsedTime)
 {
 	m_pTM->Draw(m_nHUDID,0,0);
+	
+	RECT InfIcon;
+	InfIcon.top = 0; InfIcon.left = 200; InfIcon.right = 250; InfIcon.bottom = 50;
+	m_pTM->Draw(m_nIconID,25,470,.75f,.75f,&InfIcon);
+	char szInfantryCount[64];
+	sprintf(szInfantryCount,"%d",m_nInfantry);
+	m_BF.DrawTextA(szInfantryCount,25,500,.3f,.3f,D3DCOLOR_ARGB(255,0,0,0));
+
+	RECT CavIcon;
+	CavIcon.top = 100; CavIcon.left = 0; CavIcon.right = 50; CavIcon.bottom = 150;
+	m_pTM->Draw(m_nIconID,85,470,.75f,.75f,&CavIcon);
+	char szCavCount[64];
+	sprintf(szCavCount,"%d",m_nCavalry);
+	m_BF.DrawTextA(szCavCount,85,500,.3f,.3f,D3DCOLOR_ARGB(255,0,0,0));
+
+	RECT CAIcon;
+	CAIcon.top = 100; CAIcon.left = 200; CAIcon.right = 250; CAIcon.bottom = 150;
+	m_pTM->Draw(m_nIconID,150,470,.75f,.75f,&CAIcon);
+	char szCACount[64];
+	sprintf(szCACount,"%d",m_nCavalryArcher);
+	m_BF.DrawTextA(szCACount,150,500,.3f,.3f,D3DCOLOR_ARGB(255,0,0,0));
+
+	RECT AXIcon;
+	AXIcon.top = 0; AXIcon.left = 0; AXIcon.right = 50; AXIcon.bottom = 50;
+	m_pTM->Draw(m_nIconID,25,535,.75f,.75f,&AXIcon);
+	char szAXCount[64];
+	sprintf(szAXCount,"%d",m_nAxmen);
+	m_BF.DrawTextA(szAXCount,25,565,.3f,.3f,D3DCOLOR_ARGB(255,0,0,0));
+
+	RECT ArcIcon;
+	ArcIcon.top = 0; ArcIcon.left = 100; ArcIcon.right = 150; ArcIcon.bottom = 50;
+	m_pTM->Draw(m_nIconID,85,535,.75f,.75f,&ArcIcon);
+	char szArcCount[64];
+	sprintf(szArcCount,"%d",m_nArcher);
+	m_BF.DrawTextA(szArcCount,85,565,.3f,.3f,D3DCOLOR_ARGB(255,0,0,0));
+
+	RECT EleIcon;
+	EleIcon.top = 100; EleIcon.left = 100; EleIcon.right = 150; EleIcon.bottom = 150;
+	m_pTM->Draw(m_nIconID,150,535,.75f,.75f,&EleIcon);
+	char szWarElephantCount[64];
+	sprintf(szWarElephantCount,"%d",m_nWarElephant);
+	m_BF.DrawTextA(szWarElephantCount,150,565,.3f,.3f,D3DCOLOR_ARGB(255,0,0,0));
+
 	if(m_vUnits.size() == 1)
 	{
 		switch(m_vUnits[0]->GetType())
