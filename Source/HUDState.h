@@ -21,6 +21,13 @@ class CHUDState : public IGameState
 	
 	vector<CUnit*>		 m_vUnits;
 
+	int m_nInfantry;
+	int m_nCavalry;
+	int m_nCavalryArcher;
+	int m_nAxmen;
+	int m_nArcher;
+	int m_nWarElephant;
+
 	enum 	// Type of object
 	{
 		UNIT_INFANTRY = 0,
