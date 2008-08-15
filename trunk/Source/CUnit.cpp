@@ -4,6 +4,7 @@
 #include "SGD_Math.h"
 #include "CTileEngine.h"
 #include "ObjectManager.h"
+#include "CAISystem.h"
 CUnit::CUnit(int nType)
 {
 	m_nHP				= 100;			
@@ -63,17 +64,17 @@ void CUnit::Update(float fElapsedTime)
 
 	// Set Local Rect
 	//-------------------------------
-	//m_rLocalRect = m_pAnimInstance->GetRenderRect(m_nDirectionFacing, m_nState);
+	m_rLocalRect = m_pAnimInstance->GetRenderRect(m_nDirectionFacing, m_nState);
 	//POINT ptTL = CCamera::GetInstance()->TransformToScreen(m_rLocalRect.left, m_rLocalRect.top);
 	//POINT ptBR = CCamera::GetInstance()->TransformToScreen(m_rLocalRect.right, m_rLocalRect.bottom);
 	//m_rLocalRect.left = ptTL.x;
 	//m_rLocalRect.top = ptTL.y;
 	//m_rLocalRect.right = ptBR.x;
 	//m_rLocalRect.bottom = ptBR.y;
-	m_rLocalRect.left   = ptPos.x + m_pAnimInstance->GetOffsetX(m_nDirectionFacing, m_nState);
+	/*m_rLocalRect.left   = ptPos.x + m_pAnimInstance->GetOffsetX(m_nDirectionFacing, m_nState);
 	m_rLocalRect.top    = ptPos.y - m_pAnimInstance->GetOffsetY(m_nDirectionFacing, m_nState);
 	m_rLocalRect.right  = m_rLocalRect.left + m_pAnimInstance->GetFrameWidth(m_nDirectionFacing, m_nState);
-	m_rLocalRect.bottom = m_rLocalRect.top + m_pAnimInstance->GetFrameHeight(m_nDirectionFacing, m_nState);
+	m_rLocalRect.bottom = m_rLocalRect.top + m_pAnimInstance->GetFrameHeight(m_nDirectionFacing, m_nState);*/
 	if(!m_bIsAlive)
 		return;
 	
@@ -124,14 +125,6 @@ void CUnit::Update(float fElapsedTime)
 	// if current position is == to dest position set current to to dest, dest to current and next to current
 	else if (GetState() == MOVEMENT && GetDestTile())
 	{
-		if(!GetNextTile() && m_vPath.size())
-		{
-			POINT& path = m_vPath.back();
-			SetNextTile( m_pTE->GetTile(0, path.x, path.y )  );
-			m_vPath.pop_back();
-		}
-		else if(!GetNextTile())
-			return;
 		// We are at the destination tile
 		if(GetDestTile() == GetCurrentTile())
 		{
@@ -139,28 +132,64 @@ void CUnit::Update(float fElapsedTime)
 			SetNextTile(NULL);
 			SetDestTile(NULL);
 			SetState(IDLE);
-
+			return;
 		}
+		else if(GetDestTile() == GetNextTile() && GetDestTile()->bIsOccupied)
+		{
+			m_vPath.clear();
+			SetNextTile(NULL);
+			SetDestTile(NULL);
+			SetState(IDLE);
+			return;
+		}
+		if(!GetNextTile() && m_vPath.size())
+		{
+			POINT& path = m_vPath.back();
+			SetNextTile( m_pTE->GetTile(0, path.x, path.y )  );
+			m_vPath.pop_back();
+			if(GetNextTile()->bIsOccupied && GetNextTile()->pUnit != this)
+			{
+				SetPath(CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile()));
+				return;
+			}
+		}
+		else if(!GetNextTile())
+		{
+			SetPath(CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile()));
+			return;
+		}
+		
 		else
 		{
 			// We reached the anchor of the next tile
 			if(GetPosX() == GetNextTile()->ptLocalAnchor.x && GetPosY() == GetNextTile()->ptLocalAnchor.y)
 			{
+				GetCurrentTile()->bIsOccupied = false;	
+				GetCurrentTile()->pUnit = NULL;	
 				SetCurrentTile(GetNextTile());
+				GetCurrentTile()->bIsOccupied = true;	
+				GetCurrentTile()->pUnit = this;	
 				if(m_vPath.size())
 				{
 					POINT& path = m_vPath.back();
 					SetNextTile( m_pTE->GetTile(0, path.x, path.y )  );
 					m_vPath.pop_back();
+					if(GetNextTile()->bIsOccupied && GetNextTile()->pUnit != this)
+						CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile());
 				}
 				else
 				{
-					SetNextTile(GetCurrentTile());
-					SetDestTile(GetCurrentTile());
+					SetNextTile(NULL);
+					SetDestTile(NULL);
+					SetState(IDLE);
 				}
+				
 				if(GetNextTile())
 					ChangeDirection(GetNextTile());
+				else
+					return;
 			}
+			
 			if ( GetPosX() >  GetNextTile()->ptLocalAnchor.x)
 				SetPosX(GetPosX() - GetVelX() );
 
@@ -399,6 +428,8 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 		return;
 	if(pTileFacing->ptLocalAnchor.y < GetCurrentTile()->ptLocalAnchor.y && pTileFacing->ptLocalAnchor.x < GetCurrentTile()->ptLocalAnchor.x)
 	{
+		if(m_nDirectionFacing == NORTH_WEST && !m_pAnimInstance->IsFlipped())
+			return;
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nDirectionFacing = NORTH_WEST;
 		m_pAnimInstance->SetFlip(false);
@@ -408,6 +439,8 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.y < GetCurrentTile()->ptLocalAnchor.y && pTileFacing->ptLocalAnchor.x > GetCurrentTile()->ptLocalAnchor.x)
 	{
+		if(m_nDirectionFacing == NORTH_WEST && m_pAnimInstance->IsFlipped())
+			return;
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nDirectionFacing = NORTH_WEST;
 		m_pAnimInstance->SetFlip(true);
@@ -418,6 +451,8 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.y > GetCurrentTile()->ptLocalAnchor.y && pTileFacing->ptLocalAnchor.x < GetCurrentTile()->ptLocalAnchor.x)
 	{
+		if(m_nDirectionFacing == SOUTH_WEST && !m_pAnimInstance->IsFlipped())
+			return;
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nDirectionFacing = SOUTH_WEST;
 		m_pAnimInstance->SetFlip(false);
@@ -428,6 +463,8 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.y > GetCurrentTile()->ptLocalAnchor.y && pTileFacing->ptLocalAnchor.x > GetCurrentTile()->ptLocalAnchor.x)
 	{
+		if(m_nDirectionFacing == SOUTH_WEST && m_pAnimInstance->IsFlipped())
+			return;
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nDirectionFacing = SOUTH_WEST;
 		m_pAnimInstance->SetFlip(true);
@@ -438,6 +475,8 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.x < GetCurrentTile()->ptLocalAnchor.x)
 	{
+		if(m_nDirectionFacing == WEST && !m_pAnimInstance->IsFlipped())
+			return;
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nDirectionFacing = WEST;
 		m_pAnimInstance->SetFlip(false);
@@ -448,6 +487,8 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.x > GetCurrentTile()->ptLocalAnchor.x)
 	{
+		if(m_nDirectionFacing == WEST && m_pAnimInstance->IsFlipped())
+			return;
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nDirectionFacing = WEST;
 		m_pAnimInstance->SetFlip(true);
@@ -458,6 +499,8 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.y < GetCurrentTile()->ptLocalAnchor.y)
 	{
+		if(m_nDirectionFacing == NORTH && !m_pAnimInstance->IsFlipped())
+			return;
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nDirectionFacing = NORTH;
 		m_pAnimInstance->SetFlip(false);
@@ -468,6 +511,8 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.y > GetLocalRect().top)
 	{	
+		if(m_nDirectionFacing == SOUTH && !m_pAnimInstance->IsFlipped())
+			return;
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nDirectionFacing = SOUTH;
 		m_pAnimInstance->SetFlip(false);
@@ -486,6 +531,7 @@ void CUnit::ResolveCombat()
 	{
 		m_pTarget = NULL;
 		SetState(IDLE);
+		return;
 	}
 	ChangeDirection(m_pTarget->GetCurrentTile());
 	if(m_fAttackTimer >= m_fAttackSpeed)
@@ -493,10 +539,6 @@ void CUnit::ResolveCombat()
 		m_pTarget->DamageUnit(GetAttackPower()+m_nBonus);
 		m_fAttackTimer = 0.f;
 	}
-	
-
-
-
 }
 
 void CUnit::CalcAttackBonus()
