@@ -113,7 +113,16 @@ RECT CAnimInstance::GetRenderRect(int Direction, int Action)
 	RECT r = {0,0,0,0};
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
 		if(name == m_Sheet.GetAnimations()[i].GetName())
+		{
 			r = m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].rRender;
+			int width = r.right - r.left;
+			int height = r.bottom - r.top;
+			r.left = x+width/2 - m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].ptAnchorX;
+			r.top =  y- m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].ptAnchorY;
+			r.right = r.left + width;
+			r.bottom = r.top + height;
+		
+		}
 
 	return r;
 }
