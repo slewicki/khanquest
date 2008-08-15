@@ -52,7 +52,7 @@ void CGamePlayState::Enter(void)
 	m_nTestEmitter = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_DustCload.dat", 128, 128);
 
 	// Register any Events with the GamePlayState
-	Map->LoadFile("Resource/Levels/KQ_level1.level");
+	Map->LoadFile("Resource/Levels/KQ_Level3.level");
 
 	m_pOM->UpdatePlayerUnitStartTile();
 
@@ -117,7 +117,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 				m_rSelectionBox = GetSelectionRect();
 				m_pOM->SetSelectedUnit(m_rSelectionBox);
 			}
-			if(m_pDI->GetBufferedMouseButton(M_BUTTON_RIGHT))
+			else if(m_pDI->GetBufferedMouseButton(M_BUTTON_RIGHT))
 			{
 				POINT globleMouse = m_pCamera->TransformToGlobal(ptMousePos.x, ptMousePos.y);
 				globleMouse = Map->IsoMouse(globleMouse.x, globleMouse.y, 0);
@@ -145,7 +145,8 @@ bool CGamePlayState::Input(float fElapsedTime)
 				m_ptCurrentLocation.x = m_ptCurrentLocation.y = 0;;
 				m_rSelectionBox = GetSelectionRect();
 			}
-
+		}
+			
 		
 #pragma region Camera
 			if(!m_bButtonDown)
@@ -156,17 +157,17 @@ bool CGamePlayState::Input(float fElapsedTime)
 				// Mouse Camera Movement
 
 				// Move camera Left
-				if((ptMousePos.x <= 800 && ptMousePos.x >= 750))
-					m_pCamera->SetVelX(100);
-				// Move camera Right
-				if((ptMousePos.x >= 0 && ptMousePos.x <= 50))
-					m_pCamera->SetVelX(-100);
-				// Move camera Down
-				if(( ptMousePos.y <= 450 && ptMousePos.y >= 400 ))
-					m_pCamera->SetVelY(100);
-				// Move camera Up
-				if((ptMousePos.y >= 0 && ptMousePos.y <= 50))
-					m_pCamera->SetVelY(-100); 
+				//if(CGame::GetInstance()->GetCursorPosition().x <= 5)
+				//	m_pCamera->SetVelX(-100);
+				//// Move camera Right
+				//if(CGame::GetInstance()->GetCursorPosition().x >= 795)
+				//	m_pCamera->SetVelX(100);
+				//// Move camera Down
+				//if(CGame::GetInstance()->GetCursorPosition().y >= 595 )
+				//	m_pCamera->SetVelY(100);
+				//// Move camera Up
+				//if(CGame::GetInstance()->GetCursorPosition().y <= 5)
+				//	m_pCamera->SetVelY(-100); 
 
 				// Keyboard Camera Movement
 				// Move camera Left
@@ -184,26 +185,8 @@ bool CGamePlayState::Input(float fElapsedTime)
 			}
 #pragma endregion
 
-		}
-		else
-		{
-			if(!m_bButtonDown)
-			{
-				m_pCamera->SetVelX(0);
-				m_pCamera->SetVelY(0);
-				// Move camera Left
-				if(m_pDI->GetKey(DIK_D))
-					m_pCamera->SetVelX(100);
-				// Move camera Right
-				if(m_pDI->GetKey(DIK_A))
-					m_pCamera->SetVelX(-100);
-				// Move camera Down
-				if(m_pDI->GetKey(DIK_S))
-					m_pCamera->SetVelY(100);
-				// Move camera Up
-				if(m_pDI->GetKey(DIK_W))
-					m_pCamera->SetVelY(-100); 
-			}
+		
+
 #pragma region TempButtons
 			if(CGame::GetInstance()->IsMouseInRect(m_rVictoryButton))
 			{
@@ -222,7 +205,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 			}
 
 #pragma endregion
-		}
+		
 	}
 	return true;
 }
@@ -272,14 +255,14 @@ void CGamePlayState::Render(float fElapsedTime)
 		POINT TileLoc = Map->IsoMouse(MapLoc.x, MapLoc.y, 0);
 
 		sprintf_s(buffer, 32, "Tile: %i, %i", TileLoc.x, TileLoc.y);
-		sprintf_s(buffer2, 32, "TileType: %i", Map->GetTile(0,TileLoc.x, TileLoc.y).nType);
+		sprintf_s(buffer2, 32, "TileType: %i", Map->GetTile(0,TileLoc.x, TileLoc.y)->nType);
 
-		if(Map->GetTile(0,TileLoc.x, TileLoc.y).bIsPlayerSpawn == true)
+		if(Map->GetTile(0,TileLoc.x, TileLoc.y)->bIsPlayerSpawn == true)
 			sprintf_s(buffer3, 32, "PlayerSpawn: True");
 		else
 			sprintf_s(buffer3, 32, "PlayerSpawn: False");
 
-		sprintf_s(buffer4, 32, "Local Anchor: %i, %i", Map->GetTile(0,TileLoc.x, TileLoc.y).ptLocalAnchor.x, Map->GetTile(0,TileLoc.x, TileLoc.y).ptLocalAnchor.y);
+		sprintf_s(buffer4, 32, "Local Anchor: %i, %i", Map->GetTile(0,TileLoc.x, TileLoc.y)->ptLocalAnchor.x, Map->GetTile(0,TileLoc.x, TileLoc.y)->ptLocalAnchor.y);
 		sprintf_s(buffer5, 32, "Global Anchor: %i, %i", MapLoc.x, MapLoc.y);
 
 		m_cFont.DrawTextA(buffer, 500, 0, .2f, .2f);
@@ -314,6 +297,9 @@ void CGamePlayState::Render(float fElapsedTime)
 	m_pD3D->DeviceBegin();
 	m_pD3D->SpriteBegin();
 	//---------------------------------------------
+	/*char buffer[128];
+	sprintf_s(buffer, 128, "%i, %i", CGame::GetInstance()->GetCursorPosition().x, CGame::GetInstance()->GetCursorPosition().y);
+	m_cFont.DrawTextA(buffer, 0, 0);*/
 
 }
 
@@ -332,7 +318,10 @@ RECT CGamePlayState::GetSelectionRect()
 	toDraw.left = m_ptBoxLocation.x;
 	toDraw.bottom = m_ptCurrentLocation.y;
 	toDraw.right = m_ptCurrentLocation.x;
-
+	if(toDraw.bottom == toDraw.top)
+		toDraw.bottom++;
+	if(toDraw.left == toDraw.right)
+		toDraw.right++;
 	int nSwap;
 	if(toDraw.top > toDraw.bottom)
 	{
