@@ -31,7 +31,11 @@ void ObjectManager::CheckCollisions()
 {
 	for (unsigned int i=0; i < m_vObjectList.size(); i++)
 	{
- 		m_vObjectList[i]->CheckCollisions();
+		for(unsigned int j=0; j < m_vObjectList.size(); j++)
+			// Don't check it against itself
+			if(m_vObjectList[i]!=m_vObjectList[j])
+ 				if(m_vObjectList[i]->CheckCollisions(m_vObjectList[j]))
+					break;
 	}
 }
 
@@ -218,9 +222,12 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 							Map->SetOccupy(j, k, true, i);
 							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
 							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
-							i++;
-							j = 0;
-							k = 0;
+							if(static_cast<CUnit*>(m_vObjectList[i+1])->IsPlayerUnit())
+							{
+								i++;
+								j = 0;
+								k = 0;
+							}
 							//break;
 						}
 					}
@@ -246,7 +253,15 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 							Map->SetOccupy(j, k, true, i);
 							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
 							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
-							break;
+							if(i < m_vObjectList.size() - 1 && !static_cast<CUnit*>(m_vObjectList[i+1])->IsPlayerUnit())
+							{
+								i++;
+								j = 0;
+								k = 0;
+							}
+							/*j = 0;
+							k = 0;
+							break;*/
 						}
 
 					}
