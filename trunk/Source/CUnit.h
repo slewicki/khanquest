@@ -21,8 +21,8 @@ enum	// Unit States
 	MOVEMENT,
 	COMBAT,
 	DYING,
-	RETREAT,
 	IDLE,
+	RETREAT,
 
 };
 enum { NORTH, SOUTH, WEST, NORTH_WEST, SOUTH_WEST};
@@ -38,7 +38,7 @@ private:
 	int				m_nCost;			// Cost
 	float			m_fAttackSpeed;		// Attack Speed
 	float			m_fMovementSpeed;	// Movement Speed
-
+	float			m_fAttackTimer;		// Current time between attacks
 	int				m_nBonus;			// Attack bonus or penalty
 
 	bool			m_bIsPlayerUnit;	// Is the unit player controlled
@@ -46,9 +46,9 @@ private:
 	bool			m_bIsAlive;			// Is the unit alive
 	bool			m_bIsSelected;		// Is the unit selected by the player
 
-	CTile			m_pDestinationTile; // Tile the unit is traveling to
-	CTile			m_pCurrentTile;		// Current tile the unit is on
-	CTile			m_pNextTile;		// next tile to move to
+	CTile*			m_pDestinationTile; // Tile the unit is traveling to
+	CTile*			m_pCurrentTile;		// Current tile the unit is on
+	CTile*			m_pNextTile;		// next tile to move to
 
 	CUnit*			m_pTarget;			// Enemy unit to attack, if any
 
@@ -100,9 +100,9 @@ public:
 	inline float  GetAttackSpeed	(void) const { return m_fAttackSpeed; }
 	inline float  GetSpeed			(void) const { return m_fMovementSpeed; }
 	inline int	  GetCost			(void) const { return m_nCost; }
-	inline CTile GetDestTile		(void) const { return m_pDestinationTile; }
-	inline CTile GetCurrentTile		(void) const { return m_pCurrentTile; }
-	inline CTile GetNextTile		(void) const {return m_pNextTile;}
+	inline CTile* GetDestTile		(void) const { return m_pDestinationTile; }
+	inline CTile* GetCurrentTile		(void) const { return m_pCurrentTile; }
+	inline CTile* GetNextTile		(void) const {return m_pNextTile;}
 	inline bool IsPlayerUnit(void) {return m_bIsPlayerUnit;}
 
 	inline CUnit* GetTarget			(void) const { return m_pTarget; }
@@ -129,14 +129,15 @@ public:
 	inline void SetIsPlayerUnit (bool bIsPlayerUnit)	{m_bIsPlayerUnit = bIsPlayerUnit; m_pAnimInstance->SetPlayer(m_bIsPlayerUnit);}
 	inline void SetAttackSpeed	(float fAttackSpeed)	{ m_fAttackSpeed = fAttackSpeed; }
 	inline void SetSpeed		(float fMovementSpeed){ m_fMovementSpeed = fMovementSpeed; }
-	inline void SetDestTile		(CTile pDestTile)  { m_pDestinationTile = pDestTile; }
-	inline void SetCurrentTile	(CTile pCurrentTile)  { m_pCurrentTile = pCurrentTile; }
-	inline void SetNextTile		(CTile pNextTile)  { m_pNextTile = pNextTile; }
+	inline void SetDestTile		(CTile* pDestTile)  { m_pDestinationTile = pDestTile; }
+	inline void SetCurrentTile	(CTile* pCurrentTile)  { m_pCurrentTile = pCurrentTile; }
+	inline void SetNextTile		(CTile* pNextTile)  { m_pNextTile = pNextTile; }
 	inline void SetBonus		(int nBonus)		{ m_nBonus = nBonus; }
 	inline void SetSelected		(bool bIsSelected)	{ m_bIsSelected = bIsSelected; }
 	inline void SetGrouped		(bool bIsGrouped)	{ m_bIsGrouped = bIsGrouped; }
 	inline void SetPath(list<POINT> vPath)		{m_vPath = vPath;}
 	inline void ClearPath		(void)			{m_vPath.clear();}
+	inline void SetTarget(CUnit* pTarget)		{m_pTarget = pTarget; }
 	inline void SetDirection	(int nDirectionFacing)	
 	{ 
 		m_nDirectionFacing = nDirectionFacing; 
@@ -145,6 +146,8 @@ public:
 	inline void SetState (int nState)				
 	{ 
 		m_nState = nState; 
+		if(nState == COMBAT)
+			m_fAttackTimer = 0.f;
 		m_pAnimInstance->Play(GetDirection(), GetState());	
 	}
 
@@ -170,13 +173,18 @@ public:
 	//	Last Modified: July 18, 2008
 	// Purpose: To check if unit collided with anything
 	//////////////////////////////////////////////////////
-	bool CheckCollisions(CBase* pBase);
+	void CheckCollisions();
 
 	//////////////////////////////////////////////////////
 	// Function: “ChangeDirection”
 	//	Last Modified: July 18, 2008
 	// Purpose: Change the direction the unit is facing
 	//////////////////////////////////////////////////////
-	void ChangeDirection(POINT pMousePos);
+	void ChangeDirection(CTile* pTileFacing);
 	
+	void ResolveCombat();
+
+	void CalcAttackBonus();
+
+	void UpdateVisibility();
 };
