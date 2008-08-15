@@ -13,6 +13,7 @@
 #include "d3dx9.h"
 
 enum TileType { PLAIN, MOUNTAIN, FOREST, SHALLOW_WATER, DEEP_WATER };
+class CUnit;
 
 class CTile
 {
@@ -28,12 +29,11 @@ public:
 	POINT ptLocalAnchor;	//Used to determine the center of the tile based on world space
 	bool bIsOccupied;		//Used to see if there is a player or enemy unit
 	bool bIsVisible;		//Used to see if the tile had been explored
-	int nUnitIndex;			//Used to check which unit is on a tile
+	CUnit* pUnit;			//Used to check which unit is on a tile
 	D3DXCOLOR vColor;		//Used to change the tiles color
 	CTile()
 	{
 		ptPos.x = ptPos.y = 0;
-		nUnitIndex = -1;
 	}
 };	
 
