@@ -66,7 +66,7 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 
 		// Stock the row with -1 for open tile.
 		for (int j = 0; j < MAPHEIGHT ; ++j)
-			if (!m_pTE->GetTile(0,i,j)->bIsCollision)
+			if (!m_pTE->GetTile(0,i,j)->bIsCollision && !m_pTE->GetTile(0,i,j)->bIsOccupied)
 			{
 				Map[i][j] = -1; 
 				MapPath[i][j] = -1;
