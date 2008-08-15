@@ -96,6 +96,8 @@ public:
 	void Clear();
 
 	void ParalaxScroll(bool bIsScrollable, RECT rCamPos);
+
+	void SetColor(int Layer, int x, int y, int nRed, int nGreen, int nBlue);
 };
 
 #endif

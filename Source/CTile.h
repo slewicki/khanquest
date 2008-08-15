@@ -9,8 +9,9 @@
 //	Purpose: Class to store tile values
 //////////////////////////////////////////////////////////
 #include <windows.h>
+#include "d3d9.h"
+#include "d3dx9.h"
 
-class CUnit;
 enum TileType { PLAIN, MOUNTAIN, FOREST, SHALLOW_WATER, DEEP_WATER };
 
 class CTile
@@ -27,7 +28,13 @@ public:
 	POINT ptLocalAnchor;	//Used to determine the center of the tile based on world space
 	bool bIsOccupied;		//Used to see if there is a player or enemy unit
 	bool bIsVisible;		//Used to see if the tile had been explored
-	CUnit* pUnit;			//Used to allow the tile to know what type of unit is occupying it
+	int nUnitIndex;			//Used to check which unit is on a tile
+	D3DXCOLOR vColor;		//Used to change the tiles color
+	CTile()
+	{
+		ptPos.x = ptPos.y = 0;
+		nUnitIndex = -1;
+	}
 };	
 
 #endif
