@@ -2,8 +2,10 @@
 #include "MainMenuState.h"
 #include "CGame.h"
 #include "CSGD_DirectInput.h"
+#include "CSGD_Direct3D.h"
 #include "CSGD_TextureManager.h"
 #include "CSGD_WaveManager.h"
+#include "CreditState.h"
 #include "irrXML.h"
 #include <fstream>
 #include <iostream>
@@ -28,7 +30,8 @@ void COptionsMenuState::Enter()
 	m_BF.InitBitmapFont(nFontID,' ',16,128,128);
 	Parse("Resource/KQ_OptionsMenu.xml");
 	m_nClick = m_pWM->LoadWave("Resource/KQ_Chainsaw.wav");
-
+	m_nCheckBoxID = m_pTM->LoadTexture("Resource/KQ_CheckBox.PNG");
+	m_nCheckMarkID = m_pTM->LoadTexture("Resource/KQ_CheckMark.PNG");
 	m_pWM->SetVolume(m_nSongID,CGame::GetInstance()->GetMusicVolume());
 	m_pWM->SetVolume(m_nClick,CGame::GetInstance()->GetSFXVolume());
 
@@ -41,9 +44,10 @@ void COptionsMenuState::Enter()
 	image[m_szCursorName.length()] = 0;
 	m_nCursorID = m_pTM->LoadTexture(image);
 
-	m_ptCursorPosition.x = Buttons[1].ptPosition.x - 50;
+	m_ptCursorPosition.x = Buttons[1].ptPosition.x;
 	m_ptCursorPosition.y = Buttons[1].ptPosition.y;
 	m_nCurrentButton = 1;
+	m_pToSwitchTo = NULL;
 }
 void COptionsMenuState::Exit()
 {
@@ -58,6 +62,11 @@ void COptionsMenuState::Exit()
 
 bool COptionsMenuState::Input(float fElapsedTime)
 {
+	if(m_pToSwitchTo != NULL)
+		FadeOut(fElapsedTime);
+	if(m_bPaused)
+		return true;
+
 	if(m_pDI->GetBufferedKey(DIK_UP))
 	{
 		m_pWM->Stop(m_nSongID);
@@ -86,6 +95,7 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			m_pWM->Play(m_nSongID);
 		
 	}
+
 	if(m_pDI->GetBufferedKey(DIK_LEFT))
 	{
 		if(Buttons[m_nCurrentButton].Action == MUSIC)
@@ -103,6 +113,7 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			m_pWM->Play(m_nClick);
 		}
 	}
+
 	if(m_pDI->GetBufferedKey(DIK_RIGHT))
 	{
 		if(Buttons[m_nCurrentButton].Action == MUSIC)
@@ -119,12 +130,29 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			m_pWM->Play(m_nClick);
 		}
 	}
+
 	if(m_pDI->GetBufferedKey(DIK_RETURN))
 	{
 		if(Buttons[m_nCurrentButton].Action == KEYBIND)
 		{
 			m_pWM->Play(m_nClick);
 			//Switch States;
+			//m_pToSwitchTo = CKeyBind::GetInstance();
+		}
+		if(Buttons[m_nCurrentButton].Action == CREDITS)
+		{
+			m_pToSwitchTo = CCreditState::GetInstance();
+			SetPause(true);
+		}
+		if(Buttons[m_nCurrentButton].Action == FPS)
+		{
+			CGame::GetInstance()->SetFPSDisplay(!CGame::GetInstance()->GetFPSDisplay());
+		}
+		if(Buttons[m_nCurrentButton].Action == FULLSCREEN)
+		{
+			CGame::GetInstance()->SetIsWindowed(!CGame::GetInstance()->GetIsWindowed());
+			CSGD_Direct3D::GetInstance()->ChangeDisplayParam(800, 600, CGame::GetInstance()->GetIsWindowed());
+			ShowCursor(true);
 		}
 		if(Buttons[m_nCurrentButton].Action == BACK)
 		{
@@ -138,9 +166,11 @@ bool COptionsMenuState::Input(float fElapsedTime)
 
 void COptionsMenuState::Render(float fElapsedTime)
 {
-	CSGD_Direct3D::GetInstance()->Clear(128,60,0);
-	//m_pTM->Draw(m_nImageID,m_ptImageLoc.x,m_ptImageLoc.y);
+	CSGD_Direct3D::GetInstance()->Clear(0,0,0);
 
+	m_pTM->Draw(m_nImageID,m_ptImageLoc.x,m_ptImageLoc.y);
+	if(m_bPaused)
+		return;
 	for(int i = 0; i < m_nNumButtons; i++)
 	{
 		if(Buttons[i].Action == MUSIC)
@@ -148,27 +178,101 @@ void COptionsMenuState::Render(float fElapsedTime)
 			char MusicVolume[64];
 			sprintf(MusicVolume,"%s %d",Buttons[i].Text.c_str(),CGame::GetInstance()->GetMusicVolume());
 			m_BF.DrawTextA(MusicVolume,Buttons[i].ptPosition.x,Buttons[i].ptPosition.y,Buttons[i].fscalex, Buttons[i].fscaley,
-						   D3DCOLOR_ARGB(Buttons[i].alpha, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
+						   D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
 		}
 		else if(Buttons[i].Action == SFX)
 		{
 			char SFXVolume[128];
 			sprintf(SFXVolume,"%s %d",Buttons[i].Text.c_str(),CGame::GetInstance()->GetSFXVolume());
 			m_BF.DrawTextA(SFXVolume,Buttons[i].ptPosition.x,Buttons[i].ptPosition.y,Buttons[i].fscalex, Buttons[i].fscaley,
-						   D3DCOLOR_ARGB(Buttons[i].alpha, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
+						   D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
+		}
+		else if(Buttons[i].Action == FULLSCREEN)
+		{
+			m_BF.DrawTextA(Buttons[i].Text,Buttons[i].ptPosition.x, Buttons[i].ptPosition.y, Buttons[i].fscalex, Buttons[i].fscaley,
+						   D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
+			
+			m_pTM->Draw(m_nCheckBoxID,Buttons[i].ptPosition.x + 200,Buttons[i].ptPosition.y);
+			if(!CGame::GetInstance()->GetIsWindowed())
+				m_pTM->Draw(m_nCheckMarkID,Buttons[i].ptPosition.x + 200,Buttons[i].ptPosition.y);
+				
+		}
+		else if(Buttons[i].Action == FPS)
+		{
+			m_BF.DrawTextA(Buttons[i].Text,Buttons[i].ptPosition.x, Buttons[i].ptPosition.y, Buttons[i].fscalex, Buttons[i].fscaley,
+						   D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
+
+			m_pTM->Draw(m_nCheckBoxID,Buttons[i].ptPosition.x + 200,Buttons[i].ptPosition.y);
+			if(CGame::GetInstance()->GetFPSDisplay())
+				m_pTM->Draw(m_nCheckMarkID,Buttons[i].ptPosition.x + 200, Buttons[i].ptPosition.y);
 		}
 		else
 		{
 			m_BF.DrawTextA(Buttons[i].Text,Buttons[i].ptPosition.x, Buttons[i].ptPosition.y, Buttons[i].fscalex, Buttons[i].fscaley,
-						   D3DCOLOR_ARGB(Buttons[i].alpha, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
+						   D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
 		}	
 	}
-	m_pTM->Draw(m_nCursorID,m_ptCursorPosition.x,m_ptCursorPosition.y,m_fCurScaleX,m_fCurScaleY);
+	m_pTM->Draw(m_nCursorID,m_ptCursorPosition.x-50,m_ptCursorPosition.y,m_fCurScaleX,m_fCurScaleY,
+				0,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
+
 }
 void COptionsMenuState::Update(float fElapsedTime)
 {
+	FadeIn(fElapsedTime);
+
 	m_pWM->SetVolume(m_nClick,CGame::GetInstance()->GetSFXVolume());
 	m_pWM->SetVolume(m_nSongID,CGame::GetInstance()->GetMusicVolume());
+}
+void COptionsMenuState::FadeIn(float fElapsedTime)
+{
+	m_nMaxVolume = CGame::GetInstance()->GetMusicVolume();
+
+	m_fTimer += fElapsedTime;
+	
+	if(!m_pWM->IsWavePlaying(m_nSongID))
+		m_pWM->Play(m_nSongID);
+
+
+	if(!m_bAlpha)
+		if(m_fTimer > .00002f && m_nAlpha < 255)
+		{
+			m_fTimer = 0;
+			m_nAlpha+=5;
+
+			if(m_nVolume < m_nMaxVolume)
+				m_pWM->SetVolume(m_nSongID,m_nVolume++);
+			else
+				m_pWM->SetVolume(m_nSongID,m_nMaxVolume);
+
+			if(m_nAlpha == 255)
+				m_bAlpha = true;
+		}
+}
+void COptionsMenuState::FadeOut(float fElapsedTime)
+{
+	m_fEscTimer += fElapsedTime;
+	if(m_fEscTimer > .0001)
+	{
+		m_nAlpha-=5;
+		m_fEscTimer = 0;
+
+		if(m_nVolume >= 0)
+			m_pWM->SetVolume(m_nSongID,m_nVolume--);
+		else 
+			m_pWM->SetVolume(m_nSongID,0);
+
+		if(m_nAlpha == 0)
+		{	
+			m_pWM->Stop(m_nSongID);
+			m_nAlpha = 0;
+			m_ptCursorPosition  = Buttons[1].ptPosition;
+			m_nCurrentButton = 1;
+			m_nVolume = 0;
+			CGame::GetInstance()->PushState(m_pToSwitchTo);
+			m_pToSwitchTo = NULL;
+			m_bAlpha = false;
+		}
+	}
 }
 bool COptionsMenuState::Parse(char* szFileName)
 {

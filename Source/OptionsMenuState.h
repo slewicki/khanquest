@@ -12,18 +12,33 @@ class COptionsMenuState : public IGameState
 	CSGD_DirectInput*		m_pDI;
 	CBitmapFont				m_BF;
 	CSGD_WaveManager*		m_pWM;	
+
 	int m_nImageID;
 	POINT m_ptImageLoc, m_ptImageSize;
 	string m_szImageFile;
-	int m_nClick;
-	int m_nSongID;
+	
 	bool					m_bPaused;
 	float m_fPlayTimer;
+
 	int m_nCursorID;
 	POINT m_ptCursorPosition;
 	int m_nCurrentButton;
 	float m_fCurScaleX, m_fCurScaleY;
 	string m_szCursorName;
+
+	int						m_nVolume;
+	int						m_nMaxVolume;
+	int						m_nClick;
+	int						m_nSongID;
+	int						m_nCheckBoxID;
+	int						m_nCheckMarkID;
+
+	float					m_fTimer;
+	float					m_fEscTimer;
+	
+	bool					m_bAlpha;
+	int						m_nAlpha;
+	IGameState*				m_pToSwitchTo;
 
 	struct TextToHold
 	{
@@ -41,7 +56,10 @@ class COptionsMenuState : public IGameState
 		KEYBIND = 0,
 		MUSIC,
 		SFX,
+		CREDITS,
 		BACK,
+		FULLSCREEN,
+		FPS,
 	};
 
 	COptionsMenuState(void);
@@ -115,4 +133,7 @@ public:
 	//  Purpose : Modifies the specified type.
 	///////////////////////////////////////////
 	bool Parse(char* szFileName);
+
+	void FadeIn(float fElapsedTime);
+	void FadeOut(float fElapsedTime);
 };
