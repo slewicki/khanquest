@@ -33,6 +33,7 @@ public:
 	void SetY(int value){y = value;}
 	int GetX(){return x;}
 	int GetY(){return y;}
+	bool IsFlipped() { return m_bisFliped; }
 	int GetFrameWidth(int Direction, int Action);
 	int GetOffsetX(int Direction, int Action);
 	int GetOffsetY(int Direction, int Action);
