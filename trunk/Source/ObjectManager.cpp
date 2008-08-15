@@ -15,6 +15,7 @@
 #include "CGame.h"
 #include "WinBattleState.h"
 #include "LoseBattleState.h"
+#include "CTileEngine.h"
 
 ObjectManager::ObjectManager(void)
 {
@@ -31,12 +32,27 @@ void ObjectManager::CheckCollisions()
 {
 	for (unsigned int i=0; i < m_vObjectList.size(); i++)
 	{
-		for(unsigned int j=0; j < m_vObjectList.size(); j++)
-			// Don't check it against itself
-			if(m_vObjectList[i]!=m_vObjectList[j])
- 				if(m_vObjectList[i]->CheckCollisions(m_vObjectList[j]))
-					break;
+ 		m_vObjectList[i]->CheckCollisions();
 	}
+	
+	//for (unsigned int i=0; i < m_vObjectList.size(); i++)
+	//{
+	//	for (unsigned int j = 0; j < m_vObjectList.size(); j++)
+	//	{
+	//		if(m_vObjectList[i] != m_vObjectList[j])
+	//		{
+	//			CTile* pTile1 = ((CUnit*)m_vObjectList[i])->GetCurrentTile();
+	//			CTile* pTile2 = ((CUnit*)m_vObjectList[j])->GetCurrentTile();
+	//			if(pTile1 == pTile2)
+	//			{
+	//				if(pTile1.x > 0)
+	//					CTile* pTile = CTileEngine::GetInstance()->GetTile(0, ((CUnit*)m_vObjectList[i])->GetCurrentTile().x-1, ((CUnit*)m_vObjectList[i])->GetCurrentTile().y);
+	//				((CUnit*)m_vObjectList[j])->SetCurrentTile(
+	//			}
+	//		}
+	//	}
+	//}
+
 }
 
 ObjectManager* ObjectManager::GetInstance(void)
@@ -192,7 +208,7 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 	{
 		for (int j = 0; j < Map->GetMapWidth(); ++j)
 		{
-			if (Map->GetTile(0, i, j).bIsEnemySpawn)
+			if (Map->GetTile(0, i, j)->bIsEnemySpawn)
 			{
 				CFactory::CreateComputerUnit(rand()%6);
 			}
@@ -214,12 +230,12 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 					for (int k =0; k < Map->GetMapHeight(); ++k )
 					{
 						// if map loc is a spawn point set unit current loc there
-						if (Map->GetTile(0,j,k).bIsPlayerSpawn && Map->GetTile(0,j,k).bIsOccupied == false)
+						if (Map->GetTile(0,j,k)->bIsPlayerSpawn && Map->GetTile(0,j,k)->bIsOccupied == false)
 						{
 							//POINT spawn = Map->GetLocalAnchor( j, k);
 							static_cast<CUnit*>(m_vObjectList[i])->SetPosX((float)Map->GetLocalAnchor(0, j, k).x);
 							static_cast<CUnit*>(m_vObjectList[i])->SetPosY((float)Map->GetLocalAnchor(0, j, k).y);
-							Map->SetOccupy(j, k, true, i);
+							Map->SetOccupy(j, k, true, (CUnit*)m_vObjectList[i]);
 							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
 							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
 							if(static_cast<CUnit*>(m_vObjectList[i+1])->IsPlayerUnit())
@@ -245,12 +261,12 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 					for (int k =0; k < Map->GetMapHeight(); ++k )
 					{
 						// if map loc is a spawn point set unit current loc there
-						if (Map->GetTile(0,j,k).bIsEnemySpawn && Map->GetTile(0,j,k).bIsOccupied == false)
+						if (Map->GetTile(0,j,k)->bIsEnemySpawn && Map->GetTile(0,j,k)->bIsOccupied == false)
 						{
 							//POINT spawn = Map->GetLocalAnchor( j, k);
 							static_cast<CUnit*>(m_vObjectList[i])->SetPosX((float)Map->GetLocalAnchor(0, j, k).x);
 							static_cast<CUnit*>(m_vObjectList[i])->SetPosY((float)Map->GetLocalAnchor(0, j, k).y);
-							Map->SetOccupy(j, k, true, i);
+							Map->SetOccupy(j, k, true, (CUnit*)m_vObjectList[i]);
 							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
 							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
 							if(i < m_vObjectList.size() - 1 && !static_cast<CUnit*>(m_vObjectList[i+1])->IsPlayerUnit())
@@ -271,7 +287,7 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 		}
 	}
 }
-void ObjectManager::UpdatePlayerUnitDestTile(CTile destTile)
+void ObjectManager::UpdatePlayerUnitDestTile(CTile* destTile)
 {
 	for (unsigned int i=0; i < m_vObjectList.size(); i++)
 	{
@@ -339,7 +355,7 @@ void ObjectManager::MoveSelectedUnits(POINT pMousePos)
 	{
 		if(static_cast<CUnit*>(m_vObjectList[i])->IsSelected())
 		{
-			static_cast<CUnit*>(m_vObjectList[i])->ChangeDirection(pMousePos);
+			static_cast<CUnit*>(m_vObjectList[i])->ChangeDirection(CTileEngine::GetInstance()->GetTile(0,CTileEngine::GetInstance()->IsoMouse(pMousePos.x, pMousePos.y, 0).x, CTileEngine::GetInstance()->IsoMouse(pMousePos.x, pMousePos.y, 0).y));
 			static_cast<CUnit*>(m_vObjectList[i])->ClearPath();
 			static_cast<CUnit*>(m_vObjectList[i])->SetPath(m_pCAI->FindPath(static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile(), static_cast<CUnit*>(m_vObjectList[i])->GetDestTile()));
 		}
