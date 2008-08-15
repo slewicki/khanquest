@@ -50,15 +50,15 @@ void CAISystem::UpdateState(void)
 
 }
 
-list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
+list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the path
 {
 	m_vPath.clear();
 
-	if (destination.bIsCollision || destination.bIsOccupied)
+	if (destination->bIsCollision || destination->bIsOccupied)
 		return m_vPath;
 
-	POINT ptStart	= m_pTE->IsoMouse(current.ptLocalAnchor.x, current.ptLocalAnchor.y, 0);
-	POINT ptEnd		= m_pTE->IsoMouse(destination.ptLocalAnchor.x, destination.ptLocalAnchor.y, 0);
+	POINT ptStart	= m_pTE->IsoMouse(current->ptLocalAnchor.x, current->ptLocalAnchor.y, 0);
+	POINT ptEnd		= m_pTE->IsoMouse(destination->ptLocalAnchor.x, destination->ptLocalAnchor.y, 0);
 	POINT ptPath;
 	//set initial start and end points
 	for (int i = 0; i < MAPWIDTH; ++i)
@@ -66,7 +66,7 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 
 		// Stock the row with -1 for open tile.
 		for (int j = 0; j < MAPHEIGHT ; ++j)
-			if (!m_pTE->GetTile(0,i,j).bIsCollision)
+			if (!m_pTE->GetTile(0,i,j)->bIsCollision)
 			{
 				Map[i][j] = -1; 
 				MapPath[i][j] = -1;
@@ -216,10 +216,12 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 					found=true;
 					//set tile to path tile
 					Map[ptPath.x][ptPath.y]=TILEPATH;
+					m_vPath.push_back(ptPath);
 					//move the path
 					ptPath.x+=nx;
 					ptPath.y+=ny;
 					lowvalue=MapPath[ptPath.x][ptPath.y];
+					
 				}
 			}
 			while(!found);
@@ -228,19 +230,19 @@ list<POINT> CAISystem::FindPath(CTile current, CTile destination)//find the path
 		Map[ptEnd.x][ptEnd.y]=TILEEND;
 	}
 
-	for (int i = 0; i < MAPWIDTH ; ++i)
-	{
-		// Stock the row with -1 for open tile.
-		for (int j = 0; j < MAPHEIGHT; ++j)
-			if (Map[i][j] == 4)
-			{
-				POINT path;
-				path.x = i;
-				path.y = j;
-				m_vPath.push_back(path);
-			}
-	}
-	m_vPath.push_back(ptEnd);
+	//for (int i = 0; i < MAPWIDTH ; ++i)
+	//{
+	//	// Stock the row with -1 for open tile.
+	//	for (int j = 0; j < MAPHEIGHT; ++j)
+	//		if (Map[i][j] == 4)
+	//		{
+	//			POINT path;
+	//			path.x = i;
+	//			path.y = j;
+	//			m_vPath.push_back(path);
+	//		}
+	//}
+	//m_vPath.push_back(ptEnd);
 	return m_vPath;
 }
 
