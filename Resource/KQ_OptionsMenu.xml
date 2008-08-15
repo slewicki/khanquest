@@ -3,7 +3,7 @@
       <Image>
         <ImageLocationX>0</ImageLocationX>
         <ImageLocationY>0</ImageLocationY>
-        <ImageName>Resource/PlaceHolder.png</ImageName>
+        <ImageName>Resource/KQ_PageBkg3.png</ImageName>
         <SizeX>800</SizeX>
         <SizeY>600</SizeY>
       </Image>
@@ -18,7 +18,7 @@
         <Song>Resource/KQ_CitySelect.wav</Song>
       </Songs>
 
-      <NumButtons>5</NumButtons>
+      <NumButtons>8</NumButtons>
           <Button>
                   <ButtonPositionX>350</ButtonPositionX>
                   <ButtonPositionY>50</ButtonPositionY>
@@ -41,11 +41,35 @@
                   <TextScaleY>.2</TextScaleY>
                   <Action>0</Action>
                   <ButtonText>KeyBinding</ButtonText>
-                  </Button>
+          </Button>
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
                   <ButtonPositionY>150</ButtonPositionY>
                   <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>5</Action>
+                  <ButtonText>FullScreen?</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>200</ButtonPositionX>
+                  <ButtonPositionY>200</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>6</Action>
+                  <ButtonText>FPS?</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>200</ButtonPositionX>
+                  <ButtonPositionY>250</ButtonPositionY>
+                  <TextColorA>250</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
                   <TextColorB>0</TextColorB>
@@ -56,7 +80,7 @@
           </Button>
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
-                  <ButtonPositionY>200</ButtonPositionY>
+                  <ButtonPositionY>300</ButtonPositionY>
                   <TextColorA>200</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -68,7 +92,7 @@
           </Button>
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
-                  <ButtonPositionY>250</ButtonPositionY>
+                  <ButtonPositionY>350</ButtonPositionY>
                   <TextColorA>200</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -76,10 +100,23 @@
                   <TextScaleX>.2</TextScaleX>
                   <TextScaleY>.2</TextScaleY>
                   <Action>3</Action>
+                  <ButtonText>Credits</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>200</ButtonPositionX>
+                  <ButtonPositionY>400</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>4</Action>
                   <ButtonText>Back</ButtonText>
           </Button>
 
 </Menu>
+
 
 
 
