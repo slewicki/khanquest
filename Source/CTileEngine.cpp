@@ -141,6 +141,7 @@ void CTileEngine::LoadFile(char* szFileName)
 					}
 
 					pTileArray[nLayer][x][y].bIsVisible = false;
+					pTileArray[nLayer][x][y].pUnit = NULL;
 					pTileArray[nLayer][x][y].ptTileLoc.x = x;
 					pTileArray[nLayer][x][y].ptTileLoc.y = y;
 				}
@@ -239,9 +240,9 @@ void CTileEngine::SetOccupy(int x, int y, bool bOccupy, CUnit* Unit)
 	{
 		pTileArray[i][x][y].bIsOccupied = bOccupy;
 		pTileArray[i][x][y].pUnit = Unit;
-
-
 	}
+	
+
 }
 
 void CTileEngine::SetVisible(int x, int y, bool Visible, CUnit* Unit)
@@ -294,10 +295,10 @@ void CTileEngine::ParalaxScroll(bool bIsScrollable, RECT rCamPos)
 	//m_nScrollY += 1;
 }
 
-CTile CTileEngine::MapToTile(int Layer, int x, int y)
+CTile* CTileEngine::MapToTile(int Layer, int x, int y)
 {
 	POINT ptNewPoint;
 	ptNewPoint = IsoMouse(x, y, 0);
 
-	return pTileArray[Layer][ptNewPoint.x][ptNewPoint.y];
+	return &pTileArray[Layer][ptNewPoint.x][ptNewPoint.y];
 }
