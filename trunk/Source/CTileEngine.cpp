@@ -144,6 +144,7 @@ void CTileEngine::LoadFile(char* szFileName)
 					pTileArray[nLayer][x][y].pUnit = NULL;
 					pTileArray[nLayer][x][y].ptTileLoc.x = x;
 					pTileArray[nLayer][x][y].ptTileLoc.y = y;
+					pTileArray[nLayer][x][y].vColor = D3DCOLOR_ARGB(255, 255, 255, 255);
 				}
 			}
 		}
@@ -174,7 +175,7 @@ void CTileEngine::Render(RECT nCamPos)
 				{
 					if(nCamPos.left < pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.right > pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.top < pTileArray[nLayer][Row][Col].ptLocalAnchor.y && nCamPos.bottom > pTileArray[nLayer][Row][Col].ptLocalAnchor.y)
 					{
-						m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0); 
+						m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0, pTileArray[0][Row][Col].vColor); 
 					}
 				}
 			}
@@ -241,8 +242,6 @@ void CTileEngine::SetOccupy(int x, int y, bool bOccupy, CUnit* Unit)
 		pTileArray[i][x][y].bIsOccupied = bOccupy;
 		pTileArray[i][x][y].pUnit = Unit;
 	}
-	
-
 }
 
 void CTileEngine::SetVisible(int x, int y, bool Visible, CUnit* Unit)
@@ -301,4 +300,12 @@ CTile* CTileEngine::MapToTile(int Layer, int x, int y)
 	ptNewPoint = IsoMouse(x, y, 0);
 
 	return &pTileArray[Layer][ptNewPoint.x][ptNewPoint.y];
+}
+
+void CTileEngine::SetColor(int Layer, int x, int y, int nRed, int nGreen, int nBlue)
+{
+	pTileArray[Layer][x][y].vColor.a = 255;
+	pTileArray[Layer][x][y].vColor.r = nRed;
+	pTileArray[Layer][x][y].vColor.g = nGreen;
+	pTileArray[Layer][x][y].vColor.b = nBlue;
 }
