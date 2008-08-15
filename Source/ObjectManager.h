@@ -105,7 +105,7 @@ public:
 	//
 	// Purpose: give units a start tile.
 	//////////////////////////////////////////////////////
-	void UpdatePlayerUnitDestTile(CTile currentTile);
+	void UpdatePlayerUnitDestTile(CTile* currentTile);
 
 	/////////////////////////////////////////////////////
 	// Function: "SetSeletedUnit"
@@ -129,7 +129,7 @@ public:
 	/////////////////////////////////////////////////////
 	void MoveSelectedUnits(POINT pMousePos);
 
-	CBase* GetSelectedUnit(unsigned int nIndex) 
+	CBase* GetUnit(unsigned int nIndex) 
 	{ 
 		if(nIndex >= 0 && nIndex < m_vObjectList.size())
 			return m_vObjectList[nIndex];
