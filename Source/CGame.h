@@ -43,6 +43,7 @@ private:
 	DWORD					m_dwPreviousTime;
 	int						m_nFrameCounter;	//counts number of frames per second
 	int						m_nFPS;				// prints number
+	bool					m_bFPS;
 	DWORD					m_dwFrameTimer;
 	
 	bool					m_bIsWindowed;		// Is the game windowed?
@@ -183,6 +184,8 @@ public:
 				m_ptMousePos.y >= rIsMouseHere.top && m_ptMousePos.y <= rIsMouseHere.bottom);
 	}
 
+	bool GetFPSDisplay(){return m_bFPS;}
+
 	///////////////////////////////////////////
 	//  Function: "GetNumConquered"
 	//	Last Modified: July 18, 2008
@@ -233,9 +236,10 @@ public:
 	inline void SetCursorAttack() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_ATTACK))); }
 	inline void SetSelectedCity(CCity* pSelectedCity) { m_pSelectedCity = pSelectedCity; }
 	inline void SetTotalGold(int nTotalGold) { m_nGold = nTotalGold; }
-
+	inline void SetIsWindowed(bool bIsWindowed){m_bIsWindowed = bIsWindowed;}
 	inline void AddGold(int nGold)  { m_nGold += nGold; }
 
+	inline void SetFPSDisplay(bool value){m_bFPS = value;}
 
 	///////////////////////////////////////////
 	//  Function: ParseXMLUnitInfo
@@ -299,6 +303,17 @@ public:
 	///////////////////////////////////////////
 	void LoseLastCity();
 
+	///////////////////////////////////////////
+	//  Function: AddWins
+	//	Last Modified: July 24, 2008
+	//  Purpose : adds a win
+	///////////////////////////////////////////
 	void AddWins();
+
+	///////////////////////////////////////////
+	//  Function: AddLoses
+	//	Last Modified: July 24, 2008
+	//  Purpose : adds a loss
+	///////////////////////////////////////////
 	void AddLoses();
 };

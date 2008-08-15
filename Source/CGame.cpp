@@ -41,6 +41,7 @@ CGame::CGame(void)
 	m_nLoses = 0;
 	m_nFood = 0;
 	m_chJinCount = m_chKCount = m_chXiaCount = 0;
+	m_bFPS = true;
 }
 
 CGame::~CGame(void)
@@ -281,12 +282,13 @@ bool CGame::Main(void)
 	}
 
 	m_pD3D->Clear(0, 0, 0);
-
-	// Print Frames Per Second
-	char buffer[128];
-	sprintf_s(buffer, _countof(buffer), "FPS: %i", m_nFPS);
-	CSGD_Direct3D::GetInstance()->DrawTextA(buffer, 0,20,255,255,255);
-
+	if(m_bFPS)
+	{
+		// Print Frames Per Second
+		char buffer[128];
+		sprintf_s(buffer, _countof(buffer), "FPS: %i", m_nFPS);
+		CSGD_Direct3D::GetInstance()->DrawTextA(buffer, 0,20,255,255,255);
+	}
 	char buffer2[128];
 	sprintf_s(buffer2, _countof(buffer2), "Position: %i %i", m_ptMousePos.x, m_ptMousePos.y);
 	CSGD_Direct3D::GetInstance()->DrawTextA(buffer2, 120,20,255,255,255);
