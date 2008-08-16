@@ -132,7 +132,7 @@ void CTileEngine::LoadFile(char* szFileName)
 					if (bTempBool)
 					{
 						pTileArray[nLayer][x][y].bIsCollision = true;
-						pTileArray[nLayer][x][y].bIsOccupied = true;
+						//pTileArray[nLayer][x][y].bIsOccupied = true;
 					}
 					else
 					{
@@ -176,6 +176,10 @@ void CTileEngine::Render(RECT nCamPos)
 					if(nCamPos.left < pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.right > pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.top < pTileArray[nLayer][Row][Col].ptLocalAnchor.y && nCamPos.bottom > pTileArray[nLayer][Row][Col].ptLocalAnchor.y)
 					{
 						m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0, pTileArray[0][Row][Col].vColor); 
+						// Temp for anchors
+						//m_pTM->Draw(m_nImageID, pTileArray[0][Row][Col].ptLocalAnchor.x, pTileArray[0][Row][Col].ptLocalAnchor.y, .1, .1, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 0, 0, 0)); 
+						// Set all to normal color
+						//pTileArray[0][Row][Col].vColor = D3DCOLOR_ARGB(255,255,255,255);
 					}
 				}
 			}

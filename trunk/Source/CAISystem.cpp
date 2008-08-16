@@ -54,7 +54,7 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 {
 	m_vPath.clear();
 
-	if (destination->bIsCollision || destination->bIsOccupied)
+	if (destination->bIsCollision)// || destination->bIsOccupied)
 		return m_vPath;
 
 	POINT ptStart	= m_pTE->IsoMouse(current->ptLocalAnchor.x, current->ptLocalAnchor.y, 0);

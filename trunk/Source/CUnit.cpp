@@ -13,7 +13,7 @@ CUnit::CUnit(int nType)
 	m_fAttackSpeed		= 0.f;		
 	m_fMovementSpeed	= 0.f;	
 	m_nCost				= 0;
-
+	m_fMovementTimer	= 0.f;
 	m_nBonus			= 0;			
 
 	m_bIsPlayerUnit		= true;	
@@ -59,22 +59,15 @@ void CUnit::Update(float fElapsedTime)
 	//-------------------------------
 
 	POINT ptPos = CCamera::GetInstance()->TransformToScreen((int)GetPosX(), (int)GetPosY());
+	/*SetPosX(ptPos.x);
+	SetPosY(ptPos.y);*/
+
 	m_pAnimInstance->SetX(ptPos.x);
 	m_pAnimInstance->SetY(ptPos.y);
-
 	// Set Local Rect
 	//-------------------------------
 	m_rLocalRect = m_pAnimInstance->GetRenderRect(m_nDirectionFacing, m_nState);
-	//POINT ptTL = CCamera::GetInstance()->TransformToScreen(m_rLocalRect.left, m_rLocalRect.top);
-	//POINT ptBR = CCamera::GetInstance()->TransformToScreen(m_rLocalRect.right, m_rLocalRect.bottom);
-	//m_rLocalRect.left = ptTL.x;
-	//m_rLocalRect.top = ptTL.y;
-	//m_rLocalRect.right = ptBR.x;
-	//m_rLocalRect.bottom = ptBR.y;
-	/*m_rLocalRect.left   = ptPos.x + m_pAnimInstance->GetOffsetX(m_nDirectionFacing, m_nState);
-	m_rLocalRect.top    = ptPos.y - m_pAnimInstance->GetOffsetY(m_nDirectionFacing, m_nState);
-	m_rLocalRect.right  = m_rLocalRect.left + m_pAnimInstance->GetFrameWidth(m_nDirectionFacing, m_nState);
-	m_rLocalRect.bottom = m_rLocalRect.top + m_pAnimInstance->GetFrameHeight(m_nDirectionFacing, m_nState);*/
+	//----------------------------------------
 	if(!m_bIsAlive)
 		return;
 	
@@ -101,8 +94,6 @@ void CUnit::Update(float fElapsedTime)
 	{
 		m_bIsAlive = false;
 		m_bIsSelected = false;
-		CTileEngine* Map = CTileEngine::GetInstance();
-		POINT nMapPoint = Map->IsoMouse(GetCurrentTile()->ptPos.x, GetCurrentTile()->ptPos.y, 0);	
 
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nState = DYING;
@@ -110,23 +101,77 @@ void CUnit::Update(float fElapsedTime)
 		m_pAnimInstance->SetLooping(false);
 		m_pAnimInstance->SetPlayer(IsPlayerUnit());
 	}
+	if(GetState() != MOVEMENT)
+	{
+		SetPosX(GetCurrentTile()->ptLocalAnchor.x);
+		SetPosY(GetCurrentTile()->ptLocalAnchor.y);
+	}
+	
+	if(GetState() == DYING)
+	{
+		
+		return;
+	}
 
+	// Don't occupy an occupied tile!!
+	if(GetState() == IDLE && GetCurrentTile()->pUnit != this)
+	{
+		SetDestTile(PlaceOnSurrounding(GetCurrentTile()));
+		SetPath(CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile()));
+		SetState(MOVEMENT);
+		
+	}
+	// Get on the anchor if you are IDLE!
+	
 	// Make 6 tiles around unit visible
 	UpdateVisibility();
-	
 
-	if(GetState() == COMBAT)
+	// AI
+	//---------------------------------------------------------------------------
+	if(IsPlayerUnit() && GetState() == IDLE && !m_pTarget)
 	{
+		// Find a target if there is one visible and the PLAYER unit is IDLE
+		ScanForEnemies();
+	}
+	if(!IsPlayerUnit() && !m_pTarget)
+	{
+		// If CPU unit, always scan for enemies if we dont have a target
+		ScanForEnemies();
+	}
+	if(m_pTarget && !m_pTarget->IsAlive())
+	{
+		m_pTarget = NULL;
+		SetState(IDLE);
+	}
+	// Do we have a target? if so, is it in range? than attack
+	else if(m_pTarget->IsAlive() && IsTargetInRange())
+	{
+		if(GetState() != COMBAT)
+		{
+			SetState(COMBAT);
+			ChangeDirection(m_pTarget->GetCurrentTile());
+		}
 		m_fAttackTimer += fElapsedTime;
 		ResolveCombat();
 	}
-	//-------------------------------
-	// AI movement
-	// if current position is == to dest position set current to to dest, dest to current and next to current
-	else if (GetState() == MOVEMENT && GetDestTile())
+	// Do we have a target that is out of range? Then move into range
+	else if(m_pTarget->IsAlive() && !IsTargetInRange())
 	{
-		// We are at the destination tile
-		if(GetDestTile() == GetCurrentTile())
+		// Move towards the target and update path each time,
+		// If we are in range then movement will stop and we'll attack
+		SetState(MOVEMENT);
+		SetDestTile(m_pTarget->GetCurrentTile());
+		SetPath(CAISystem::GetInstance()->FindPath(GetCurrentTile(), GetDestTile()));
+	}
+	
+
+	// Move to our destination
+#pragma region Move
+	if (GetState() == MOVEMENT && GetDestTile())
+	{
+		m_fMovementTimer += fElapsedTime;
+		// We are at the destination tile or are we in range of our target? then stop
+		if(m_vPath.size() == 0 || (GetDestTile() == GetCurrentTile()) || (m_pTarget && IsTargetInRange()))
 		{
 			m_vPath.clear();
 			SetNextTile(NULL);
@@ -142,127 +187,57 @@ void CUnit::Update(float fElapsedTime)
 			SetState(IDLE);
 			return;
 		}
+
 		if(!GetNextTile() && m_vPath.size())
 		{
 			POINT& path = m_vPath.back();
 			SetNextTile( m_pTE->GetTile(0, path.x, path.y )  );
+			ChangeDirection(GetNextTile());
 			m_vPath.pop_back();
 			if(GetNextTile()->bIsOccupied && GetNextTile()->pUnit != this)
 			{
+				SetNextTile(NULL);
 				SetPath(CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile()));
 				return;
 			}
 		}
-		else if(!GetNextTile())
+		if(!GetNextTile())
 		{
 			SetPath(CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile()));
 			return;
 		}
-		
-		else
+		// We reached the anchor of the next tile
+		if(MoveUnit())
 		{
-			// We reached the anchor of the next tile
-			if(GetPosX() == GetNextTile()->ptLocalAnchor.x && GetPosY() == GetNextTile()->ptLocalAnchor.y)
+			GetCurrentTile()->bIsOccupied = false;	
+			GetCurrentTile()->pUnit = NULL;	
+			SetCurrentTile(GetNextTile());
+			GetCurrentTile()->bIsOccupied = true;	
+			GetCurrentTile()->pUnit = this;	
+			if(m_vPath.size())
 			{
-				GetCurrentTile()->bIsOccupied = false;	
-				GetCurrentTile()->pUnit = NULL;	
-				SetCurrentTile(GetNextTile());
-				GetCurrentTile()->bIsOccupied = true;	
-				GetCurrentTile()->pUnit = this;	
-				if(m_vPath.size())
-				{
-					POINT& path = m_vPath.back();
-					SetNextTile( m_pTE->GetTile(0, path.x, path.y )  );
-					m_vPath.pop_back();
-					if(GetNextTile()->bIsOccupied && GetNextTile()->pUnit != this)
-						CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile());
-				}
-				else
-				{
-					SetNextTile(NULL);
-					SetDestTile(NULL);
-					SetState(IDLE);
-				}
-				
-				if(GetNextTile())
-					ChangeDirection(GetNextTile());
-				else
-					return;
+				POINT& path = m_vPath.back();
+				SetNextTile( m_pTE->GetTile(0, path.x, path.y )  );
+				m_vPath.pop_back();
+				if(GetNextTile()->bIsOccupied && GetNextTile()->pUnit != this)
+					CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile());
 			}
-			
-			if ( GetPosX() >  GetNextTile()->ptLocalAnchor.x)
-				SetPosX(GetPosX() - GetVelX() );
+			else
+			{
+				SetNextTile(NULL);
+				SetDestTile(NULL);
+				SetState(IDLE);
+			}
 
-			else if ( GetPosX() < GetNextTile()->ptLocalAnchor.x)
-				SetPosX( GetPosX() +  GetVelX() );
-
-			if ( GetPosY() >  GetNextTile()->ptLocalAnchor.y)
-				SetPosY( GetPosY() - GetVelY() );
-
-			else if ( GetPosY() <  GetNextTile()->ptLocalAnchor.y)
-				SetPosY( GetPosY() +  GetVelY() );
-			
+			if(GetNextTile())
+				ChangeDirection(GetNextTile());
+			else
+				return;
 		}
-		
-			
-		//// if you're at dest
-		//if ( GetPosX() == GetDestTile()->ptLocalAnchor.x  && GetPosY() == GetDestTile()->ptLocalAnchor.y  )
-		//{
-		//	m_pTE->SetOccupy(GetCurrentTile()->ptTileLoc.x, GetCurrentTile()->ptTileLoc.y, false , NULL); 
-		//	SetCurrentTile( GetDestTile() );
-		//	SetDestTile( GetCurrentTile() );
-		//	SetNextTile(GetCurrentTile() );
-		//	m_pTE->SetOccupy(GetCurrentTile()->ptTileLoc.x, GetCurrentTile()->ptTileLoc.y, true, this); 
-		//	m_pTE->SetVisible(GetCurrentTile()->ptTileLoc.x, GetCurrentTile()->ptTileLoc.y, true, this);
-		//	SetState(IDLE);
-		//	return;
-
-		//}
-
-		//if (GetNextTile()->ptLocalAnchor.x < 0)
-		//{
-		//	if (m_vPath.size() > 0)
-		//	{
-		//		POINT& path = m_vPath.front();
-		//		SetNextTile( m_pTE->GetTile(0, path.x, path.y )  ); 
-		//		m_vPath.pop_front();
-		//	}
-		//}
-
-		//// if moving & current position is != dest position & current position != next position then move to next
-		//if( GetPosX() != GetNextTile()->ptLocalAnchor.x || GetPosY() != GetNextTile()->ptLocalAnchor.y )
-		//{
-		//	if ( GetPosX() >  GetNextTile()->ptLocalAnchor.x)
-		//		SetPosX(GetPosX() - GetVelX() );
-
-		//	else if ( GetPosX() < GetNextTile()->ptLocalAnchor.x)
-		//		SetPosX( GetPosX() +  GetVelX() );
-
-		//	if ( GetPosY() >  GetNextTile()->ptLocalAnchor.y)
-		//		SetPosY( GetPosY() - GetVelY() );
-
-		//	else if ( GetPosY() <  GetNextTile()->ptLocalAnchor.y)
-		//		SetPosY( GetPosY() +  GetVelY() );
-		//}
-		//// if your at next your next
-		//else if (  GetPosX() == GetNextTile()->ptLocalAnchor.x && GetNextTile()->ptLocalAnchor.y == GetPosY()  )
-		//{
-		//	if (m_vPath.size() > 0)
-		//	{
-		//		m_pTE->SetOccupy(GetCurrentTile()->ptTileLoc.x, GetCurrentTile()->ptTileLoc.y, false, NULL); 
-		//		SetCurrentTile( GetNextTile());
-		//		m_pTE->SetOccupy(GetCurrentTile()->ptTileLoc.x, GetCurrentTile()->ptTileLoc.y, true, this);
-		//		m_pTE->SetVisible(GetCurrentTile()->ptTileLoc.x, GetCurrentTile()->ptTileLoc.y, true, this);
-		//		POINT& path = m_vPath.front();
-		//		SetNextTile( m_pTE->GetTile(0, path.x, path.y )  ); 
-		//		m_vPath.pop_front();
-		//	}
-		//}
-		
-
-	}
-
-	//-------------------------------
+	} 
+#pragma endregion
+	//---------------------------------------------------------------------------
+	
 }
 
 void CUnit::Render(float fElapsedTime)
@@ -275,18 +250,21 @@ void CUnit::Render(float fElapsedTime)
 			CSGD_Direct3D::GetInstance()->DeviceEnd();
 
 			CSGD_Direct3D::GetInstance()->DrawPrimitiveRect(m_rLocalRect,D3DCOLOR_ARGB(255,0,255,0));
-
+			if(m_pTarget)
+				CSGD_Direct3D::GetInstance()->DrawPrimitiveRect(m_pTarget->GetLocalRect(),D3DCOLOR_ARGB(255,255,255,0));
+				
 			CSGD_Direct3D::GetInstance()->DeviceBegin();
 			CSGD_Direct3D::GetInstance()->SpriteBegin();
 
-			m_pHealthBar->Render(m_rHealthRect);
+			
 		}
+		m_pHealthBar->Render(m_rHealthRect);
 	}
 	if(CCamera::GetInstance()->IsOnScreen(GetGlobalRect()))
 		m_pAnimInstance->Render();
 }
 
-void CUnit::CheckCollisions()
+void CUnit::ScanForEnemies()
 {
 	ObjectManager* pOM = ObjectManager::GetInstance();
 	// If we are dead or already in combat, do not check
@@ -303,12 +281,13 @@ void CUnit::CheckCollisions()
 	//00-22-44
 	POINT ptTileID = GetCurrentTile()->ptTileLoc;
 	POINT ptTopLeft;
+
 	// Start at top left corner and check all surrounding
-	ptTopLeft.x = ptTileID.x-m_nRange;
-	ptTopLeft.y = ptTileID.y-m_nRange;
-	for (int x = ptTopLeft.x; x < ptTopLeft.x + m_nRange*2; x++)
+	ptTopLeft.x = ptTileID.x-VISIBILITY;
+	ptTopLeft.y = ptTileID.y-VISIBILITY;
+	for (int x = ptTopLeft.x; x <= ptTopLeft.x + VISIBILITY*2; x++)
 	{
-		for (int y = ptTopLeft.y; y < ptTopLeft.y + m_nRange*2; y++)
+		for (int y = ptTopLeft.y; y <= ptTopLeft.y + VISIBILITY*2; y++)
 		{
 			// Don't go out of bounds
 			if(x >= Map->GetMapWidth() || x < 0)
@@ -316,7 +295,8 @@ void CUnit::CheckCollisions()
 			// Don't go out of bounds
 			if(y >= Map->GetMapHeight() || y < 0)
 				continue;
-
+			//Map->GetTile(0, x, y)->vColor = D3DCOLOR_ARGB(255, 0, 0, 255);
+			
 			if(Map->GetTile(0, x, y)->bIsOccupied)
 			{
 				CUnit* pUnit = Map->GetTile(0, x, y)->pUnit;
@@ -329,19 +309,11 @@ void CUnit::CheckCollisions()
 				if(!pUnit->IsAlive() || pUnit == this)
 					continue;
 				
-				// If the unit is moving and is in range of his target, then attack
-				if(pUnit == this->GetTarget())
-				{
-					SetState(COMBAT);
-					//Resolve combat
-					return;
-				}
-				
-				else if(this->GetTarget() == NULL)
+				// If we dont have a target, set one
+				if(this->GetTarget() == NULL)
 				{
 					// If the unit is IDLE, and finds an enemy, set the target
 					SetTarget(pUnit);
-					SetState(COMBAT);
 					return;
 				}
 			}
@@ -403,13 +375,12 @@ void CUnit::UpdateVisibility()
 
 	POINT ptTileID = GetCurrentTile()->ptTileLoc;
 	POINT ptTopLeft;
-	int m_nVisibility = 6;
 	// Start at top left corner and check all surrounding
-	ptTopLeft.x = ptTileID.x-m_nVisibility;
-	ptTopLeft.y = ptTileID.y-m_nVisibility;
-	for (int x = ptTopLeft.x; x < ptTopLeft.x + m_nVisibility*2; x++)
+	ptTopLeft.x = ptTileID.x-VISIBILITY;
+	ptTopLeft.y = ptTileID.y-VISIBILITY;
+	for (int x = ptTopLeft.x; x < ptTopLeft.x + VISIBILITY*2; x++)
 	{
-		for (int y = ptTopLeft.y; y < ptTopLeft.y + m_nVisibility*2; y++)
+		for (int y = ptTopLeft.y; y < ptTopLeft.y + VISIBILITY*2; y++)
 		{
 			// Don't go out of bounds
 			if(x >= Map->GetMapWidth() || x < 0)
@@ -418,6 +389,7 @@ void CUnit::UpdateVisibility()
 			if(y >= Map->GetMapHeight() || y < 0)
 				continue;
 			Map->SetVisible(x, y, true, NULL);
+			//Map->GetTile(0, x, y)->vColor = D3DCOLOR_ARGB(255, 255, 0, 0);
 		}
 	}
 }
@@ -527,7 +499,7 @@ void CUnit::ResolveCombat()
 {
 	if(!m_pTarget)
 		return;
-	if(!m_pTarget->IsAlive())
+	if(m_pTarget->GetHealth() <= 0)
 	{
 		m_pTarget = NULL;
 		SetState(IDLE);
@@ -582,4 +554,78 @@ void CUnit::CalcAttackBonus()
 	// Forest enemy defense bonus
 	if(GetTarget()->GetCurrentTile()->nType == FOREST)
 		m_nBonus--;
+}
+
+CTile* CUnit::PlaceOnSurrounding(CTile* pCenterTile)
+{
+	CTileEngine* Map = CTileEngine::GetInstance();
+
+	POINT ptTileID = pCenterTile->ptTileLoc;
+	// Start at top left corner and check all surrounding
+	CTile* pCheckTile = NULL;
+	int nLayer = 1;
+	//-1, -1
+	//-1, 0
+	//-1, 1
+	//------
+	// 0, -1
+	// 0, 0
+	// 0, 1
+	//------
+	// 1, -1
+	// 1, 0
+	// 1, 1
+	while(true)
+	{
+		for (int x = ptTileID.x-nLayer; x < ptTileID.x + nLayer; x++)
+		{
+			for (int y = ptTileID.y-nLayer; y < ptTileID.y + nLayer; y++)
+			{
+				// Don't go out of bounds
+				if(x >= Map->GetMapWidth() || x < 0)
+					continue;
+				// Don't go out of bounds
+				if(y >= Map->GetMapHeight() || y < 0)
+					continue;
+				if((x >= Map->GetMapWidth() || x < 0) && (y >= Map->GetMapHeight() || y < 0))
+					return NULL;
+				if(!Map->GetTile(0, x, y)->bIsOccupied)
+					return Map->GetTile(0, x, y);
+			}
+		}
+		nLayer++;
+	}
+}
+
+bool CUnit::MoveUnit()
+{
+	POINT ptStart = GetCurrentTile()->ptLocalAnchor;
+	POINT ptEnd	  = GetNextTile()->ptLocalAnchor;
+	float fPercent =  m_fMovementTimer/(1/m_fMovementSpeed) ;
+	if(fPercent >=1)
+	{
+		SetPosX(ptEnd.x);
+		SetPosY(ptEnd.y);
+		m_fMovementTimer = 0.f;
+		return true;
+	}
+	int xPos = (int)Lerp((float)ptStart.x, (float)ptEnd.x, fPercent);
+	int yPos = (int)Lerp((float)ptStart.y, (float)ptEnd.y, fPercent);
+	SetPosX(xPos);
+	SetPosY(yPos);
+	return false;
+	
+
+}
+
+bool CUnit::IsTargetInRange()
+{
+
+	if((m_pTarget->GetCurrentTile()->ptTileLoc.x <= GetCurrentTile()->ptTileLoc.x + m_nRange 
+		&& m_pTarget->GetCurrentTile()->ptTileLoc.x >= GetCurrentTile()->ptTileLoc.x - m_nRange)
+	&& (m_pTarget->GetCurrentTile()->ptTileLoc.y <= GetCurrentTile()->ptTileLoc.y + m_nRange 
+		&& m_pTarget->GetCurrentTile()->ptTileLoc.y >= GetCurrentTile()->ptTileLoc.y - m_nRange))
+		return true;
+
+	return false;
 }

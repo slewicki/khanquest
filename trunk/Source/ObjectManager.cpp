@@ -30,10 +30,10 @@ ObjectManager::~ObjectManager(void)
 }
 void ObjectManager::CheckCollisions()
 {
-	for (unsigned int i=0; i < m_vObjectList.size(); i++)
-	{
- 		m_vObjectList[i]->CheckCollisions();
-	}
+	//for (unsigned int i=0; i < m_vObjectList.size(); i++)
+	//{
+ //		m_vObjectList[i]->CheckCollisions();
+	//}
 	
 	//for (unsigned int i=0; i < m_vObjectList.size(); i++)
 	//{
@@ -238,7 +238,7 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 							Map->SetOccupy(j, k, true, (CUnit*)m_vObjectList[i]);
 							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
 							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
-							if(static_cast<CUnit*>(m_vObjectList[i+1])->IsPlayerUnit())
+							if(i < m_vObjectList.size() - 1 && static_cast<CUnit*>(m_vObjectList[i+1])->IsPlayerUnit())
 							{
 								i++;
 								j = 0;
@@ -289,14 +289,33 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 }
 void ObjectManager::UpdatePlayerUnitDestTile(CTile* destTile)
 {
+	if(!destTile)
+		return;
 	for (unsigned int i=0; i < m_vObjectList.size(); i++)
 	{
 		if (static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit() )
 		{
-			if (static_cast<CUnit*>(m_vObjectList[i])->IsSelected())
+			if (static_cast<CUnit*>(m_vObjectList[i])->IsSelected() && static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
 			{
-				static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(destTile);
-				static_cast<CUnit*>(m_vObjectList[i])->SetState(MOVEMENT);
+				// If its occupied
+				if(destTile->bIsOccupied)
+				{
+					// and an enemy
+					if(destTile->pUnit && !destTile->pUnit->IsPlayerUnit())
+						// then thats the new target
+						static_cast<CUnit*>(m_vObjectList[i])->SetTarget(destTile->pUnit);
+					
+				}
+				//static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(destTile);
+				//	static_cast<CUnit*>(m_vObjectList[i])->SetState(MOVEMENT);
+				else
+				{
+					// otherwise, thats where we're going
+					static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(destTile);
+					static_cast<CUnit*>(m_vObjectList[i])->SetState(MOVEMENT);
+					static_cast<CUnit*>(m_vObjectList[i])->SetPath(m_pCAI->FindPath(static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile(), static_cast<CUnit*>(m_vObjectList[i])->GetDestTile()));
+	
+				}
 			}
 		}
 	}
