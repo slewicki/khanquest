@@ -102,9 +102,9 @@ public:
 	inline float  GetSpeed			(void) const { return m_fMovementSpeed; }
 	inline int	  GetCost			(void) const { return m_nCost; }
 	inline CTile* GetDestTile		(void) const { return m_pDestinationTile; }
-	inline CTile* GetCurrentTile		(void) const { return m_pCurrentTile; }
+	inline CTile* GetCurrentTile	(void) const { return m_pCurrentTile; }
 	inline CTile* GetNextTile		(void) const {return m_pNextTile;}
-	inline bool IsPlayerUnit(void) {return m_bIsPlayerUnit;}
+	inline bool IsPlayerUnit		(void) {return m_bIsPlayerUnit;}
 
 	inline CUnit* GetTarget			(void) const { return m_pTarget; }
 	inline bool	  IsSelected		(void) const { return m_bIsSelected; }
@@ -114,7 +114,7 @@ public:
 	inline int    GetState			(void) const { return m_nState; }
 	inline int    GetDirection		(void) const { return m_nDirectionFacing; }
 	inline RECT   GetLocalRect	    (void) const { return m_rLocalRect; }
-	inline RECT   GetGlobalRect	(void) const { return m_rGlobalRect; }
+	inline RECT   GetGlobalRect		(void) const { return m_rGlobalRect; }
 
 
 	//////////////////////////////////////////////////////
@@ -136,9 +136,9 @@ public:
 	inline void SetBonus		(int nBonus)		{ m_nBonus = nBonus; }
 	inline void SetSelected		(bool bIsSelected)	{ m_bIsSelected = bIsSelected; }
 	inline void SetGrouped		(bool bIsGrouped)	{ m_bIsGrouped = bIsGrouped; }
-	inline void SetPath(list<POINT> vPath)		{m_vPath = vPath;}
+	inline void SetPath			(list<POINT> vPath)		{m_vPath = vPath;}
 	inline void ClearPath		(void)			{m_vPath.clear();}
-	inline void SetTarget(CUnit* pTarget)		{m_pTarget = pTarget; }
+	inline void SetTarget		(CUnit* pTarget)		{m_pTarget = pTarget; }
 	inline void SetDirection	(int nDirectionFacing)	
 	{ 
 		m_nDirectionFacing = nDirectionFacing; 
@@ -181,10 +181,25 @@ public:
 	//////////////////////////////////////////////////////
 	void ChangeDirection(CTile* pTileFacing);
 	
+	//////////////////////////////////////////////////////
+	// Function: “ResolveCombat”
+	//	Last Modified: August 14, 2008
+	// Purpose: Resove combat between units
+	//////////////////////////////////////////////////////
 	void ResolveCombat();
 
+	//////////////////////////////////////////////////////
+	// Function: “CalcAttackBonus”
+	//	Last Modified: August 14, 2008
+	// Purpose: Factor in unit attack bounces
+	//////////////////////////////////////////////////////
 	void CalcAttackBonus();
 
+	//////////////////////////////////////////////////////
+	// Function: “UpdateVisibility”
+	//	Last Modified: July 18, 2008
+	// Purpose: update visablity of the map
+	//////////////////////////////////////////////////////
 	void UpdateVisibility();
 
 	CTile* PlaceOnSurrounding(CTile* pCenterTile);
