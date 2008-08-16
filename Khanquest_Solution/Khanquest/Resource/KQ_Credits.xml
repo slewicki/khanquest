@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Menu Name ="Credits">
+
+<NumCoders>7</NumCoders>
+<Coders>
+<Code>Sean Hamstra</Code>
+<Code>Thomas Impellittery</Code>
+<Code>Rodney Kite</Code>
+<Code>Sebastian Lewicki</Code>
+<Code>Dennis Wallace II</Code>
+<Code>Dennis Wallace</Code>
+<Code>D</Code>
+</Coders>
+
+<NumResources>8</NumResources>
+<Resources>
+<Resource>Re1</Resource>
+<Resource>Re2</Resource>
+<Resource>Re3</Resource>
+<Resource>Re4</Resource>
+<Resource>www</Resource>
+<Resource>www.</Resource>
+<Resource>www.google.com\alpha\beta\gama</Resource>
+<Resource>Age Of Empires</Resource>
+</Resources>
+
+<NumInstructors>5</NumInstructors>
+<Instructors>
+<Instructor>Kay</Instructor>
+<Instructor>Dustin</Instructor>
+<Instructor>Ap1</Instructor>
+<Instructor>Ap2</Instructor>
+<Instructor>Ap3</Instructor>
+</Instructors>
+
+<NumTitles>3</NumTitles>
+<Titles>
+<Title>Programmers</Title>
+<Title>Resources</Title>
+<Title>Instructors</Title>
+</Titles>
+
+</Menu>
+
+
+

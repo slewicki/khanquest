@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Menu Name ="MainMenu">
+      <Image>
+        <ImageLocationX>0</ImageLocationX>
+        <ImageLocationY>0</ImageLocationY>
+        <ImageName>Resource/KQ_PageBkg3.png</ImageName>
+        <SizeX>800</SizeX>
+        <SizeY>600</SizeY>
+      </Image>
+      
+      <Cursor>
+          <CursorName>Resource/KQ_AttackSymbol.png</CursorName>
+          <CursorScaleX>.5</CursorScaleX>
+          <CursorScaleY>.5</CursorScaleY>
+      </Cursor>
+      
+      <Songs>
+             <Song>Resource/KQ_CitySelect.wav</Song>
+      </Songs>
+      
+      <NumButtons>5</NumButtons>
+          <Button>
+                  <ButtonPositionX>300</ButtonPositionX>
+                  <ButtonPositionY>50</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>255</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.3</TextScaleX>
+                  <TextScaleY>.3</TextScaleY>
+                  <ButtonText>Main Menu</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>200</ButtonPositionX>
+                  <ButtonPositionY>150</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>1</Action>
+                  <ButtonText>New Game</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>200</ButtonPositionX>
+                  <ButtonPositionY>200</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>2</Action>
+                  <ButtonText>Load Game</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>200</ButtonPositionX>
+                  <ButtonPositionY>250</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>3</Action>
+                  <ButtonText>Options</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>200</ButtonPositionX>
+                  <ButtonPositionY>300</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>4</Action>
+                  <ButtonText>Exit Game</ButtonText>
+          </Button>
+</Menu>
+
+
+
+
+
+
+
