@@ -1,0 +1,18 @@
+sampler2D g_samInput;
+
+
+float4 main( float2 vPOS : VPOS, float2 Tex : TEXCOORD ) : COLOR
+{
+	float4 Color;
+
+	//Grab the color from the texture based on coordinates
+	Color = tex2D(g_samInput, Tex.xy);
+
+	//Test
+	Color = tex2D(g_samInput, Tex.xy);
+
+	//Fog of War
+	//Color = tex2D(g_samSrcColor, Tex.xy) * Tex.y;
+
+	return Color;
+}

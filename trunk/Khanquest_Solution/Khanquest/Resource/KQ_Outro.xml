@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Menu Name ="Outro">
+      <Image>
+        <ImageLocationX>0</ImageLocationX>
+        <ImageLocationY>0</ImageLocationY>
+        <ImageName>Resource/KQ_Outro.png</ImageName>
+        <SizeX>512</SizeX>
+        <SizeY>512</SizeY>
+      </Image>
+
+      <Cursor>
+          <CursorName>Resource/KQ_AttackSymbol.png</CursorName>
+          <CursorScaleX>1</CursorScaleX>
+          <CursorScaleY>1</CursorScaleY>
+      </Cursor>
+      
+      <Songs>
+          <Song>Resource/KQ_LoseGame.wav</Song>
+      </Songs>
+
+      <NumButtons>3</NumButtons>
+          <Button>
+                  <ButtonPositionX>500</ButtonPositionX>
+                  <ButtonPositionY>50</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>255</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.4</TextScaleX>
+                  <TextScaleY>.4</TextScaleY>
+                  <ButtonText>Do You Want/   To Quit?/   Coward!</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>575</ButtonPositionX>
+                  <ButtonPositionY>250</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.3</TextScaleX>
+                  <TextScaleY>.3</TextScaleY>
+                  <Action>1</Action>
+                  <ButtonText>Yes</ButtonText>
+                  </Button>
+          <Button>
+                  <ButtonPositionX>650</ButtonPositionX>
+                  <ButtonPositionY>250</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.3</TextScaleX>
+                  <TextScaleY>.3</TextScaleY>
+                  <Action>2</Action>
+                  <ButtonText>No</ButtonText>
+          </Button>
+</Menu>
+
+
+
+
+
+
+
+
+
+
+
+
