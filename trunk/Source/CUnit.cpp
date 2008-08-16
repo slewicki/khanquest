@@ -189,7 +189,7 @@ void CUnit::Update(float fElapsedTime)
 
 	// Move to our destination
 #pragma region Move
-	if (GetState() == MOVEMENT && GetDestTile())
+	if ( (GetState() == MOVEMENT || GetState() == RETREAT) && GetDestTile() )
 	{
 		m_fMovementTimer += fElapsedTime;
 		// We are at the destination tile or are we in range of our target? then stop

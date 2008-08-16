@@ -129,6 +129,11 @@ public:
 	/////////////////////////////////////////////////////
 	void MoveSelectedUnits(POINT pMousePos);
 
+	/////////////////////////////////////////////////////
+	// Function: "GetUnit"
+	//
+	// Purpose: return the unit at the index.
+	/////////////////////////////////////////////////////
 	CBase* GetUnit(unsigned int nIndex) 
 	{ 
 		if(nIndex >= 0 && nIndex < m_vObjectList.size())
@@ -136,9 +141,18 @@ public:
 		else
 			return 0;
 	}
+	/////////////////////////////////////////////////////
+	// Function: "GetUnits"
 	//
-	// Purpose: Gets units from the object manager
+	// Purpose: Gets a vector of units from the object manager
 	/////////////////////////////////////////////////////
 	vector<CBase*> GetUnits();
+
+	/////////////////////////////////////////////////////
+	// Function: "GetSpawnPointDest"
+	//
+	// Purpose: makes all units retreat
+	/////////////////////////////////////////////////////
+	void ObjectManager::GetSpawnPointDest(CUnit* pUnit);
 
 };

@@ -61,7 +61,7 @@ void CFactory::CreateComputerUnit(int nType)
 	unit->SetRange(temp.GetRange());
 	unit->SetSpeed(temp.GetSpeed());
 
-	unit->SetState(MOVEMENT);
+	unit->SetState(IDLE);
 	unit->SetDirection(NORTH);
 	unit->SetIsPlayerUnit(false);
 	// Register Events
