@@ -46,6 +46,7 @@ private:
 	DWORD					m_dwFrameTimer;
 	
 	bool					m_bIsWindowed;		// Is the game windowed?
+	bool					m_bFPS;				// FPS on
 	float					m_fGameTime;		// Time since the game began
 	int						m_nSFXVolume;		// Sound Effects Volume
 	int						m_nMusicVolume;		// Music Volume
@@ -178,6 +179,7 @@ public:
 	inline int IsWarElephantUnlocked() { return m_chKCount>=3; }
 	bool GetIsWindowed(){return m_bIsWindowed;}
 	HWND GetWindowHandle(){return m_hWnd;}
+	bool GetFPSDisplay(){return m_bFPS;}
 	inline bool IsMouseInRect(RECT rIsMouseHere)
 	{
 		return (m_ptMousePos.x <= rIsMouseHere.right && m_ptMousePos.x >= rIsMouseHere.left &&
@@ -226,6 +228,7 @@ public:
 	//	Last Modified: July 18, 2008
 	//  Purpose : Modifies the specified type.
 	///////////////////////////////////////////
+	inline void SetIsWindowed(bool bIsWindowed){m_bIsWindowed = bIsWindowed;}
 	inline void SetMusicVolume(int nMusicVolume) {m_nMusicVolume = nMusicVolume; }
 	inline void SetSFXVolume(int nSFXVolume) { m_nSFXVolume = nSFXVolume; }
 	inline void SetWindowOffset(int nX, int nY) { m_ptWindOffset.x = nX; m_ptWindOffset.y = nY; }
@@ -234,7 +237,7 @@ public:
 	inline void SetCursorAttack() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_ATTACK))); }
 	inline void SetSelectedCity(CCity* pSelectedCity) { m_pSelectedCity = pSelectedCity; }
 	inline void SetTotalGold(int nTotalGold) { m_nGold = nTotalGold; }
-
+	inline void SetFPSDisplay(bool bFPS) {m_bFPS = bFPS;}
 	inline void AddGold(int nGold)  { m_nGold += nGold; }
 
 
