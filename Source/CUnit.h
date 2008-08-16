@@ -15,7 +15,7 @@
 #include "CAISystem.h"
 #include "CTileEngine.h"
 using std::vector;
-
+#define VISIBILITY 6
 enum	// Unit States
 {
 	MOVEMENT,
@@ -68,6 +68,7 @@ private:
 	RECT			m_rLocalRect;
 	RECT			m_rGlobalRect;
 	RECT			m_rHealthRect;
+	float			m_fMovementTimer;
 
 	list<POINT>	m_vPath;				// unit path
 	
@@ -146,8 +147,6 @@ public:
 	inline void SetState (int nState)				
 	{ 
 		m_nState = nState; 
-		if(nState == COMBAT)
-			m_fAttackTimer = 0.f;
 		m_pAnimInstance->Play(GetDirection(), GetState());	
 	}
 
@@ -173,7 +172,7 @@ public:
 	//	Last Modified: July 18, 2008
 	// Purpose: To check if unit collided with anything
 	//////////////////////////////////////////////////////
-	void CheckCollisions();
+
 
 	//////////////////////////////////////////////////////
 	// Function: “ChangeDirection”
@@ -187,4 +186,13 @@ public:
 	void CalcAttackBonus();
 
 	void UpdateVisibility();
+
+	CTile* PlaceOnSurrounding(CTile* pCenterTile);
+	// True if we reach the next tile
+	bool MoveUnit();
+
+	bool IsTargetInRange();
+
+	void ScanForEnemies();
+
 };

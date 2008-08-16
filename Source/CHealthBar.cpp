@@ -1,11 +1,3 @@
-//////////////////////////////////////////////////////
-//	File	:	"CHealthBar.h"
-//
-//	Author	:	Tom (TI)
-//
-//	Purpose	:	Store all information and functionality
-//				for the unit health bar.
-//////////////////////////////////////////////////////
 #include "CHealthBar.h"
 
 CHealthBar::CHealthBar()
