@@ -41,7 +41,7 @@ CGame::CGame(void)
 	m_nLoses = 0;
 	m_nFood = 0;
 	m_chJinCount = m_chKCount = m_chXiaCount = 0;
-	m_bFPS = true;
+
 }
 
 CGame::~CGame(void)
@@ -282,16 +282,15 @@ bool CGame::Main(void)
 	}
 
 	m_pD3D->Clear(0, 0, 0);
-	if(m_bFPS)
-	{
-		// Print Frames Per Second
-		char buffer[128];
-		sprintf_s(buffer, _countof(buffer), "FPS: %i", m_nFPS);
-		CSGD_Direct3D::GetInstance()->DrawTextA(buffer, 0,20,255,255,255);
-	}
-	char buffer2[128];
-	sprintf_s(buffer2, _countof(buffer2), "Position: %i %i", m_ptMousePos.x, m_ptMousePos.y);
-	CSGD_Direct3D::GetInstance()->DrawTextA(buffer2, 120,20,255,255,255);
+
+	// Print Frames Per Second
+	//char buffer[128];
+	//sprintf_s(buffer, _countof(buffer), "FPS: %i", m_nFPS);
+	//CSGD_Direct3D::GetInstance()->DrawTextA(buffer, 0,20,255,255,255);
+
+	//char buffer2[128];
+	//sprintf_s(buffer2, _countof(buffer2), "Position: %i %i", m_ptMousePos.x, m_ptMousePos.y);
+	//CSGD_Direct3D::GetInstance()->DrawTextA(buffer2, 120,20,255,255,255);
 
 	// Render all states on the stack
 	for(unsigned int i = 0; i < m_vStates.size(); i++)
@@ -417,7 +416,7 @@ bool CGame::ParseXMLUnitInfo (const char* szFile)
 
 					// Player unit info
 					m_pPlayerUnitInfo[nUnit].SetType(nUnit);
-					m_pPlayerUnitInfo[nUnit].SetHP(nHP);
+					m_pPlayerUnitInfo[nUnit].SetMaxHP(nHP);
 					m_pPlayerUnitInfo[nUnit].SetAttackPower(nAttack);
 					m_pPlayerUnitInfo[nUnit].SetRange(nRange);
 
@@ -426,7 +425,7 @@ bool CGame::ParseXMLUnitInfo (const char* szFile)
 					
 					// CPU unit info
 					m_pCPUUnitInfo[nUnit].SetType(nUnit);
-					m_pCPUUnitInfo[nUnit].SetHP(nHP);
+					m_pCPUUnitInfo[nUnit].SetMaxHP(nHP);
 					m_pCPUUnitInfo[nUnit].SetAttackPower(nAttack);
 					m_pCPUUnitInfo[nUnit].SetRange(nRange);
 
@@ -488,7 +487,7 @@ bool CGame::ParseBinaryUnitInfo (const char* szFile)
 			
 			// Player unit info
 			m_pPlayerUnitInfo[i].SetType(nType);
-			m_pPlayerUnitInfo[i].SetHP(nHP);
+			m_pPlayerUnitInfo[i].SetMaxHP(nHP);
 			m_pPlayerUnitInfo[i].SetAttackPower(nAttack);
 			m_pPlayerUnitInfo[i].SetRange(nRange);
 			m_pPlayerUnitInfo[i].SetCost(nCost);
@@ -498,7 +497,7 @@ bool CGame::ParseBinaryUnitInfo (const char* szFile)
 			
 			// CPU unit info
 			m_pCPUUnitInfo[i].SetType(nType);
-			m_pCPUUnitInfo[i].SetHP(nHP);
+			m_pCPUUnitInfo[i].SetMaxHP(nHP);
 			m_pCPUUnitInfo[i].SetAttackPower(nAttack);
 			m_pCPUUnitInfo[i].SetRange(nRange);
 

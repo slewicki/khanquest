@@ -67,6 +67,7 @@ void CHUDState::Update(float fElapsedTime)
 			}
 		}
 	}
+	UpdateSelected();
 }
 
 void CHUDState::Render(float fElapsedTime)
@@ -229,7 +230,7 @@ void CHUDState::Render(float fElapsedTime)
 				m_BF.DrawTextA(idk, 300, 540,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
 			}
 		};
-		float fHealth = ((float)m_vUnits[0]->GetHealth() / ((float)m_vUnits[0]->GetHP()));
+		float fHealth = ((float)m_vUnits[0]->GetHealth() / ((float)m_vUnits[0]->GetMaxHP()));
 		int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 		CSGD_Direct3D::GetInstance()->DeviceEnd();
 		CSGD_Direct3D::GetInstance()->SpriteEnd();
@@ -268,7 +269,7 @@ void CHUDState::Render(float fElapsedTime)
 				m_BF.DrawTextA(idk, 225 + (nPosX * 60), 500+nPosY,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
 
 				
-				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetHP()));
+				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetMaxHP()));
 				int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 				CSGD_Direct3D::GetInstance()->DeviceEnd();
 				CSGD_Direct3D::GetInstance()->SpriteEnd();
@@ -296,7 +297,7 @@ void CHUDState::Render(float fElapsedTime)
 				m_BF.DrawTextA(idk, 225 + (nPosX * 60), 500+nPosY,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
 
 				
-				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetHP()));
+				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetMaxHP()));
 				int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 				CSGD_Direct3D::GetInstance()->DeviceEnd();
 				CSGD_Direct3D::GetInstance()->SpriteEnd();
@@ -323,7 +324,7 @@ void CHUDState::Render(float fElapsedTime)
 				m_BF.DrawTextA(idk, 225 + (nPosX * 60), 500+nPosY,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
 
 				
-				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetHP()));
+				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetMaxHP()));
 				int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 				CSGD_Direct3D::GetInstance()->DeviceEnd();
 				CSGD_Direct3D::GetInstance()->SpriteEnd();
@@ -350,7 +351,7 @@ void CHUDState::Render(float fElapsedTime)
 				m_BF.DrawTextA(idk, 225 + (nPosX * 60), 500+nPosY,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
 
 				
-				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetHP()));
+				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetMaxHP()));
 				int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 				CSGD_Direct3D::GetInstance()->DeviceEnd();
 				CSGD_Direct3D::GetInstance()->SpriteEnd();
@@ -377,7 +378,7 @@ void CHUDState::Render(float fElapsedTime)
 				m_BF.DrawTextA(idk, 225 + (nPosX * 60), 500+nPosY,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
 
 				
-				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetHP()));
+				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetMaxHP()));
 				int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 				CSGD_Direct3D::GetInstance()->DeviceEnd();
 				CSGD_Direct3D::GetInstance()->SpriteEnd();
@@ -404,7 +405,7 @@ void CHUDState::Render(float fElapsedTime)
 				m_BF.DrawTextA(idk, 225 + (nPosX * 60), 500+nPosY,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
 
 				
-				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetHP()));
+				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetMaxHP()));
 				int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 				CSGD_Direct3D::GetInstance()->DeviceEnd();
 				CSGD_Direct3D::GetInstance()->SpriteEnd();

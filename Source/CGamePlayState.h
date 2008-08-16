@@ -58,6 +58,7 @@ private:
 	CBitmapFont								m_cFont;
 	int										m_nLucidiaWhiteID;
 	int										m_nTerrorLevel;
+	int										m_nSelectionID;
 	// Create a vector of list of selected units (CUnit*) and make an accessor
 	// for the HUD to use.  The HUD should disply up to 8 units, the max that can be selected.
 
@@ -137,7 +138,7 @@ public:
 	//  Purpose : Returns the specified type.
 	///////////////////////////////////////////
 	int GetTerrorLevel() { return m_nTerrorLevel; }
-	
+	int GetSelectionID() { return m_nSelectionID; }
 
 	///////////////////////////////////////////
 	//  Function: Modifiers

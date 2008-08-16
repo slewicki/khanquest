@@ -34,7 +34,7 @@ void CHealthBar::DamageHealth(int nPercentHealth)
 
 void CHealthBar::Render(RECT toDraw)
 {	
-	toDraw.right += (m_nHealth - 60);
+	toDraw.right;// += (m_nHealth - 60);
 	m_pD3D->DrawRect(toDraw, m_currColor);
 	m_pD3D->DrawPrimitiveRect(toDraw, D3DCOLOR_ARGB(255,0,0,0));
 }

@@ -54,7 +54,7 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 {
 	m_vPath.clear();
 
-	if (destination->bIsCollision || destination->bIsOccupied)
+	if (destination->bIsCollision)// || destination->bIsOccupied)
 		return m_vPath;
 
 	POINT ptStart	= m_pTE->IsoMouse(current->ptLocalAnchor.x, current->ptLocalAnchor.y, 0);
@@ -136,9 +136,9 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 				if(MapPath[x][y]==-1)
 				{
 					//scan the neighbors
-					for(nx=x-1; nx<=x+1; nx++)
+					for(nx=x-1;nx<=x+1;nx++)
 					{
-						for(ny=y-1; ny<=y+1; ny++)
+						for(ny=y-1;ny<=y+1;ny++)
 						{
 							//make sure the neighbor is on the map
 							if(nx>=0 && ny>=0 && nx<MAPWIDTH && ny<MAPHEIGHT && !(nx==x && ny==y))
@@ -229,6 +229,20 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 		//replace the end tile
 		Map[ptEnd.x][ptEnd.y]=TILEEND;
 	}
+
+	//for (int i = 0; i < MAPWIDTH ; ++i)
+	//{
+	//	// Stock the row with -1 for open tile.
+	//	for (int j = 0; j < MAPHEIGHT; ++j)
+	//		if (Map[i][j] == 4)
+	//		{
+	//			POINT path;
+	//			path.x = i;
+	//			path.y = j;
+	//			m_vPath.push_back(path);
+	//		}
+	//}
+	//m_vPath.push_back(ptEnd);
 	return m_vPath;
 }
 

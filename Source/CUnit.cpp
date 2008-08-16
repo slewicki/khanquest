@@ -5,9 +5,12 @@
 #include "CTileEngine.h"
 #include "ObjectManager.h"
 #include "CAISystem.h"
+#include "CSGD_TextureManager.h"
+#include "CGamePlayState.h"
 CUnit::CUnit(int nType)
 {
-	m_nHP				= 100;			
+	m_nMaxHP				= 0;
+	m_nCurrentHP		= 0;
 	m_nAttack			= 0;			
 	m_nRange			= 1;			
 	m_fAttackSpeed		= 0.f;		
@@ -26,12 +29,10 @@ CUnit::CUnit(int nType)
 	m_nDirectionFacing	= SOUTH_WEST; 
 	m_nState			= IDLE;	
 	m_fAttackTimer		= 0.f;
-
+	m_nSelectionID = -1;
 	SetType(nType);
 	SetNextTile(NULL);
 	SetDestTile(NULL);
-	m_pHealthBar = new CHealthBar();
-	m_pHealthBar->SetHealth(m_nHP);
 	m_pAnimInstance = new CAnimInstance(GetType());
 	m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 
@@ -43,9 +44,51 @@ CUnit::CUnit(int nType)
 CUnit::~CUnit(void)
 {
 	delete m_pAnimInstance;
-	delete m_pHealthBar;
+
+	//CSGD_TextureManager::GetInstance()->ReleaseTexture(m_nSelectionID);
+
 }
 
+void CUnit::RenderHealth()
+{
+	POINT ptPos = CCamera::GetInstance()->TransformToScreen((int)GetPosX(), (int)GetPosY());
+	// Set Health Rect
+	//-------------------------------
+	
+	float fHealth = ((float)GetHealth() / ((float)GetMaxHP()));
+	int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
+	DWORD dwColor;
+	if ( fHealth <= .2f )
+		dwColor = D3DCOLOR_ARGB(255, 255, 0, 0);
+	else if ( fHealth <= .4f && fHealth > .2f )
+		dwColor = D3DCOLOR_ARGB(255, 255, 128, 0);
+	else if ( fHealth <= .6f && fHealth > .4f)
+		dwColor = D3DCOLOR_ARGB(255, 255, 255, 0);
+	else if ( fHealth <= .8f && fHealth > .6f )
+		dwColor = D3DCOLOR_ARGB(255, 0, 240, 0);
+	else
+		dwColor = D3DCOLOR_ARGB(255, 0, 190, 0);
+
+	RECT rHealthBar;
+	CSGD_Direct3D::GetInstance()->DeviceEnd();
+	CSGD_Direct3D::GetInstance()->SpriteEnd();
+	rHealthBar.left =	m_rLocalRect.left + (int)((m_rLocalRect.right - m_rLocalRect.left)*.5f) - 25;
+	rHealthBar.bottom = m_rLocalRect.top-10;
+	//rHealthBar.right = rHealthBar.left + 50;
+	rHealthBar.top	= rHealthBar.bottom - 3;
+	//CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 255, 0, 0);
+	rHealthBar.right = rHealthBar.left + nHealthBarLength;
+	//CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 0, 255, 0);
+	CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, dwColor);
+	CSGD_Direct3D::GetInstance()->DeviceBegin();
+	CSGD_Direct3D::GetInstance()->SpriteBegin();
+	if(IsPlayerUnit() && IsSelected() && m_pTarget)
+	{
+		m_pTarget->RenderHealth();
+	}
+
+	
+}
 void CUnit::Update(float fElapsedTime)
 {
 	m_pAnimInstance->Update(fElapsedTime);
@@ -71,26 +114,9 @@ void CUnit::Update(float fElapsedTime)
 	if(!m_bIsAlive)
 		return;
 	
-	// Set Health Rect
-	//-------------------------------
-	m_rHealthRect.left = ptPos.x;
-	m_rHealthRect.top = ptPos.y - 10;
-	m_rHealthRect.right = m_rHealthRect.left + 60;
-	m_rHealthRect.bottom = m_rHealthRect.top - 5;
-	int nSwap;
-	if(m_rHealthRect.top > m_rHealthRect.bottom)
-	{
-		nSwap = m_rHealthRect.top;
-		m_rHealthRect.top = m_rHealthRect.bottom;
-		m_rHealthRect.bottom = nSwap;
-	}
-	if(m_rHealthRect.left > m_rHealthRect.right)
-	{
-		nSwap = m_rHealthRect.left;
-		m_rHealthRect.left = m_rHealthRect.right;
-		m_rHealthRect.right = nSwap;
-	}
-	if(m_pHealthBar->GetHealth() <= 0 && m_bIsAlive == true)
+
+	// If dead, start death animation and set dead
+	if(GetHealth() <= 0 && m_bIsAlive == true)
 	{
 		m_bIsAlive = false;
 		m_bIsSelected = false;
@@ -100,18 +126,15 @@ void CUnit::Update(float fElapsedTime)
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 		m_pAnimInstance->SetLooping(false);
 		m_pAnimInstance->SetPlayer(IsPlayerUnit());
-	}
-	if(GetState() != MOVEMENT)
-	{
-		SetPosX(GetCurrentTile()->ptLocalAnchor.x);
-		SetPosY(GetCurrentTile()->ptLocalAnchor.y);
-	}
-	
-	if(GetState() == DYING)
-	{
-		
 		return;
 	}
+	// If we aren't moving then make sure we are on the anchor point!
+	if(GetState() != MOVEMENT)
+	{
+		SetPosX((float)GetCurrentTile()->ptLocalAnchor.x);
+		SetPosY((float)GetCurrentTile()->ptLocalAnchor.y);
+	}
+	
 
 	// Don't occupy an occupied tile!!
 	if(GetState() == IDLE && GetCurrentTile()->pUnit != this)
@@ -121,8 +144,6 @@ void CUnit::Update(float fElapsedTime)
 		SetState(MOVEMENT);
 		
 	}
-	// Get on the anchor if you are IDLE!
-	
 	// Make 6 tiles around unit visible
 	UpdateVisibility();
 
@@ -133,12 +154,13 @@ void CUnit::Update(float fElapsedTime)
 		// Find a target if there is one visible and the PLAYER unit is IDLE
 		ScanForEnemies();
 	}
-	if(!IsPlayerUnit() && !m_pTarget)
+	else if(!IsPlayerUnit() && !m_pTarget)
 	{
 		// If CPU unit, always scan for enemies if we dont have a target
 		ScanForEnemies();
 	}
-	if(m_pTarget && !m_pTarget->IsAlive())
+	// If our target is dead and we didn't know it, set it to null and relax
+	if(m_pTarget && m_pTarget->GetHealth() <= 0)
 	{
 		m_pTarget = NULL;
 		SetState(IDLE);
@@ -179,6 +201,7 @@ void CUnit::Update(float fElapsedTime)
 			SetState(IDLE);
 			return;
 		}
+		// Is are we at our next tile and is it the dest and is it occupied? then just stop
 		else if(GetDestTile() == GetNextTile() && GetDestTile()->bIsOccupied)
 		{
 			m_vPath.clear();
@@ -187,7 +210,7 @@ void CUnit::Update(float fElapsedTime)
 			SetState(IDLE);
 			return;
 		}
-
+		// 
 		if(!GetNextTile() && m_vPath.size())
 		{
 			POINT& path = m_vPath.back();
@@ -201,6 +224,7 @@ void CUnit::Update(float fElapsedTime)
 				return;
 			}
 		}
+		// Why dont we have a next tile? Lets find a path then!
 		if(!GetNextTile())
 		{
 			SetPath(CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile()));
@@ -209,11 +233,14 @@ void CUnit::Update(float fElapsedTime)
 		// We reached the anchor of the next tile
 		if(MoveUnit())
 		{
+			// Set prev. to unoccupied
 			GetCurrentTile()->bIsOccupied = false;	
 			GetCurrentTile()->pUnit = NULL;	
 			SetCurrentTile(GetNextTile());
+			// Start out the next one
 			GetCurrentTile()->bIsOccupied = true;	
 			GetCurrentTile()->pUnit = this;	
+			// If we have a path, set the next tile
 			if(m_vPath.size())
 			{
 				POINT& path = m_vPath.back();
@@ -222,13 +249,14 @@ void CUnit::Update(float fElapsedTime)
 				if(GetNextTile()->bIsOccupied && GetNextTile()->pUnit != this)
 					CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile());
 			}
+			// Otherwise stop
 			else
 			{
 				SetNextTile(NULL);
 				SetDestTile(NULL);
 				SetState(IDLE);
 			}
-
+			// If we have a next tile, change direction towards that one
 			if(GetNextTile())
 				ChangeDirection(GetNextTile());
 			else
@@ -240,28 +268,37 @@ void CUnit::Update(float fElapsedTime)
 	
 }
 
+void CUnit::RenderSelection()
+{
+	int nPosX = m_rLocalRect.left+ (int)((m_rLocalRect.right - m_rLocalRect.left)*.5f) - 32;
+	int nPosY = m_rLocalRect.top+ (int)((m_rLocalRect.bottom - m_rLocalRect.top)*.5f);
+
+	CSGD_TextureManager::GetInstance()->Draw(CGamePlayState::GetInstance()->GetSelectionID(), nPosX, nPosY);
+	if(m_pTarget)
+	{
+		int nPosX = m_pTarget->GetLocalRect().left+ (int)((m_pTarget->GetLocalRect().right - m_pTarget->GetLocalRect().left)*.5f) - 32;
+		int nPosY = m_pTarget->GetLocalRect().top+ (int)((m_pTarget->GetLocalRect().bottom - m_pTarget->GetLocalRect().top)*.5f);
+
+		CSGD_TextureManager::GetInstance()->Draw(CGamePlayState::GetInstance()->GetSelectionID(), nPosX, nPosY, 1.f, 1.f, 0, 0, 0, 0, D3DCOLOR_ARGB(255, 255, 0, 0));
+	}
+	
+}
 void CUnit::Render(float fElapsedTime)
 {
 	if(m_bIsAlive)
 	{
 		if(m_bIsSelected)
 		{
-			CSGD_Direct3D::GetInstance()->SpriteEnd();
-			CSGD_Direct3D::GetInstance()->DeviceEnd();
+			RenderSelection();
 
-			CSGD_Direct3D::GetInstance()->DrawPrimitiveRect(m_rLocalRect,D3DCOLOR_ARGB(255,0,255,0));
-			if(m_pTarget)
-				CSGD_Direct3D::GetInstance()->DrawPrimitiveRect(m_pTarget->GetLocalRect(),D3DCOLOR_ARGB(255,255,255,0));
-				
-			CSGD_Direct3D::GetInstance()->DeviceBegin();
-			CSGD_Direct3D::GetInstance()->SpriteBegin();
-
-			
+			RenderHealth();
 		}
-		m_pHealthBar->Render(m_rHealthRect);
+		
 	}
 	if(CCamera::GetInstance()->IsOnScreen(GetGlobalRect()))
+	{
 		m_pAnimInstance->Render();
+	}
 }
 
 void CUnit::ScanForEnemies()
@@ -508,7 +545,7 @@ void CUnit::ResolveCombat()
 	ChangeDirection(m_pTarget->GetCurrentTile());
 	if(m_fAttackTimer >= m_fAttackSpeed)
 	{
-		m_pTarget->DamageUnit(GetAttackPower()+m_nBonus);
+		m_pTarget->SetCurrentHP(m_pTarget->GetHealth() - GetAttackPower()+m_nBonus);
 		m_fAttackTimer = 0.f;
 	}
 }
@@ -604,18 +641,16 @@ bool CUnit::MoveUnit()
 	float fPercent =  m_fMovementTimer/(1/m_fMovementSpeed) ;
 	if(fPercent >=1)
 	{
-		SetPosX(ptEnd.x);
-		SetPosY(ptEnd.y);
+		SetPosX((float)ptEnd.x);
+		SetPosY((float)ptEnd.y);
 		m_fMovementTimer = 0.f;
 		return true;
 	}
 	int xPos = (int)Lerp((float)ptStart.x, (float)ptEnd.x, fPercent);
 	int yPos = (int)Lerp((float)ptStart.y, (float)ptEnd.y, fPercent);
-	SetPosX(xPos);
-	SetPosY(yPos);
+	SetPosX((float)xPos);
+	SetPosY((float)yPos);
 	return false;
-	
-
 }
 
 bool CUnit::IsTargetInRange()

@@ -11,7 +11,6 @@
 #include "CBase.h"
 #include "AnimInstance.h"
 #include "CTile.h"
-#include "CHealthBar.h"
 #include "CAISystem.h"
 #include "CTileEngine.h"
 using std::vector;
@@ -32,7 +31,8 @@ class CUnit : public CBase
 {
 private:
 	// Unit Stats
-	int				m_nHP;				// Current Hitpoints
+	int				m_nMaxHP;			// Starting Hitpoints
+	int				m_nCurrentHP;		// Current Hitpoints
 	int				m_nAttack;			// Attack power
 	int				m_nRange;			// Attack Range
 	int				m_nCost;			// Cost
@@ -58,8 +58,7 @@ private:
 										// get to the destination
 
 	int				m_nState;			// The state the unit is in
-	CHealthBar*		m_pHealthBar;
-	
+	int				m_nSelectionID;
 	CAnimInstance*	m_pAnimInstance;
 	CTileEngine*	m_pTE;
 
@@ -94,17 +93,17 @@ public:
 	//	Purpose: Gets the specified type
 	//////////////////////////////////////////////////////
 	// Get unit stats
-	inline int	  GetHP				(void) const { return m_nHP; }
-	inline int	  GetHealth			(void) const {return m_pHealthBar->GetHealth();}
+	inline int	  GetMaxHP				(void) const { return m_nMaxHP; }
+	inline int	  GetHealth			(void) const {return m_nCurrentHP;}
 	inline int	  GetAttackPower	(void) const { return m_nAttack; }
 	inline int	  GetRange			(void) const { return m_nRange; }
 	inline float  GetAttackSpeed	(void) const { return m_fAttackSpeed; }
 	inline float  GetSpeed			(void) const { return m_fMovementSpeed; }
 	inline int	  GetCost			(void) const { return m_nCost; }
 	inline CTile* GetDestTile		(void) const { return m_pDestinationTile; }
-	inline CTile* GetCurrentTile	(void) const { return m_pCurrentTile; }
+	inline CTile* GetCurrentTile		(void) const { return m_pCurrentTile; }
 	inline CTile* GetNextTile		(void) const {return m_pNextTile;}
-	inline bool IsPlayerUnit		(void) {return m_bIsPlayerUnit;}
+	inline bool IsPlayerUnit(void) {return m_bIsPlayerUnit;}
 
 	inline CUnit* GetTarget			(void) const { return m_pTarget; }
 	inline bool	  IsSelected		(void) const { return m_bIsSelected; }
@@ -114,7 +113,7 @@ public:
 	inline int    GetState			(void) const { return m_nState; }
 	inline int    GetDirection		(void) const { return m_nDirectionFacing; }
 	inline RECT   GetLocalRect	    (void) const { return m_rLocalRect; }
-	inline RECT   GetGlobalRect		(void) const { return m_rGlobalRect; }
+	inline RECT   GetGlobalRect	(void) const { return m_rGlobalRect; }
 
 
 	//////////////////////////////////////////////////////
@@ -122,8 +121,8 @@ public:
 	//	Last Modified: July 18, 2008
 	//	Purpose: Sets the specified type
 	//////////////////////////////////////////////////////
-	inline void SetHP			(int nHP)				{ m_nHP = nHP; }
-	inline void SetHealthBarHP	(void)					{m_pHealthBar->SetHealth(m_nHP);}
+	inline void SetMaxHP			(int nHP)				{ m_nMaxHP = nHP; }
+	inline void SetCurrentHP	(int nHP)					{ m_nCurrentHP = nHP; }
 	inline void SetAttackPower	(int nAttack)			{ m_nAttack = nAttack; }
 	inline void SetRange		(int nRange)			{ m_nRange = nRange; }
 	inline void SetCost			(int nCost)				{ m_nCost = nCost; }
@@ -136,9 +135,9 @@ public:
 	inline void SetBonus		(int nBonus)		{ m_nBonus = nBonus; }
 	inline void SetSelected		(bool bIsSelected)	{ m_bIsSelected = bIsSelected; }
 	inline void SetGrouped		(bool bIsGrouped)	{ m_bIsGrouped = bIsGrouped; }
-	inline void SetPath			(list<POINT> vPath)		{m_vPath = vPath;}
+	inline void SetPath(list<POINT> vPath)		{m_vPath = vPath;}
 	inline void ClearPath		(void)			{m_vPath.clear();}
-	inline void SetTarget		(CUnit* pTarget)		{m_pTarget = pTarget; }
+	inline void SetTarget(CUnit* pTarget)		{m_pTarget = pTarget; }
 	inline void SetDirection	(int nDirectionFacing)	
 	{ 
 		m_nDirectionFacing = nDirectionFacing; 
@@ -150,7 +149,6 @@ public:
 		m_pAnimInstance->Play(GetDirection(), GetState());	
 	}
 
-	inline void DamageUnit(int nDamage) { m_pHealthBar->DamageHealth(nDamage); }
 
 	////////////////////////////////////////
 	//	Function:	"Update"
@@ -159,6 +157,8 @@ public:
 	//			 position by its velocity.
 	/////////////////////////////////////////
 	void Update(float fElapsedTime);
+	void RenderHealth();
+
 
 	//////////////////////////////////////////////////////
 	// Function: “Render”
@@ -166,6 +166,8 @@ public:
 	// Purpose: To render unit to the screen its position
 	//////////////////////////////////////////////////////
 	void Render(float fElapsedTime);
+	void RenderSelection();
+
 
 	//////////////////////////////////////////////////////
 	// Function: “CheckCollisions”
@@ -181,25 +183,10 @@ public:
 	//////////////////////////////////////////////////////
 	void ChangeDirection(CTile* pTileFacing);
 	
-	//////////////////////////////////////////////////////
-	// Function: “ResolveCombat”
-	//	Last Modified: August 14, 2008
-	// Purpose: Resove combat between units
-	//////////////////////////////////////////////////////
 	void ResolveCombat();
 
-	//////////////////////////////////////////////////////
-	// Function: “CalcAttackBonus”
-	//	Last Modified: August 14, 2008
-	// Purpose: Factor in unit attack bounces
-	//////////////////////////////////////////////////////
 	void CalcAttackBonus();
 
-	//////////////////////////////////////////////////////
-	// Function: “UpdateVisibility”
-	//	Last Modified: July 18, 2008
-	// Purpose: update visablity of the map
-	//////////////////////////////////////////////////////
 	void UpdateVisibility();
 
 	CTile* PlaceOnSurrounding(CTile* pCenterTile);
@@ -209,5 +196,6 @@ public:
 	bool IsTargetInRange();
 
 	void ScanForEnemies();
+
 
 };

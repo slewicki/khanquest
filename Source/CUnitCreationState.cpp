@@ -286,7 +286,7 @@ void CUnitCreationState::Render(float fElapsedTime)
 			break;
 		}
 		
-		m_cFont.DrawTextA(szType + "/HP: " + IntToString(m_pPlayerUnitInfo[i].GetHP()) +
+		m_cFont.DrawTextA(szType + "/HP: " + IntToString(m_pPlayerUnitInfo[i].GetMaxHP()) +
 		"    Attack: " + IntToString(m_pPlayerUnitInfo[i].GetAttackPower()) +
 		"/Attack Speed: " + FloatToString(m_pPlayerUnitInfo[i].GetAttackSpeed()) +
 		"/Range: " + IntToString(m_pPlayerUnitInfo[i].GetRange()) +
