@@ -309,7 +309,7 @@ CTile* CTileEngine::MapToTile(int Layer, int x, int y)
 void CTileEngine::SetColor(int Layer, int x, int y, int nRed, int nGreen, int nBlue)
 {
 	pTileArray[Layer][x][y].vColor.a = 255;
-	pTileArray[Layer][x][y].vColor.r = nRed;
-	pTileArray[Layer][x][y].vColor.g = nGreen;
-	pTileArray[Layer][x][y].vColor.b = nBlue;
+	pTileArray[Layer][x][y].vColor.r = (float)nRed;
+	pTileArray[Layer][x][y].vColor.g = (float)nGreen;
+	pTileArray[Layer][x][y].vColor.b = (float)nBlue;
 }
