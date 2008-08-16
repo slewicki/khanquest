@@ -67,6 +67,8 @@ void CGamePlayState::Enter(void)
 	m_nButtonID = m_pTM->LoadTexture("Resource/KQ_ScrollButton.png");
 
 	m_nLucidiaWhiteID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
+	m_nSelectionID = CSGD_TextureManager::GetInstance()->LoadTexture("Resource/KQ_SelectionCircle1.png");
+
 
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
 	
@@ -77,6 +79,7 @@ void CGamePlayState::Exit(void)
 {
 	m_pTM->ReleaseTexture(m_nButtonID);
 	m_pTM->ReleaseTexture(m_nLucidiaWhiteID);
+	m_pTM->ReleaseTexture(m_nSelectionID);
 
 	//Remove all objects from manager?	
 	ObjectManager::GetInstance()->RemoveAllObjects();

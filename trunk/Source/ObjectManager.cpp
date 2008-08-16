@@ -311,6 +311,7 @@ void ObjectManager::UpdatePlayerUnitDestTile(CTile* destTile)
 				else
 				{
 					// otherwise, thats where we're going
+					static_cast<CUnit*>(m_vObjectList[i])->SetTarget(NULL);
 					static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(destTile);
 					static_cast<CUnit*>(m_vObjectList[i])->SetState(MOVEMENT);
 					static_cast<CUnit*>(m_vObjectList[i])->SetPath(m_pCAI->FindPath(static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile(), static_cast<CUnit*>(m_vObjectList[i])->GetDestTile()));

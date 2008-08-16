@@ -27,12 +27,12 @@ void CFactory::CreatePlayerUnit(int nType)
 	CUnit temp = CGame::GetInstance()->GetUnitInfo(nType);
 	unit->SetAttackPower(temp.GetAttackPower());
 	unit->SetAttackSpeed(temp.GetAttackSpeed());
-	unit->SetHP(temp.GetHP());
-	unit->SetHealthBarHP();
+	unit->SetMaxHP(temp.GetMaxHP());
+	unit->SetCurrentHP(temp.GetMaxHP());
 	unit->SetRange(temp.GetRange());
 	unit->SetSpeed(temp.GetSpeed());
 		
-	unit->SetState(MOVEMENT);
+	unit->SetState(IDLE);
 	unit->SetDirection(NORTH);
 	unit->SetIsPlayerUnit(true);
 	// Register Events
@@ -56,8 +56,8 @@ void CFactory::CreateComputerUnit(int nType)
 	CUnit temp = CGame::GetInstance()->GetUnitInfo(nType);
 	unit->SetAttackPower(temp.GetAttackPower());
 	unit->SetAttackSpeed(temp.GetAttackSpeed());
-	unit->SetHP(temp.GetHP());
-	unit->SetHealthBarHP();
+	unit->SetMaxHP(temp.GetMaxHP());
+	unit->SetCurrentHP(temp.GetMaxHP());
 	unit->SetRange(temp.GetRange());
 	unit->SetSpeed(temp.GetSpeed());
 
