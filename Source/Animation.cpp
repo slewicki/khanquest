@@ -5,6 +5,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 #include "Animation.h"
 #include "CSGD_TextureManager.h"
+#include "SGD_Math.h"
+
 CAnimation::CAnimation(void)
 {
 	m_nCurrentFrame = 0;
@@ -14,6 +16,7 @@ CAnimation::CAnimation(void)
 	m_bIsPlaying = false;
 	m_bIsPlayer = true;
 	m_bIsFading = false;
+	m_fFadeTimer = 0.f;
 }
 
 CAnimation::~CAnimation(void)
@@ -26,9 +29,11 @@ CAnimation::~CAnimation(void)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 bool CAnimation::Update(float fElapsedTime)
 {
+	if(m_bIsFading)
+		m_fFadeTimer += fElapsedTime;
 	if(!m_bIsPlaying)
 		return false;
-
+	
 	m_fFrameTimer += fElapsedTime * m_fSpeed *5;
 	if(m_fFrameTimer > m_vFrames[m_nCurrentFrame].fDuration)
 	{
@@ -72,8 +77,8 @@ void CAnimation::Render( int x, int y, float scale, DWORD color,  bool  isfliped
 	
 
 	if(m_bIsFading)
-		m_nAlpha--;
-	if(m_nAlpha == 0)
+		m_nAlpha  = (int)Lerp(255, 0, m_fFadeTimer/3.f);
+	if(m_nAlpha <= 0)
 	{
 		CEventSystem::GetInstance()->SendEvent("Remove");
 	}

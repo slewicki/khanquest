@@ -137,6 +137,8 @@ void CHUDState::Render(float fElapsedTime)
 
 				sprintf_s(idk,"Range: %d",m_vUnits[0]->GetRange());
 				m_BF.DrawTextA(idk, 300, 540,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
+				
+				
 			}
 			
 			break;
@@ -245,6 +247,32 @@ void CHUDState::Render(float fElapsedTime)
 
 		CSGD_Direct3D::GetInstance()->DeviceBegin();
 		CSGD_Direct3D::GetInstance()->SpriteBegin();
+		
+		//DEBUG INFO
+				//-------------------------------------------------
+				switch (m_vUnits[0]->GetState())
+				{
+				case MOVEMENT:
+					m_BF.DrawTextA("MOVEMENT", 300, 560,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
+					break;
+				case COMBAT:
+					m_BF.DrawTextA("COMBAT", 300, 560,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
+
+					break;
+				case DYING:
+					m_BF.DrawTextA("DYING", 300, 560,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
+
+					break;
+				case IDLE:
+					m_BF.DrawTextA("IDLE", 300, 560,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
+
+					break;
+				case RETREAT:
+					m_BF.DrawTextA("RETREAT", 300, 560,.2f,.2f,D3DCOLOR_ARGB(255,0,0,0));
+					break;
+				}
+				//-------------------------------------------------
+
 		return;
 	}
 	int nPosY = 0;
@@ -253,8 +281,9 @@ void CHUDState::Render(float fElapsedTime)
 	{
 		if(i>=4)
 		{
-			nPosX = 0;
 			nPosY = 60;
+			if(i==4)
+				nPosX = 0;
 		}
 		switch(m_vUnits[i]->GetType())
 		{
