@@ -33,11 +33,13 @@ CUnit::CUnit(int nType)
 	SetType(nType);
 	SetNextTile(NULL);
 	SetDestTile(NULL);
+	SetCurrentTile(NULL);
 	m_pAnimInstance = new CAnimInstance(GetType());
 	m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 
 	m_pTE = CTileEngine::GetInstance();
 	m_pCAI = CAISystem::GetInstance();
+	m_vAttackers.clear();
 
 }
 
@@ -92,6 +94,7 @@ void CUnit::RenderHealth()
 void CUnit::Update(float fElapsedTime)
 {
 	m_pAnimInstance->Update(fElapsedTime);
+	
 
 	// Set Global Rect
 	//-------------------------------
@@ -113,7 +116,10 @@ void CUnit::Update(float fElapsedTime)
 	//----------------------------------------
 	if(!m_bIsAlive)
 		return;
-	
+	if(GetState() == COMBAT && !m_pTarget)
+	{
+		SetState(IDLE);
+	}
 
 	// If dead, start death animation and set dead
 	if(GetHealth() <= 0 && m_bIsAlive == true)
@@ -129,21 +135,20 @@ void CUnit::Update(float fElapsedTime)
 		return;
 	}
 	// If we aren't moving then make sure we are on the anchor point!
-	if(GetState() != MOVEMENT)
+	if(GetState() != MOVEMENT && GetState() != RETREAT)
 	{
 		SetPosX((float)GetCurrentTile()->ptLocalAnchor.x);
 		SetPosY((float)GetCurrentTile()->ptLocalAnchor.y);
+		// Dont occupy an occupied tile (at least if we aren't moving)
+		if(GetCurrentTile()->pUnit && GetCurrentTile()->pUnit != this)
+		{
+			SetDestTile(PlaceOnSurrounding(GetCurrentTile()));
+			//SetCurrentTile(PlaceOnSurrounding(GetCurrentTile()));
+			SetPath(CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile()));
+			SetState(MOVEMENT);
+		}
 	}
 	
-
-	// Don't occupy an occupied tile!!
-	if(GetState() == IDLE && GetCurrentTile()->pUnit != this)
-	{
-		SetDestTile(PlaceOnSurrounding(GetCurrentTile()));
-		SetPath(CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile()));
-		SetState(MOVEMENT);
-		
-	}
 	// Make 6 tiles around unit visible
 	UpdateVisibility();
 
@@ -159,31 +164,36 @@ void CUnit::Update(float fElapsedTime)
 		// If CPU unit, always scan for enemies if we dont have a target
 		ScanForEnemies();
 	}
-	// If our target is dead and we didn't know it, set it to null and relax
-	if(m_pTarget && m_pTarget->GetHealth() <= 0)
+	if (m_pTarget)
 	{
-		m_pTarget = NULL;
-		SetState(IDLE);
-	}
-	// Do we have a target? if so, is it in range? than attack
-	else if(m_pTarget->IsAlive() && IsTargetInRange())
-	{
-		if(GetState() != COMBAT)
+		
+		// Do we have a target? if so, is it in range? than attack
+		if(m_pTarget->GetHealth()>0 && IsTargetInRange())
 		{
-			SetState(COMBAT);
-			ChangeDirection(m_pTarget->GetCurrentTile());
+			if(GetState() != COMBAT)
+			{
+				SetState(COMBAT);
+				ChangeDirection(m_pTarget->GetCurrentTile());
+			}
+			m_fAttackTimer += fElapsedTime;
+			ResolveCombat();
 		}
-		m_fAttackTimer += fElapsedTime;
-		ResolveCombat();
-	}
-	// Do we have a target that is out of range? Then move into range
-	else if(m_pTarget->IsAlive() && !IsTargetInRange())
-	{
-		// Move towards the target and update path each time,
-		// If we are in range then movement will stop and we'll attack
-		SetState(MOVEMENT);
-		SetDestTile(m_pTarget->GetCurrentTile());
-		SetPath(CAISystem::GetInstance()->FindPath(GetCurrentTile(), GetDestTile()));
+		// Do we have a target that is out of range? Then move into range
+		else if(m_pTarget->GetHealth()>0 && !IsTargetInRange())
+		{
+			// Move towards the target and update path each time,
+			// If we are in range then movement will stop and we'll attack
+			SetState(MOVEMENT);
+			SetDestTile(m_pTarget->GetCurrentTile());
+			SetPath(CAISystem::GetInstance()->FindPath(GetCurrentTile(), GetDestTile()));
+			// If we can't get to him right now, scan for different enemies
+			if(m_vPath.size() == 0)
+			{
+				ScanForEnemies();
+			}
+		} 
+		else if(m_pTarget->GetHealth() <=0)
+			m_pTarget = NULL;
 	}
 	
 
@@ -201,7 +211,7 @@ void CUnit::Update(float fElapsedTime)
 			SetState(IDLE);
 			return;
 		}
-		// Is are we at our next tile and is it the dest and is it occupied? then just stop
+		// Is our next tile == the dest and is it occupied? then just stop
 		else if(GetDestTile() == GetNextTile() && GetDestTile()->bIsOccupied)
 		{
 			m_vPath.clear();
@@ -219,6 +229,8 @@ void CUnit::Update(float fElapsedTime)
 			m_vPath.pop_back();
 			if(GetNextTile()->bIsOccupied && GetNextTile()->pUnit != this)
 			{
+				/*if(GetNextTile()->pUnit && (GetNextTile()->pUnit->IsPlayerUnit() != IsPlayerUnit())
+					SetTarget(GetNextTile()->pUnit);*/
 				SetNextTile(NULL);
 				SetPath(CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile()));
 				return;
@@ -317,94 +329,89 @@ void CUnit::ScanForEnemies()
 
 	//00-22-44
 	POINT ptTileID = GetCurrentTile()->ptTileLoc;
-	POINT ptTopLeft;
 
 	// Start at top left corner and check all surrounding
-	ptTopLeft.x = ptTileID.x-VISIBILITY;
-	ptTopLeft.y = ptTileID.y-VISIBILITY;
-	for (int x = ptTopLeft.x; x <= ptTopLeft.x + VISIBILITY*2; x++)
+	int nLayer = 1;
+	while(nLayer <= VISIBILITY)
 	{
-		for (int y = ptTopLeft.y; y <= ptTopLeft.y + VISIBILITY*2; y++)
+		for (int x = ptTileID.x-nLayer; x < ptTileID.x + nLayer; x++)
 		{
-			// Don't go out of bounds
-			if(x >= Map->GetMapWidth() || x < 0)
-				continue;
-			// Don't go out of bounds
-			if(y >= Map->GetMapHeight() || y < 0)
-				continue;
-			//Map->GetTile(0, x, y)->vColor = D3DCOLOR_ARGB(255, 0, 0, 255);
-			
-			if(Map->GetTile(0, x, y)->bIsOccupied)
+			for (int y = ptTileID.y-nLayer; y < ptTileID.y + nLayer; y++)
 			{
-				CUnit* pUnit = Map->GetTile(0, x, y)->pUnit;
-				if(pUnit == NULL)
-					break;
-				// Ignore allies
-				if(pUnit->IsPlayerUnit() == this->IsPlayerUnit())
+				// Don't go out of bounds
+				if(x >= Map->GetMapWidth() || x < 0)
 					continue;
-				// Ignore dead and self
-				if(!pUnit->IsAlive() || pUnit == this)
+				// Don't go out of bounds
+				if(y >= Map->GetMapHeight() || y < 0)
 					continue;
-				
-				// If we dont have a target, set one
-				if(this->GetTarget() == NULL)
+				/*	if((x >= Map->GetMapWidth() || x < 0) && (y >= Map->GetMapHeight() || y < 0))
+						return NULL;*/
+				if(Map->GetTile(0, x, y)->bIsOccupied)
 				{
-					// If the unit is IDLE, and finds an enemy, set the target
-					SetTarget(pUnit);
-					return;
+					CUnit* pUnit = Map->GetTile(0, x, y)->pUnit;
+					if(pUnit == NULL)
+						break;
+					// Ignore allies
+					if(pUnit->IsPlayerUnit() == this->IsPlayerUnit())
+						continue;
+					// Ignore dead and self
+					if(!pUnit->IsAlive() || pUnit == this)
+						continue;
+		
+					if(this->GetTarget() == NULL)
+					{
+						// If unit finds an enemy, set the target
+						SetTarget(pUnit);
+						return;
+					}
 				}
+
 			}
 		}
+		nLayer++;
 	}
 
 
-	/*POINT nMapPoint = Map->IsoMouse(this->GetCurrentTile().ptLocalAnchor.x, this->GetCurrentTile().ptLocalAnchor.y, 0);
-	int nDistanceX = 3 * m_nRange + nMapPoint.x;
-	int nDistanceY = 3 * m_nRange + nMapPoint.y;
-	for(int i = nMapPoint.x - m_nRange; i < nDistanceX; ++i)
-	{
-		for(int j = nMapPoint.y - m_nRange; j < nDistanceY; ++j)
-		{
-			if(i >= Map->GetMapWidth() || i < 0)
-				continue;
-			if(j >= Map->GetMapHeight() || j < 0)
-				continue;
+	//// Start at top left corner and check all surrounding
+	//ptTopLeft.x = ptTileID.x-VISIBILITY;
+	//ptTopLeft.y = ptTileID.y-VISIBILITY;
+	//for (int x = ptTopLeft.x; x <= ptTopLeft.x + VISIBILITY*2; x++)
+	//{
+	//	for (int y = ptTopLeft.y; y <= ptTopLeft.y + VISIBILITY*2; y++)
+	//	{
+	//		// Don't go out of bounds
+	//		if(x >= Map->GetMapWidth() || x < 0)
+	//			continue;
+	//		// Don't go out of bounds
+	//		if(y >= Map->GetMapHeight() || y < 0)
+	//			continue;
+	//		//Map->GetTile(0, x, y)->vColor = D3DCOLOR_ARGB(255, 0, 0, 255);
+	//		
+	//		if(Map->GetTile(0, x, y)->bIsOccupied)
+	//		{
+	//			CUnit* pUnit = Map->GetTile(0, x, y)->pUnit;
+	//			if(pUnit == NULL)
+	//				break;
+	//			// Ignore allies
+	//			if(pUnit->IsPlayerUnit() == this->IsPlayerUnit())
+	//				continue;
+	//			// Ignore dead and self
+	//			if(!pUnit->IsAlive() || pUnit == this)
+	//				continue;
+	//			
+	//			// If we dont have a target, set one
+	//			if(this->GetTarget() == NULL)
+	//			{
+	//				// If the unit is IDLE, and finds an enemy, set the target
+	//				SetTarget(pUnit);
+	//				return;
+	//			}
+	//		}
+	//	}
+	//}
 
-			if(Map->GetTile(0,i,j).bIsOccupied)
-			{
-				if(Map->GetTile(0,i,j).nUnitIndex > -1)
-				{
-					if (static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->IsAlive())
-					{
-						if(m_bIsPlayerUnit == static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->IsPlayerUnit())
-							break;
-					}
-					if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex)) != this)
-						if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->IsAlive())
-						{
 
-							if(m_nState != COMBAT)
-							{
-								ChangeDirection(Map->GetTile(0,i,j).ptPos);
-								m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
-								m_nState = COMBAT;
-								m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
-								m_pAnimInstance->SetPlayer(IsPlayerUnit());
 
-							}	
-							if(static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex)) != 0)
-							{
-								static_cast<CUnit*>(pOM->GetSelectedUnit(Map->GetTile(0,i,j).nUnitIndex))->DamageUnit( GetAttackPower() );
-								return true;
-							}
-						}
-				}
-			}
-
-		}
-
-	}*/
-	
 }
 void CUnit::UpdateVisibility()
 {
@@ -536,17 +543,24 @@ void CUnit::ResolveCombat()
 {
 	if(!m_pTarget)
 		return;
-	if(m_pTarget->GetHealth() <= 0)
-	{
-		m_pTarget = NULL;
-		SetState(IDLE);
-		return;
-	}
+	
 	ChangeDirection(m_pTarget->GetCurrentTile());
 	if(m_fAttackTimer >= m_fAttackSpeed)
 	{
 		m_pTarget->SetCurrentHP(m_pTarget->GetHealth() - GetAttackPower()+m_nBonus);
 		m_fAttackTimer = 0.f;
+	}
+	if(m_pTarget->GetHealth() <= 0)
+	{
+		m_pTarget->RemoveAttacker(this);
+		for (unsigned int i = 0; i < m_pTarget->GetAttackerList().size(); i++)
+		{
+			// We target is dead tell all attackers to lay off!
+			m_pTarget->GetAttackerList()[i]->SetTarget(NULL);
+		}
+		m_pTarget->GetAttackerList().clear();
+		m_pTarget->GetCurrentTile()->pUnit = NULL;
+		m_pTarget = NULL;
 	}
 }
 

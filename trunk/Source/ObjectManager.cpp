@@ -214,80 +214,141 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 			}
 		}
 	}
-
-	// go through
-	for (unsigned int i=0; i < m_vObjectList.size(); i++)
+	for (unsigned int i = 0; i < m_vObjectList.size(); i++)
 	{
-		// check if object is a player unit
-		if (static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit() )
+		
+		// Go thru map until end or until the unit has a tile
+		for (int k = 0; k < Map->GetMapWidth() && (((CUnit*)m_vObjectList[i])->GetCurrentTile() == NULL); ++k)
 		{
-			// check to see if it has a location already
-			if (static_cast<CUnit*>(m_vObjectList[i])->GetPosX() <= 0 && static_cast<CUnit*>(m_vObjectList[i])->GetPosY() <= 0)
+			// Go thru map until end or until the unit has a tile
+			for (int j = 0; j < Map->GetMapWidth() && (((CUnit*)m_vObjectList[i])->GetCurrentTile() == NULL); ++j)
 			{
-				//check the map for spawn point
-				for (int j =0; j < Map->GetMapWidth(); ++j )
+				// If enemy spawn point, and unoccupied and is enemy, place it here
+				if (Map->GetTile(0, k, j)->bIsEnemySpawn && !((CUnit*)m_vObjectList[i])->IsPlayerUnit() && !Map->GetTile(0, k, j)->bIsOccupied)
 				{
-					for (int k =0; k < Map->GetMapHeight(); ++k )
-					{
-						// if map loc is a spawn point set unit current loc there
-						if (Map->GetTile(0,j,k)->bIsPlayerSpawn && Map->GetTile(0,j,k)->bIsOccupied == false)
-						{
-							//POINT spawn = Map->GetLocalAnchor( j, k);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosX((float)Map->GetLocalAnchor(0, j, k).x);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosY((float)Map->GetLocalAnchor(0, j, k).y);
-							Map->SetOccupy(j, k, true, (CUnit*)m_vObjectList[i]);
-							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
-							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(NULL);
-							static_cast<CUnit*>(m_vObjectList[i])->SetState(IDLE);
-							if(i < m_vObjectList.size() - 1 && static_cast<CUnit*>(m_vObjectList[i+1])->IsPlayerUnit())
-							{
-								i++;
-								j = 0;
-								k = 0;
-							}
-							//break;
-						}
-					}
-
+					((CUnit*)m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, k, j));
+					Map->GetTile(0, k, j)->bIsOccupied = true;
+					Map->GetTile(0, k, j)->pUnit = ((CUnit*)m_vObjectList[i]);
+				}
+				// If player spawn point and unoccupied and player unit, place here
+				else if(Map->GetTile(0, k, j)->bIsPlayerSpawn && ((CUnit*)m_vObjectList[i])->IsPlayerUnit() && !Map->GetTile(0, k, j)->bIsOccupied)
+				{
+					((CUnit*)m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, k, j));
+					Map->GetTile(0, k, j)->bIsOccupied = true;
+					Map->GetTile(0, k, j)->pUnit = ((CUnit*)m_vObjectList[i]);
 				}
 			}
 		}
-		else
+		// If we went thru the whole map and didn't find a spawn point, remove the unit
+		if(!((CUnit*)m_vObjectList[i])->GetCurrentTile())
 		{
-			if (static_cast<CUnit*>(m_vObjectList[i])->GetPosX() <= 0 && static_cast<CUnit*>(m_vObjectList[i])->GetPosY() <= 0)
-			{
-				//check the map for spawn point
-				for (int j =0; j < Map->GetMapWidth(); ++j )
-				{
-					for (int k =0; k < Map->GetMapHeight(); ++k )
-					{
-						// if map loc is a spawn point set unit current loc there
-						if (Map->GetTile(0,j,k)->bIsEnemySpawn && Map->GetTile(0,j,k)->bIsOccupied == false)
-						{
-							//POINT spawn = Map->GetLocalAnchor( j, k);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosX((float)Map->GetLocalAnchor(0, j, k).x);
-							static_cast<CUnit*>(m_vObjectList[i])->SetPosY((float)Map->GetLocalAnchor(0, j, k).y);
-							Map->SetOccupy(j, k, true, (CUnit*)m_vObjectList[i]);
-							static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
-							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(NULL);
-							static_cast<CUnit*>(m_vObjectList[i])->SetState(IDLE);
-							if(i < m_vObjectList.size() - 1 && !static_cast<CUnit*>(m_vObjectList[i+1])->IsPlayerUnit())
-							{
-								i++;
-								j = 0;
-								k = 0;
-							}
-							/*j = 0;
-							k = 0;
-							break;*/
-						}
-
-					}
-
-				}
-			}
+			this->RemoveObject(((CUnit*)m_vObjectList[i]));
 		}
+		
 	}
+	//// go through
+	//int i = 0;
+	//while(i < m_vObjectList.size())
+	//{
+	//	// check if object is a player unit
+	//	if (static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit() )
+	//	{
+	//		// check to see if it has a location already
+	//		if (static_cast<CUnit*>(m_vObjectList[i])->GetPosX() <= 0 && static_cast<CUnit*>(m_vObjectList[i])->GetPosY() <= 0)
+	//		{
+	//			//check the map for spawn point
+	//			for (int j =0; j < Map->GetMapWidth(); ++j )
+	//			{
+	//				for (int k =0; k < Map->GetMapHeight(); ++k )
+	//				{
+	//					// if map loc is a spawn point set unit current loc there
+	//					if (Map->GetTile(0,j,k)->bIsPlayerSpawn && Map->GetTile(0,j,k)->bIsOccupied == false)
+	//					{
+	//						//POINT spawn = Map->GetLocalAnchor( j, k);
+	//						static_cast<CUnit*>(m_vObjectList[i])->SetPosX((float)Map->GetLocalAnchor(0, j, k).x);
+	//						static_cast<CUnit*>(m_vObjectList[i])->SetPosY((float)Map->GetLocalAnchor(0, j, k).y);
+	//						Map->SetOccupy(j, k, true, (CUnit*)m_vObjectList[i]);
+	//						static_cast<CUnit*>(m_vObjectList[i])->SetCurrentTile(Map->GetTile(0, j,k));
+	//						static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(NULL);
+	//						static_cast<CUnit*>(m_vObjectList[i])->SetState(IDLE);
+	//						/*if(i < m_vObjectList.size() - 1 && static_cast<CUnit*>(m_vObjectList[i+1])->IsPlayerUnit())
+	//						{
+	//							i++;
+	//							j = 0;
+	//							k = 0;
+	//						}*/
+	//						i++;
+	//						break;
+	//					}
+	//				
+	//				}
+	//				if (static_cast<CUnit*>(m_vObjectList[i])->GetPosX() <= 0 && static_cast<CUnit*>(m_vObjectList[i])->GetPosY() <= 0)
+	//					break;
+
+	//			}
+	//			// if we went thru the whole map and still have no spawn point, oh well lets stop
+	//			if (static_cast<CUnit*>(m_vObjectList[i])->GetPosX() <= 0 && static_cast<CUnit*>(m_vObjectList[i])->GetPosY() <= 0)
+	//			{
+	//				i = m_vObjectList.size();
+	//			}
+	//		}
+	//		else
+	//			i++;
+	//	}
+	//}
+	//	
+	//	// go through
+	//int m = 0;
+	//while(m < m_vObjectList.size())
+	//{
+	//	// check if object is a player unit
+	//	if (!static_cast<CUnit*>(m_vObjectList[m])->IsPlayerUnit() )
+	//	{
+	//		// check to see if it has a location already
+	//		if (static_cast<CUnit*>(m_vObjectList[m])->GetPosX() <= 0 && static_cast<CUnit*>(m_vObjectList[m])->GetPosY() <= 0)
+	//		{
+	//			//check the map for spawn point
+	//			for (int j =0; j < Map->GetMapWidth(); ++j )
+	//			{
+	//				for (int k =0; k < Map->GetMapHeight(); ++k )
+	//				{
+	//					// if map loc is a spawn point set unit current loc there
+	//					if (Map->GetTile(0,j,k)->bIsEnemySpawn && Map->GetTile(0,j,k)->bIsOccupied == false)
+	//					{
+	//						//POINT spawn = Map->GetLocalAnchor( j, k);
+	//						static_cast<CUnit*>(m_vObjectList[m])->SetPosX((float)Map->GetLocalAnchor(0, j, k).x);
+	//						static_cast<CUnit*>(m_vObjectList[m])->SetPosY((float)Map->GetLocalAnchor(0, j, k).y);
+	//						Map->SetOccupy(j, k, true, (CUnit*)m_vObjectList[m]);
+	//						static_cast<CUnit*>(m_vObjectList[m])->SetCurrentTile(Map->GetTile(0, j,k));
+	//						static_cast<CUnit*>(m_vObjectList[m])->SetDestTile(NULL);
+	//						static_cast<CUnit*>(m_vObjectList[m])->SetState(IDLE);
+	//						/*if(i < m_vObjectList.size() - 1 && static_cast<CUnit*>(m_vObjectList[i+1])->IsPlayerUnit())
+	//						{
+	//							i++;
+	//							j = 0;
+	//							k = 0;
+	//						}*/
+	//						m++;
+	//						break;
+	//					}
+	//					
+	//				
+	//				}
+	//				if (static_cast<CUnit*>(m_vObjectList[m])->GetPosX() <= 0 && static_cast<CUnit*>(m_vObjectList[m])->GetPosY() <= 0)
+	//					break;
+
+
+	//			}
+	//			// if we went thru the whole map and still have no spawn point, oh well lets stop
+	//			if (static_cast<CUnit*>(m_vObjectList[m])->GetPosX() <= 0 && static_cast<CUnit*>(m_vObjectList[m])->GetPosY() <= 0)
+	//			{
+	//				m = m_vObjectList.size();
+	//			}
+	//		}
+	//		else
+	//			m++;
+	//	}
+	//}
 }
 void ObjectManager::UpdatePlayerUnitDestTile(CTile* destTile)
 {

@@ -63,6 +63,7 @@ private:
 	CTileEngine*	m_pTE;
 
 	CAISystem*		m_pCAI;
+	vector<CUnit*>	m_vAttackers;
 
 	RECT			m_rLocalRect;
 	RECT			m_rGlobalRect;
@@ -114,6 +115,7 @@ public:
 	inline int    GetDirection		(void) const { return m_nDirectionFacing; }
 	inline RECT   GetLocalRect	    (void) const { return m_rLocalRect; }
 	inline RECT   GetGlobalRect	(void) const { return m_rGlobalRect; }
+	inline vector<CUnit*>   GetAttackerList	(void) const { return m_vAttackers; }
 
 
 	//////////////////////////////////////////////////////
@@ -137,7 +139,33 @@ public:
 	inline void SetGrouped		(bool bIsGrouped)	{ m_bIsGrouped = bIsGrouped; }
 	inline void SetPath(list<POINT> vPath)		{m_vPath = vPath;}
 	inline void ClearPath		(void)			{m_vPath.clear();}
-	inline void SetTarget(CUnit* pTarget)		{m_pTarget = pTarget; }
+	inline void AddAttacker(CUnit* pAttacker) { m_vAttackers.push_back(pAttacker); }
+	void RemoveAttacker(CUnit* pAttacker)
+	{
+		vector<CUnit*>::iterator iter;
+		for (iter = m_vAttackers.begin(); iter < m_vAttackers.end(); iter++)
+		{
+			if((*iter) == pAttacker)
+			{
+				m_vAttackers.erase(iter);
+				break;
+			}
+		}
+	}
+	void SetTarget(CUnit* pTarget)		
+	{
+		// If we have a target tell him we no longer are attaking
+		if(m_pTarget)
+		{
+			m_pTarget->RemoveAttacker(this);
+		}
+		// Set our new target
+		m_pTarget = pTarget;
+		// Tell him we are attacking if he is not NULL
+		if(m_pTarget)
+			m_pTarget->AddAttacker(this);
+	
+	}
 	inline void SetDirection	(int nDirectionFacing)	
 	{ 
 		m_nDirectionFacing = nDirectionFacing; 

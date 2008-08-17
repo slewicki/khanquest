@@ -50,11 +50,11 @@ void CAnimInstance::Update(float fElapsedTime)
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size(); i++)
 	{
 		string name = m_szAction + "_" + m_szDirection;
-		if(m_Sheet.GetAnimations()[i].IsPlaying())
-		{
+		//if(m_Sheet.GetAnimations()[i].IsPlaying())
+		//{
 			if(name == m_Sheet.GetAnimations()[i].GetName())
 				m_Sheet.GetAnimations()[i].Update(fElapsedTime);
-		}
+		//}
 	}
 }
 
