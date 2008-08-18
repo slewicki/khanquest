@@ -34,6 +34,7 @@ public:
 	int GetX(){return x;}
 	int GetY(){return y;}
 	bool IsFlipped() { return m_bisFliped; }
+	bool IsPlaying(int Direction,int Action);
 	int GetFrameWidth(int Direction, int Action);
 	int GetOffsetX(int Direction, int Action);
 	int GetOffsetY(int Direction, int Action);
@@ -42,7 +43,7 @@ public:
 	void SetFlip(bool value){m_bisFliped = value;}
 	void SetPlayer(bool value);
 	RECT GetRenderRect(int Direction, int Action);
-
+	void StopAllAnimations();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 // Function: “Play” 

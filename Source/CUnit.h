@@ -155,10 +155,10 @@ public:
 	void SetTarget(CUnit* pTarget)		
 	{
 		// If we have a target tell him we no longer are attaking
-		if(m_pTarget)
+		/*if(m_pTarget)
 		{
 			m_pTarget->RemoveAttacker(this);
-		}
+		}*/
 		// Set our new target
 		m_pTarget = pTarget;
 		// Tell him we are attacking if he is not NULL
@@ -174,7 +174,12 @@ public:
 	inline void SetState (int nState)				
 	{ 
 		m_nState = nState; 
-		m_pAnimInstance->Play(GetDirection(), GetState());	
+		//m_pAnimInstance->Play(GetDirection(), GetState());	
+	}
+
+	inline void ClearAttackerList()
+	{
+		m_vAttackers.clear();
 	}
 
 
