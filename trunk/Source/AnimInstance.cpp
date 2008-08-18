@@ -96,6 +96,15 @@ int CAnimInstance::GetFrameHeight(int Direction, int Action)
 			return m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].rRender.bottom - m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].rRender.top;
 	return -1;
 }
+bool CAnimInstance::IsPlaying(int Direction, int Action)
+{
+	string name = GetName(Direction,Action);
+
+	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
+		if(name == m_Sheet.GetAnimations()[i].GetName())
+			return m_Sheet.GetAnimations()[i].IsPlaying();
+	return false;
+}
 
 int CAnimInstance::GetFrameWidth(int Direction, int Action)
 {
@@ -159,6 +168,14 @@ void CAnimInstance::SetLooping(bool value)
 		}
 	}
 }
+void CAnimInstance::StopAllAnimations()
+{
+	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size(); i++)
+	{
+		m_Sheet.GetAnimations()[i].Stop();
+	}
+}
+
 void CAnimInstance::SetPlayer(bool value)
 {
 	m_bisPlayer = value;
