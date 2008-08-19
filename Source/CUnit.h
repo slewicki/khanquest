@@ -39,6 +39,7 @@ private:
 	float			m_fAttackSpeed;		// Attack Speed
 	float			m_fMovementSpeed;	// Movement Speed
 	float			m_fAttackTimer;		// Current time between attacks
+	DWORD			m_fHealTimer;		// healing timer
 	int				m_nBonus;			// Attack bonus or penalty
 
 	bool			m_bIsPlayerUnit;	// Is the unit player controlled
