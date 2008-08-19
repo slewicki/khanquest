@@ -12,7 +12,7 @@
 class CAttractMode : public IGameState
 {	
 	CDirectShow*	m_pDS;
-	bool			m_bPaused;
+	int				m_nDemoID;
 
 	CAttractMode(void);
 	CAttractMode(const CAttractMode&);

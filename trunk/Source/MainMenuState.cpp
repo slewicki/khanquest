@@ -48,10 +48,10 @@ void CMainMenuState::Enter(void)
 	m_fEscTimer = 0;
 	m_fTimer = 0;
 	m_nAlpha = 0;
-	
+	m_JoyTimer = 0;
 	m_nVolume = 0;
 	m_nMaxVolume = 0;
-
+	m_fAttractTimer = 0;
 	m_pWM->SetVolume(m_nSongID,m_nVolume);
 	m_pWM->Play(m_nSongID);
 	m_pToSwitchTo = NULL;
@@ -65,13 +65,16 @@ void CMainMenuState::Exit(void)
 
 bool CMainMenuState::Input(float fElapsedTime)
 {
+	m_JoyTimer += fElapsedTime;
+	m_fAttractTimer += fElapsedTime;
+
 	if(m_pToSwitchTo != NULL)
 		FadeOut(fElapsedTime);
 
 	if(m_bPaused)
 		return true;
 
-	if(m_pDI->GetBufferedKey(DIK_1))
+	if(m_fAttractTimer > 5000)
 	{
 		m_bPaused = true;
 		CGame::GetInstance()->PushState(CAttractMode::GetInstance());
@@ -86,6 +89,7 @@ bool CMainMenuState::Input(float fElapsedTime)
 			m_ptCursorPosition.y = Buttons[m_nNumButtons-1].ptPosition.y;
 			m_nCurrentButton = m_nNumButtons-1;
 		}
+		m_fAttractTimer = 0;
 	}
 	if(m_pDI->GetBufferedKey(DIK_DOWN))
 	{
@@ -96,9 +100,42 @@ bool CMainMenuState::Input(float fElapsedTime)
 			m_ptCursorPosition.y = Buttons[1].ptPosition.y;
 			m_nCurrentButton = 1;
 		}
+		m_fAttractTimer = 0;
 	}
 
-	if(m_pDI->GetBufferedKey(DIK_RETURN))
+	if(m_pDI->GetJoystickDir(JOYSTICK_UP))
+	{
+		if(m_JoyTimer > .2)
+		{	
+			m_nCurrentButton--;
+			m_ptCursorPosition.y = Buttons[m_nCurrentButton].ptPosition.y;
+			if(m_ptCursorPosition.y < Buttons[1].ptPosition.y)
+			{
+				m_ptCursorPosition.y = Buttons[m_nNumButtons-1].ptPosition.y;
+				m_nCurrentButton = m_nNumButtons-1;
+			}
+			m_JoyTimer = 0;
+		}
+		m_fAttractTimer = 0;
+	}
+
+	if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
+	{
+		if(m_JoyTimer > .2)
+		{	
+			m_nCurrentButton++;
+			m_ptCursorPosition.y = Buttons[m_nCurrentButton].ptPosition.y;
+			if(m_nCurrentButton > m_nNumButtons-1)
+			{
+				m_ptCursorPosition.y = Buttons[1].ptPosition.y;
+				m_nCurrentButton = 1;
+			}
+			m_JoyTimer = 0;
+		}
+		m_fAttractTimer = 0;
+	}
+
+	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedJoyButton(JOY_BUTTON1))
 	{
 		switch(Buttons[m_nCurrentButton].Action)
 		{
@@ -132,6 +169,7 @@ bool CMainMenuState::Input(float fElapsedTime)
 			}
 			break;
 		};
+		m_fAttractTimer = 0;
 	}
 
 	return true;
@@ -147,8 +185,8 @@ void CMainMenuState::Update(float fElapsedTime)
 
 void CMainMenuState::Render(float fElapsedTime)
 {
-	CSGD_Direct3D::GetInstance()->Clear(128,60,0);
-	//m_pTM->Draw(m_nImageID,m_ptImageLoc.x,m_ptImageLoc.y);
+	CSGD_Direct3D::GetInstance()->Clear(0,0,0);
+	m_pTM->Draw(m_nImageID,m_ptImageLoc.x,m_ptImageLoc.y);
 
 	for(int i = 0; i < m_nNumButtons; i++)
 	{
@@ -169,10 +207,10 @@ void CMainMenuState::FadeIn(float fElapsedTime)
 
 
 	if(!m_bAlpha)
-		if(m_fTimer > .002f && m_nAlpha < 255)
+		if(m_fTimer > .00002f && m_nAlpha < 255)
 		{
 			m_fTimer = 0;
-			m_nAlpha++;
+			m_nAlpha+=5;
 
 			if(m_nVolume < m_nMaxVolume)
 				m_pWM->SetVolume(m_nSongID,m_nVolume++);
@@ -186,9 +224,9 @@ void CMainMenuState::FadeIn(float fElapsedTime)
 void CMainMenuState::FadeOut(float fElapsedTime)
 {
 	m_fEscTimer += fElapsedTime;
-	if(m_fEscTimer > .001)
+	if(m_fEscTimer > .0001)
 	{
-		m_nAlpha--;
+		m_nAlpha-=5;
 		m_fEscTimer = 0;
 
 		if(m_nVolume >= 0)

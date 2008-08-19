@@ -6,6 +6,7 @@
 #include "CSGD_TextureManager.h"
 #include "CSGD_WaveManager.h"
 #include "CreditState.h"
+#include "KeyBindState.h"
 #include "irrXML.h"
 #include <fstream>
 #include <iostream>
@@ -48,6 +49,7 @@ void COptionsMenuState::Enter()
 	m_ptCursorPosition.y = Buttons[1].ptPosition.y;
 	m_nCurrentButton = 1;
 	m_pToSwitchTo = NULL;
+	m_JoyTimer = 0;
 }
 void COptionsMenuState::Exit()
 {
@@ -62,11 +64,13 @@ void COptionsMenuState::Exit()
 
 bool COptionsMenuState::Input(float fElapsedTime)
 {
+	m_JoyTimer += fElapsedTime;
+
 	if(m_pToSwitchTo != NULL)
 		FadeOut(fElapsedTime);
 	if(m_bPaused)
 		return true;
-
+#pragma region UP
 	if(m_pDI->GetBufferedKey(DIK_UP))
 	{
 		m_pWM->Stop(m_nSongID);
@@ -79,10 +83,28 @@ bool COptionsMenuState::Input(float fElapsedTime)
 		}
 		if(Buttons[m_nCurrentButton].Action == MUSIC)
 			m_pWM->Play(m_nSongID);
-		
 	}
-	if(m_pDI->GetBufferedKey(DIK_DOWN))
+	/*if(m_pDI->GetJoystickDir(JOYSTICK_UP))
 	{
+		if(m_JoyTimer > .2)
+		{
+			m_pWM->Stop(m_nSongID);
+			m_nCurrentButton--;
+			m_ptCursorPosition.y = Buttons[m_nCurrentButton].ptPosition.y;
+			if(m_ptCursorPosition.y < Buttons[1].ptPosition.y)
+			{
+				m_ptCursorPosition.y = Buttons[m_nNumButtons-1].ptPosition.y;
+				m_nCurrentButton = m_nNumButtons-1;
+			}
+			if(Buttons[m_nCurrentButton].Action == MUSIC)
+				m_pWM->Play(m_nSongID);
+			m_JoyTimer = 0;
+		}
+	}*/
+#pragma endregion
+#pragma region DOWN
+	if(m_pDI->GetBufferedKey(DIK_DOWN))
+	{	
 		m_pWM->Stop(m_nSongID);
 		m_nCurrentButton++;
 		m_ptCursorPosition.y = Buttons[m_nCurrentButton].ptPosition.y;
@@ -93,9 +115,26 @@ bool COptionsMenuState::Input(float fElapsedTime)
 		}
 		if(Buttons[m_nCurrentButton].Action == MUSIC)
 			m_pWM->Play(m_nSongID);
-		
 	}
-
+	/*if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
+	{
+		if(m_JoyTimer > .2)
+		{
+			m_pWM->Stop(m_nSongID);
+			m_nCurrentButton++;
+			m_ptCursorPosition.y = Buttons[m_nCurrentButton].ptPosition.y;
+			if(m_nCurrentButton > m_nNumButtons-1)
+			{
+				m_ptCursorPosition.y = Buttons[1].ptPosition.y;
+				m_nCurrentButton = 1;
+			}
+			if(Buttons[m_nCurrentButton].Action == MUSIC)
+				m_pWM->Play(m_nSongID);
+			m_JoyTimer = 0;
+		}
+	}*/
+#pragma endregion
+#pragma region Left
 	if(m_pDI->GetBufferedKey(DIK_LEFT))
 	{
 		if(Buttons[m_nCurrentButton].Action == MUSIC)
@@ -109,11 +148,33 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			CGame::GetInstance()->SetSFXVolume(CGame::GetInstance()->GetSFXVolume() - 1);
 			if(CGame::GetInstance()->GetSFXVolume() < 0)
 				CGame::GetInstance()->SetSFXVolume(0);
-	
+
 			m_pWM->Play(m_nClick);
 		}
 	}
+	/*if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{	
+		if(m_JoyTimer > .2)
+		{
+			if(Buttons[m_nCurrentButton].Action == MUSIC)
+			{
+				CGame::GetInstance()->SetMusicVolume(CGame::GetInstance()->GetMusicVolume() - 1);
+				if(CGame::GetInstance()->GetMusicVolume() < 0)
+					CGame::GetInstance()->SetMusicVolume(0);
+			}
+			if(Buttons[m_nCurrentButton].Action == SFX)
+			{
+				CGame::GetInstance()->SetSFXVolume(CGame::GetInstance()->GetSFXVolume() - 1);
+				if(CGame::GetInstance()->GetSFXVolume() < 0)
+					CGame::GetInstance()->SetSFXVolume(0);
 
+				m_pWM->Play(m_nClick);
+			}
+			m_JoyTimer = 0;
+		}
+	}*/
+#pragma endregion 
+#pragma region RIGHT
 	if(m_pDI->GetBufferedKey(DIK_RIGHT))
 	{
 		if(Buttons[m_nCurrentButton].Action == MUSIC)
@@ -130,14 +191,36 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			m_pWM->Play(m_nClick);
 		}
 	}
-
-	if(m_pDI->GetBufferedKey(DIK_RETURN))
+	//if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	//{	
+	//	if(m_JoyTimer > .2)
+	//	{
+	//		if(Buttons[m_nCurrentButton].Action == MUSIC)
+	//		{
+	//			CGame::GetInstance()->SetMusicVolume(CGame::GetInstance()->GetMusicVolume() + 1);
+	//			if(CGame::GetInstance()->GetMusicVolume() > 100)
+	//				CGame::GetInstance()->SetMusicVolume(100);
+	//		}
+	//		if(Buttons[m_nCurrentButton].Action == SFX)
+	//		{
+	//			CGame::GetInstance()->SetSFXVolume(CGame::GetInstance()->GetSFXVolume() + 1);
+	//			if(CGame::GetInstance()->GetSFXVolume() > 100)
+	//				CGame::GetInstance()->SetSFXVolume(100);
+	//			m_pWM->Play(m_nClick);
+	//		}
+	//		m_JoyTimer = 0;
+	//	}
+	//}
+#pragma endregion
+#pragma region Selection
+	if(m_pDI->GetBufferedKey(DIK_RETURN))// || m_pDI->GetBufferedJoyButton(JOYSTICK_A))
 	{
 		if(Buttons[m_nCurrentButton].Action == KEYBIND)
 		{
 			m_pWM->Play(m_nClick);
 			//Switch States;
-			//m_pToSwitchTo = CKeyBind::GetInstance();
+			m_pToSwitchTo = CKeyBindState::GetInstance();
+			SetPause(true);
 		}
 		if(Buttons[m_nCurrentButton].Action == CREDITS)
 		{
@@ -161,6 +244,8 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			CMainMenuState::GetInstance()->SetPause(false);
 		}		
 	}
+#pragma endregion
+
 	return true;
 }
 
@@ -178,29 +263,29 @@ void COptionsMenuState::Render(float fElapsedTime)
 			char MusicVolume[64];
 			sprintf(MusicVolume,"%s %d",Buttons[i].Text.c_str(),CGame::GetInstance()->GetMusicVolume());
 			m_BF.DrawTextA(MusicVolume,Buttons[i].ptPosition.x,Buttons[i].ptPosition.y,Buttons[i].fscalex, Buttons[i].fscaley,
-						   D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
+				D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
 		}
 		else if(Buttons[i].Action == SFX)
 		{
 			char SFXVolume[128];
 			sprintf(SFXVolume,"%s %d",Buttons[i].Text.c_str(),CGame::GetInstance()->GetSFXVolume());
 			m_BF.DrawTextA(SFXVolume,Buttons[i].ptPosition.x,Buttons[i].ptPosition.y,Buttons[i].fscalex, Buttons[i].fscaley,
-						   D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
+				D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
 		}
 		else if(Buttons[i].Action == FULLSCREEN)
 		{
 			m_BF.DrawTextA(Buttons[i].Text,Buttons[i].ptPosition.x, Buttons[i].ptPosition.y, Buttons[i].fscalex, Buttons[i].fscaley,
-						   D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
-			
+				D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
+
 			m_pTM->Draw(m_nCheckBoxID,Buttons[i].ptPosition.x + 200,Buttons[i].ptPosition.y);
 			if(!CGame::GetInstance()->GetIsWindowed())
 				m_pTM->Draw(m_nCheckMarkID,Buttons[i].ptPosition.x + 200,Buttons[i].ptPosition.y);
-				
+
 		}
 		else if(Buttons[i].Action == FPS)
 		{
 			m_BF.DrawTextA(Buttons[i].Text,Buttons[i].ptPosition.x, Buttons[i].ptPosition.y, Buttons[i].fscalex, Buttons[i].fscaley,
-						   D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
+				D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
 
 			m_pTM->Draw(m_nCheckBoxID,Buttons[i].ptPosition.x + 200,Buttons[i].ptPosition.y);
 			if(CGame::GetInstance()->GetFPSDisplay())
@@ -209,11 +294,11 @@ void COptionsMenuState::Render(float fElapsedTime)
 		else
 		{
 			m_BF.DrawTextA(Buttons[i].Text,Buttons[i].ptPosition.x, Buttons[i].ptPosition.y, Buttons[i].fscalex, Buttons[i].fscaley,
-						   D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
+				D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
 		}	
 	}
 	m_pTM->Draw(m_nCursorID,m_ptCursorPosition.x-50,m_ptCursorPosition.y,m_fCurScaleX,m_fCurScaleY,
-				0,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
+		0,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 
 }
 void COptionsMenuState::Update(float fElapsedTime)
@@ -228,7 +313,7 @@ void COptionsMenuState::FadeIn(float fElapsedTime)
 	m_nMaxVolume = CGame::GetInstance()->GetMusicVolume();
 
 	m_fTimer += fElapsedTime;
-	
+
 	if(!m_pWM->IsWavePlaying(m_nSongID))
 		m_pWM->Play(m_nSongID);
 
@@ -287,7 +372,7 @@ bool COptionsMenuState::Parse(char* szFileName)
 		case EXN_ELEMENT:
 			{
 				//Grabs the attribute name
- 				szName = xml->getNodeName();
+				szName = xml->getNodeName();
 			}
 			break;
 		case EXN_TEXT:
