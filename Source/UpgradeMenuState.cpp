@@ -149,7 +149,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 		if(CGame::GetInstance()->IsMouseInRect(m_rMinusButtons[i]))
 		{
 			// Change cursor to click icon
-//			CGame::GetInstance()->SetCursorClick();
+			CGame::GetInstance()->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 			{
 				if(m_nNumUnits[i]>0)
@@ -164,7 +164,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 		}
 		if(CGame::GetInstance()->IsMouseInRect(m_rPlusButtons[i]))
 		{
-//			CGame::GetInstance()->SetCursorClick();
+			CGame::GetInstance()->SetCursorClick();
 			if(m_nFoodTotal > 0 && m_nTotalUnits < MAX_UNITS && m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 			{
 				
@@ -182,7 +182,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 	}
 	if(CGame::GetInstance()->IsMouseInRect(m_rAttackButton))
 	{
-//		CGame::GetInstance()->SetCursorClick();
+		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
 			// Ask if they are sure...?
@@ -195,7 +195,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 	}
 	if(CGame::GetInstance()->IsMouseInRect(m_rBackButton))
 	{
-//		CGame::GetInstance()->SetCursorClick();
+		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
 			// Go back to the map

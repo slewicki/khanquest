@@ -43,6 +43,7 @@ private:
 	POINT m_ptMousePoint;			//Mouse Location
 	int m_nScrollX;					//Scroll by X value
 	int m_nScrollY;					//Scroll by Y value
+	int m_nBlankTileID;					//Scroll by Y value
 
 
 public:
@@ -62,6 +63,13 @@ public:
 	//	Purpose: Updates values based on time
 	/////////////////////////////////
 	void Render(RECT nCamPos);
+
+	/////////////////////////////////
+	//	Function:	"Render - Minimap"
+	//
+	//	Purpose: Render the minimap
+	/////////////////////////////////
+	void RenderMiniMap(RECT nCamPos);
 
 	//Accessors
 	//Map

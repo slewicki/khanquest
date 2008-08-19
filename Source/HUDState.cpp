@@ -1,6 +1,8 @@
 #include "HUDState.h"
 #include "CUnit.h"
 #include "ObjectManager.h"
+#include "CTileEngine.h"
+#include "CCamera.h"
 
 CHUDState::CHUDState(void)
 {
@@ -73,6 +75,8 @@ void CHUDState::Update(float fElapsedTime)
 void CHUDState::Render(float fElapsedTime)
 {
 	m_pTM->Draw(m_nHUDID,0,0);
+	
+	CTileEngine::GetInstance()->RenderMiniMap(CCamera::GetInstance()->GetScreenArea());
 	
 	RECT InfIcon;
 	InfIcon.top = 0; InfIcon.left = 200; InfIcon.right = 250; InfIcon.bottom = 50;
