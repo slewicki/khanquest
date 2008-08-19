@@ -369,8 +369,6 @@ void ObjectManager::UpdatePlayerUnitDestTile(CTile* destTile)
 						static_cast<CUnit*>(m_vObjectList[i])->SetTarget(destTile->pUnit);
 					
 				}
-				//static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(destTile);
-				//	static_cast<CUnit*>(m_vObjectList[i])->SetState(MOVEMENT);
 				else
 				{
 					// otherwise, thats where we're going
@@ -458,55 +456,38 @@ vector<CBase*> ObjectManager::GetUnits()
 void ObjectManager::GetSpawnPointDest(CUnit* pUnit)
 {
 	// go through
-	for (unsigned int i=0; i < m_vObjectList.size(); i++)
+	for (unsigned int i = 0; i < m_vObjectList.size(); i++)
 	{
-		// check if unit is in RETREAT
-		if (static_cast<CUnit*>(m_vObjectList[i])->GetState() == RETREAT )
+		if ( ((CUnit*)m_vObjectList[i]) == pUnit )
 		{
-			// if is player unit
-			if ( static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit() )
+			// Go thru map until end or until the unit has a dest tile
+			for (int k = 0; k < Map->GetMapWidth() && (((CUnit*)m_vObjectList[i])->GetDestTile() == NULL); ++k)
 			{
-				//check the map for spawn point
-				for (int j =0; j < Map->GetMapWidth(); ++j )
+				// Go thru map until end or until the unit has a dest tile
+				for (int j = 0; j < Map->GetMapWidth() && (((CUnit*)m_vObjectList[i])->GetDestTile() == NULL); ++j)
 				{
-					for (int k =0; k < Map->GetMapHeight(); ++k )
+					// If enemy spawn point, and unoccupied and is enemy, set its dest
+					if (Map->GetTile(0, k, j)->bIsEnemySpawn && !((CUnit*)m_vObjectList[i])->IsPlayerUnit() && !Map->GetTile(0, k, j)->bIsOccupied)
 					{
-						// if map loc is a spawn point set unit dest loc there
-						if (Map->GetTile(0,j,k)->bIsPlayerSpawn && Map->GetTile(0,j,k)->bIsOccupied == false)
-						{
-							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
-							if(i < m_vObjectList.size() - 1 && static_cast<CUnit*>(m_vObjectList[i+1])->IsPlayerUnit())
-							{
-								i++;
-								j = 0;
-								k = 0;
-							}
-						}
+						((CUnit*)m_vObjectList[i])->SetDestTile(Map->GetTile(0, k, j));
+					}
+					// If player spawn point and unoccupied and player unit, place here
+					else if(Map->GetTile(0, k, j)->bIsPlayerSpawn && ((CUnit*)m_vObjectList[i])->IsPlayerUnit() && !Map->GetTile(0, k, j)->bIsOccupied)
+					{
+						((CUnit*)m_vObjectList[i])->SetDestTile(Map->GetTile(0, k, j));
 					}
 				}
 			}
-			// is CPU unit
-			else if ( !static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit() )
-			{
-				//check the map for spawn point
-				for (int j =0; j < Map->GetMapWidth(); ++j )
-				{
-					for (int k =0; k < Map->GetMapHeight(); ++k )
-					{
-						// if map loc is a spawn point set unit dest loc there
-						if (Map->GetTile(0,j,k)->bIsEnemySpawn && Map->GetTile(0,j,k)->bIsOccupied == false)
-						{
-							static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(Map->GetTile(0, j,k));
-							if(i < m_vObjectList.size() - 1 && !static_cast<CUnit*>(m_vObjectList[i+1])->IsPlayerUnit())
-							{
-								i++;
-								j = 0;
-								k = 0;
-							}
-						}
-					}
-				}
-			}
+		}
+	}
+}
+void ObjectManager::SetSelectedUnitsRetreat()
+{
+	for (unsigned int i = 0; i < m_vObjectList.size(); i++)
+	{
+		if ( ((CUnit*)m_vObjectList[i])->IsPlayerUnit() && ((CUnit*)m_vObjectList[i])->IsSelected() )
+		{
+			((CUnit*)m_vObjectList[i])->SetState(RETREAT);
 		}
 	}
 }

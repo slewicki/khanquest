@@ -40,6 +40,8 @@ CUnit::CUnit(int nType)
 	m_pTE = CTileEngine::GetInstance();
 	m_pCAI = CAISystem::GetInstance();
 	m_vAttackers.clear();
+	m_fHealTimer = GetTickCount();
+
 
 }
 
@@ -94,7 +96,6 @@ void CUnit::RenderHealth()
 void CUnit::Update(float fElapsedTime)
 {
 	m_pAnimInstance->Update(fElapsedTime);
-	
 
 	// Set Global Rect
 	//-------------------------------
@@ -116,14 +117,31 @@ void CUnit::Update(float fElapsedTime)
 	//----------------------------------------
 	if(!m_bIsAlive)
 		return;
-	if(GetState() == COMBAT && !m_pTarget)
+
+	if(m_nState == IDLE && m_nCurrentHP < m_nMaxHP)
+	{
+		if ( (GetTickCount() - m_fHealTimer) * 1000 > 3)
+		{
+			m_nCurrentHP += 1;
+			m_fHealTimer = GetTickCount();
+		}
+	}
+
+	if(m_nState == COMBAT && !m_pTarget)
 	{
 		SetState(IDLE);
 		ChangeDirection(GetCurrentTile());
 	}
+	if( !m_bIsPlayerUnit &&  !m_pCurrentTile->bIsEnemySpawn  && m_nState != RETREAT && m_nCurrentHP <= ( m_nMaxHP * .5) && m_bIsAlive == true) 
+	{
+		m_nState = RETREAT;
+		SetTarget(NULL);
+		SetDestTile(NULL);
+		ObjectManager::GetInstance()->GetSpawnPointDest(this);
+	}
 
 	// If dead, start death animation and set dead
-	if(GetHealth() <= 0 && m_bIsAlive == true)
+	if(m_nCurrentHP <= 0 && m_bIsAlive == true)
 	{
 		m_bIsAlive = false;
 		m_bIsSelected = false;
@@ -138,7 +156,7 @@ void CUnit::Update(float fElapsedTime)
 	if(GetState() == IDLE && IsPlayerUnit())
 		int i = 0;
 	// If we aren't moving then make sure we are on the anchor point!
-	if(GetState() != MOVEMENT && GetState() != RETREAT)
+	if(m_nState != MOVEMENT && m_nState != RETREAT)
 	{
 		SetPosX((float)GetCurrentTile()->ptLocalAnchor.x);
 		SetPosY((float)GetCurrentTile()->ptLocalAnchor.y);
@@ -154,7 +172,6 @@ void CUnit::Update(float fElapsedTime)
 				ChangeDirection(GetNextTile());
 		}
 	}
-
 	
 	// Make 6 tiles around unit visible (if player unit)
 	if(IsPlayerUnit())
@@ -162,23 +179,23 @@ void CUnit::Update(float fElapsedTime)
 
 	// AI
 	//---------------------------------------------------------------------------
-	if(IsPlayerUnit() && GetState() == IDLE && !m_pTarget)
+	if(m_bIsPlayerUnit && m_nState == IDLE && !m_pTarget && m_nState != RETREAT)
 	{
 		// Find a target if there is one visible and the PLAYER unit is IDLE
 		ScanForEnemies();
 	}
-	else if(!IsPlayerUnit() && !m_pTarget)
+	else if(!m_bIsPlayerUnit && !m_pTarget && m_nState != RETREAT)
 	{
 		// If CPU unit, always scan for enemies if we dont have a target
 		ScanForEnemies();
 	}
-	if (m_pTarget)
+	if (m_pTarget && m_nState != RETREAT)
 	{
 		
 		// Do we have a target? if so, is it in range? than attack
 		if(m_pTarget->GetHealth()>0 && IsTargetInRange())
 		{
-			if(GetState() != COMBAT)
+			if(m_nState != COMBAT)
 			{
 				SetState(COMBAT);
 			}
@@ -213,26 +230,34 @@ void CUnit::Update(float fElapsedTime)
 
 	// Move to our destination
 #pragma region Move
-	if ( (GetState() == MOVEMENT || GetState() == RETREAT) && GetDestTile() )
+	if ( (m_nState == MOVEMENT || m_nState== RETREAT) && GetDestTile() )
 	{
 		m_fMovementTimer += fElapsedTime;
 		// We are at the destination tile or are we in range of our target? then stop
-		if(m_vPath.size() == 0 || (GetDestTile() == GetCurrentTile()) || (m_pTarget && IsTargetInRange()))
+		if(m_nState== !RETREAT && ( m_vPath.size() == 0 || (GetDestTile() == GetCurrentTile()) || (m_pTarget && IsTargetInRange()) ) )
 		{
 			m_vPath.clear();
 			SetNextTile(NULL);
 			SetDestTile(NULL);
-			SetState(IDLE);
-			ChangeDirection(GetCurrentTile());
+			m_nState = IDLE;
 			return;
 		}
 		// Is our next tile == the dest and is it occupied? then just stop
-		else if(GetDestTile() == GetNextTile() && GetDestTile()->bIsOccupied)
+		else if(m_nState== !RETREAT && GetDestTile() == GetNextTile() && GetDestTile()->bIsOccupied)
 		{
 			m_vPath.clear();
 			SetNextTile(NULL);
 			SetDestTile(NULL);
-			SetState(IDLE);
+			m_nState = IDLE;
+			ChangeDirection(GetCurrentTile());
+			return;
+		}
+		else if( m_nState== RETREAT &&  GetDestTile() == GetCurrentTile() )
+		{
+			m_vPath.clear();
+			SetNextTile(NULL);
+			SetDestTile(NULL);
+			m_nState = IDLE;
 			ChangeDirection(GetCurrentTile());
 			return;
 		}
