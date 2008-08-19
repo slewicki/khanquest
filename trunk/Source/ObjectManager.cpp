@@ -20,7 +20,6 @@
 ObjectManager::ObjectManager(void)
 {
 	pPE = CParticleEngine::GetInstance();
-	m_nEmitterID = pPE->LoadBineryEmitter("Resource/KQ_DustCload.dat", 128, 128);
 	Map = CTileEngine::GetInstance();
 	m_pCAI = CAISystem::GetInstance();
 }
@@ -30,28 +29,7 @@ ObjectManager::~ObjectManager(void)
 }
 void ObjectManager::CheckCollisions()
 {
-	//for (unsigned int i=0; i < m_vObjectList.size(); i++)
-	//{
- //		m_vObjectList[i]->CheckCollisions();
-	//}
-	
-	//for (unsigned int i=0; i < m_vObjectList.size(); i++)
-	//{
-	//	for (unsigned int j = 0; j < m_vObjectList.size(); j++)
-	//	{
-	//		if(m_vObjectList[i] != m_vObjectList[j])
-	//		{
-	//			CTile* pTile1 = ((CUnit*)m_vObjectList[i])->GetCurrentTile();
-	//			CTile* pTile2 = ((CUnit*)m_vObjectList[j])->GetCurrentTile();
-	//			if(pTile1 == pTile2)
-	//			{
-	//				if(pTile1.x > 0)
-	//					CTile* pTile = CTileEngine::GetInstance()->GetTile(0, ((CUnit*)m_vObjectList[i])->GetCurrentTile().x-1, ((CUnit*)m_vObjectList[i])->GetCurrentTile().y);
-	//				((CUnit*)m_vObjectList[j])->SetCurrentTile(
-	//			}
-	//		}
-	//	}
-	//}
+
 
 }
 
@@ -206,7 +184,7 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 {
 	for (int i = 0; i < Map->GetMapWidth(); ++i)
 	{
-		for (int j = 0; j < Map->GetMapWidth(); ++j)
+		for (int j = 0; j < Map->GetMapHeight(); ++j)
 		{
 			if (Map->GetTile(0, i, j)->bIsEnemySpawn)
 			{
@@ -221,7 +199,7 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 		for (int k = 0; k < Map->GetMapWidth() && (((CUnit*)m_vObjectList[i])->GetCurrentTile() == NULL); ++k)
 		{
 			// Go thru map until end or until the unit has a tile
-			for (int j = 0; j < Map->GetMapWidth() && (((CUnit*)m_vObjectList[i])->GetCurrentTile() == NULL); ++j)
+			for (int j = 0; j < Map->GetMapHeight() && (((CUnit*)m_vObjectList[i])->GetCurrentTile() == NULL); ++j)
 			{
 				// If enemy spawn point, and unoccupied and is enemy, place it here
 				if (Map->GetTile(0, k, j)->bIsEnemySpawn && !((CUnit*)m_vObjectList[i])->IsPlayerUnit() && !Map->GetTile(0, k, j)->bIsOccupied)
