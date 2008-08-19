@@ -20,7 +20,6 @@ class ObjectManager : public IListener
 private:
 	vector<CBase*> m_vObjectList;
 	CParticleEngine* pPE;
-	int m_nEmitterID;
 	CTileEngine* Map;
 	CAISystem*		m_pCAI;
 
@@ -50,13 +49,6 @@ public:
 	// Purpose: To update all objects
 	//////////////////////////////////////////////////////
 	void UpdateObjects(float fElapsedTime);
-
-	//////////////////////////////////////////////////////
-	// Function: “CheckCollisions”
-	//
-	// Purpose: Call checkcollisions on all objects
-	//////////////////////////////////////////////////////
-	void CheckCollisions();
 
 	//////////////////////////////////////////////////////
 	// Function: “RenderObjects”
