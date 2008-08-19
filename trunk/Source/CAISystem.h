@@ -15,8 +15,8 @@ using std::list;
 
 //names of tiles
 enum { TILEEMPTY, TILEBLOCK, TILESTART, TILEEND, TILEPATH, TILESELECT, };
- const int MAPWIDTH=20;
- const int MAPHEIGHT=20;
+ const int MAPWIDTH=100;
+ const int MAPHEIGHT=100;
 
 class CAISystem
 {
