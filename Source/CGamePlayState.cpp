@@ -13,6 +13,8 @@
 #include "CPausedState.h"
 #include "HUDState.h"
 #include "CFactory.h"
+#include "KeyBindState.h"
+
 CGamePlayState::CGamePlayState(void)
 {
 	m_pCamera = NULL;
@@ -178,41 +180,19 @@ bool CGamePlayState::Input(float fElapsedTime)
 
 				// Keyboard Camera Movement
 				// Move camera Left
-				if(m_pDI->GetKey(DIK_D))
+				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_RIGHT))))
 					m_pCamera->SetVelX(100);
 				// Move camera Right
-				if(m_pDI->GetKey(DIK_A))
+				if( m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_LEFT))))
 					m_pCamera->SetVelX(-100);
 				// Move camera Down
-				if(m_pDI->GetKey(DIK_S))
+				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_DOWN))))
 					m_pCamera->SetVelY(100);
 				// Move camera Up
-				if(m_pDI->GetKey(DIK_W))
+				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_UP))))
 					m_pCamera->SetVelY(-100); 
 			}
-#pragma endregion
-
-		
-
-#pragma region TempButtons
-			if(CGame::GetInstance()->IsMouseInRect(m_rVictoryButton))
-			{
-				//		CGame::GetInstance()->SetCursorClick();
-				if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
-				{
-					//// Go back to the map
-					//// Call this function if the user wins the battle
-					//if(m_nTerrorLevel < 100)
-					//{
-					//	m_nTerrorLevel += 25;
-					//}
-					//CGame::GetInstance()->SetCityConquered(CGame::GetInstance()->GetSelectedCity());
-					//CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
-				}
-			}
-
-#pragma endregion
-		
+#pragma endregion		
 	}
 	return true;
 }
