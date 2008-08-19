@@ -154,4 +154,5 @@ public:
 	/////////////////////////////////////////////////////
 	void SetSelectedUnitsRetreat();
 
+	void CheckCollisions();
 };
