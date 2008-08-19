@@ -49,15 +49,11 @@ bool CAnimation::Update(float fElapsedTime)
 				Stop();
 			}
 		}
-		if(m_nCurrentFrame == ((int)m_vFrames.size() - 1) && m_bIsLooping == false)
-		{
-			m_bIsFading = true;
-		}
+		
 		if(m_vFrames[m_nCurrentFrame].szTriggerName != "")
 		{
 			if(m_vFrames[m_nCurrentFrame].ptAccessories.size())
 			{
-
 				CEventSystem::GetInstance()->SendEvent(m_vFrames[m_nCurrentFrame].szTriggerName,(void*)&m_vFrames[m_nCurrentFrame]);
 			}
 		}
@@ -77,8 +73,12 @@ void CAnimation::Render( int x, int y, float scale, DWORD color,  bool  isfliped
 	
 
 	if(m_bIsFading)
-		m_nAlpha  = (int)Lerp(255, 0, m_fFadeTimer/3.f);
-	if(m_nAlpha <= 0)
+	{
+		if(m_fFadeTimer > 2.f)
+			m_nAlpha  = (int)Lerp(255, 0, (m_fFadeTimer-2)/3.f);
+
+	}
+	if(m_nAlpha <= 0 || m_fFadeTimer >= 4)
 	{
 		CEventSystem::GetInstance()->SendEvent("Remove");
 	}

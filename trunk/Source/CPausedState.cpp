@@ -82,6 +82,11 @@ bool CPausedState::Input(float fElapsedTime)
 			CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
 		}
 	}
+	else if(m_pDI->GetBufferedKey(DIK_ESCAPE))
+		{
+			CGamePlayState::GetInstance()->SetPaused(false);
+			CGame::GetInstance()->PopCurrentState();
+		}
 	return true;
 }
 
