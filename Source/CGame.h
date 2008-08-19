@@ -22,7 +22,7 @@
 #include "CCity.h"
 #include "CGamePlayState.h"
 #include "resource.h"	//  For icon/cursor ID
-
+#include "CBitmapFont.h"
 //Pixel Shader Testing
 #include "CPixelShader.h"
 
@@ -38,13 +38,14 @@ private:
 	CSGD_WaveManager*		m_pWM;
 	CSGD_DirectInput*		m_pDI;
 	CAnimationManager*		m_pAM;
+	CBitmapFont				m_BF;
 	//CTileEngine*			m_pMap;
 	// Time and Frame Variables
 	DWORD					m_dwPreviousTime;
 	int						m_nFrameCounter;	//counts number of frames per second
 	int						m_nFPS;				// prints number
 	DWORD					m_dwFrameTimer;
-	
+	int						m_nFontID;
 	bool					m_bIsWindowed;		// Is the game windowed?
 	bool					m_bFPS;				// FPS on
 	float					m_fGameTime;		// Time since the game began

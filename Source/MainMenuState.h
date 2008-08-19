@@ -20,7 +20,8 @@ class CMainMenuState : public IGameState
 	int						m_nMaxVolume;
 	float					m_fTimer;
 	float					m_fEscTimer;
-
+	float					m_JoyTimer;
+	float					m_fAttractTimer;
 	int m_nImageID;
 	POINT m_ptImageLoc, m_ptImageSize;
 	string m_szImageFile;

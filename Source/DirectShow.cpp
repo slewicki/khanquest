@@ -10,164 +10,149 @@ CDirectShow::~CDirectShow(void)
 }
 void CDirectShow::Init()
 {
-	//initialize the graph manager
-	pGB = NULL;
-	//initialize the media controller
-	pMC = NULL;
-	//initialize the video window
-	pVW = NULL;
-	//intiaize the video event handler
-	pME = NULL;
-
-	//set fullscreen to false
-	m_bIsFullScreen = false;
+	m_nCount = 0;
+	m_nCurrent = 0;
+	vVideos.clear();
+	CoInitialize(NULL);
+	m_bIsPlaying = false;
 	
 }
+int CDirectShow::LoadVideo(LPCWSTR szFilePath, HWND hwnd, bool bIsFullscreen)
+{
+	tVideo tLoad;
+	m_bIsPlaying = false;
+	memset(&tLoad, 0, sizeof(tLoad));
+
+	if (FAILED(CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC, 
+		IID_IGraphBuilder, (void **)&tLoad.m_pGraphBuilder))) 
+	{
+		return false;
+	}
+	tLoad.m_bIsFullscreen = bIsFullscreen;
+	// Load this file and Build a filter graph for it.
+	tLoad.m_pGraphBuilder->RenderFile(szFilePath, NULL);
+	
+	// Specify the owner window
+	tLoad.m_hWnd = hwnd;
+	tLoad.m_pGraphBuilder->QueryInterface(IID_IVideoWindow, (void **)&tLoad.m_pVideoWindow);
+	tLoad.m_pVideoWindow->put_Owner((OAHWND)tLoad.m_hWnd);
+	tLoad.m_pVideoWindow->put_WindowStyle(WS_CHILD | WS_CLIPSIBLINGS);
+	
+	// Make the Movie Take up the Entire Window.
+	RECT rect;
+	GetClientRect(tLoad.m_hWnd, &rect);
+	if(!bIsFullscreen)
+		tLoad.m_pVideoWindow->SetWindowPosition(0, 0, rect.right, rect.bottom);
+	else
+		tLoad.m_pVideoWindow->SetWindowPosition(0, 0, GetSystemMetrics(SM_CXFULLSCREEN), GetSystemMetrics(SM_CYFULLSCREEN));
+
+	// Set the owner window to receive event notifications.
+	tLoad.m_pGraphBuilder->QueryInterface(IID_IMediaEventEx, (void **)&tLoad.m_pMediaEvent);
+	tLoad.m_pMediaEvent->SetNotifyWindow((OAHWND)tLoad.m_hWnd, WM_GRAPHNOTIFY, 0);
+
+	tLoad.m_pGraphBuilder->QueryInterface(IID_IMediaControl, (void **)&tLoad.m_pMediaControl);
+
+	vVideos.push_back(tLoad);
+
+	return m_nCount++;
+}
+
+bool CDirectShow::Play(int nID)
+{
+	if (nID >= (signed)vVideos.size())
+		return false;
+	vVideos[nID].m_pVideoWindow->SetWindowForeground(-1);
+	//if(vVideos[nID].m_bIsFullscreen)
+	//	vVideos[nID].m_pVideoWindow->put_FullScreenMode(OATRUE);
+	vVideos[nID].m_pMediaControl->Run();
+	//InvalidateRect(vVideos[nID].m_hWnd, NULL, NULL);
+	m_nCurrent = nID;
+	m_bIsPlaying = true;
+	return true;
+}
+
+bool CDirectShow::Stop(int nID)
+{	
+	if (nID >= (signed)vVideos.size())
+		return false;
+	m_bIsPlaying = false;
+	vVideos[nID].m_pVideoWindow->put_Visible(OAFALSE);
+	vVideos[nID].m_pMediaControl->Stop();
+
+	
+	//vVideos[nID].m_pVideoWindow->put_FullScreenMode(OAFALSE);
+	
+
+	return true;
+}
+
+void CDirectShow::Release(int nID)
+{
+	if (nID >= (signed)vVideos.size())
+		return;
+	
+	//if (vVideos[nID].m_pMediaControl)
+	//{
+	//	vVideos[nID].m_pMediaControl->Stop();			// Stop the graph
+	//	vVideos[nID].m_pMediaControl->Release();		// Release the Movie Controls	
+	//	vVideos[nID].m_pMediaControl = NULL;			// Set to NULL for safety
+	//}
+	//if (vVideos[nID].m_pVideoWindow)
+	//{
+	//	vVideos[nID].m_pVideoWindow->put_Visible(OAFALSE);		// show no longer
+	//	vVideos[nID].m_pVideoWindow->put_Owner(NULL);			// Have no Owner
+	//	vVideos[nID].m_pVideoWindow->Release();						// Release the video Window
+	//	vVideos[nID].m_pVideoWindow = NULL;							// NULL for safety
+	//}
+	//if (vVideos[nID].m_pMediaEvent)
+	//{
+	//	vVideos[nID].m_pMediaEvent->Release();			// release 
+	//	vVideos[nID].m_pMediaEvent = NULL;				// NULL for safety
+	//}
+	if (vVideos[nID].m_pGraphBuilder)
+	{
+		vVideos[nID].m_pGraphBuilder->Release();
+		vVideos[nID].m_pGraphBuilder = NULL;
+	}
+	
+	m_nCount--;
+
+}
+
+
+void CDirectShow::HandleEvent(int nID)
+{
+	long evCode, param1, param2;		// parameters to be set on certain messages
+	HRESULT result;							// for error tracking
+	if (nID >= (signed)vVideos.size())
+		return;
+	
+	/*if (vVideos[nID].m_pMediaEvent)
+		return;*/
+
+	// Call GetEvent until it returns a failure code, indicating that the queue is empty
+	while (result = vVideos[nID].m_pMediaEvent->GetEvent(&evCode, &param1, &param2, 0), SUCCEEDED(result))
+	{
+		result	 = vVideos[nID].m_pMediaEvent->FreeEventParams(evCode, param1, param2);
+
+		// if the sample stops playing or is stopped by the user then call cleanup
+		if ((evCode == EC_COMPLETE) || (evCode == EC_USERABORT))
+		{
+			Release(nID);
+			m_bIsFinished = true;
+			m_bIsPlaying = false;
+			break;
+		}
+	}
+}
+
 void CDirectShow::ShutDown()
 {
-	//pVW->SetWindowForeground(0);
-	pMC->Stop();
-	//set the window to play behind the game window
-	//pVW->SetWindowForeground(0);
-	//set playing to false;
-	m_bIsPlaying = false;
-
-	//release the media controller
-	if(pMC)
-	{
-		pMC->Release();
-		pMC = NULL;
-	}
-	//release the video window
-	if(pVW)
-	{
-		pVW->put_Visible(OAFALSE);
-		pVW->put_Owner(NULL);
-		pVW->Release();
-	}
-	//release the media event handler
-	if(pME)
-	{
-		pME->Release();
-		pME = NULL;
-	}
-	//release the graph builder
-	if(pGB)
-	{
-		pGB->Release();
-		pGB = NULL;
-	}
-	//unitialize the com interface
-	CoUninitialize();
-	//update the game window
-	if(!CGame::GetInstance()->GetIsWindowed())
-		CSGD_Direct3D::GetInstance()->ChangeDisplayParam(800, 600, CGame::GetInstance()->GetIsWindowed());
-}
-
-void CDirectShow::Play(LPCWSTR lstrFilename)
-{	
-	//initialize the com interface
-	CoInitialize(NULL);
-
-	//This creates the filter graph manager
-	CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC,
-	IID_IGraphBuilder, (void **)&pGB);
-
-	//Query COM interface
-	pGB->QueryInterface(IID_IMediaControl, (void **)&pMC);
-	pGB->QueryInterface(IID_IVideoWindow, (void **)&pVW);
 	
-	//set is playing to true
-	m_bIsPlaying = true;
-
-	//build the streming video file
-	pGB->RenderFile(lstrFilename,NULL);
-	//Set the parent window
-	pVW->put_Owner((OAHWND)g_hwnd);
-	g_hwnd = CGame::GetInstance()->GetWindowHandle();
-	//Set the style to the child window
-	pVW->put_WindowStyle(WS_CHILD | WS_CLIPSIBLINGS);
-	//here we create a RECT in which to draw the child window on
-	//make a rect to store the parent information 
-	RECT vwrect;	
-	//get the size of the Parent
-	GetClientRect(g_hwnd,&vwrect);
-	//get an set the actual position in the window to display at
-	POINT actual;
-	actual.x = 0;
-	actual.y = 0;
-	ScreenToClient(g_hwnd, &actual);
-	actual.x *= -1;
-	actual.y *= -1;
-	//Set the Child to this position
-	pVW->SetWindowPosition(actual.x,actual.y,vwrect.right,vwrect.bottom);
-	//hide the cursor while video plays
-	pVW->HideCursor(OATRUE);
-	//set the video to play on top of the game window
-	//pVW->SetWindowForeground(-1);
-	//query the graph builder for the event its sending
-	pGB->QueryInterface(IID_IMediaEventEx, (void**)&pME);
-	//send the message to the parent window
-	pME->SetNotifyWindow((OAHWND)g_hwnd,WM_GRAPHNOTIFY, 0);
-	//send the graphic builder info to the media controller
-	pGB->QueryInterface(IID_IMediaControl, (void **)&pMC);
-	//play the video
-	pMC->Run();
-}
-void CDirectShow::Update(float fElapsedTime)
-{
-	////if the video is playing
-	//if(m_bIsPlaying)
-	//{
-	//	//set the window to play on top of the game window
-	//	//pVW->SetWindowForeground(OATRUE);
-	//	//set the window handle
-	//	g_hwnd = CGame::GetInstance()->GetWindowHandle();
-	//	//make a rect to store the parent window info
-	//	RECT vwrect;	
-	//	//get the size of the Parent
-	//	GetClientRect(g_hwnd,&vwrect);
-	//	//get an set the actual position in the window to display at
-	//	POINT actual;
-	//	actual.x = 0;
-	//	actual.y = 0;
-	//	ScreenToClient(g_hwnd, &actual);
-	//	actual.x *= -1;
-	//	actual.y *= -1;
-	//	//if not in fullscreen
-	//	if(!m_bIsFullScreen)
-	//		//set the screen to fit nside the game window
-	//		pVW->SetWindowPosition(actual.x,actual.y, vwrect.right,vwrect.bottom);//actual.x + 120,actual.y + 182);//648, 515);
-	//	else
-	//		//if in fullscreen set to the resolution of the screen 
-	//		pVW->SetWindowPosition(0,0, GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
-
-	//}
-
-	if(CSGD_DirectInput::GetInstance()->GetBufferedKey(DIK_RETURN))
+	for (unsigned int i = 0; i < vVideos.size(); i++)
 	{
-		pVW->put_Visible(OAFALSE);
-		Stop();
-		ShowWindow(g_hwnd,SW_SHOW);
-		SetFocus(g_hwnd);
-		m_bIsPlaying = false;
+		Release(i);
 	}
-
-
-}
-void CDirectShow::Stop()
-{
-
-	//stop the video
-	//pMC->Stop();
+	vVideos.clear();
 	
-	
-	//initialize the graph manager
-	pGB = NULL;
-	//initialize the media controller
-	pMC = NULL;
-	//initialize the video window
-	pVW = NULL;
-	//intiaize the video event handler
-	pME = NULL;
 }

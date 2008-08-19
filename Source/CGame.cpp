@@ -16,7 +16,7 @@
 #include "irrXML.h"
 #include "WinGameState.h"
 #include "LoseGameState.h"
-
+#include "DirectShow.h"
 using namespace std;
 
 CGame::CGame(void)
@@ -41,7 +41,7 @@ CGame::CGame(void)
 	m_nLoses = 0;
 	m_nFood = 0;
 	m_chJinCount = m_chKCount = m_chXiaCount = 0;
-
+	m_bFPS = true;
 }
 
 CGame::~CGame(void)
@@ -133,6 +133,9 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pRenderTarget, NULL);
 	//m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pVisibleTarget, NULL);
 	
+	m_nFontID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
+	m_BF.InitBitmapFont(m_nFontID,' ',16,128,128);
+
 	return true;
 }
 
@@ -144,6 +147,7 @@ void CGame::Shutdown(void)
 	//	Unload assets
 	for (int i = 0; i < 10; i++)
 	{
+		m_pTM->ReleaseTexture(m_nFontID);
 		m_pTM->ReleaseTexture(m_pCities[i]->GetImageID());
 		delete m_pCities[i];
 	}
@@ -258,6 +262,9 @@ bool CGame::Main(void)
 		}*/
 	}
 
+	if(/*m_bIsWindowed && */CDirectShow::GetInstance()->IsPlaying() && InvalidateRect(m_hWnd, 0, 0))
+		return true;
+
 	m_pD3D->Clear(0, 0, 0);
 	m_pD3D->DeviceBegin();
 	m_pD3D->LineBegin();
@@ -282,15 +289,6 @@ bool CGame::Main(void)
 	}
 
 	m_pD3D->Clear(0, 0, 0);
-
-	 //Print Frames Per Second
-	if (m_bFPS)
-	{
-		char buffer[128];
-		sprintf_s(buffer, _countof(buffer), "FPS: %i", m_nFPS);
-		CSGD_Direct3D::GetInstance()->DrawTextA(buffer, 0,20,255,255,255);
-	}
-
 	char buffer2[128];
 	sprintf_s(buffer2, _countof(buffer2), "Position: %i %i", m_ptMousePos.x, m_ptMousePos.y);
 	CSGD_Direct3D::GetInstance()->DrawTextA(buffer2, 120,20,255,255,255);
@@ -302,6 +300,15 @@ bool CGame::Main(void)
 	}
 	POINT ptMouse = GetCursorPosition();
 	//m_pTM->Draw(m_nCursorID, ptMouse.x, ptMouse.y);
+
+	//Print Frames Per Second
+	if (m_bFPS)
+	{
+		char buffer[128];
+		sprintf_s(buffer, _countof(buffer), "FPS: %i", m_nFPS);
+
+		m_BF.DrawTextA(buffer,0,20,.3f,.3f,D3DCOLOR_ARGB(255,255,255,255));//CSGD_Direct3D::GetInstance()->DrawTextA(buffer, 0,20,255,255,255);
+	}
 
 	m_pD3D->SpriteEnd();
 	m_pD3D->LineEnd();

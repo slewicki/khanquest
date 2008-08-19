@@ -12,6 +12,8 @@ class COptionsMenuState : public IGameState
 	CSGD_DirectInput*		m_pDI;
 	CBitmapFont				m_BF;
 	CSGD_WaveManager*		m_pWM;	
+	
+	float					m_JoyTimer;
 
 	int m_nImageID;
 	POINT m_ptImageLoc, m_ptImageSize;
