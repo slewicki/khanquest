@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Menu Name ="KeyBinding">
+      <Image>
+        <ImageLocationX>0</ImageLocationX>
+        <ImageLocationY>0</ImageLocationY>
+        <ImageName>Resource/KQ_PageBkg3.png</ImageName>
+        <SizeX>800</SizeX>
+        <SizeY>600</SizeY>
+      </Image>
+
+      <Cursor>
+          <CursorName>Resource/KQ_AttackSymbol.png</CursorName>
+          <CursorScaleX>.5</CursorScaleX>
+          <CursorScaleY>.5</CursorScaleY>
+      </Cursor>
+
+      <Songs>
+             <Song>Resource/KQ_CitySelect.wav</Song>
+      </Songs>
+
+      <NumButtons>7</NumButtons>
+      
+          <Button>
+                  <ButtonPositionX>300</ButtonPositionX>
+                  <ButtonPositionY>50</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>255</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.3</TextScaleX>
+                  <TextScaleY>.3</TextScaleY>
+                  <ButtonText>Controls</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>275</ButtonPositionX>
+                  <ButtonPositionY>150</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>4</Action>
+                  <ButtonText>KeyBind All</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>150</ButtonPositionX>
+                  <ButtonPositionY>200</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>0</Action>
+                  <ButtonText>Camera Up</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>150</ButtonPositionX>
+                  <ButtonPositionY>250</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>1</Action>
+                  <ButtonText>Camera Down</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>150</ButtonPositionX>
+                  <ButtonPositionY>300</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>2</Action>
+                  <ButtonText>Camera Left</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>150</ButtonPositionX>
+                  <ButtonPositionY>350</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>3</Action>
+                  <ButtonText>Camera Right</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>275</ButtonPositionX>
+                  <ButtonPositionY>400</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>5</Action>
+                  <ButtonText>Back</ButtonText>
+          </Button>
+</Menu>
+
+
+
