@@ -223,7 +223,7 @@ void CUnit::Update(float fElapsedTime)
 	{
 		m_fMovementTimer += fElapsedTime;
 		// We are at the destination tile or are we in range of our target? then stop
-		if(m_nState== !RETREAT && ( m_vPath.size() == 0 || (GetDestTile() == GetCurrentTile()) || (m_pTarget && IsTargetInRange()) ) )
+		if(m_nState== !RETREAT && ( (GetDestTile() == GetCurrentTile()) || (m_pTarget && IsTargetInRange()) ) )
 		{
 			m_vPath.clear();
 			SetNextTile(NULL);

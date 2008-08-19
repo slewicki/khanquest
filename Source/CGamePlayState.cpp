@@ -54,7 +54,7 @@ void CGamePlayState::Enter(void)
 	m_nTestEmitter = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_DustCload.dat", 128, 128);
 
 	// Register any Events with the GamePlayState
-	Map->LoadFile("Resource/Levels/KQ_Level3.level");
+	Map->LoadFile("Resource/Levels/KQ_Level4.level");
 
 	m_pOM->UpdatePlayerUnitStartTile();
 
@@ -100,7 +100,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 
 	if(!m_bIsPaused)
 	{
-
+		m_pHUD->Input(fElapsedTime);
 		if(m_pDI->GetBufferedKey(DIK_F1))
 		{
 			//Tile  = &Map->GetTile(4,4);
@@ -249,6 +249,8 @@ void CGamePlayState::Render(float fElapsedTime)
 			sprintf_s(buffer3, 32, "PlayerSpawn: True");
 		else
 			sprintf_s(buffer3, 32, "PlayerSpawn: False");
+		
+		POINT miniTileLoc = Map->IsoMiniMouse(CGame::GetInstance()->GetCursorPosition().x, CGame::GetInstance()->GetCursorPosition().y, 0);
 
 		sprintf_s(buffer4, 32, "Local Anchor: %i, %i", Map->GetTile(0,TileLoc.x, TileLoc.y)->ptLocalAnchor.x, Map->GetTile(0,TileLoc.x, TileLoc.y)->ptLocalAnchor.y);
 		sprintf_s(buffer5, 32, "Global Anchor: %i, %i", MapLoc.x, MapLoc.y);
@@ -258,13 +260,17 @@ void CGamePlayState::Render(float fElapsedTime)
 		m_cFont.DrawTextA(buffer3, 500, 60, .2f, .2f);
 		m_cFont.DrawTextA(buffer4, 500, 90, .2f, .2f);
 		m_cFont.DrawTextA(buffer5, 500, 120, .2f, .2f);
+		sprintf_s(buffer5, 32, "Minimap Tile: %i, %i", miniTileLoc.x, miniTileLoc.y);
+		m_cFont.DrawTextA(buffer5, 500, 150, .2f, .2f);
+
+
 	}
 
 	m_pOM->RenderObjects(fElapsedTime);
 
 	// Temp for demo
 	m_pTM->Draw(m_nButtonID, m_rVictoryButton.left, m_rVictoryButton.top, .4f, .3f);
-	Map->ParalaxScroll(true, m_pCamera->GetScreenArea());
+	//Map->ParalaxScroll(true, m_pCamera->GetScreenArea());
 
 	m_cFont.DrawTextA("Victory", m_rVictoryButton.left+30, m_rVictoryButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 	//----------------------------------------------

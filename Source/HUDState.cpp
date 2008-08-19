@@ -3,7 +3,7 @@
 #include "ObjectManager.h"
 #include "CTileEngine.h"
 #include "CCamera.h"
-
+#include "CGame.h"
 CHUDState::CHUDState(void)
 {
 }
@@ -14,12 +14,14 @@ CHUDState::~CHUDState(void)
 void CHUDState::Enter(void)
 {
 	m_pTM = CSGD_TextureManager::GetInstance();
+	m_pDI = CSGD_DirectInput::GetInstance();
 	int nFontID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_BF.InitBitmapFont(nFontID,' ',16,128,128);
 	m_nHUDID = m_pTM->LoadTexture("Resource/KQ_HUD.png");
 	m_nIconID = m_pTM->LoadTexture("Resource/KQ_UnitIcons.png");
 	m_nInfantry = m_nCavalry = m_nCavalryArcher = m_nAxmen = m_nArcher = m_nWarElephant = 0;
-
+	m_nMiniMapBkgID = m_pTM->LoadTexture("Resource/KQ_MiniMapBack.png");
+	
 }
 
 void CHUDState::Exit(void)
@@ -29,7 +31,16 @@ void CHUDState::Exit(void)
 
 bool CHUDState::Input(float fElapsedTime)
 {
-
+	POINT ptMouse = CGame::GetInstance()->GetCursorPosition();
+	if(ptMouse.y > 400)
+	{
+		POINT ptTile = CTileEngine::GetInstance()->IsoMiniMouse(ptMouse.x, ptMouse.y, 0);
+		if(m_pDI->GetBufferedMouseButton(M_BUTTON_RIGHT) && ptTile.x>=0 && ptTile.y>=0)
+		{
+			ObjectManager::GetInstance()->UpdatePlayerUnitDestTile(CTileEngine::GetInstance()->GetTile(0,ptTile.x, ptTile.y));
+			//CTileEngine::GetInstance()->GetTile(0, ptTile.x, ptTile.y)->bIsVisible = false;
+		}
+	}
 	return true;
 }
 
@@ -74,6 +85,7 @@ void CHUDState::Update(float fElapsedTime)
 
 void CHUDState::Render(float fElapsedTime)
 {
+	m_pTM->Draw(m_nMiniMapBkgID, 0, 0);
 	m_pTM->Draw(m_nHUDID,0,0);
 	
 	CTileEngine::GetInstance()->RenderMiniMap(CCamera::GetInstance()->GetScreenArea());

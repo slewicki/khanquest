@@ -93,6 +93,7 @@ public:
 	static CTileEngine* GetInstance();
 
 	POINT IsoMouse(int x, int y, int z);
+	POINT IsoMiniMouse(int x, int y, int z);
 
 	CTile* GetTile(int Layer, int x, int y) { return &pTileArray[Layer][x][y]; }
 	CTile* MapToTile(int Layer, int x, int y);

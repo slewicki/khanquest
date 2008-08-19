@@ -9,12 +9,14 @@
 #include "IGameState.h"
 #include "CSGD_TextureManager.h"
 #include "CBitmapFont.h"
+#include "CSGD_DirectInput.h"
 
 class CUnit;
 
 class CHUDState : public IGameState
 {
 	CSGD_TextureManager* m_pTM;
+	CSGD_DirectInput*	 m_pDI;
 	CBitmapFont			 m_BF;
 	int					 m_nHUDID;
 	int					 m_nIconID;
@@ -27,6 +29,8 @@ class CHUDState : public IGameState
 	int m_nAxmen;
 	int m_nArcher;
 	int m_nWarElephant;
+	int	m_nMiniMapBkgID;
+
 
 	enum 	// Type of object
 	{
