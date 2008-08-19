@@ -214,7 +214,7 @@ void CWorldMapState::Render(float fElapsedTime)
 		if(!m_bPaused && CGame::GetInstance()->IsMouseInRect(m_pCities[i]->GetClickRect()) && m_pCities[i]->IsAttackable())
 		{
 			m_pTM->Draw(m_pCities[i]->GetImageID(), 0, 0, 1, 1, 0, 0, 0, 0, this->m_dwSelectedColor);
-			//CGame::GetInstance()->SetCursorClick();
+			CGame::GetInstance()->SetCursorClick();
 			switch(m_pCities[i]->GetOwner())
 			{
 			case XIA_CITY: // Xia Territory"

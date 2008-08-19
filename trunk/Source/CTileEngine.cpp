@@ -14,6 +14,7 @@ CTileEngine::CTileEngine()
 	m_nImageID = -1;
 	m_nImageID = m_pTM->LoadTexture("Resource/KQ_Terrain.png", D3DCOLOR_XRGB(255, 0, 255));
 	m_nScrollImage = m_pTM->LoadTexture("Resource/KQ_Clouds.png");
+	//m_nBlankTileID = m_pTM->LoadTexture("Resource/KQ_BlankTile.png");
 	m_ptMousePoint.x = 0;
 	m_ptMousePoint.y = 0;
 	m_nScrollX = 800;
@@ -22,6 +23,7 @@ CTileEngine::CTileEngine()
 
 CTileEngine::~CTileEngine()
 {
+	//m_pTM->ReleaseTexture(m_nBlankTileID);
 	Clear();
 }
 
@@ -132,7 +134,7 @@ void CTileEngine::LoadFile(char* szFileName)
 					if (bTempBool)
 					{
 						pTileArray[nLayer][x][y].bIsCollision = true;
-						//pTileArray[nLayer][x][y].bIsOccupied = true;
+						pTileArray[nLayer][x][y].bIsOccupied = false;
 					}
 					else
 					{
@@ -175,6 +177,13 @@ void CTileEngine::Render(RECT nCamPos)
 				{
 					if(nCamPos.left < pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.right > pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.top < pTileArray[nLayer][Row][Col].ptLocalAnchor.y && nCamPos.bottom > pTileArray[nLayer][Row][Col].ptLocalAnchor.y)
 					{
+						//Temp
+						//-------------------------
+						pTileArray[nLayer][Row][Col].vColor = D3DCOLOR_ARGB(255, 255, 255, 255);
+						
+						if(pTileArray[nLayer][Row][Col].bIsOccupied) 
+							pTileArray[nLayer][Row][Col].vColor = D3DCOLOR_ARGB(255,255, 0, 0);
+						//----------------------------
 						m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0, pTileArray[0][Row][Col].vColor); 
 						// Temp for anchors
 						//m_pTM->Draw(m_nImageID, pTileArray[0][Row][Col].ptLocalAnchor.x, pTileArray[0][Row][Col].ptLocalAnchor.y, .1, .1, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 0, 0, 0)); 
@@ -185,6 +194,90 @@ void CTileEngine::Render(RECT nCamPos)
 			}
 		}
 	}
+}
+
+void CTileEngine::RenderMiniMap(RECT nCamPos)
+{
+	float fPercentX, fPercentY;
+	fPercentX = 200.f/(m_nMapWidth*62); 
+	fPercentY = 100.f/(m_nMapHeight*32); 
+	for ( int nLayer = 0; nLayer < 1; nLayer++)
+	{
+		for (int Col = 0; Col < m_nMapHeight; Col++)
+		{
+			for(int Row = 0; Row < m_nMapWidth; Row++)
+			{
+				RECT rTile;
+				rTile.left = pTileArray[nLayer][Row][Col].ptPos.x * m_nTileWidth;
+				rTile.top = pTileArray[nLayer][Row][Col].ptPos.y * m_nTileHeight;
+				rTile.right = rTile.left + m_nTileWidth;
+				rTile.bottom = rTile.top + m_nTileHeight;
+
+				POINT ptTilePos = { (((Row * (m_nTileWidth*fPercentX) / 2)) + (Col * (m_nTileWidth*fPercentX) / 2))+510, (((Row * -((m_nTileHeight*fPercentY) / 2)) + (Col * (m_nTileHeight*fPercentY) / 2)) + 516) };
+
+				//if( (nCamPosX > pTileArray[Row][Col].ptLocalAnchor.x || nCamPosX < pTileArray[Row][Col].ptLocalAnchor.x) && (nCamPosY > pTileArray[Row][Col].ptLocalAnchor.y || nCamPosY < pTileArray[Row][Col].ptLocalAnchor.y))
+				if(pTileArray[0][Row][Col].bIsVisible == true)
+				{
+					/*if(nCamPos.left < pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.right > pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.top < pTileArray[nLayer][Row][Col].ptLocalAnchor.y && nCamPos.bottom > pTileArray[nLayer][Row][Col].ptLocalAnchor.y)
+					{*/
+						
+						m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0, pTileArray[0][Row][Col].vColor); 
+						
+					//}
+				}
+				else
+					m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 0, 0, 0)); 
+
+			}
+		}
+	}
+	//DWORD dwColor;
+	//
+	//for (int Col = 0; Col < m_nMapHeight; Col++)
+	//{
+	//	for(int Row = 0; Row < m_nMapWidth; Row++)
+	//	{
+	//		RECT rTile;
+	//		rTile.left = 0;
+	//		rTile.top = 0;
+	//		rTile.right = 62;
+	//		rTile.bottom = 32;
+
+	//		POINT ptTilePos = { (((Row * (m_nTileWidth*fPercentX) / 2)) + (Col * (m_nTileWidth*fPercentX) / 2))+510, (((Row * -((m_nTileHeight*fPercentY) / 2)) + (Col * (m_nTileHeight*fPercentY) / 2)) + 516) };
+
+	//		//if( (nCamPosX > pTileArray[Row][Col].ptLocalAnchor.x || nCamPosX < pTileArray[Row][Col].ptLocalAnchor.x) && (nCamPosY > pTileArray[Row][Col].ptLocalAnchor.y || nCamPosY < pTileArray[Row][Col].ptLocalAnchor.y))
+	//		if(pTileArray[0][Row][Col].bIsVisible == true)
+	//		{
+	//			/*if(nCamPos.left < pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.right > pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.top < pTileArray[nLayer][Row][Col].ptLocalAnchor.y && nCamPos.bottom > pTileArray[nLayer][Row][Col].ptLocalAnchor.y)
+	//			{*/
+	//				switch(pTileArray[0][Row][Col].nType)
+	//				{
+	//				case PLAIN:
+	//					dwColor = D3DCOLOR_ARGB(255, 0, 255, 0);
+	//					break;
+	//				case MOUNTAIN:
+	//					dwColor = D3DCOLOR_ARGB(255, 128, 128, 100);
+	//					break;
+	//				case FOREST:
+	//					dwColor = D3DCOLOR_ARGB(255, 0, 128, 0);
+	//					break;
+	//				case SHALLOW_WATER:
+	//					dwColor = D3DCOLOR_ARGB(255, 0, 0, 255);
+	//					break;
+	//				case DEEP_WATER:
+	//					dwColor = D3DCOLOR_ARGB(255, 0, 0, 128);
+	//					break;
+	//				}
+	//				m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0, dwColor); 
+	//				
+	//			//}
+	//		}
+	//		else
+	//			m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 255, 255, 0)); 
+
+	//	}
+	//}
+	
 }
 
 void CTileEngine::SetLocalAnchor()

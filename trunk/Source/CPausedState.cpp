@@ -57,15 +57,16 @@ bool CPausedState::Input(float fElapsedTime)
 {
 	if(CGame::GetInstance()->IsMouseInRect(m_rResumeButton))
 	{
-		//		CGame::GetInstance()->SetCursorClick();
+		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
 			CGamePlayState::GetInstance()->SetPaused(false);
 			CGame::GetInstance()->PopCurrentState();
 		}	
 	}
-	if(CGame::GetInstance()->IsMouseInRect(m_rRetreatButton))
+	else if(CGame::GetInstance()->IsMouseInRect(m_rRetreatButton))
 	{
+		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
 			CGamePlayState::GetInstance()->SetTerrorLevel(CGamePlayState::GetInstance()->GetTerrorLevel() - 25);
@@ -73,8 +74,9 @@ bool CPausedState::Input(float fElapsedTime)
 			CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
 		}
 	}
-	if(CGame::GetInstance()->IsMouseInRect(m_rQuitButton))
+	else if(CGame::GetInstance()->IsMouseInRect(m_rQuitButton))
 	{
+		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
 			CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
