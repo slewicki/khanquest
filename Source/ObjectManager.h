@@ -151,8 +151,15 @@ public:
 	/////////////////////////////////////////////////////
 	// Function: "GetSpawnPointDest"
 	//
+	// Purpose: sets units detestation to a spawn point
+	/////////////////////////////////////////////////////
+	void GetSpawnPointDest(CUnit* pUnit);
+
+	/////////////////////////////////////////////////////
+	// Function: "SetSelectedUnitsRetreat"
+	//
 	// Purpose: makes all units retreat
 	/////////////////////////////////////////////////////
-	void ObjectManager::GetSpawnPointDest(CUnit* pUnit);
+	void SetSelectedUnitsRetreat();
 
 };
