@@ -40,6 +40,18 @@ void CAnimInstance::Play(int Direction, int Action)
 		}
 }
 
+void CAnimInstance::StartFadeTimer(int Direction, int Action)
+{	
+	string name = GetName(Direction,Action);
+
+	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
+		if(name == m_Sheet.GetAnimations()[i].GetName())
+		{
+			m_Sheet.GetAnimations()[i].StartFadeTimer();
+			break;
+		}
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 // Function: “LookUp” 
 // Last Modified: July 27, 2008

@@ -13,7 +13,7 @@
 #include "CPausedState.h"
 #include "HUDState.h"
 #include "CFactory.h"
-#include "KeyBindState.h"
+//#include "KeyBindState.h"
 
 CGamePlayState::CGamePlayState(void)
 {
@@ -23,8 +23,7 @@ CGamePlayState::CGamePlayState(void)
 
 	m_bButtonDown = false;
 	m_nTerrorLevel = 0;
-	m_nSkyCloudID = -1;
-	m_nSkyCloudID2 = -1;
+
 }
 
 
@@ -52,10 +51,7 @@ void CGamePlayState::Enter(void)
 	m_pCamera->InitCamera(0.f,0.f);
 
 	m_pPE = CParticleEngine::GetInstance();
-	//m_nTestEmitter = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_DustCload.dat", 128, 128);
-	m_nSkyCloudID  = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_SkyClouds.dat", 0, -10);
-	m_nSkyCloudID2  = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_SkyClouds2.dat", 0, -10);
-
+	m_nTestEmitter = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_DustCload.dat", 128, 128);
 
 	// Register any Events with the GamePlayState
 	Map->LoadFile("Resource/Levels/KQ_Level3.level");
@@ -97,8 +93,9 @@ bool CGamePlayState::Input(float fElapsedTime)
 {
 	if(m_pDI->GetBufferedKey(DIK_ESCAPE))
 	{
-		m_bIsPaused = !m_bIsPaused;
-		CGame::GetInstance()->PushState(CPausedState::GetInstance());
+		m_bIsPaused = true;
+		if(m_bIsPaused)
+			CGame::GetInstance()->PushState(CPausedState::GetInstance());
 	}
 
 	if(!m_bIsPaused)
@@ -111,8 +108,8 @@ bool CGamePlayState::Input(float fElapsedTime)
 		}
 		if(m_pDI->GetBufferedKey(DIK_F2))
 		{
-			//m_pPE->SetPostion(200, 200, m_nTestEmitter);
-			//m_pPE->SetIsRunning(m_nTestEmitter, true);
+			m_pPE->SetPostion(200, 200, m_nTestEmitter);
+			m_pPE->SetIsRunning(m_nTestEmitter, true);
 		}
 
 		if(m_pDI->GetBufferedKey(DIK_F3))
@@ -184,16 +181,16 @@ bool CGamePlayState::Input(float fElapsedTime)
 
 				// Keyboard Camera Movement
 				// Move camera Left
-				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_RIGHT))))
+				if(m_pDI->GetKey(DIK_D))//m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_RIGHT))))
 					m_pCamera->SetVelX(100);
 				// Move camera Right
-				if( m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_LEFT))))
+				if( m_pDI->GetKey(DIK_A))//m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_LEFT))))
 					m_pCamera->SetVelX(-100);
 				// Move camera Down
-				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_DOWN))))
+				if(m_pDI->GetKey(DIK_S))//m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_DOWN))))
 					m_pCamera->SetVelY(100);
 				// Move camera Up
-				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_UP))))
+				if(m_pDI->GetKey(DIK_W))//m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_UP))))
 					m_pCamera->SetVelY(-100); 
 			}
 #pragma endregion		
@@ -292,15 +289,6 @@ void CGamePlayState::Render(float fElapsedTime)
 	sprintf_s(buffer, 128, "%i, %i", CGame::GetInstance()->GetCursorPosition().x, CGame::GetInstance()->GetCursorPosition().y);
 	m_cFont.DrawTextA(buffer, 0, 0);*/
 
-
-	POINT pSkyCloud = m_pCamera->TransformToScreen(0, -10);
-	m_pPE->SetPostion(pSkyCloud.x, pSkyCloud.y, m_nSkyCloudID);
-	m_pPE->SetIsRunning(m_nSkyCloudID, true);
-
-
-	POINT pSkyCloud2 = m_pCamera->TransformToScreen(0, -10);
-	m_pPE->SetPostion(pSkyCloud2.x, pSkyCloud2.y, m_nSkyCloudID2);
-	m_pPE->SetIsRunning(m_nSkyCloudID2, true);
 }
 
 string CGamePlayState::IntToString(int nNum)

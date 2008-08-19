@@ -94,7 +94,8 @@ void CUnit::RenderHealth()
 void CUnit::Update(float fElapsedTime)
 {
 	m_pAnimInstance->Update(fElapsedTime);
-	
+	if(!m_bIsAlive)
+		return;
 
 	// Set Global Rect
 	//-------------------------------
@@ -114,19 +115,29 @@ void CUnit::Update(float fElapsedTime)
 	//-------------------------------
 	m_rLocalRect = m_pAnimInstance->GetRenderRect(m_nDirectionFacing, m_nState);
 	//----------------------------------------
-	if(!m_bIsAlive)
-		return;
+	
 	if(m_nState == COMBAT && !m_pTarget)
 	{
 		SetState(IDLE);
+		ChangeDirection(GetCurrentTile());
 	}
 
-	if(m_nState != RETREAT && m_nCurrentHP <= ( m_nMaxHP * .5) && m_bIsAlive == true && ( !m_pCurrentTile->bIsEnemySpawn || !m_pCurrentTile->bIsPlayerSpawn ))
+	if(m_nState != RETREAT && m_nCurrentHP <= ( m_nMaxHP * .5) && m_bIsAlive == true 
+		&& ( !m_pCurrentTile->bIsEnemySpawn && !m_pCurrentTile->bIsPlayerSpawn ))
 	{
 		m_nState = RETREAT;
+		if(m_pTarget)
+			m_pTarget->RemoveAttacker(this);
 		SetTarget(NULL);
 		SetDestTile(NULL);
 		ObjectManager::GetInstance()->GetSpawnPointDest(this);
+		SetPath(CAISystem::GetInstance()->FindPath(GetCurrentTile(), GetDestTile()));
+		SetState(MOVEMENT);
+		if(GetNextTile())
+		{
+			
+			ChangeDirection(GetNextTile());
+		}
 	}
 
 	// If dead, start death animation and set dead
@@ -140,6 +151,7 @@ void CUnit::Update(float fElapsedTime)
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 		m_pAnimInstance->SetLooping(false);
 		m_pAnimInstance->SetPlayer(IsPlayerUnit());
+		m_pAnimInstance->StartFadeTimer(m_nDirectionFacing, m_nState);
 		return;
 	}
 	// If we aren't moving then make sure we are on the anchor point!
@@ -158,7 +170,8 @@ void CUnit::Update(float fElapsedTime)
 	}
 	
 	// Make 6 tiles around unit visible
-	UpdateVisibility();
+	if(IsPlayerUnit())
+		UpdateVisibility();
 
 	// AI
 	//---------------------------------------------------------------------------
@@ -174,7 +187,6 @@ void CUnit::Update(float fElapsedTime)
 	}
 	if (m_pTarget && m_nState != RETREAT)
 	{
-		
 		// Do we have a target? if so, is it in range? than attack
 		if(m_pTarget->GetHealth()>0 && IsTargetInRange())
 		{
@@ -217,6 +229,7 @@ void CUnit::Update(float fElapsedTime)
 			SetNextTile(NULL);
 			SetDestTile(NULL);
 			m_nState = IDLE;
+			ChangeDirection(GetCurrentTile());
 			return;
 		}
 		// Is our next tile == the dest and is it occupied? then just stop
@@ -226,6 +239,7 @@ void CUnit::Update(float fElapsedTime)
 			SetNextTile(NULL);
 			SetDestTile(NULL);
 			m_nState = IDLE;
+			ChangeDirection(GetCurrentTile());
 			return;
 		}
 		// 
@@ -275,6 +289,7 @@ void CUnit::Update(float fElapsedTime)
 				SetNextTile(NULL);
 				SetDestTile(NULL);
 				SetState(IDLE);
+				ChangeDirection(GetCurrentTile());
 			}
 			// If we have a next tile, change direction towards that one
 			if(GetNextTile())
@@ -315,7 +330,7 @@ void CUnit::Render(float fElapsedTime)
 		}
 		
 	}
-	if(CCamera::GetInstance()->IsOnScreen(GetGlobalRect()))
+	if(CCamera::GetInstance()->IsOnScreen(GetGlobalRect()) && GetCurrentTile()->bIsVisible)
 	{
 		m_pAnimInstance->Render();
 	}
@@ -519,13 +534,14 @@ void CUnit::ResolveCombat()
 	if(m_pTarget->GetHealth() <= 0)
 	{
 		m_pTarget->RemoveAttacker(this);
-		for (unsigned int i = 0; i < m_pTarget->GetAttackerList().size(); i++)
+		for (unsigned int i = 0; m_pTarget && i < m_pTarget->GetAttackerList().size(); i++)
 		{
 			// We target is dead tell all attackers to lay off!
 			m_pTarget->GetAttackerList()[i]->SetTarget(NULL);
 		}
-		m_pTarget->GetAttackerList().clear();
+		m_pTarget->ClearAttackerList();
 		m_pTarget->GetCurrentTile()->pUnit = NULL;
+		m_pTarget->GetCurrentTile()->bIsOccupied = false;
 		m_pTarget = NULL;
 	}
 }

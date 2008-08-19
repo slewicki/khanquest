@@ -117,6 +117,7 @@ public:
 	inline RECT   GetLocalRect	    (void) const { return m_rLocalRect; }
 	inline RECT   GetGlobalRect	(void) const { return m_rGlobalRect; }
 	inline vector<CUnit*>   GetAttackerList	(void) const { return m_vAttackers; }
+	
 
 
 	//////////////////////////////////////////////////////
