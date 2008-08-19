@@ -25,7 +25,9 @@ but may use it in any project for educational purposes.
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 #include <vector>
+#include <string>
 using std::vector;
+using std::string;
 
 #pragma comment (lib, "dinput8.lib")
 #pragma comment (lib, "dxguid.lib")
@@ -495,5 +497,11 @@ public:
 	//	Purpose	:	Returns the name of the joystick (i.e. "Logitech Dual Action Gamepad")
 	///////////////////////////////////////////////////////////////////
 	char *GetJoystickName(int nNum = 0);
+
+	DWORD CheckKeysInDIK(void);
+
+	string DIKtoString(DWORD DIK_CODE);
+
+	
 };
 
