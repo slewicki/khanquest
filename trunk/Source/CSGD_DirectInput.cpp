@@ -1121,3 +1121,130 @@ char *CSGD_DirectInput::GetJoystickName(int nNum)
 	//	Return the name of the joystick.
 	return m_joystickList[nNum].szJoyname;
 }
+
+string CSGD_DirectInput::DIKtoString(DWORD DIK_CODE)
+{
+	if(DIK_CODE == -1)
+		return "Invalid";
+	unsigned short num = -1;
+	UINT vkcode = 0;
+	string szOut;
+	
+
+	//	Map the Scan Code from Direct Input to a Virtual Key value....
+	vkcode = MapVirtualKeyEx(DIK_CODE, 1, m_keyLayout);
+	//	...and tranlsate that Virtual Key into an Ascii Value.
+	ToAsciiEx(vkcode, DIK_CODE, m_ucAsciiVals, &num, 0, m_keyLayout);
+	
+	switch(DIK_CODE)
+	{
+	case DIK_LCONTROL:
+		 szOut = "Left Control";
+		 break;
+	case DIK_RCONTROL:
+		szOut = "Right Control";
+		 break;
+
+	case DIK_LSHIFT:
+		szOut = "Left Shift";
+		 break;
+
+	case DIK_RSHIFT:
+		szOut = "Right Shift";
+		 break;
+
+	case DIK_SPACE:
+		szOut = "Space";
+		 break;
+
+	case DIK_RETURN:
+	case DIK_ESCAPE:
+	case DIK_TAB:
+		szOut = "Invalid";
+		 break;
+
+	case DIK_UP:
+		szOut =  "Up Arrow";
+		 break;
+
+	case DIK_DOWN:
+		szOut = "Down Arrow";
+		 break;
+
+	case DIK_LEFT:
+		szOut = "Left Arrow";
+		 break;
+
+	case DIK_RIGHT:
+		szOut = "Right Arrow";
+		 break;
+
+	case DIK_LMENU:
+		szOut = "Invalid";
+		 break;
+	case DIK_NUMPAD0:
+		return "Numpad 0";
+	case DIK_NUMPAD1:
+		return "Numpad 1";
+	case DIK_NUMPAD2:
+		return "Numpad 2";
+	case DIK_NUMPAD3:
+		return "Numpad 3";
+	case DIK_NUMPAD4:
+		return "Numpad 4";
+	case DIK_NUMPAD5:
+		return "Numpad 5";
+	case DIK_NUMPAD6:
+		return "Numpad 6";
+	case DIK_NUMPAD7:
+		return "Numpad 7";
+	case DIK_NUMPAD8:
+		return "Numpad 8";
+	case DIK_NUMPAD9:
+		return "Numpad 9";
+	default:
+		if((char)num < 'a' || (char)num > 'z')
+			return "Invalid";
+
+	}
+	char ch[2];
+	ch[0] = (char)num;
+	ch[1] = '\0';
+	if(num == -1)
+		szOut = "Invalid";
+	if(szOut.empty())
+		szOut = ch;
+
+	return szOut;
+		
+
+	
+}
+
+DWORD CSGD_DirectInput::CheckKeysInDIK(void)
+{	
+
+
+	//	Go through each keyboard state.
+	//	Get the Current Keyboard State.
+	if (!(GetKeyboardState(m_ucAsciiVals)))
+		DIERRBOX("Could not GetKeyboardState.");
+
+	unsigned short num = 0;
+	UINT vkcode = 0;
+
+	//	Go through each element in the Buffer.
+	for (DWORD i = 0; i < m_dwKeyElements; i++)
+	{
+		for (unsigned int j = 0; j < 256; j++)
+		{
+			if ((m_didodKey[i].dwOfs == j) && (m_didodKey[i].dwData & 0x80))
+			{
+				return j;
+			}
+		}
+	}
+
+	//	Return the Ascii Value.
+	return -1;
+}
