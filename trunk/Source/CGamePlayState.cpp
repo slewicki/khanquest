@@ -23,7 +23,8 @@ CGamePlayState::CGamePlayState(void)
 
 	m_bButtonDown = false;
 	m_nTerrorLevel = 0;
-
+	m_nSkyCloudID = -1;
+	m_nSkyCloudID2 = -1;
 }
 
 
@@ -51,7 +52,10 @@ void CGamePlayState::Enter(void)
 	m_pCamera->InitCamera(0.f,0.f);
 
 	m_pPE = CParticleEngine::GetInstance();
-	m_nTestEmitter = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_DustCload.dat", 128, 128);
+	//m_nTestEmitter = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_DustCload.dat", 128, 128);
+	m_nSkyCloudID  = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_SkyClouds.dat", 0, -10);
+	m_nSkyCloudID2  = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_SkyClouds2.dat", 0, -10);
+
 
 	// Register any Events with the GamePlayState
 	Map->LoadFile("Resource/Levels/KQ_Level3.level");
@@ -107,8 +111,8 @@ bool CGamePlayState::Input(float fElapsedTime)
 		}
 		if(m_pDI->GetBufferedKey(DIK_F2))
 		{
-			m_pPE->SetPostion(200, 200, m_nTestEmitter);
-			m_pPE->SetIsRunning(m_nTestEmitter, true);
+			//m_pPE->SetPostion(200, 200, m_nTestEmitter);
+			//m_pPE->SetIsRunning(m_nTestEmitter, true);
 		}
 
 		if(m_pDI->GetBufferedKey(DIK_F3))
@@ -288,6 +292,15 @@ void CGamePlayState::Render(float fElapsedTime)
 	sprintf_s(buffer, 128, "%i, %i", CGame::GetInstance()->GetCursorPosition().x, CGame::GetInstance()->GetCursorPosition().y);
 	m_cFont.DrawTextA(buffer, 0, 0);*/
 
+
+	POINT pSkyCloud = m_pCamera->TransformToScreen(0, -10);
+	m_pPE->SetPostion(pSkyCloud.x, pSkyCloud.y, m_nSkyCloudID);
+	m_pPE->SetIsRunning(m_nSkyCloudID, true);
+
+
+	POINT pSkyCloud2 = m_pCamera->TransformToScreen(0, -10);
+	m_pPE->SetPostion(pSkyCloud2.x, pSkyCloud2.y, m_nSkyCloudID2);
+	m_pPE->SetIsRunning(m_nSkyCloudID2, true);
 }
 
 string CGamePlayState::IntToString(int nNum)
