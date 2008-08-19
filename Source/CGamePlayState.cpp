@@ -109,6 +109,11 @@ bool CGamePlayState::Input(float fElapsedTime)
 			m_pPE->SetIsRunning(m_nTestEmitter, true);
 		}
 
+		if(m_pDI->GetBufferedKey(DIK_F3))
+		{
+			m_pOM->SetSelectedUnitsRetreat();
+		}
+
 		POINT ptMousePos = CGame::GetInstance()->GetMousePos(); 
 		if(ptMousePos.y <= 450 && ((ptMousePos.x > 0 && ptMousePos.x < 800) && (ptMousePos.y > 0 && ptMousePos.y < 600)))
 		{
