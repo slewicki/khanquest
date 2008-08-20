@@ -36,6 +36,8 @@ public:
 
 	void InitCamera(float fStartPosX, float fStartPosY);
 
+	void CenterCamera(int nPosX, int nPosY);
+
 	//////////////////////////////////////////////////////
 	//	Function:	Accessors
 	//

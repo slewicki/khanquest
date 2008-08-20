@@ -40,6 +40,10 @@ bool CHUDState::Input(float fElapsedTime)
 			ObjectManager::GetInstance()->UpdatePlayerUnitDestTile(CTileEngine::GetInstance()->GetTile(0,ptTile.x, ptTile.y));
 			//CTileEngine::GetInstance()->GetTile(0, ptTile.x, ptTile.y)->bIsVisible = false;
 		}
+		if(m_pDI->GetMouseButton(M_BUTTON_LEFT) && ptTile.x>=0 && ptTile.y>=0)
+		{
+			CCamera::GetInstance()->CenterCamera(CTileEngine::GetInstance()->GetTile(0,ptTile.x, ptTile.y)->ptLocalAnchor.x, CTileEngine::GetInstance()->GetTile(0,ptTile.x, ptTile.y)->ptLocalAnchor.y);
+		}
 	}
 	return true;
 }

@@ -133,3 +133,9 @@ bool CCamera::IsOnScreen(RECT rObjectArea)
 	else
 		return false;
 }
+
+void CCamera::CenterCamera(int nPosX, int nPosY)
+{
+	m_vPos.fX = (float)(nPosX - 400);
+	m_vPos.fY = (float)(nPosY - 225);
+}
