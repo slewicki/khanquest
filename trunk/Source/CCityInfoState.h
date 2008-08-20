@@ -28,9 +28,8 @@ private:
 	CBitmapFont								m_cFont;
 	string									m_szTitle;
 	string									m_szDescription;
-	int										m_nSongID;
 	int										m_nClick;
-
+	float									m_JoyTimer;
 	// Unit sprite IDs (Unit animations later)
 	CCity*									m_pSelectedCity;
 	int										m_nDisplayID;

@@ -21,7 +21,7 @@ class CUpgradeMenuState : public IGameState
 	int										m_nCheckBoxID;
 	int										m_nCheckMarkID;
 	int										m_nClick;
-	int										m_nSongID;
+
 	CCity*									m_pSelectedCity;
 	CBitmapFont								m_cFont;
 	CUnit*									m_pPlayerUnitInfo;

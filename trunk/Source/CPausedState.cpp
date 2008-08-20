@@ -43,6 +43,8 @@ void CPausedState::Enter(void)
 	m_nLucidiaWhiteID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
+	
+	CGame::GetInstance()->SetSongPlay(CITYSELECT);
 
 }
 

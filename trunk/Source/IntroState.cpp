@@ -27,7 +27,6 @@ void CIntroState::Enter()
 	m_pDI = CSGD_DirectInput::GetInstance();
 	m_pWM = CSGD_WaveManager::GetInstance();
 	m_BF.InitBitmapFont(m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png"),' ',16,128,128);
-	m_nSongID = m_pWM->LoadWave("Resource/KQ_Intro.wav");
 	m_nImageID = m_pTM->LoadTexture("Resource/KQ_iCodeGames.png");
 	m_nTitleID = m_pTM->LoadTexture("Resource/KQ_Title.png");
 	
@@ -37,20 +36,12 @@ void CIntroState::Enter()
 	m_nTitle = 0;
 	m_fTimer = 0;
 	m_nAlpha = 0;
-	m_nVolume = 0;
-	m_nMaxVolume = CGame::GetInstance()->GetMusicVolume();
-
 	m_bPaused = false;
-	
-	m_pWM->SetVolume(m_nSongID,m_nVolume);
-
-	m_pWM->Play(m_nSongID);
+	CGame::GetInstance()->SetSongPlay(INTRO);
 
 }
 void CIntroState::Exit()
 {
-	m_pWM->Stop(m_nSongID);
-	m_pWM->UnloadWave(m_nSongID);
 }
 
 bool CIntroState::Input(float fElapsedTime)
@@ -65,7 +56,7 @@ bool CIntroState::Input(float fElapsedTime)
 	if(m_bTitle == true && m_nTitle == 0)
 		CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
 
-	if(m_pDI->GetBufferedKey(DIK_RETURN))
+	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedJoyButton(JOYSTICK_SELECT) || m_pDI->GetBufferedJoyButton(JOYSTICK_A))
 	{	
 		m_bTitle = true;
 	}
@@ -92,18 +83,14 @@ void CIntroState::Update(float fElapsedTime)
 	m_fTimer += fElapsedTime;
 	if(!m_bAlpha)
 	{		
-		if(m_fTimer > .002f) 
+		if(m_fTimer > .00002f) 
 		{
 			m_fTimer = 0;
 			m_nAlpha++;
-			if(m_nVolume < m_nMaxVolume)
-				m_pWM->SetVolume(m_nSongID,m_nVolume++);
-			else
-				m_pWM->SetVolume(m_nSongID,m_nMaxVolume);
 		}
 	}
 	else if(!m_bTitle)
-		if(m_fTimer > .002f)
+		if(m_fTimer > .00002f)
 		{
 			m_fTimer = 0;
 			if(m_nTitle <=255)
@@ -115,7 +102,7 @@ void CIntroState::Update(float fElapsedTime)
 void CIntroState::FadeOut(float fElapsedTime)
 {
 	m_fEscTimer += fElapsedTime;
-	if(m_fEscTimer > .001)
+	if(m_fEscTimer > .00001)
 	{
 		m_fEscTimer = 0;
 		
@@ -129,11 +116,5 @@ void CIntroState::FadeOut(float fElapsedTime)
 
 		if(m_nAlpha < 0)
 			m_nAlpha = 0;
-
-		if(m_bTitle)
-			if(m_nVolume >= 0)
-				m_pWM->SetVolume(m_nSongID,m_nVolume--);
-			else 
-				m_pWM->SetVolume(m_nSongID,0);
 	}
 }

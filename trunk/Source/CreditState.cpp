@@ -28,10 +28,13 @@ void CCreditState::Enter()
 	m_cFont.InitBitmapFont(nFontID,' ',16,128,128);
 	Parse("Resource/KQ_Credits.xml");
 	m_nYpos = 600;
+	CGame::GetInstance()->SetSongPlay(CREDITS);
+
 }
 void CCreditState::Exit()
 {
-
+	CGame::GetInstance()->SetSongPlay(CITYSELECT);
+	
 }
 
 bool CCreditState::Input(float fElapsedTime)

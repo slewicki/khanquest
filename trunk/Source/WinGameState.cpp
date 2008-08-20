@@ -21,7 +21,6 @@ void CWinGameState::Enter()
 	m_pWM = CSGD_WaveManager::GetInstance();
 
 	m_nImageID = m_pTM->LoadTexture("Resource/KQ_WonGame.png");
-	m_nSongID = m_pWM->LoadWave("Resource/KQ_WonGame.wav");
 	
 	m_BF.InitBitmapFont(m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png"),' ',16,128,128);
 
@@ -29,18 +28,11 @@ void CWinGameState::Enter()
 	m_bEsc = false;
 	m_fTimer = 0;
 	m_nAlpha = 0;
-	m_nVolume = 0;
-	m_nMaxVolume = CGame::GetInstance()->GetMusicVolume();
-
-	m_pWM->SetVolume(m_nSongID,m_nVolume);
-
-	m_pWM->Play(m_nSongID);
+	CGame::GetInstance()->SetSongPlay(WONGAME);
 
 }
 void CWinGameState::Exit()
 {
-	m_pWM->Stop(m_nSongID);
-	m_pWM->UnloadWave(m_nSongID);
 	CMainMenuState::GetInstance()->SetPause(false);
 
 }
@@ -78,10 +70,6 @@ void CWinGameState::Update(float fElapsedTime)
 			m_fTimer = 0;
 			m_nAlpha++;
 			
-			if(m_nVolume < m_nMaxVolume)
-				m_pWM->SetVolume(m_nSongID,m_nVolume++);
-			else
-				m_pWM->SetVolume(m_nSongID,m_nMaxVolume);
 
 			if(m_nAlpha == 255)
 				m_bAlpha = true;
@@ -93,10 +81,7 @@ void CWinGameState::Update(float fElapsedTime)
 			{
 				m_nAlpha--;
 				m_fTimer;
-				if(m_nVolume >= 0)
-					m_pWM->SetVolume(m_nSongID,m_nVolume--);
-				else 
-					m_pWM->SetVolume(m_nSongID,0);
+
 				if(m_nAlpha == 0)
 					CGame::GetInstance()->PopCurrentState();
 			}
@@ -109,10 +94,6 @@ void CWinGameState::StartEsc()
 		m_nAlpha--;
 		m_fEscTimer = 0;
 		
-		if(m_nVolume >= 0)
-			m_pWM->SetVolume(m_nSongID,m_nVolume--);
-		else 
-			m_pWM->SetVolume(m_nSongID,0);
 		
 		if(m_nAlpha == 0)
 		{

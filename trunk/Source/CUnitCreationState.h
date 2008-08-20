@@ -32,7 +32,6 @@ private:
 	float									m_fTimer;
 	int										m_nScrollButtonID;
 	int										m_nClick;
-	int										m_nSongID;
 
 	CCity*									m_pSelectedCity;
 	CBitmapFont								m_cFont;

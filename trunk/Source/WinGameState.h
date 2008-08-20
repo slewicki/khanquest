@@ -16,12 +16,10 @@ class CWinGameState : public IGameState
 	float m_fTimer;
 	float m_fEscTimer;
 	int m_nAlpha;
-	int m_nSongID;
+
 	int m_nImageID;
 	bool m_bAlpha;
 	bool m_bEsc;
-	int m_nVolume;
-	int m_nMaxVolume;
 	POINT m_ptImageLoc, m_ptImageSize;
 	string m_szImageFile;
 

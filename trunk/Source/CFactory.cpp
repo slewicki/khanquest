@@ -35,7 +35,9 @@ void CFactory::CreatePlayerUnit(int nType)
 	unit->SetState(IDLE);
 	unit->SetDirection(NORTH);
 	unit->SetIsPlayerUnit(true);
+	unit->SetAttackSoundID(CGame::GetInstance()->GetAttackSound(unit->GetType()));
 	// Register Events
+	unit->SetDeathSoundID(CGame::GetInstance()->GetDeathSound(unit->GetType()));
 
 
 	// Add to manager
@@ -65,7 +67,8 @@ void CFactory::CreateComputerUnit(int nType)
 	unit->SetDirection(NORTH);
 	unit->SetIsPlayerUnit(false);
 	// Register Events
-
+	unit->SetAttackSoundID(CGame::GetInstance()->GetAttackSound(unit->GetType()));
+	unit->SetDeathSoundID(CGame::GetInstance()->GetDeathSound(unit->GetType()));
 
 	// Add to manager
 	ObjectManager::GetInstance()->AddObject(unit);

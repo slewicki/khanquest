@@ -34,15 +34,14 @@ void CCityInfoState::Enter(void)
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pWM = CSGD_WaveManager::GetInstance();
 	m_pDI = CSGD_DirectInput::GetInstance();
-	m_nSongID = m_pWM->LoadWave("Resource/KQ_CitySelect.wav");
 	m_nClick = m_pWM->LoadWave("Resource/KQ_Click.wav");
-	m_pWM->SetVolume(m_nSongID, CGame::GetInstance()->GetMusicVolume());
 	m_pWM->SetVolume(m_nClick, CGame::GetInstance()->GetSFXVolume());
 	// Invade Button Rectangle
 	m_rInvade.left = 357;
 	m_rInvade.top = 470;
 	m_rInvade.right = 487;
 	m_rInvade.bottom = 530;
+	m_JoyTimer = 0;
 
 	// Cancel Button Rectangle
 	m_rCancel.left = 570;
@@ -82,16 +81,14 @@ void CCityInfoState::Enter(void)
 	m_nButtonID = m_pTM->LoadTexture("Resource/KQ_ScrollButton.png");
 	m_nFontID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_cFont.InitBitmapFont(m_nFontID, ' ', 16, 128, 128);
-	
+
+	CGame::GetInstance()->SetSongPlay(CITYSELECT);	
 }
 
 void CCityInfoState::Exit(void)
 {
-	if(m_pWM->IsWavePlaying(m_nSongID))
-		m_pWM->Stop(m_nSongID);
 	if(m_pWM->IsWavePlaying(m_nClick))
 		m_pWM->Stop(m_nClick);
-	m_pWM->UnloadWave(m_nSongID);
 	m_pWM->UnloadWave(m_nClick);
 
 	m_pTM->ReleaseTexture(m_nDisplayID);
@@ -101,6 +98,7 @@ void CCityInfoState::Exit(void)
 
 bool CCityInfoState::Input(float fElapsedTime)
 {
+	m_JoyTimer += fElapsedTime;
 
 	if(m_fPositionX <= 270.f && !m_bRetract)
 	{
@@ -122,7 +120,7 @@ bool CCityInfoState::Input(float fElapsedTime)
 		else if(CGame::GetInstance()->IsMouseInRect(m_rCancel))
 		{
 			CGame::GetInstance()->SetCursorClick();
-			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))//m_pDI->GetBufferedJoyButton(JOYSTICK_A))
 			{
 				m_pWM->Play(m_nClick);
 

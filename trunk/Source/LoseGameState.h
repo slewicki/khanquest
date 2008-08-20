@@ -12,14 +12,10 @@ class CLoseGameState: public IGameState
 	CSGD_DirectInput*		m_pDI;
 	CSGD_WaveManager*		m_pWM;
 	CBitmapFont				m_BF;
-	
-	int m_nVolume;
-	int m_nMaxVolume;
 	float m_fTimer;
 	float m_fEscTimer;
 	bool m_bAlpha;
 	bool m_bEsc;
-	int m_nSongID;
 	int m_nImageID;
 	POINT m_ptImageLoc, m_ptImageSize;
 	string m_szImageFile;

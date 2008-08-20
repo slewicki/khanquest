@@ -52,10 +52,11 @@ bool CAnimation::Update(float fElapsedTime)
 		
 		if(m_vFrames[m_nCurrentFrame].szTriggerName != "")
 		{
-			if(m_vFrames[m_nCurrentFrame].ptAccessories.size())
-			{
+//			if(m_vFrames[m_nCurrentFrame].ptAccessories.size())
+//			{
+
 				CEventSystem::GetInstance()->SendEvent(m_vFrames[m_nCurrentFrame].szTriggerName,(void*)&m_vFrames[m_nCurrentFrame]);
-			}
+//			}
 		}
 	}
 	return true;

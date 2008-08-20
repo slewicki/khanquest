@@ -28,10 +28,7 @@ class COptionsMenuState : public IGameState
 	float m_fCurScaleX, m_fCurScaleY;
 	string m_szCursorName;
 
-	int						m_nVolume;
-	int						m_nMaxVolume;
 	int						m_nClick;
-	int						m_nSongID;
 	int						m_nCheckBoxID;
 	int						m_nCheckMarkID;
 

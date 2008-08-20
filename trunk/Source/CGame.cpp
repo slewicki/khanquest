@@ -65,7 +65,6 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	
 	//this->ParseBinaryUnitInfo("Resource/KQ_unitStats.dat");
 	this->ParseBinaryUnitInfo("Resource/KQ_unitStats.dat");
-
 	//	Get pointers to singletons:
 	m_pD3D	= CSGD_Direct3D::GetInstance();
 	m_pTM	= CSGD_TextureManager::GetInstance();
@@ -118,7 +117,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	InitCities();
 		
 //	SetCursorNormal();
-
+	m_nCurrentSong = 0;
 	m_pAM = CAnimationManager::GetInstance();
 	m_pAM->BinParse("Resource/KQ_Infantry.dat", "Resource/KQ_Player_Infantry.png","Resource/Enemies/KQ_AI_Infantry.png");
 	m_pAM->BinParse("Resource/KQ_Axmen.dat", "Resource/KQ_Player_Axmen.png","Resource/Enemies/KQ_AI_Axmen.png");
@@ -135,10 +134,17 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	
 	m_nFontID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_BF.InitBitmapFont(m_nFontID,' ',16,128,128);
-
+	
+	this->ParsePlayList("Resource/KQ_PlayList.xml");
+	m_nAttackSoundID[UNIT_AXMEN] = m_nAttackSoundID[UNIT_INFANTRY] = m_pWM->LoadWave("Resource/KQ_SwordAttack.wav");
+	m_nAttackSoundID[UNIT_CAVALRY] = m_nAttackSoundID[UNIT_CAVALRY_ARCHER] = m_nAttackSoundID[UNIT_ARCHER] = m_pWM->LoadWave("Resource/KQ_ArrowAttack.wav");
+	m_nAttackSoundID[UNIT_WAR_ELEPHANT] = m_pWM->LoadWave("Resource/KQ_AttackElephant.wav");
+	m_nDeathSoundID[UNIT_AXMEN] = m_nDeathSoundID[UNIT_INFANTRY] = m_nDeathSoundID[UNIT_ARCHER] = m_pWM->LoadWave("Resource/KQ_DeathMen.wav");
+    m_nDeathSoundID[UNIT_CAVALRY] = m_nDeathSoundID[UNIT_CAVALRY_ARCHER] = m_pWM->LoadWave("Resource/KQ_DeathHorse.wav");
+	m_nDeathSoundID[UNIT_WAR_ELEPHANT] = m_pWM->LoadWave("Resource/KQ_DeathElephant.wav");
+	
 	return true;
 }
-
 void CGame::Shutdown(void)
 {
 	//	Clean up current state
@@ -222,7 +228,13 @@ bool CGame::Main(void)
 	{
 		m_vStates[i]->Update(fElapsedTime);
 	}
-	
+
+	if(!m_pWM->IsWavePlaying(m_nPlayList[m_nCurrentSong]))
+	{
+		m_pWM->Stop(m_nPlayList[m_nPreviousSong]);
+		m_pWM->Play(m_nPlayList[m_nCurrentSong],DSBPLAY_LOOPING);
+		m_nPreviousSong = m_nCurrentSong;
+	}
 	//	3.	Draw
 	// Check for Device
 	bool bDevice = m_pD3D->GetDirect3DDevice()->TestCooperativeLevel() == D3DERR_DEVICENOTRESET;
@@ -523,6 +535,49 @@ bool CGame::ParseBinaryUnitInfo (const char* szFile)
 		return false;
 
 	}
+	return true;
+}
+
+
+bool CGame::ParsePlayList(const char* szFileName)
+{
+	//Function variables - do not change
+	string szName, szTempBool;
+	IrrXMLReader* xml = createIrrXMLReader(szFileName);
+	int nCounter = 0;
+	while(xml && xml->read())
+	{
+		switch(xml->getNodeType())
+		{
+		case EXN_ELEMENT:
+			{
+				//Grabs the attribute name
+ 				szName = xml->getNodeName();
+			}
+			break;
+		case EXN_TEXT:
+			{
+				//Checks the Attribute name and sets the approiate value
+				if(!strcmp("NumSongs",szName.c_str()))
+				{
+					m_nPlayList = new int[atoi(xml->getNodeName())];
+				}
+				if (!strcmp("Song", szName.c_str()))
+				{
+					string idk = xml->getNodeName();
+					char temp[128];
+					strncpy(temp,idk.c_str(),idk.length());
+					temp[idk.length()] = 0;
+					m_nPlayList[nCounter] = m_pWM->LoadWave(temp);
+					nCounter++;
+				}				
+				szName = "none";
+			}
+			break;
+		}
+	}
+	//Delete the parser
+	delete xml;
 	return true;
 }
 

@@ -13,10 +13,6 @@
           <CursorScaleX>1</CursorScaleX>
           <CursorScaleY>1</CursorScaleY>
       </Cursor>
-      
-      <Songs>
-          <Song>Resource/KQ_LoseGame.wav</Song>
-      </Songs>
 
       <NumButtons>3</NumButtons>
           <Button>
@@ -55,6 +51,7 @@
                   <ButtonText>No</ButtonText>
           </Button>
 </Menu>
+
 
 
 

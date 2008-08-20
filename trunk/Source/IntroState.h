@@ -22,8 +22,6 @@ class CIntroState : public IGameState
 
 	bool					m_bPaused;
 	bool					m_bTitle;
-	int						m_nVolume;
-	int						m_nMaxVolume;
 	float					m_fTimer;
 	float					m_fEscTimer;
 	int						m_nTitle;
@@ -32,7 +30,6 @@ class CIntroState : public IGameState
 	POINT m_ptImageLoc, m_ptImageSize;
 	char* m_szImageFile;
 
-	int m_nSongID;
 	bool m_bAlpha;
 	int m_nAlpha;
 

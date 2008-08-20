@@ -28,6 +28,10 @@
 
 using std::string;
 #define TOTAL_CITIES 10
+
+//Enum for playlist added this order;
+enum{INTRO,LOSEBATTLE,LOSEGAME,WONBATTLE,WONGAME,CITYSELECT,CREDITS};
+
 class CGame	
 {
 private:
@@ -52,8 +56,11 @@ private:
 	int						m_nSFXVolume;		// Sound Effects Volume
 	int						m_nMusicVolume;		// Music Volume
 	vector<IGameState*>		m_vStates;			// Stack based states
-
-
+	int						m_nAttackSoundID[6];
+	int						m_nDeathSoundID[6];
+	int*					m_nPlayList;
+	int						m_nCurrentSong;
+	int						m_nPreviousSong;
 	CUnit					m_pPlayerUnitInfo[6];	// Info for player's units
 	CUnit					m_pCPUUnitInfo[6];		// Info for CPU's units
 
@@ -186,6 +193,8 @@ public:
 		return (m_ptMousePos.x <= rIsMouseHere.right && m_ptMousePos.x >= rIsMouseHere.left &&
 				m_ptMousePos.y >= rIsMouseHere.top && m_ptMousePos.y <= rIsMouseHere.bottom);
 	}
+	int GetAttackSound(int nUnitType){return m_nAttackSoundID[nUnitType];}
+	int GetDeathSound(int nUnitType){return m_nDeathSoundID[nUnitType];}
 
 	///////////////////////////////////////////
 	//  Function: "GetNumConquered"
@@ -240,7 +249,7 @@ public:
 	inline void SetTotalGold(int nTotalGold) { m_nGold = nTotalGold; }
 	inline void SetFPSDisplay(bool bFPS) {m_bFPS = bFPS;}
 	inline void AddGold(int nGold)  { m_nGold += nGold; }
-
+	void SetSongPlay(int ntoPlay){m_nCurrentSong = ntoPlay;}
 
 	///////////////////////////////////////////
 	//  Function: ParseXMLUnitInfo
@@ -255,6 +264,8 @@ public:
 	//  Purpose : Reads in base unit stats
 	///////////////////////////////////////////
 	bool	ParseBinaryUnitInfo (const char* szFile);
+
+	bool	ParsePlayList		(const char* szFileName);
 
 	///////////////////////////////////////////
 	//  Function: InitCities

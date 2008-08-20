@@ -30,10 +30,9 @@ void COptionsMenuState::Enter()
 	int nFontID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_BF.InitBitmapFont(nFontID,' ',16,128,128);
 	Parse("Resource/KQ_OptionsMenu.xml");
-	m_nClick = m_pWM->LoadWave("Resource/KQ_Chainsaw.wav");
+	m_nClick = m_pWM->LoadWave("Resource/KQ_Click.wav");
 	m_nCheckBoxID = m_pTM->LoadTexture("Resource/KQ_CheckBox.PNG");
 	m_nCheckMarkID = m_pTM->LoadTexture("Resource/KQ_CheckMark.PNG");
-	m_pWM->SetVolume(m_nSongID,CGame::GetInstance()->GetMusicVolume());
 	m_pWM->SetVolume(m_nClick,CGame::GetInstance()->GetSFXVolume());
 
 	char image[128];
@@ -44,6 +43,7 @@ void COptionsMenuState::Enter()
 	strncpy(image,m_szCursorName.c_str(),m_szCursorName.length());
 	image[m_szCursorName.length()] = 0;
 	m_nCursorID = m_pTM->LoadTexture(image);
+	CGame::GetInstance()->SetSongPlay(CITYSELECT);
 
 	m_ptCursorPosition.x = Buttons[1].ptPosition.x;
 	m_ptCursorPosition.y = Buttons[1].ptPosition.y;
@@ -55,11 +55,8 @@ void COptionsMenuState::Exit()
 {
 	if(m_pWM->IsWavePlaying(m_nClick))
 		m_pWM->Stop(m_nClick);
-	if(m_pWM->IsWavePlaying(m_nSongID))
-		m_pWM->Stop(m_nSongID);	
+	
 	m_pWM->UnloadWave(m_nClick);
-	m_pWM->UnloadWave(m_nSongID);
-
 }
 
 bool COptionsMenuState::Input(float fElapsedTime)
@@ -73,7 +70,6 @@ bool COptionsMenuState::Input(float fElapsedTime)
 #pragma region UP
 	if(m_pDI->GetBufferedKey(DIK_UP))
 	{
-		m_pWM->Stop(m_nSongID);
 		m_nCurrentButton--;
 		m_ptCursorPosition.y = Buttons[m_nCurrentButton].ptPosition.y;
 		if(m_ptCursorPosition.y < Buttons[1].ptPosition.y)
@@ -81,8 +77,6 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			m_ptCursorPosition.y = Buttons[m_nNumButtons-1].ptPosition.y;
 			m_nCurrentButton = m_nNumButtons-1;
 		}
-		if(Buttons[m_nCurrentButton].Action == MUSIC)
-			m_pWM->Play(m_nSongID);
 	}
 	/*if(m_pDI->GetJoystickDir(JOYSTICK_UP))
 	{
@@ -105,7 +99,6 @@ bool COptionsMenuState::Input(float fElapsedTime)
 #pragma region DOWN
 	if(m_pDI->GetBufferedKey(DIK_DOWN))
 	{	
-		m_pWM->Stop(m_nSongID);
 		m_nCurrentButton++;
 		m_ptCursorPosition.y = Buttons[m_nCurrentButton].ptPosition.y;
 		if(m_nCurrentButton > m_nNumButtons-1)
@@ -113,8 +106,6 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			m_ptCursorPosition.y = Buttons[1].ptPosition.y;
 			m_nCurrentButton = 1;
 		}
-		if(Buttons[m_nCurrentButton].Action == MUSIC)
-			m_pWM->Play(m_nSongID);
 	}
 	/*if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
 	{
@@ -306,28 +297,16 @@ void COptionsMenuState::Update(float fElapsedTime)
 	FadeIn(fElapsedTime);
 
 	m_pWM->SetVolume(m_nClick,CGame::GetInstance()->GetSFXVolume());
-	m_pWM->SetVolume(m_nSongID,CGame::GetInstance()->GetMusicVolume());
 }
 void COptionsMenuState::FadeIn(float fElapsedTime)
 {
-	m_nMaxVolume = CGame::GetInstance()->GetMusicVolume();
-
 	m_fTimer += fElapsedTime;
-
-	if(!m_pWM->IsWavePlaying(m_nSongID))
-		m_pWM->Play(m_nSongID);
-
 
 	if(!m_bAlpha)
 		if(m_fTimer > .00002f && m_nAlpha < 255)
 		{
 			m_fTimer = 0;
 			m_nAlpha+=5;
-
-			if(m_nVolume < m_nMaxVolume)
-				m_pWM->SetVolume(m_nSongID,m_nVolume++);
-			else
-				m_pWM->SetVolume(m_nSongID,m_nMaxVolume);
 
 			if(m_nAlpha == 255)
 				m_bAlpha = true;
@@ -341,18 +320,11 @@ void COptionsMenuState::FadeOut(float fElapsedTime)
 		m_nAlpha-=5;
 		m_fEscTimer = 0;
 
-		if(m_nVolume >= 0)
-			m_pWM->SetVolume(m_nSongID,m_nVolume--);
-		else 
-			m_pWM->SetVolume(m_nSongID,0);
-
 		if(m_nAlpha == 0)
 		{	
-			m_pWM->Stop(m_nSongID);
 			m_nAlpha = 0;
 			m_ptCursorPosition  = Buttons[1].ptPosition;
 			m_nCurrentButton = 1;
-			m_nVolume = 0;
 			CGame::GetInstance()->PushState(m_pToSwitchTo);
 			m_pToSwitchTo = NULL;
 			m_bAlpha = false;
@@ -409,15 +381,6 @@ bool COptionsMenuState::Parse(char* szFileName)
 				else if(!strcmp("CursorScaleY",szName.c_str()))
 				{
 					m_fCurScaleY = float(atof(xml->getNodeName()));
-				}
-				else if(!strcmp("Song",szName.c_str()))
-				{
-					char buffer[64];
-					string idk = xml->getNodeName();
-					strncpy(buffer,idk.c_str(),idk.length());
-					buffer[idk.length()] = 0;
-					m_nSongID = m_pWM->LoadWave(buffer);
-
 				}
 				else if (!strcmp("NumButtons", szName.c_str()))
 				{
