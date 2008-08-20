@@ -165,10 +165,32 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 				return;
 			}
 		}
-		
-
 	}
-		if(pEvent->GetEventID() == "Remove")
+
+	if(pEvent->GetEventID() == "Attack")
+	{
+		for(unsigned int i = 0; i < m_vObjectList.size(); i++)
+		{
+			if(static_cast<CUnit*>(m_vObjectList[i])->IsOnScreen())
+			{
+				CSGD_WaveManager::GetInstance()->SetVolume(static_cast<CUnit*>(m_vObjectList[i])->GetAttackSoundID(),CGame::GetInstance()->GetSFXVolume());
+				CSGD_WaveManager::GetInstance()->Play(static_cast<CUnit*>(m_vObjectList[i])->GetAttackSoundID());
+			}
+		}
+	}
+	if(pEvent->GetEventID() == "Dying")
+	{
+		for(unsigned int i = 0; i < m_vObjectList.size(); i++)
+		{
+			if(static_cast<CUnit*>(m_vObjectList[i])->IsOnScreen())
+			{
+				CSGD_WaveManager::GetInstance()->SetVolume(static_cast<CUnit*>(m_vObjectList[i])->GetDeathSoundID(),CGame::GetInstance()->GetSFXVolume());
+				CSGD_WaveManager::GetInstance()->Play(static_cast<CUnit*>(m_vObjectList[i])->GetDeathSoundID());
+			}
+		}
+	}
+	
+	if(pEvent->GetEventID() == "Remove")
 	{
 		for(unsigned int i = 0; i < m_vObjectList.size(); i++)
 			if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() == false)
@@ -177,7 +199,6 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 				break;
 			}
 	}
-
 }
 
 void ObjectManager::UpdatePlayerUnitStartTile(void)

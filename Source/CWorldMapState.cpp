@@ -82,13 +82,9 @@ void CWorldMapState::Enter(void)
 	m_nAttackSymbolID = m_pTM->LoadTexture("Resource/KQ_AttackSymbol.png");
 	m_nTitleID = m_pTM->LoadTexture("Resource/KQ_Title.png");
 	m_nLucidiaWhiteID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
+	m_nClick = m_pWM->LoadWave("Resource/KQ_Click.wav");
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
-
-	m_nSongID = m_pWM->LoadWave("Resource/KQ_CitySelect.wav");
-	m_nClick  = m_pWM->LoadWave("Resource/KQ_Click.wav");
-	m_pWM->SetVolume(m_nSongID,CGame::GetInstance()->GetMusicVolume());
-	m_pWM->SetVolume(m_nClick,CGame::GetInstance()->GetSFXVolume());
-	m_pWM->Play(m_nSongID);
+	CGame::GetInstance()->SetSongPlay(CITYSELECT);
 
 }
 
@@ -96,10 +92,7 @@ void CWorldMapState::Exit(void)
 {
 	if(m_pWM->IsWavePlaying(m_nClick))
 		m_pWM->Stop(m_nClick);
-	if(m_pWM->IsWavePlaying(m_nSongID))
-		m_pWM->Stop(m_nSongID);
-	
-	m_pWM->UnloadWave(m_nSongID);
+
 	m_pWM->UnloadWave(m_nClick);
 
 	m_pTM->ReleaseTexture(m_nWorldMapID);

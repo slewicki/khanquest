@@ -16,8 +16,8 @@ class CMainMenuState : public IGameState
 	CSGD_WaveManager*		m_pWM;
 	IGameState*				m_pToSwitchTo;
 	bool					m_bPaused;
-	int						m_nVolume;
-	int						m_nMaxVolume;
+	
+	
 	float					m_fTimer;
 	float					m_fEscTimer;
 	float					m_JoyTimer;
@@ -41,8 +41,6 @@ class CMainMenuState : public IGameState
 	};
 	TextToHold* Buttons;
 	int m_nNumButtons;
-	int m_nSongID;
-
 
 	bool m_bAlpha;
 	int m_nAlpha;

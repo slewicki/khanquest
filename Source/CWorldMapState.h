@@ -38,7 +38,6 @@ private:
 	int								m_nAttackSymbolID;
 	int								m_nTitleID;
 	int								m_nLucidiaWhiteID;
-	int								m_nSongID;
 	int								m_nClick;
 
 	bool							m_bPaused;

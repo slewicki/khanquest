@@ -53,13 +53,9 @@ void CKeyBindState::Enter(void)
 	m_bLeaving = false;
 	m_fTimer = 0;
 	m_nAlpha = 0;
+	CGame::GetInstance()->SetSongPlay(CITYSELECT);
 
 	m_JoyTimer = 0;
-	m_nVolume = 0;
-	m_nMaxVolume = 0;
-
-	m_pWM->SetVolume(m_nSongID,m_nVolume);
-	m_pWM->Play(m_nSongID);
 }
 
 void CKeyBindState::Exit(void)
@@ -67,7 +63,6 @@ void CKeyBindState::Exit(void)
 	m_pTM->ReleaseTexture(m_nFontID);
 	m_pTM->ReleaseTexture(m_nCursorID);
 	m_pTM->ReleaseTexture(m_nImageID);
-	m_pWM->UnloadWave(m_nSongID);
 	if(Buttons != NULL)
 	delete [] Buttons;
 }
@@ -166,24 +161,13 @@ bool CKeyBindState::BindKey(DWORD dwDIK, int nID)
 
 void CKeyBindState::FadeIn(float fElapsedTime)
 {
-	m_nMaxVolume = CGame::GetInstance()->GetMusicVolume();
-
 	m_fTimer += fElapsedTime;
-	
-	if(!m_pWM->IsWavePlaying(m_nSongID))
-		m_pWM->Play(m_nSongID);
-
 
 	if(!m_bAlpha)
 		if(m_fTimer > .00002f && m_nAlpha < 255)
 		{
 			m_fTimer = 0;
 			m_nAlpha+=5;
-
-			if(m_nVolume < m_nMaxVolume)
-				m_pWM->SetVolume(m_nSongID,m_nVolume++);
-			else
-				m_pWM->SetVolume(m_nSongID,m_nMaxVolume);
 
 			if(m_nAlpha == 255)
 				m_bAlpha = true;
@@ -197,18 +181,11 @@ void CKeyBindState::FadeOut(float fElapsedTime)
 		m_nAlpha-=5;
 		m_fEscTimer = 0;
 
-		if(m_nVolume >= 0)
-			m_pWM->SetVolume(m_nSongID,m_nVolume--);
-		else 
-			m_pWM->SetVolume(m_nSongID,0);
-
 		if(m_nAlpha == 0)
 		{	
-			m_pWM->Stop(m_nSongID);
 			m_nAlpha = 0;
 			m_ptCursorPosition  = Buttons[1].ptPosition;
 			m_nCurrentButton = 1;
-			m_nVolume = 0;
 			CGame::GetInstance()->PopCurrentState();
 			COptionsMenuState::GetInstance()->SetPause(false);
 			m_bAlpha = false;
@@ -267,15 +244,6 @@ bool CKeyBindState::Parse(char* szFileName)
 				else if(!strcmp("CursorScaleY",szName.c_str()))
 				{
 					m_fCurScaleY = float(atof(xml->getNodeName()));
-				}
-				else if(!strcmp("Song",szName.c_str()))
-				{
-					char buffer[64];
-					string idk = xml->getNodeName();
-					strncpy(buffer,idk.c_str(),idk.length());
-					buffer[idk.length()] = 0;
-					m_nSongID = m_pWM->LoadWave(buffer);
-
 				}
 				else if (!strcmp("NumButtons", szName.c_str()))
 				{

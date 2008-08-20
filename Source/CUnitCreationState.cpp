@@ -66,9 +66,7 @@ void CUnitCreationState::Enter(void)
 	m_nBackgroundID = m_pTM->LoadTexture("Resource/KQ_PageBkg3.png");
 	m_nScrollButtonID = m_pTM->LoadTexture("Resource/KQ_ScrollButton.png");
 
-	m_nSongID = m_pWM->LoadWave("Resource/KQ_CitySelect.wav");
 	m_nClick =  m_pWM->LoadWave("Resource/KQ_Click.wav");
-	m_pWM->SetVolume(m_nSongID,CGame::GetInstance()->GetMusicVolume());
 	m_pWM->SetVolume(m_nClick,CGame::GetInstance()->GetSFXVolume());
 
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
@@ -140,17 +138,15 @@ void CUnitCreationState::Enter(void)
 	m_rBackButton.right = 745;
 	m_rBackButton.bottom = 575;
 
-	m_pWM->Play(m_nSongID);
+	CGame::GetInstance()->SetSongPlay(CITYSELECT);
+
 	
 }
 
 void CUnitCreationState::Exit(void)
 {
-	if(m_pWM->IsWavePlaying(m_nSongID))
-		m_pWM->Stop(m_nSongID);
 	if(m_pWM->IsWavePlaying(m_nClick))
 		m_pWM->Stop(m_nClick);
-	m_pWM->UnloadWave(m_nSongID);
 	m_pWM->UnloadWave(m_nClick);
 
 	m_pTM->ReleaseTexture(m_nPlusButtonID);

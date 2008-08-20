@@ -2,7 +2,6 @@
 #include "CBitmapfont.h"
 #include "IGameState.h"
 
-class CSGD_WaveManager;
 class CSGD_TextureManager;
 class CSGD_DirectInput;
 
@@ -11,11 +10,8 @@ class COutroState : public IGameState
 	CSGD_TextureManager*	m_pTM;
 	CSGD_DirectInput*		m_pDI;
 	CBitmapFont				m_BF;
-	CSGD_WaveManager*		m_pWM;
 	IGameState*				m_pToSwitchTo;
 	bool					m_bPaused;
-	int						m_nVolume;
-	int						m_nMaxVolume;
 	float					m_fTimer;
 	float					m_fEscTimer;
 
@@ -38,7 +34,6 @@ class COutroState : public IGameState
 	};
 	TextToHold* Buttons;
 	int m_nNumButtons;
-	int m_nSongID;
 	bool m_bAlpha;
 	int m_nAlpha;
 
