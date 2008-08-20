@@ -249,13 +249,13 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 }
 void ObjectManager::UpdatePlayerUnitDestTile(CTile* destTile)
 {
-	if(!destTile)
+	if(!destTile || destTile->bIsCollision)
 		return;
 	for (unsigned int i=0; i < m_vObjectList.size(); i++)
 	{
 		if (static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit() )
 		{
-			if (static_cast<CUnit*>(m_vObjectList[i])->IsSelected() && static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
+			if (static_cast<CUnit*>(m_vObjectList[i])->IsSelected())
 			{
 				// If its occupied
 				if(destTile->bIsOccupied)
@@ -271,8 +271,8 @@ void ObjectManager::UpdatePlayerUnitDestTile(CTile* destTile)
 					// otherwise, thats where we're going
 					static_cast<CUnit*>(m_vObjectList[i])->SetTarget(NULL);
 					static_cast<CUnit*>(m_vObjectList[i])->SetDestTile(destTile);
+					static_cast<CUnit*>(m_vObjectList[i])->SetNextTile(NULL);
 					static_cast<CUnit*>(m_vObjectList[i])->SetState(MOVEMENT);
-					static_cast<CUnit*>(m_vObjectList[i])->SetPath(m_pCAI->FindPath(static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile(), static_cast<CUnit*>(m_vObjectList[i])->GetDestTile()));
 	
 				}
 			}
@@ -288,18 +288,25 @@ void ObjectManager::SetSelectedUnit(RECT toCheck)
 
 		if(IntersectRect(&rIntersect, &static_cast<CUnit*>(m_vObjectList[i])->GetLocalRect(), &toCheck))
 		{
-			if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() && static_cast<CUnit*>(m_vObjectList[i])->IsSelected() == false && static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
+			if(nSelectedAmount == 0 && static_cast<CUnit*>(m_vObjectList[i])->IsAlive() && static_cast<CUnit*>(m_vObjectList[i])->IsSelected() == false && !static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
+			{	
+				static_cast<CUnit*>(m_vObjectList[i])->SetSelected(true);
+				nSelectedAmount = 7;
+			}
+			else if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() && static_cast<CUnit*>(m_vObjectList[i])->IsSelected() == false && static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
 			{
-				if(nSelectedAmount >= 7)
+				if(nSelectedAmount > 7)
 				{
 					static_cast<CUnit*>(m_vObjectList[i])->SetSelected(false);
-					break;
-				}
-					
-				static_cast<CUnit*>(m_vObjectList[i])->SetSelected(true);
-				++nSelectedAmount;
-			}
 
+				}
+				else
+				{
+					static_cast<CUnit*>(m_vObjectList[i])->SetSelected(true);
+					++nSelectedAmount;
+				}
+			}
+			
 		}
 		else
 		{

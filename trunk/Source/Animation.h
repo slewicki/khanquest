@@ -77,6 +77,7 @@ public:
 	bool IsPlaying(){return m_bIsPlaying;}
 	void StartFadeTimer() { m_bIsFading = true; }
 
+
 	//////////////////////////////////////////////////////////////////////////
 	// Function: Modifiers
 	//	Last Modified: August 04, 2008

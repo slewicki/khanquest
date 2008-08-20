@@ -53,7 +53,7 @@ void CHUDState::Update(float fElapsedTime)
 	m_nInfantry = m_nCavalry = m_nCavalryArcher = m_nAxmen = m_nArcher = m_nWarElephant = 0;
 	for(unsigned int i = 0; i < ObjectManager::GetInstance()->GetUnits().size(); ++i)
 	{
-		if(static_cast<CUnit*>(ObjectManager::GetInstance()->GetUnits()[i])->IsPlayerUnit())
+		if(static_cast<CUnit*>(ObjectManager::GetInstance()->GetUnits()[i])->IsPlayerUnit() && ((CUnit*)ObjectManager::GetInstance()->GetUnits()[i])->IsActive())
 		{
 			switch(ObjectManager::GetInstance()->GetUnits()[i]->GetType())
 			{

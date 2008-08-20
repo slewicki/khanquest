@@ -81,7 +81,6 @@ void CAnimation::Render( int x, int y, float scale, DWORD color,  bool  isfliped
 	}
 	if(m_nAlpha <= 0 || m_fFadeTimer >= 4)
 	{
-		CEventSystem::GetInstance()->SendEvent("Remove");
 	}
 
 	if(!isfliped)

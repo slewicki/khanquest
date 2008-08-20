@@ -39,13 +39,15 @@ private:
 	float			m_fAttackSpeed;		// Attack Speed
 	float			m_fMovementSpeed;	// Movement Speed
 	float			m_fAttackTimer;		// Current time between attacks
-	DWORD			m_dHealTimer;		// healing timer
+	float			m_fHealTimer;		// healing timer
 	int				m_nBonus;			// Attack bonus or penalty
 
 	bool			m_bIsPlayerUnit;	// Is the unit player controlled
 	bool			m_bIsGrouped;		// Is the unit in a group
 	bool			m_bIsAlive;			// Is the unit alive
 	bool			m_bIsSelected;		// Is the unit selected by the player
+	bool			m_bIsActive;
+	float			m_fDeathTimer;
 
 	CTile*			m_pDestinationTile; // Tile the unit is traveling to
 	CTile*			m_pCurrentTile;		// Current tile the unit is on
@@ -55,16 +57,14 @@ private:
 
 	int				m_nDirectionFacing; // The direction the unit is facing
 
-	vector<CTile*>	m_vTilePath;		// The path the unit will take to 
+	//vector<CTile*>	m_vTilePath;		// The path the unit will take to 
 										// get to the destination
 
 	int				m_nState;			// The state the unit is in
-	int				m_nSelectionID;
 	CAnimInstance*	m_pAnimInstance;
 	CTileEngine*	m_pTE;
 
 	CAISystem*		m_pCAI;
-	vector<CUnit*>	m_vAttackers;
 
 	RECT			m_rLocalRect;
 	RECT			m_rGlobalRect;
@@ -111,12 +111,13 @@ public:
 	inline bool	  IsSelected		(void) const { return m_bIsSelected; }
 	inline bool	  IsAlive			(void) const { if(this == NULL) return false;
 													else return m_bIsAlive; }
+	inline bool	  IsActive			(void) const { return m_bIsActive;}
+
 	inline bool	  IsGrouped			(void) const { return m_bIsGrouped; }
 	inline int    GetState			(void) const { return m_nState; }
 	inline int    GetDirection		(void) const { return m_nDirectionFacing; }
 	inline RECT   GetLocalRect	    (void) const { return m_rLocalRect; }
 	inline RECT   GetGlobalRect	(void) const { return m_rGlobalRect; }
-	inline vector<CUnit*>   GetAttackerList	(void) const { return m_vAttackers; }
 	
 
 
@@ -141,51 +142,23 @@ public:
 	inline void SetGrouped		(bool bIsGrouped)	{ m_bIsGrouped = bIsGrouped; }
 	inline void SetPath(list<POINT> vPath)		{m_vPath = vPath;}
 	inline void ClearPath		(void)			{m_vPath.clear();}
-	inline void AddAttacker(CUnit* pAttacker) { m_vAttackers.push_back(pAttacker); }
-	void RemoveAttacker(CUnit* pAttacker)
-	{
-		vector<CUnit*>::iterator iter;
-		for (iter = m_vAttackers.begin(); iter < m_vAttackers.end(); iter++)
-		{
-			if((*iter) == pAttacker)
-			{
-				m_vAttackers.erase(iter);
-				break;
-			}
-		}
-	}
+
 	void SetTarget(CUnit* pTarget)		
 	{
 		// If we have a target tell him we no longer are attaking
-		/*if(m_pTarget)
-		{
-			m_pTarget->RemoveAttacker(this);
-		}*/
-		// Set our new target
 		m_pTarget = pTarget;
-		// Tell him we are attacking if he is not NULL
-		if(m_pTarget)
-			m_pTarget->AddAttacker(this);
 	
 	}
 	inline void SetDirection	(int nDirectionFacing)	
 	{ 
 		m_nDirectionFacing = nDirectionFacing; 
-		m_pAnimInstance->Play(GetDirection(), GetState());	
+
 	}
 	inline void SetState (int nState)				
 	{ 
 		m_nState = nState; 
-		//m_pAnimInstance->Play(GetDirection(), GetState());	
 	}
 
-	inline void ClearAttackerList()
-	{
-		if (m_vAttackers.size())
-		{
-			m_vAttackers.clear();
-		}
-	}
 
 
 	////////////////////////////////////////
@@ -244,10 +217,11 @@ public:
 
 	CTile* PlaceOnSurrounding(CTile* pCenterTile);
 	// True if we reach the next tile
-	bool MoveUnit();
+	bool MoveUnit(float fElapsedTime);
 
 	bool IsTargetInRange();
-
+	bool IsTargetInView();
+	bool IsTileAdjacent(CTile* pTile1, CTile* pTile2);
 	void ScanForEnemies();
 
 

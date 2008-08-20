@@ -97,15 +97,16 @@ void CGamePlayState::Exit(void)
 
 bool CGamePlayState::Input(float fElapsedTime)
 {
-	if(m_pDI->GetBufferedKey(DIK_ESCAPE))
-	{
-		m_bIsPaused = true;
-		if(m_bIsPaused)
-			CGame::GetInstance()->PushState(CPausedState::GetInstance());
-	}
+	
 
 	if(!m_bIsPaused)
 	{
+		if(m_pDI->GetBufferedKey(DIK_ESCAPE))
+		{
+			m_bIsPaused = true;
+			if(m_bIsPaused)
+				CGame::GetInstance()->PushState(CPausedState::GetInstance());
+		}
 		m_pHUD->Input(fElapsedTime);
 		if(m_pDI->GetBufferedKey(DIK_F1))
 		{
