@@ -6,6 +6,8 @@
 //	Purpose: Tile Engine
 //////////////////////////////////////////////////////////
 #include "CTileEngine.h"
+#include "CUnit.h"
+#include "CCamera.h"
 
 CTileEngine::CTileEngine()
 {
@@ -14,7 +16,7 @@ CTileEngine::CTileEngine()
 	m_nImageID = -1;
 	m_nImageID = m_pTM->LoadTexture("Resource/KQ_Terrain.png", D3DCOLOR_XRGB(255, 0, 255));
 	m_nScrollImage = m_pTM->LoadTexture("Resource/KQ_Clouds.png");
-	//m_nBlankTileID = m_pTM->LoadTexture("Resource/KQ_BlankTile.png");
+	m_nBlankTileID = m_pTM->LoadTexture("Resource/KQ_BlankTile.png");
 	m_ptMousePoint.x = 0;
 	m_ptMousePoint.y = 0;
 	m_nScrollX = 800;
@@ -199,8 +201,8 @@ void CTileEngine::Render(RECT nCamPos)
 void CTileEngine::RenderMiniMap(RECT nCamPos)
 {
 	float fPercentX, fPercentY;
-	fPercentX = 200.f/(m_nMapWidth*62); 
-	fPercentY = 100.f/(m_nMapHeight*32); 
+	fPercentX = 266.f/(m_nMapWidth*62); 
+	fPercentY = 135.f/(m_nMapHeight*32); 
 	for ( int nLayer = 0; nLayer < 1; nLayer++)
 	{
 		for (int Col = 0; Col < m_nMapHeight; Col++)
@@ -213,70 +215,43 @@ void CTileEngine::RenderMiniMap(RECT nCamPos)
 				rTile.right = rTile.left + m_nTileWidth;
 				rTile.bottom = rTile.top + m_nTileHeight;
 
-				POINT ptTilePos = { (((Row * (m_nTileWidth*fPercentX) / 2)) + (Col * (m_nTileWidth*fPercentX) / 2))+510, (((Row * -((m_nTileHeight*fPercentY) / 2)) + (Col * (m_nTileHeight*fPercentY) / 2)) + 516) };
-
+				POINT ptTilePos = { (((Row * (m_nTileWidth*fPercentX) / 2)) + (Col * (m_nTileWidth*fPercentX) / 2))+510, (((Row * -((m_nTileHeight*fPercentY) / 2)) + (Col * (m_nTileHeight*fPercentY) / 2)))+ 528 };
+				//m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, fPercentX, fPercentY, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 122, 122, 122)); 
+				
 				//if( (nCamPosX > pTileArray[Row][Col].ptLocalAnchor.x || nCamPosX < pTileArray[Row][Col].ptLocalAnchor.x) && (nCamPosY > pTileArray[Row][Col].ptLocalAnchor.y || nCamPosY < pTileArray[Row][Col].ptLocalAnchor.y))
 				if(pTileArray[0][Row][Col].bIsVisible == true)
 				{
-					/*if(nCamPos.left < pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.right > pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.top < pTileArray[nLayer][Row][Col].ptLocalAnchor.y && nCamPos.bottom > pTileArray[nLayer][Row][Col].ptLocalAnchor.y)
-					{*/
-						
-						m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0, pTileArray[0][Row][Col].vColor); 
-						
-					//}
+					if(pTileArray[0][Row][Col].bIsOccupied && pTileArray[0][Row][Col].pUnit && pTileArray[0][Row][Col].pUnit->IsPlayerUnit())
+						m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, fPercentX, fPercentY, 0, 0, 0, 0, D3DCOLOR_ARGB(255, 0, 255, 0)); 
+
+					else if(pTileArray[0][Row][Col].bIsOccupied && pTileArray[0][Row][Col].pUnit && !pTileArray[0][Row][Col].pUnit->IsPlayerUnit())
+						m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, fPercentX, fPercentY, 0, 0, 0, 0, D3DCOLOR_ARGB(255, 255, 0, 0)); 
+					else 
+						m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, fPercentX, fPercentY, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 255, 255, 255)); 
+					
 				}
 				else
-					m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 0, 0, 0)); 
+					m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, fPercentX, fPercentY, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 0, 0, 0)); 
 
 			}
 		}
 	}
-	//DWORD dwColor;
-	//
-	//for (int Col = 0; Col < m_nMapHeight; Col++)
-	//{
-	//	for(int Row = 0; Row < m_nMapWidth; Row++)
-	//	{
-	//		RECT rTile;
-	//		rTile.left = 0;
-	//		rTile.top = 0;
-	//		rTile.right = 62;
-	//		rTile.bottom = 32;
+	RECT rCamera;
+	int x = CCamera::GetInstance()->GetPosX();
+	int y = CCamera::GetInstance()->GetPosY();
+	rCamera.left	=	(x*fPercentX)+510;
+	rCamera.right	=	rCamera.left+(800*fPercentX);
+	rCamera.top		=	(y*fPercentY)+(528 - (300*fPercentY));
+	rCamera.bottom	=	rCamera.top+(455*fPercentY);
+	CSGD_Direct3D::GetInstance()->DeviceEnd();
+	CSGD_Direct3D::GetInstance()->SpriteEnd();
+	
+	CSGD_Direct3D::GetInstance()->DrawPrimitiveRect(rCamera, D3DCOLOR_ARGB(255, 255, 255, 255));
+	
+	
+	CSGD_Direct3D::GetInstance()->DeviceBegin();
+	CSGD_Direct3D::GetInstance()->SpriteBegin();
 
-	//		POINT ptTilePos = { (((Row * (m_nTileWidth*fPercentX) / 2)) + (Col * (m_nTileWidth*fPercentX) / 2))+510, (((Row * -((m_nTileHeight*fPercentY) / 2)) + (Col * (m_nTileHeight*fPercentY) / 2)) + 516) };
-
-	//		//if( (nCamPosX > pTileArray[Row][Col].ptLocalAnchor.x || nCamPosX < pTileArray[Row][Col].ptLocalAnchor.x) && (nCamPosY > pTileArray[Row][Col].ptLocalAnchor.y || nCamPosY < pTileArray[Row][Col].ptLocalAnchor.y))
-	//		if(pTileArray[0][Row][Col].bIsVisible == true)
-	//		{
-	//			/*if(nCamPos.left < pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.right > pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.top < pTileArray[nLayer][Row][Col].ptLocalAnchor.y && nCamPos.bottom > pTileArray[nLayer][Row][Col].ptLocalAnchor.y)
-	//			{*/
-	//				switch(pTileArray[0][Row][Col].nType)
-	//				{
-	//				case PLAIN:
-	//					dwColor = D3DCOLOR_ARGB(255, 0, 255, 0);
-	//					break;
-	//				case MOUNTAIN:
-	//					dwColor = D3DCOLOR_ARGB(255, 128, 128, 100);
-	//					break;
-	//				case FOREST:
-	//					dwColor = D3DCOLOR_ARGB(255, 0, 128, 0);
-	//					break;
-	//				case SHALLOW_WATER:
-	//					dwColor = D3DCOLOR_ARGB(255, 0, 0, 255);
-	//					break;
-	//				case DEEP_WATER:
-	//					dwColor = D3DCOLOR_ARGB(255, 0, 0, 128);
-	//					break;
-	//				}
-	//				m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0, dwColor); 
-	//				
-	//			//}
-	//		}
-	//		else
-	//			m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 255, 255, 0)); 
-
-	//	}
-	//}
 	
 }
 
@@ -312,6 +287,43 @@ POINT CTileEngine::IsoMouse(int x, int y, int z)
 	}
 
 	return m_ptMousePoint;
+}
+POINT CTileEngine::IsoMiniMouse(int nLocalX, int nLocalY, int z)
+{
+	nLocalX -= 512;
+	nLocalY -= 530;
+	float fPercentX, fPercentY;
+	fPercentY = fPercentX = 266.f/(m_nMapWidth*62); 
+	fPercentY = 135.f/(m_nMapHeight*32); 
+	//nLocalX *= fPercentX;
+	//nLocalY *= fPercentX;
+
+	POINT newPoint;
+	int nTileWidth = m_nTileWidth*fPercentX;
+	int nTileHeight = m_nTileHeight*fPercentX;
+	newPoint.y = (nTileWidth * nLocalY + nTileHeight * nLocalX) / (nTileHeight * nTileWidth)-(1*fPercentY);
+	float fTempX = (2*fPercentX)-(((nTileWidth * nLocalY - (float)nTileHeight * nLocalX) / (nTileHeight * nTileWidth)));
+	newPoint.x = (int)fTempX;
+
+	if(fTempX > (newPoint.x + .5))
+		newPoint.x += 1;
+	
+	if(newPoint.y >= m_nMapHeight && newPoint.y < m_nMapHeight+2)
+		newPoint.y = m_nMapHeight-1;
+	else if(newPoint.y < 0 && newPoint.y > -2)
+		newPoint.y = 0;
+	else if(newPoint.y <= -5 || newPoint.y >= m_nMapWidth+2)
+		newPoint.y = -1;
+
+	if(newPoint.x >= m_nMapWidth && newPoint.x < m_nMapWidth+2)
+		newPoint.x = m_nMapWidth-1;
+	else if(newPoint.x < 0 && newPoint.x > -2)
+		newPoint.x = 0;
+	else if(newPoint.y <= -5 || newPoint.x >= m_nMapWidth+2)
+		newPoint.x = -1;
+	return newPoint;
+	
+
 }
 
 void CTileEngine::Clear()

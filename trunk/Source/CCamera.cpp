@@ -7,6 +7,7 @@
 //				and implements our base interface.
 //////////////////////////////////////////////////////
 #include "CCamera.h"
+#include "CTileEngine.h"
 
 
 void CCamera::InitCamera(float fStartPosX, float fStartPosY)
@@ -18,7 +19,7 @@ void CCamera::InitCamera(float fStartPosX, float fStartPosY)
 	m_rScreenArea.left = (int)fStartPosX;
 	m_rScreenArea.right = m_rScreenArea.left + 800;
 	m_rScreenArea.top = (int)fStartPosY;
-	m_rScreenArea.bottom = m_rScreenArea.bottom + 600;
+	m_rScreenArea.bottom = m_rScreenArea.top + 455;
 }
 
 
@@ -73,12 +74,53 @@ POINT CCamera::TransformToGlobal(POINT ptCamPos)
 
 void CCamera::Update(float fElapsedTime)
 {
+	int nMapHeight = CTileEngine::GetInstance()->GetMapHeight();
+	int nMapWidth = CTileEngine::GetInstance()->GetMapWidth();
+	int nTileWidth = CTileEngine::GetInstance()->GetTileWidth();
+	int nTileHeight = CTileEngine::GetInstance()->GetTileHeight();
+	// Keep camera on map
+	//------------------------------------------------------------
+	if(m_vPos.fY > (nMapHeight * nTileHeight)-227)
+	{
+		m_vVel.fY = 0;
+		m_vPos.fY = (nMapHeight * nTileHeight)-227;
+	}
+	else if(m_vPos.fY < -(nMapWidth * nTileHeight)+455)
+	{
+		m_vVel.fY = 0;
+		m_vPos.fY = -(nMapWidth * nTileHeight)+455;
+	}
+
+	if(m_vPos.fX < -400.f)
+	{
+		m_vVel.fX = 0;
+		m_vPos.fX = -400.f;
+	}
+	else if((m_vPos.fX)+400 > (nMapHeight * nTileWidth))
+	{
+		m_vVel.fX = 0;
+		m_vPos.fX = (nMapHeight * nTileWidth)-400;
+	}
+	if((m_vPos.fX)+400 > (nMapWidth  * nTileWidth))
+	{
+		m_vVel.fX = 0;
+		m_vPos.fX = (nMapWidth * nTileWidth)-400;
+	}
+	//------------------------------------------------------------
+
+
 	m_vPos.fX += m_vVel.fX*fElapsedTime;
 	m_vPos.fY += m_vVel.fY*fElapsedTime;
 	m_rScreenArea.left = (int)m_vPos.fX;
 	m_rScreenArea.right = m_rScreenArea.left + 800;
 	m_rScreenArea.top = (int)m_vPos.fY;
 	m_rScreenArea.bottom = m_rScreenArea.top + 600;
+
+
+	
+
+
+	
 }
 
 
