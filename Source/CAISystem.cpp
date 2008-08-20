@@ -245,20 +245,6 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 		//replace the end tile
 		Map[ptEnd.x][ptEnd.y]=TILEEND;
 	}
-
-	//for (int i = 0; i < m_nMapWidth ; ++i)
-	//{
-	//	// Stock the row with -1 for open tile.
-	//	for (int j = 0; j < m_nMapHeight; ++j)
-	//		if (Map[i][j] == 4)
-	//		{
-	//			POINT path;
-	//			path.x = i;
-	//			path.y = j;
-	//			m_vPath.push_back(path);
-	//		}
-	//}
-	//m_vPath.push_back(ptEnd);
 	Exit();
 	return m_vPath;
 }
