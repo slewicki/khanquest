@@ -287,12 +287,12 @@ void CGamePlayState::Render(float fElapsedTime)
 	rHud.right = 800;
 
 	POINT pSkyCloud = m_pCamera->TransformToScreen(0, -10);
-	m_pPE->SetPostion(pSkyCloud.x, pSkyCloud.y, m_nSkyCloudID);
+	m_pPE->SetPostion((float)pSkyCloud.x, (float)pSkyCloud.y, m_nSkyCloudID);
 	m_pPE->SetIsRunning(m_nSkyCloudID, true);
 
 
 	POINT pSkyCloud2 = m_pCamera->TransformToScreen(0, -10);
-	m_pPE->SetPostion(pSkyCloud2.x, pSkyCloud2.y, m_nSkyCloudID2);
+	m_pPE->SetPostion((float)pSkyCloud2.x, (float)pSkyCloud2.y, m_nSkyCloudID2);
 	m_pPE->SetIsRunning(m_nSkyCloudID2, true);
 
 
