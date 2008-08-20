@@ -115,7 +115,7 @@ void CUnit::Update(float fElapsedTime)
 	if(!m_bIsAlive)
 	{
 		m_fDeathTimer += fElapsedTime;
-		if(m_fDeathTimer >= 5.f)
+		if(m_fDeathTimer >= 7.f)
 			m_bIsActive = false;
 		return;
 	}

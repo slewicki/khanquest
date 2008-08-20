@@ -57,7 +57,7 @@ bool COutroState::Input(float fElapsedTime)
 		FadeOut(fElapsedTime);
 	if(m_bAlpha == true && m_nAlpha == 0)
 		return false;
-	if(m_pDI->GetBufferedKey(DIK_LEFT))
+	if(!m_bAlpha && m_pDI->GetBufferedKey(DIK_LEFT))
 	{
 		m_nCurrentButton--;
 		m_ptCursorPosition.x = Buttons[m_nCurrentButton].ptPosition.x;
@@ -67,7 +67,7 @@ bool COutroState::Input(float fElapsedTime)
 			m_nCurrentButton = m_nNumButtons-1;
 		}
 	}
-	if(m_pDI->GetBufferedKey(DIK_RIGHT))
+	if(!m_bAlpha && m_pDI->GetBufferedKey(DIK_RIGHT))
 	{
 		m_nCurrentButton++;
 		m_ptCursorPosition.x = Buttons[m_nCurrentButton].ptPosition.x;
@@ -97,8 +97,8 @@ bool COutroState::Input(float fElapsedTime)
 }
 void COutroState::Render(float fElapsedTime)
 {
-	CSGD_Direct3D::GetInstance()->Clear(160,80,0);
 	RECT toDraw = {0,0,512,512};
+	//m_pTM->Draw(m_nImageID,0,0,3.f,3.f, 0,0,0,0,D3DCOLOR_ARGB(255,0,0,0));
 	m_pTM->Draw(m_nImageID,0,0,1.25f,1.25f, &toDraw,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 	
 	for(int i = 0; i < m_nNumButtons; i++)
@@ -118,7 +118,9 @@ void COutroState::Update(float fElapsedTime)
 		if(m_fTimer > .002f && m_nAlpha < 255)
 		{
 			m_fTimer = 0;
-			m_nAlpha++;
+			m_nAlpha+=2;
+			if(m_nAlpha > 255)
+				m_nAlpha = 255;
 		}
 }
 void COutroState::FadeOut(float fElapsedTime)
@@ -126,7 +128,7 @@ void COutroState::FadeOut(float fElapsedTime)
 	m_fEscTimer += fElapsedTime;
 	if(m_fEscTimer > .001)
 	{
-		m_nAlpha--;
+		m_nAlpha-=2;
 		m_fEscTimer = 0;
 		if(m_nAlpha < 0)
 			m_nAlpha = 0;

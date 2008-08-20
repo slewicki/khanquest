@@ -80,31 +80,31 @@ void CCamera::Update(float fElapsedTime)
 	int nTileHeight = CTileEngine::GetInstance()->GetTileHeight();
 	// Keep camera on map
 	//------------------------------------------------------------
-	if(m_vPos.fY > (nMapHeight * nTileHeight)-227)
+	if(m_vPos.fY >  (float)((nMapHeight * nTileHeight)-227))
 	{
-		m_vVel.fY = 0;
-		m_vPos.fY = (nMapHeight * nTileHeight)-227;
+		m_vVel.fY = 0.f;
+		m_vPos.fY = (float)((nMapHeight * nTileHeight)-227);
 	}
 	else if(m_vPos.fY < -(nMapWidth * nTileHeight)+455)
 	{
-		m_vVel.fY = 0;
-		m_vPos.fY = -(nMapWidth * nTileHeight)+455;
+		m_vVel.fY = 0.f;
+		m_vPos.fY = - (float)((nMapWidth * nTileHeight)+455);
 	}
 
 	if(m_vPos.fX < -400.f)
 	{
-		m_vVel.fX = 0;
+		m_vVel.fX = 0.f;
 		m_vPos.fX = -400.f;
 	}
-	else if((m_vPos.fX)+400 > (nMapHeight * nTileWidth))
+	else if((m_vPos.fX)+400.f >  (float)(nMapHeight * nTileWidth))
 	{
-		m_vVel.fX = 0;
-		m_vPos.fX = (nMapHeight * nTileWidth)-400;
+		m_vVel.fX = 0.f;
+		m_vPos.fX =  (float)(nMapHeight * nTileWidth)-400.f;
 	}
-	if((m_vPos.fX)+400 > (nMapWidth  * nTileWidth))
+	if((m_vPos.fX)+400.f >  (float)(nMapWidth  * nTileWidth))
 	{
 		m_vVel.fX = 0;
-		m_vPos.fX = (nMapWidth * nTileWidth)-400;
+		m_vPos.fX =  (float)(nMapWidth * nTileWidth)-400.f;
 	}
 	//------------------------------------------------------------
 

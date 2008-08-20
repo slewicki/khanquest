@@ -190,7 +190,7 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 		}
 	}
 	
-	if(pEvent->GetEventID() == "Remove")
+	/*if(pEvent->GetEventID() == "Remove")
 	{
 		for(unsigned int i = 0; i < m_vObjectList.size(); i++)
 			if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() == false)
@@ -198,7 +198,7 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 				RemoveObject(m_vObjectList[i]);
 				break;
 			}
-	}
+	}*/
 }
 
 void ObjectManager::UpdatePlayerUnitStartTile(void)
