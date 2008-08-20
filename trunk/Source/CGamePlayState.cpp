@@ -45,13 +45,15 @@ void CGamePlayState::Enter(void)
 	Map = CTileEngine::GetInstance();
 	m_pD3D = CSGD_Direct3D::GetInstance();
 	m_pHUD = CHUDState::GetInstance();
+	m_pPE = CParticleEngine::GetInstance();
+
 	m_pES->RegisterClient("Play", ObjectManager::GetInstance());
 	m_pES->RegisterClient("Remove", ObjectManager::GetInstance());
 	m_pCamera = CCamera::GetInstance();
 	m_pCamera->InitCamera(0.f,0.f);
 
 	m_pPE = CParticleEngine::GetInstance();
-	m_nTestEmitter = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_DustCload.dat", 128, 128);
+//	m_nTestEmitter = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_DustCload.dat", 128, 128);
 
 	// Register any Events with the GamePlayState
 	Map->LoadFile("Resource/Levels/KQ_Level4.level");
@@ -71,6 +73,8 @@ void CGamePlayState::Enter(void)
 	m_nLucidiaWhiteID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_nSelectionID = CSGD_TextureManager::GetInstance()->LoadTexture("Resource/KQ_SelectionCircle1.png");
 
+	m_nSkyCloudID   = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_SkyClouds.dat", -10, 200);
+	m_nSkyCloudID2  = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_SkyClouds2.dat", -10, 200);
 
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
 	
@@ -108,8 +112,8 @@ bool CGamePlayState::Input(float fElapsedTime)
 		}
 		if(m_pDI->GetBufferedKey(DIK_F2))
 		{
-			m_pPE->SetPostion(200, 200, m_nTestEmitter);
-			m_pPE->SetIsRunning(m_nTestEmitter, true);
+			//m_pPE->SetPostion(200, 200, m_nTestEmitter);
+			//m_pPE->SetIsRunning(m_nTestEmitter, true);
 		}
 
 		if(m_pDI->GetBufferedKey(DIK_F3))
@@ -278,6 +282,17 @@ void CGamePlayState::Render(float fElapsedTime)
 	rHud.top = rHud.left = 0;
 	rHud.bottom = 600;
 	rHud.right = 800;
+
+	POINT pSkyCloud = m_pCamera->TransformToScreen(0, -10);
+	m_pPE->SetPostion(pSkyCloud.x, pSkyCloud.y, m_nSkyCloudID);
+	m_pPE->SetIsRunning(m_nSkyCloudID, true);
+
+
+	POINT pSkyCloud2 = m_pCamera->TransformToScreen(0, -10);
+	m_pPE->SetPostion(pSkyCloud2.x, pSkyCloud2.y, m_nSkyCloudID2);
+	m_pPE->SetIsRunning(m_nSkyCloudID2, true);
+
+
 	m_pHUD->Render(fElapsedTime);
 //	m_pTM->Draw(m_nHUD_ID,0,0,1,1,&rHud);
 

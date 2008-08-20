@@ -40,7 +40,7 @@ CUnit::CUnit(int nType)
 	m_pTE = CTileEngine::GetInstance();
 	m_pCAI = CAISystem::GetInstance();
 	m_vAttackers.clear();
-
+	m_dHealTimer = GetTickCount();
 }
 
 CUnit::~CUnit(void)
@@ -122,6 +122,16 @@ void CUnit::Update(float fElapsedTime)
 		ChangeDirection(GetCurrentTile());
 	}
 
+	
+	if (m_nState == IDLE)
+	{
+		if (GetTickCount() - m_dHealTimer > 2000 )
+		{
+			m_nCurrentHP += 1;
+			m_dHealTimer = GetTickCount();
+		}
+	}
+
 	if(m_nState != RETREAT && m_nCurrentHP <= ( m_nMaxHP * .5) && m_bIsAlive == true 
 		&& ( !m_pCurrentTile->bIsEnemySpawn && !m_pCurrentTile->bIsPlayerSpawn ))
 	{
@@ -140,6 +150,17 @@ void CUnit::Update(float fElapsedTime)
 		}
 	}
 
+	if(m_nState == RETREAT && m_bIsAlive == true 
+		&& GetDestTile() == NULL)
+	{
+		if(m_pTarget)
+			m_pTarget->RemoveAttacker(this);
+		SetTarget(NULL);
+		ObjectManager::GetInstance()->GetSpawnPointDest(this);
+		SetPath(CAISystem::GetInstance()->FindPath(GetCurrentTile(), GetDestTile()));
+		if(GetNextTile())
+			ChangeDirection(GetNextTile());
+	}
 	// If dead, start death animation and set dead
 	if(m_nCurrentHP <= 0 && m_bIsAlive == true)
 	{
@@ -223,7 +244,7 @@ void CUnit::Update(float fElapsedTime)
 	{
 		m_fMovementTimer += fElapsedTime;
 		// We are at the destination tile or are we in range of our target? then stop
-		if(m_nState== !RETREAT && ( (GetDestTile() == GetCurrentTile()) || (m_pTarget && IsTargetInRange()) ) )
+		if(m_nState== !RETREAT && ( m_vPath.size() == 0 || (GetDestTile() == GetCurrentTile()) || (m_pTarget && IsTargetInRange()) ) )
 		{
 			m_vPath.clear();
 			SetNextTile(NULL);
