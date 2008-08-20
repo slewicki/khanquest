@@ -175,7 +175,6 @@ void CUnit::Update(float fElapsedTime)
 			m_nCurrentHP += 1;
 			m_fHealTimer = 0.f;
 		}
-		
 
 		// If we aren't moving then make sure we are on the anchor point!
 		SetPosX((float)GetCurrentTile()->ptLocalAnchor.x);
