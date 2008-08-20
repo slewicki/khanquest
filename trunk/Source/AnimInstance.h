@@ -42,6 +42,7 @@ public:
 	void SetLooping(bool value);
 	void SetFlip(bool value){m_bisFliped = value;}
 	void SetPlayer(bool value);
+	void StartFadeTimer(int Direction, int Action);
 	RECT GetRenderRect(int Direction, int Action);
 	void StopAllAnimations();
 
