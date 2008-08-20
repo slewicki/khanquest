@@ -218,6 +218,9 @@ string CAnimInstance::GetName(int Direction, int Action)
 	case 3:
 		m_szAction = "Idle";
 		break;
+	case 4:
+		m_szAction = "Move";
+		break;
 	};
 
 	switch(Direction)

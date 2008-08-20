@@ -15,28 +15,28 @@ using std::list;
 
 //names of tiles
 enum { TILEEMPTY, TILEBLOCK, TILESTART, TILEEND, TILEPATH, TILESELECT, };
- //const int MAPWIDTH=10;
- //const int MAPHEIGHT=10;
+ const int MAPWIDTH=20;
+ const int MAPHEIGHT=20;
 
 class CAISystem
 {
 	CTileEngine* m_pTE;
 
 	//dimensions of map
-	int m_nMapWidth;
-	int m_nMapHeight;
+	//int m_nMapWidth;
+	//int m_nMapHeight;
 
-	int **Map;		//contains tile data about the map
-	int **MapPath;	//contains path finding info about the map marks
-	bool **MapMark;	//contains marked tiles for path finding
+	//int **Map;		//contains tile data about the map
+	//int **MapPath;	//contains path finding info about the map marks
+	//bool **MapMark;	//contains marked tiles for path finding
 	
 
 	//dimensions of map
 
-	//int Map[MAPWIDTH][MAPHEIGHT];//contains tile data about the map
-	//int MapPath[MAPWIDTH][MAPHEIGHT];//contains pathfinding info about the map
-	////map marks
-	//bool MapMark[MAPWIDTH][MAPHEIGHT];//contains marked tiles for pathfinding
+	int Map[MAPWIDTH][MAPHEIGHT];//contains tile data about the map
+	int MapPath[MAPWIDTH][MAPHEIGHT];//contains pathfinding info about the map
+	//map marks
+	bool MapMark[MAPWIDTH][MAPHEIGHT];//contains marked tiles for pathfinding
 
 
 	int TileSelected;	//currently selected tile

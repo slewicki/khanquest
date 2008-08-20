@@ -18,18 +18,19 @@ CUnit::CUnit(int nType)
 	m_nCost				= 0;
 	m_fMovementTimer	= 0.f;
 	m_nBonus			= 0;			
-
+	m_fHealTimer		= 0.f;
 	m_bIsPlayerUnit		= true;	
 	m_bIsGrouped		= false;		
 	m_bIsAlive			= true;
-	m_bIsSelected		= false;		
+	m_bIsSelected		= false;	
+	m_fDeathTimer		= 0.f;
+	m_bIsActive			= true;
 
 	m_pTarget			= NULL;		
 
 	m_nDirectionFacing	= SOUTH_WEST; 
 	m_nState			= IDLE;	
 	m_fAttackTimer		= 0.f;
-	m_nSelectionID = -1;
 	SetType(nType);
 	SetNextTile(NULL);
 	SetDestTile(NULL);
@@ -39,8 +40,6 @@ CUnit::CUnit(int nType)
 
 	m_pTE = CTileEngine::GetInstance();
 	m_pCAI = CAISystem::GetInstance();
-	m_vAttackers.clear();
-	m_dHealTimer = GetTickCount();
 }
 
 CUnit::~CUnit(void)
@@ -93,200 +92,215 @@ void CUnit::RenderHealth()
 }
 void CUnit::Update(float fElapsedTime)
 {
-	m_pAnimInstance->Update(fElapsedTime);
+	if(m_bIsActive)
+	{
+		m_pAnimInstance->Update(fElapsedTime);
+		// Set Global Rect
+		//-------------------------------
+		m_rGlobalRect.left   = (int)GetPosX();
+		m_rGlobalRect.top    = (int)GetPosY();
+		m_rGlobalRect.right  = m_rGlobalRect.left + m_pAnimInstance->GetFrameWidth(m_nDirectionFacing, m_nState);
+		m_rGlobalRect.bottom = m_rGlobalRect.top + m_pAnimInstance->GetFrameHeight(m_nDirectionFacing, m_nState);
+		//-------------------------------
+
+		POINT ptPos = CCamera::GetInstance()->TransformToScreen((int)GetPosX(), (int)GetPosY());
+
+		m_pAnimInstance->SetX(ptPos.x);
+		m_pAnimInstance->SetY(ptPos.y);
+		// Set Local Rect
+		//-------------------------------
+		m_rLocalRect = m_pAnimInstance->GetRenderRect(m_nDirectionFacing, m_nState);
+		//----------------------------------------
+	}
 	if(!m_bIsAlive)
+	{
+		m_fDeathTimer += fElapsedTime;
+		if(m_fDeathTimer >= 5.f)
+			m_bIsActive = false;
 		return;
-
-	// Set Global Rect
-	//-------------------------------
-	m_rGlobalRect.left   = (int)GetPosX();
-	m_rGlobalRect.top    = (int)GetPosY();
-	m_rGlobalRect.right  = m_rGlobalRect.left + m_pAnimInstance->GetFrameWidth(m_nDirectionFacing, m_nState);
-	m_rGlobalRect.bottom = m_rGlobalRect.top + m_pAnimInstance->GetFrameHeight(m_nDirectionFacing, m_nState);
-	//-------------------------------
-
-	POINT ptPos = CCamera::GetInstance()->TransformToScreen((int)GetPosX(), (int)GetPosY());
-	/*SetPosX(ptPos.x);
-	SetPosY(ptPos.y);*/
-
-	m_pAnimInstance->SetX(ptPos.x);
-	m_pAnimInstance->SetY(ptPos.y);
-	// Set Local Rect
-	//-------------------------------
-	m_rLocalRect = m_pAnimInstance->GetRenderRect(m_nDirectionFacing, m_nState);
-	//----------------------------------------
-	
-	if(m_nState == COMBAT && !m_pTarget)
-	{
-		SetState(IDLE);
-		ChangeDirection(GetCurrentTile());
 	}
 
-	
-	if (m_nState == IDLE)
-	{
-		if (GetTickCount() - m_dHealTimer > 2000 )
-		{
-			m_nCurrentHP += 1;
-			m_dHealTimer = GetTickCount();
-		}
-	}
 
-	if(m_nState != RETREAT && m_nCurrentHP <= ( m_nMaxHP * .5) && m_bIsAlive == true 
-		&& ( !m_pCurrentTile->bIsEnemySpawn && !m_pCurrentTile->bIsPlayerSpawn ))
-	{
-		m_nState = RETREAT;
-		if(m_pTarget)
-			m_pTarget->RemoveAttacker(this);
-		SetTarget(NULL);
-		SetDestTile(NULL);
-		ObjectManager::GetInstance()->GetSpawnPointDest(this);
-		SetPath(CAISystem::GetInstance()->FindPath(GetCurrentTile(), GetDestTile()));
-		SetState(MOVEMENT);
-		if(GetNextTile())
-		{
-			
-			ChangeDirection(GetNextTile());
-		}
-	}
 
-	if(m_nState == RETREAT && m_bIsAlive == true 
-		&& GetDestTile() == NULL)
-	{
-		if(m_pTarget)
-			m_pTarget->RemoveAttacker(this);
-		SetTarget(NULL);
-		ObjectManager::GetInstance()->GetSpawnPointDest(this);
-		SetPath(CAISystem::GetInstance()->FindPath(GetCurrentTile(), GetDestTile()));
-		if(GetNextTile())
-			ChangeDirection(GetNextTile());
-	}
-	// If dead, start death animation and set dead
+	// Make 6 tiles around unit visible
+	if(IsPlayerUnit())
+		UpdateVisibility();
+	//----------------------------------
+
 	if(m_nCurrentHP <= 0 && m_bIsAlive == true)
 	{
 		m_bIsAlive = false;
 		m_bIsSelected = false;
-
+		
+		//Start death animation and fading
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nState = DYING;
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 		m_pAnimInstance->SetLooping(false);
 		m_pAnimInstance->SetPlayer(IsPlayerUnit());
 		m_pAnimInstance->StartFadeTimer(m_nDirectionFacing, m_nState);
-		return;
+	
+		// Clear the tile
+		GetCurrentTile()->bIsOccupied = false;
+		GetCurrentTile()->pUnit = NULL;
+	
 	}
-	// If we aren't moving then make sure we are on the anchor point!
-	if(m_nState != MOVEMENT && m_nState != RETREAT)
+	else if(m_nState != RETREAT && m_nCurrentHP <= ( m_nMaxHP * .25) && m_bIsAlive == true 
+		&& ( !m_pCurrentTile->bIsEnemySpawn && !m_pCurrentTile->bIsPlayerSpawn ))
 	{
+		m_nState = RETREAT;
+		m_pTarget = NULL;
+		SetDestTile(NULL);
+		SetNextTile(NULL);
+		ObjectManager::GetInstance()->GetSpawnPointDest(this);
+		SetPath(CAISystem::GetInstance()->FindPath(GetCurrentTile(), GetDestTile()));
+		ChangeDirection(GetCurrentTile());
+	}
+	// If the target is dead dont mind him
+	if(m_pTarget && m_pTarget->GetHealth() <= 0)
+	{
+		m_pTarget = NULL;
+		SetState(IDLE);
+		// Change animation to idle
+		ChangeDirection(GetCurrentTile());
+	}
+	
+
+	switch (m_nState)
+	{
+	case IDLE:
+		m_fHealTimer += fElapsedTime;
+		if (m_fHealTimer > 2.f  && m_nCurrentHP < m_nMaxHP)
+		{
+			m_nCurrentHP += 1;
+			m_fHealTimer = 0.f;
+		}
+		
+
+		// If we aren't moving then make sure we are on the anchor point!
 		SetPosX((float)GetCurrentTile()->ptLocalAnchor.x);
 		SetPosY((float)GetCurrentTile()->ptLocalAnchor.y);
-		// Dont occupy an occupied tile (at least if we aren't moving)
-		if(GetCurrentTile()->pUnit && GetCurrentTile()->pUnit != this)
+		//-----------------------------------------------------
+		
+		if(!m_pTarget && m_nCurrentHP > ( m_nMaxHP * .25))
+			ScanForEnemies();
+		if(m_pTarget)
 		{
-			SetDestTile(PlaceOnSurrounding(GetCurrentTile()));
-			//SetCurrentTile(PlaceOnSurrounding(GetCurrentTile()));
-			SetPath(CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile()));
-			SetState(MOVEMENT);
-		}
-	}
-	
-	// Make 6 tiles around unit visible
-	if(IsPlayerUnit())
-		UpdateVisibility();
-
-	// AI
-	//---------------------------------------------------------------------------
-	if(m_bIsPlayerUnit && m_nState == IDLE && !m_pTarget && m_nState != RETREAT)
-	{
-		// Find a target if there is one visible and the PLAYER unit is IDLE
-		ScanForEnemies();
-	}
-	else if(!m_bIsPlayerUnit && !m_pTarget && m_nState != RETREAT)
-	{
-		// If CPU unit, always scan for enemies if we dont have a target
-		ScanForEnemies();
-	}
-	if (m_pTarget && m_nState != RETREAT)
-	{
-		// Do we have a target? if so, is it in range? than attack
-		if(m_pTarget->GetHealth()>0 && IsTargetInRange())
-		{
-			if(m_nState != COMBAT)
+			if(IsTargetInRange())
 			{
-				m_nState = COMBAT;
+				SetState(COMBAT);
+				// Face the target
 				ChangeDirection(m_pTarget->GetCurrentTile());
 			}
-			m_fAttackTimer += fElapsedTime;
-			ResolveCombat();
-		}
-		// Do we have a target that is out of range? Then move into range
-		else if(m_pTarget->GetHealth()>0 && !IsTargetInRange())
-		{
-			// Move towards the target and update path each time,
-			// If we are in range then movement will stop and we'll attack
-			m_nState = MOVEMENT;
-			SetDestTile(m_pTarget->GetCurrentTile());
-			SetPath(CAISystem::GetInstance()->FindPath(GetCurrentTile(), GetDestTile()));
-			// If we can't get to him right now, scan for different enemies
-			if(m_vPath.size() == 0)
+			else
 			{
-				ScanForEnemies();
+				SetState(MOVEMENT);
+				SetDestTile(m_pTarget->GetCurrentTile());
+				SetPath(CAISystem::GetInstance()->FindPath(GetCurrentTile(), GetDestTile()));
+				if(m_vPath.size())
+				{
+					// Found a path, set next tile
+					POINT& path = m_vPath.back();
+					SetNextTile( m_pTE->GetTile(0, path.x, path.y )  );
+					ChangeDirection(GetNextTile());
+					m_vPath.pop_back();
+				}
+				else
+				{
+					// No path available, go back to IDLE
+					SetState(IDLE);
+					ChangeDirection(GetCurrentTile());
+				}
 			}
-		} 
-		else if(m_pTarget->GetHealth() <=0)
-			m_pTarget = NULL;
-	}
-	
+		}
 
-	// Move to our destination
-#pragma region Move
-	if ( (m_nState == MOVEMENT || m_nState== RETREAT) && GetDestTile() )
-	{
-		m_fMovementTimer += fElapsedTime;
-		// We are at the destination tile or are we in range of our target? then stop
-		if(m_nState== !RETREAT && ( m_vPath.size() == 0 || (GetDestTile() == GetCurrentTile()) || (m_pTarget && IsTargetInRange()) ) )
+		break;
+	case COMBAT:
+		// If we aren't moving then make sure we are on the anchor point!
+		SetPosX((float)GetCurrentTile()->ptLocalAnchor.x);
+		SetPosY((float)GetCurrentTile()->ptLocalAnchor.y);
+		//-----------------------------------------------------
+		m_fAttackTimer += fElapsedTime;
+		if(m_pTarget)
 		{
-			m_vPath.clear();
-			SetNextTile(NULL);
-			SetDestTile(NULL);
-			m_nState = IDLE;
-			ChangeDirection(GetCurrentTile());
-			return;
-		}
-		// Is our next tile == the dest and is it occupied? then just stop
-		else if(GetDestTile() == GetNextTile() && GetDestTile()->bIsOccupied)
-		{
-			m_vPath.clear();
-			SetNextTile(NULL);
-			SetDestTile(NULL);
-			m_nState = IDLE;
-			ChangeDirection(GetCurrentTile());
-			return;
-		}
-		// 
-		if(!GetNextTile() && m_vPath.size())
-		{
-			POINT& path = m_vPath.back();
-			SetNextTile( m_pTE->GetTile(0, path.x, path.y )  );
-			ChangeDirection(GetNextTile());
-			m_vPath.pop_back();
-			if(GetNextTile()->bIsOccupied && GetNextTile()->pUnit != this)
+			if(IsTargetInRange())
 			{
-				/*if(GetNextTile()->pUnit && (GetNextTile()->pUnit->IsPlayerUnit() != IsPlayerUnit())
-					SetTarget(GetNextTile()->pUnit);*/
-				SetNextTile(NULL);
-				SetPath(CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile()));
-				return;
+				ResolveCombat();
+			}
+			else
+			{
+				// Go back to idle, which will reset path and move to target
+				SetState(IDLE);
+				ChangeDirection(GetCurrentTile());
 			}
 		}
-		// Why dont we have a next tile? Lets find a path then!
-		if(!GetNextTile())
+		else
 		{
-			SetPath(CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile()));
-			return;
+			// No target, Go back to IDLE to chill
+			SetState(IDLE);
+			ChangeDirection(GetCurrentTile());
 		}
-		// We reached the anchor of the next tile
-		if(MoveUnit())
+		break;
+	case MOVEMENT:
+		// No destination, then go back to IDLE
+		if(!GetDestTile())
+		{
+			SetState(IDLE);
+			SetNextTile(NULL);
+			ChangeDirection(GetCurrentTile());
+		}
+		// Reached destination or in range of target
+		if((GetCurrentTile() == GetDestTile()) || (m_pTarget && IsTargetInRange()))
+		{
+			m_vPath.clear();
+			SetDestTile(NULL);
+			SetNextTile(NULL);
+			SetState(IDLE);
+			ChangeDirection(GetCurrentTile());
+			break;
+		}
+		// If we have a destination but not a next, set it
+		if(GetDestTile() && !GetNextTile())
+		{	
+			if(m_vPath.size())
+			{
+				POINT& path = m_vPath.back();
+				SetNextTile( m_pTE->GetTile(0, path.x, path.y )  );
+				ChangeDirection(GetNextTile());
+				m_vPath.pop_back();
+				// If the next tile isn't right next to us, we cant move there
+				if(!IsTileAdjacent(m_pCurrentTile, m_pNextTile))
+				{
+					m_vPath.clear();
+					SetNextTile(NULL);
+					break;
+				}
+			}
+			// No path to dest? find one
+			else
+			{
+				SetPath(CAISystem::GetInstance()->FindPath(GetCurrentTile(), GetDestTile()));
+				break;
+			}
+		}
+		
+		// Next one is occupied, stop and find a new path next run
+		if(GetNextTile()->bIsOccupied)
+		{
+			// If that is the dest, just stop
+			if(GetNextTile() == GetDestTile())
+			{
+				SetDestTile(NULL);
+				SetState(IDLE);
+				ChangeDirection(GetCurrentTile());
+			}
+			// Clear the old path and next tile
+			m_vPath.clear();
+			SetNextTile(NULL);
+			break;
+		}
+		// Returns true if we make it to the next tile
+		if(MoveUnit(fElapsedTime))
 		{
 			// Set prev. to unoccupied
 			GetCurrentTile()->bIsOccupied = false;	
@@ -295,32 +309,95 @@ void CUnit::Update(float fElapsedTime)
 			// Start out the next one
 			GetCurrentTile()->bIsOccupied = true;	
 			GetCurrentTile()->pUnit = this;	
-			// If we have a path, set the next tile
+			// Clear next tile, will be reset next run if path exists
+			SetNextTile(NULL);
+			
+			if(m_pTarget && !IsTargetInView())
+			{
+				m_pTarget = NULL;
+				m_nState = IDLE;
+				ChangeDirection(m_pCurrentTile);
+			}
+			break;
+		}
+		break;
+	case RETREAT:
+		// No destination, then go back to IDLE
+		if(!GetDestTile())
+		{
+			SetState(IDLE);
+			SetNextTile(NULL);
+			ChangeDirection(GetCurrentTile());
+		}
+		// Reached destination or in range of target
+		if((GetCurrentTile() == GetDestTile()) || (!IsPlayerUnit() && GetCurrentTile()->bIsEnemySpawn) || (IsPlayerUnit() && GetCurrentTile()->bIsPlayerSpawn))
+		{
+			m_vPath.clear();
+			SetDestTile(NULL);
+			SetNextTile(NULL);
+			SetState(IDLE);
+			ChangeDirection(GetCurrentTile());
+			break;
+		}
+		// If we have a destination but not a next, set it
+		if(GetDestTile() && !GetNextTile())
+		{	
 			if(m_vPath.size())
 			{
 				POINT& path = m_vPath.back();
 				SetNextTile( m_pTE->GetTile(0, path.x, path.y )  );
+				ChangeDirection(GetNextTile());
 				m_vPath.pop_back();
-				if(GetNextTile()->bIsOccupied && GetNextTile()->pUnit != this)
-					CAISystem::GetInstance()->FindPath(this->GetCurrentTile(), GetDestTile());
+				// If the next tile isn't right next to us, we cant move there
+				if(!IsTileAdjacent(m_pCurrentTile, m_pNextTile))
+				{
+					m_vPath.clear();
+					SetNextTile(NULL);
+					break;
+				}
 			}
-			// Otherwise stop
+			// No path to dest? find one
 			else
 			{
-				SetNextTile(NULL);
+				SetPath(CAISystem::GetInstance()->FindPath(GetCurrentTile(), GetDestTile()));
+				break;
+			}
+		}
+		
+		// Next one is occupied, stop and find a new path next run
+		if(GetNextTile()->bIsOccupied)
+		{
+			// If that is the dest, just stop
+			if(GetNextTile() == GetDestTile())
+			{
 				SetDestTile(NULL);
 				SetState(IDLE);
 				ChangeDirection(GetCurrentTile());
 			}
-			// If we have a next tile, change direction towards that one
-			if(GetNextTile())
-				ChangeDirection(GetNextTile());
-			else
-				return;
+			// Clear the old path and next tile
+			m_vPath.clear();
+			SetNextTile(NULL);
+			break;
 		}
-	} 
-#pragma endregion
-	//---------------------------------------------------------------------------
+		// Returns true if we make it to the next tile
+		if(MoveUnit(fElapsedTime))
+		{
+			// Set prev. to unoccupied
+			GetCurrentTile()->bIsOccupied = false;	
+			GetCurrentTile()->pUnit = NULL;	
+			SetCurrentTile(GetNextTile());
+			// Start out the next one
+			GetCurrentTile()->bIsOccupied = true;	
+			GetCurrentTile()->pUnit = this;	
+			// Clear next tile, will be reset next run if path exists
+			SetNextTile(NULL);
+			break;
+		}
+		break;
+	case DYING:
+
+		break;
+	}
 	
 }
 
@@ -341,6 +418,9 @@ void CUnit::RenderSelection()
 }
 void CUnit::Render(float fElapsedTime)
 {
+	if(!m_bIsActive)
+		return;
+
 	if(m_bIsAlive)
 	{
 		if(m_bIsSelected)
@@ -442,13 +522,18 @@ void CUnit::UpdateVisibility()
 
 void CUnit::ChangeDirection(CTile* pTileFacing)
 {
-	if(pTileFacing == GetCurrentTile())
+	if(pTileFacing == GetCurrentTile() || pTileFacing == NULL)
+	{
+		m_pAnimInstance->StopAllAnimations();
 		return;
+	}
 	if(pTileFacing->ptLocalAnchor.y < GetCurrentTile()->ptLocalAnchor.y && pTileFacing->ptLocalAnchor.x < GetCurrentTile()->ptLocalAnchor.x)
 	{
-		if(m_nDirectionFacing == NORTH_WEST && !m_pAnimInstance->IsFlipped())
+		// If this already is our animation, and it's playing just return
+		if(m_nDirectionFacing == NORTH_WEST && !m_pAnimInstance->IsFlipped() && m_pAnimInstance->IsPlaying(m_nDirectionFacing, GetState()))
 			return;
-		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		
+		m_pAnimInstance->StopAllAnimations();
 		m_nDirectionFacing = NORTH_WEST;
 		m_pAnimInstance->SetFlip(false);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
@@ -457,9 +542,9 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.y < GetCurrentTile()->ptLocalAnchor.y && pTileFacing->ptLocalAnchor.x > GetCurrentTile()->ptLocalAnchor.x)
 	{
-		if(m_nDirectionFacing == NORTH_WEST && m_pAnimInstance->IsFlipped())
+		if(m_nDirectionFacing == NORTH_WEST && m_pAnimInstance->IsFlipped() && m_pAnimInstance->IsPlaying(m_nDirectionFacing, GetState()))
 			return;
-		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_pAnimInstance->StopAllAnimations();
 		m_nDirectionFacing = NORTH_WEST;
 		m_pAnimInstance->SetFlip(true);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
@@ -469,9 +554,9 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.y > GetCurrentTile()->ptLocalAnchor.y && pTileFacing->ptLocalAnchor.x < GetCurrentTile()->ptLocalAnchor.x)
 	{
-		if(m_nDirectionFacing == SOUTH_WEST && !m_pAnimInstance->IsFlipped())
+		if(m_nDirectionFacing == SOUTH_WEST && !m_pAnimInstance->IsFlipped() && m_pAnimInstance->IsPlaying(m_nDirectionFacing, GetState()))
 			return;
-		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_pAnimInstance->StopAllAnimations();
 		m_nDirectionFacing = SOUTH_WEST;
 		m_pAnimInstance->SetFlip(false);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
@@ -481,9 +566,9 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.y > GetCurrentTile()->ptLocalAnchor.y && pTileFacing->ptLocalAnchor.x > GetCurrentTile()->ptLocalAnchor.x)
 	{
-		if(m_nDirectionFacing == SOUTH_WEST && m_pAnimInstance->IsFlipped())
+		if(m_nDirectionFacing == SOUTH_WEST && m_pAnimInstance->IsFlipped() && m_pAnimInstance->IsPlaying(m_nDirectionFacing, GetState()))
 			return;
-		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_pAnimInstance->StopAllAnimations();
 		m_nDirectionFacing = SOUTH_WEST;
 		m_pAnimInstance->SetFlip(true);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
@@ -493,9 +578,9 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.x < GetCurrentTile()->ptLocalAnchor.x)
 	{
-		if(m_nDirectionFacing == WEST && !m_pAnimInstance->IsFlipped())
+		if(m_nDirectionFacing == WEST && !m_pAnimInstance->IsFlipped() && m_pAnimInstance->IsPlaying(m_nDirectionFacing, GetState()))
 			return;
-		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_pAnimInstance->StopAllAnimations();
 		m_nDirectionFacing = WEST;
 		m_pAnimInstance->SetFlip(false);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
@@ -505,9 +590,9 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.x > GetCurrentTile()->ptLocalAnchor.x)
 	{
-		if(m_nDirectionFacing == WEST && m_pAnimInstance->IsFlipped())
+		if(m_nDirectionFacing == WEST && m_pAnimInstance->IsFlipped() && m_pAnimInstance->IsPlaying(m_nDirectionFacing, GetState()))
 			return;
-		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_pAnimInstance->StopAllAnimations();
 		m_nDirectionFacing = WEST;
 		m_pAnimInstance->SetFlip(true);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
@@ -517,9 +602,9 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.y < GetCurrentTile()->ptLocalAnchor.y)
 	{
-		if(m_nDirectionFacing == NORTH && !m_pAnimInstance->IsFlipped())
+		if(m_nDirectionFacing == NORTH && !m_pAnimInstance->IsFlipped() && m_pAnimInstance->IsPlaying(m_nDirectionFacing, GetState()))
 			return;
-		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_pAnimInstance->StopAllAnimations();
 		m_nDirectionFacing = NORTH;
 		m_pAnimInstance->SetFlip(false);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
@@ -529,9 +614,9 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 	}
 	else if(pTileFacing->ptLocalAnchor.y > GetLocalRect().top)
 	{	
-		if(m_nDirectionFacing == SOUTH && !m_pAnimInstance->IsFlipped())
+		if(m_nDirectionFacing == SOUTH && !m_pAnimInstance->IsFlipped() && m_pAnimInstance->IsPlaying(m_nDirectionFacing, GetState()))
 			return;
-		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
+		m_pAnimInstance->StopAllAnimations();
 		m_nDirectionFacing = SOUTH;
 		m_pAnimInstance->SetFlip(false);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
@@ -545,8 +630,7 @@ void CUnit::ResolveCombat()
 {
 	if(!m_pTarget)
 		return;
-	
-	ChangeDirection(m_pTarget->GetCurrentTile());
+	CalcAttackBonus();
 	if(m_fAttackTimer >= m_fAttackSpeed)
 	{
 		m_pTarget->SetCurrentHP(m_pTarget->GetHealth() - GetAttackPower()+m_nBonus);
@@ -554,15 +638,6 @@ void CUnit::ResolveCombat()
 	}
 	if(m_pTarget->GetHealth() <= 0)
 	{
-		m_pTarget->RemoveAttacker(this);
-		for (unsigned int i = 0; m_pTarget && i < m_pTarget->GetAttackerList().size(); i++)
-		{
-			// We target is dead tell all attackers to lay off!
-			m_pTarget->GetAttackerList()[i]->SetTarget(NULL);
-		}
-		m_pTarget->ClearAttackerList();
-		m_pTarget->GetCurrentTile()->pUnit = NULL;
-		m_pTarget->GetCurrentTile()->bIsOccupied = false;
 		m_pTarget = NULL;
 	}
 }
@@ -651,8 +726,10 @@ CTile* CUnit::PlaceOnSurrounding(CTile* pCenterTile)
 	}
 }
 
-bool CUnit::MoveUnit()
+bool CUnit::MoveUnit(float fElapsedTime)
 {
+	m_fMovementTimer += fElapsedTime;
+
 	POINT ptStart = GetCurrentTile()->ptLocalAnchor;
 	POINT ptEnd	  = GetNextTile()->ptLocalAnchor;
 	float fPercent =  m_fMovementTimer/(1/m_fMovementSpeed) ;
@@ -677,6 +754,29 @@ bool CUnit::IsTargetInRange()
 		&& m_pTarget->GetCurrentTile()->ptTileLoc.x >= GetCurrentTile()->ptTileLoc.x - m_nRange)
 	&& (m_pTarget->GetCurrentTile()->ptTileLoc.y <= GetCurrentTile()->ptTileLoc.y + m_nRange 
 		&& m_pTarget->GetCurrentTile()->ptTileLoc.y >= GetCurrentTile()->ptTileLoc.y - m_nRange))
+		return true;
+
+	return false;
+}
+
+bool CUnit::IsTargetInView()
+{
+
+	if((m_pTarget->GetCurrentTile()->ptTileLoc.x <= GetCurrentTile()->ptTileLoc.x + VISIBILITY 
+		&& m_pTarget->GetCurrentTile()->ptTileLoc.x >= GetCurrentTile()->ptTileLoc.x - VISIBILITY)
+	&& (m_pTarget->GetCurrentTile()->ptTileLoc.y <= GetCurrentTile()->ptTileLoc.y + VISIBILITY 
+		&& m_pTarget->GetCurrentTile()->ptTileLoc.y >= GetCurrentTile()->ptTileLoc.y - VISIBILITY))
+		return true;
+
+	return false;
+}
+bool CUnit::IsTileAdjacent(CTile* pTile1, CTile* pTile2)
+{
+
+	if((pTile1->ptTileLoc.x		<= pTile2->ptTileLoc.x + 1 
+		&& pTile1->ptTileLoc.x	>= pTile2->ptTileLoc.x - 1)
+	&& (pTile1->ptTileLoc.y		<= pTile2->ptTileLoc.y + 1 
+		&& pTile1->ptTileLoc.y	>= pTile2->ptTileLoc.y - 1))
 		return true;
 
 	return false;
