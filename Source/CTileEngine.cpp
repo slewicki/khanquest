@@ -215,7 +215,7 @@ void CTileEngine::RenderMiniMap(RECT nCamPos)
 				rTile.right = rTile.left + m_nTileWidth;
 				rTile.bottom = rTile.top + m_nTileHeight;
 
-				POINT ptTilePos = { (((Row * (m_nTileWidth*fPercentX) / 2)) + (Col * (m_nTileWidth*fPercentX) / 2))+510, (((Row * -((m_nTileHeight*fPercentY) / 2)) + (Col * (m_nTileHeight*fPercentY) / 2)))+ 528 };
+				POINT ptTilePos = { (int)(((Row * (m_nTileWidth*fPercentX) / 2)) + (Col * (m_nTileWidth*fPercentX) / 2))+510, (int)(((Row * -((m_nTileHeight*fPercentY) / 2)) + (Col * (m_nTileHeight*fPercentY) / 2)))+ 528 };
 				//m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, fPercentX, fPercentY, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 122, 122, 122)); 
 				
 				//if( (nCamPosX > pTileArray[Row][Col].ptLocalAnchor.x || nCamPosX < pTileArray[Row][Col].ptLocalAnchor.x) && (nCamPosY > pTileArray[Row][Col].ptLocalAnchor.y || nCamPosY < pTileArray[Row][Col].ptLocalAnchor.y))
@@ -237,12 +237,12 @@ void CTileEngine::RenderMiniMap(RECT nCamPos)
 		}
 	}
 	RECT rCamera;
-	int x = CCamera::GetInstance()->GetPosX();
-	int y = CCamera::GetInstance()->GetPosY();
-	rCamera.left	=	(x*fPercentX)+510;
-	rCamera.right	=	rCamera.left+(800*fPercentX);
-	rCamera.top		=	(y*fPercentY)+(528 - (300*fPercentY));
-	rCamera.bottom	=	rCamera.top+(455*fPercentY);
+	int x = (int)CCamera::GetInstance()->GetPosX();
+	int y = (int)CCamera::GetInstance()->GetPosY();
+	rCamera.left	=	(int)(x*fPercentX)+510;
+	rCamera.right	=	rCamera.left+(int)(800*fPercentX);
+	rCamera.top		=	(int)(y*fPercentY)+(528 - (int)(300*fPercentY));
+	rCamera.bottom	=	rCamera.top+(int)(455*fPercentY);
 	CSGD_Direct3D::GetInstance()->DeviceEnd();
 	CSGD_Direct3D::GetInstance()->SpriteEnd();
 	
@@ -299,9 +299,9 @@ POINT CTileEngine::IsoMiniMouse(int nLocalX, int nLocalY, int z)
 	//nLocalY *= fPercentX;
 
 	POINT newPoint;
-	int nTileWidth = m_nTileWidth*fPercentX;
-	int nTileHeight = m_nTileHeight*fPercentX;
-	newPoint.y = (nTileWidth * nLocalY + nTileHeight * nLocalX) / (nTileHeight * nTileWidth)-(1*fPercentY);
+	int nTileWidth = (int)(m_nTileWidth*fPercentX);
+	int nTileHeight = (int)(m_nTileHeight*fPercentX);
+	newPoint.y = (int)((nTileWidth * nLocalY + nTileHeight * nLocalX) / (nTileHeight * nTileWidth)-(1*fPercentY));
 	float fTempX = (2*fPercentX)-(((nTileWidth * nLocalY - (float)nTileHeight * nLocalX) / (nTileHeight * nTileWidth)));
 	newPoint.x = (int)fTempX;
 
