@@ -129,7 +129,11 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	ChangeState(CIntroState::GetInstance());
 	//	Create the render target.
 	// D3DUSAGE_RENDERTARGET can only be used with D3DPOOL_DEFAULT
-	m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pRenderTarget, NULL);
+	
+	
+	//m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pRenderTarget, NULL);
+	
+	
 	//m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pVisibleTarget, NULL);
 	
 	m_nFontID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
@@ -202,6 +206,16 @@ bool CGame::Main(void)
 	// Get input from all since during battle the HUD still needs input
 	// Because of this use paused bools to stop input to other states
 	// when pushing on states such as CCityInfoState over CWorldMapState
+	// Fullscreen Toggling
+	if(m_pDI->GetBufferedKey(DIK_RETURN) && (m_pDI->GetKey(DIK_LMENU) || m_pDI->GetKey(DIK_RMENU)))
+	{
+		m_bIsWindowed = !m_bIsWindowed;
+		m_pD3D->ChangeDisplayParam(800, 600, m_bIsWindowed);
+		ShowCursor(true);
+
+		
+	}
+
 	for(unsigned int i = 0; i < m_vStates.size(); i++)
 	{
 		// If false is returned, exit the game
@@ -210,14 +224,7 @@ bool CGame::Main(void)
 	}
 
 
-	// Fullscreen Toggling
-	if(m_pDI->GetBufferedKey(DIK_RETURN) && (m_pDI->GetKey(DIK_LMENU) || m_pDI->GetKey(DIK_RMENU)))
-	{
-		m_bIsWindowed = !m_bIsWindowed;
-		m_pD3D->ChangeDisplayParam(800, 600, m_bIsWindowed);
-		ShowCursor(true);
-		
-	}
+	
 
 	//	2.	Update	-	move objects, check collisions, do physics, do AI
 
@@ -237,42 +244,42 @@ bool CGame::Main(void)
 	}
 	//	3.	Draw
 	// Check for Device
-	bool bDevice = m_pD3D->GetDirect3DDevice()->TestCooperativeLevel() == D3DERR_DEVICENOTRESET;
-	if(bDevice)
-	{
-		m_pRenderTarget->Release();
-		//m_pVisibleTarget->Release();
+	//bool bDevice = m_pD3D->GetDirect3DDevice()->TestCooperativeLevel() == D3DERR_DEVICENOTRESET;
+	//if(bDevice)
+	//{
+	//	m_pRenderTarget->Release();
+	//	//m_pVisibleTarget->Release();
 
-		HRESULT hr = m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pRenderTarget, NULL);
-		if(hr != D3D_OK)
-		{
-			if(hr == D3DERR_INVALIDCALL)
-				int i = 1;
-			else if(hr == D3DERR_OUTOFVIDEOMEMORY)
-				int i = 1;
-			else if(hr == D3DERR_NOTAVAILABLE)
-				int i = 1;
-			else if (hr == E_OUTOFMEMORY)
-				int i = 1;
+	//	HRESULT hr = m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pRenderTarget, NULL);
+	//	if(hr != D3D_OK)
+	//	{
+	//		if(hr == D3DERR_INVALIDCALL)
+	//			int i = 1;
+	//		else if(hr == D3DERR_OUTOFVIDEOMEMORY)
+	//			int i = 1;
+	//		else if(hr == D3DERR_NOTAVAILABLE)
+	//			int i = 1;
+	//		else if (hr == E_OUTOFMEMORY)
+	//			int i = 1;
 
-			MessageBox(m_hWnd, "Failed to load texture", "Error", MB_OK);
-		}
+	//		MessageBox(m_hWnd, "Failed to load texture", "Error", MB_OK);
+	//	}
 
-		/*hr = m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pVisibleTarget, NULL);
-		if(hr != D3D_OK)
-		{
-			if(hr == D3DERR_INVALIDCALL)
-				int i = 1;
-			else if(hr == D3DERR_OUTOFVIDEOMEMORY)
-				int i = 1;
-			else if(hr == D3DERR_NOTAVAILABLE)
-				int i = 1;
-			else if (hr == E_OUTOFMEMORY)
-				int i = 1;
+	//	/*hr = m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pVisibleTarget, NULL);
+	//	if(hr != D3D_OK)
+	//	{
+	//		if(hr == D3DERR_INVALIDCALL)
+	//			int i = 1;
+	//		else if(hr == D3DERR_OUTOFVIDEOMEMORY)
+	//			int i = 1;
+	//		else if(hr == D3DERR_NOTAVAILABLE)
+	//			int i = 1;
+	//		else if (hr == E_OUTOFMEMORY)
+	//			int i = 1;
 
-			MessageBox(m_hWnd, "Failed to load texture", "Error", MB_OK);
-		}*/
-	}
+	//		MessageBox(m_hWnd, "Failed to load texture", "Error", MB_OK);
+	//	}*/
+	//}
 
 	if(/*m_bIsWindowed && */CDirectShow::GetInstance()->IsPlaying() && InvalidateRect(m_hWnd, 0, 0))
 		return true;
@@ -283,22 +290,23 @@ bool CGame::Main(void)
 	m_pD3D->SpriteBegin();
 
 	//grab the backbuffer
-	m_pD3D->GetDirect3DDevice()->GetRenderTarget(0, &m_pBackBuffer);
+	//m_pD3D->GetDirect3DDevice()->GetRenderTarget(0, &m_pBackBuffer);
 
-	if(m_vStates[0] == CGamePlayState::GetInstance())
-	{
-		//Set Render Target
-		LPDIRECT3DSURFACE9 pSurface = NULL;
-		m_pRenderTarget->GetSurfaceLevel(0, &pSurface);
-		m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, pSurface);
-		pSurface->Release();
+	//if(m_vStates[0] == CGamePlayState::GetInstance())
+	//{
 
-		//LPDIRECT3DTEXTURE9 pVisible = NULL;
-		//D3DXCreateTextureFromFile(m_pD3D->GetDirect3DDevice(), "Resource/KQ_Circle.bmp", &pVisible);
-		//m_pVisibleTarget = pVisible;
-		////m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, pVisible);
-		//pVisible->Release();
-	}
+	//	//Set Render Target
+	//	LPDIRECT3DSURFACE9 pSurface = NULL;
+	//	m_pRenderTarget->GetSurfaceLevel(0, &pSurface);
+	//	m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, pSurface);
+	//	pSurface->Release();
+
+	//	//LPDIRECT3DTEXTURE9 pVisible = NULL;
+	//	//D3DXCreateTextureFromFile(m_pD3D->GetDirect3DDevice(), "Resource/KQ_Circle.bmp", &pVisible);
+	//	//m_pVisibleTarget = pVisible;
+	//	////m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, pVisible);
+	//	//pVisible->Release();
+	//}
 
 	m_pD3D->Clear(0, 0, 0);
 	char buffer2[128];
@@ -336,33 +344,35 @@ bool CGame::Main(void)
 		m_nFrameCounter = 0;		// reset frame counter
 		m_dwFrameTimer = GetTickCount();
 	}
-	if(m_vStates[0] != CGamePlayState::GetInstance())
+	//if(m_vStates[0] != CGamePlayState::GetInstance())
 		m_pD3D->Present();
-	else if (ObjectManager::GetInstance()->GetUnits().size() > 0)
-	{
-		//Setup Pixel shader for second loop
-		m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, m_pBackBuffer);
-		m_pBackBuffer->Release();
+	//else if (ObjectManager::GetInstance()->GetUnits().size() > 0)
+	//{
+	//	//Setup Pixel shader for second loop
+	//	m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, m_pBackBuffer);
+	//	m_pBackBuffer->Release();
 
-		//Pixel Shader Render
-		m_pD3D->Clear(0, 0, 0);
-		m_pD3D->DeviceBegin();
-		m_pD3D->SpriteBegin();
+	//	
 
-		//process shader
-		m_PixelShader.SetConstantFloat("Pos.x",ObjectManager::GetInstance()->GetUnits()[0]->GetPosX());
-		m_PixelShader.SetConstantFloat("Pos.Y", ObjectManager::GetInstance()->GetUnits()[0]->GetPosX());
-		//m_PixelShader.SetConstantFloat("texture1", m_pTM->LoadTexture("Resource/KQ_Circle.bmp"));
-		m_PixelShader.Begin();
+	//	//Pixel Shader Render
+	//	m_pD3D->Clear(0, 0, 0);
+	//	m_pD3D->DeviceBegin();
+	//	m_pD3D->SpriteBegin();
 
-		//Draw to the backbuffer
-		m_pD3D->GetSprite()->Draw(m_pRenderTarget, 0, 0, 0, D3DCOLOR_XRGB(255, 255, 255));
+	//	//process shader
+	//	m_PixelShader.SetConstantFloat("Pos.x",ObjectManager::GetInstance()->GetUnits()[0]->GetPosX());
+	//	m_PixelShader.SetConstantFloat("Pos.Y", ObjectManager::GetInstance()->GetUnits()[0]->GetPosX());
+	//	//m_PixelShader.SetConstantFloat("texture1", m_pTM->LoadTexture("Resource/KQ_Circle.bmp"));
+	//	m_PixelShader.Begin();
 
-		m_pD3D->SpriteEnd();
-		m_PixelShader.End();
-		m_pD3D->DeviceEnd();
-		m_pD3D->Present();
-	}
+	//	//Draw to the backbuffer
+	//	m_pD3D->GetSprite()->Draw(m_pRenderTarget, 0, 0, 0, D3DCOLOR_XRGB(255, 255, 255));
+
+	//	m_pD3D->SpriteEnd();
+	//	m_PixelShader.End();
+	//	m_pD3D->DeviceEnd();
+	//	m_pD3D->Present();
+	//}
 	
 	return true;
 }

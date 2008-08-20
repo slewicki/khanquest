@@ -48,7 +48,7 @@ void CGamePlayState::Enter(void)
 	m_pPE = CParticleEngine::GetInstance();
 
 	m_pES->RegisterClient("Play", ObjectManager::GetInstance());
-	m_pES->RegisterClient("Remove", ObjectManager::GetInstance());
+	//m_pES->RegisterClient("Remove", ObjectManager::GetInstance());
 	m_pCamera = CCamera::GetInstance();
 	m_pCamera->InitCamera(0.f,0.f);
 
