@@ -1,7 +1,7 @@
 // File CAISystem.h
 //
 // Author: Rodney Kite (RK)
-//
+// Last Modified: August 20, 2008
 // Purpose: Contains class definition for CAISystem Class, which handles
 //			all of the unit AI
 //////////////////////////////////////////////////////////////////////////
@@ -15,8 +15,8 @@ using std::list;
  
 //names of tiles
 enum { TILEEMPTY, TILEBLOCK, TILESTART, TILEEND, TILEPATH, TILESELECT, };
- //const int MAPWIDTH=20;
- //const int MAPHEIGHT=20;
+ //const int m_nMapWidth=20;
+ //const int m_nMapHeight=20;
 
 class CAISystem
 {
@@ -32,13 +32,12 @@ class CAISystem
 	
 
 	////dimensions of map
-	//int Map[MAPWIDTH][MAPHEIGHT];//contains tile data about the map
-	//int MapPath[MAPWIDTH][MAPHEIGHT];//contains pathfinding info about the map
+	//int Map[m_nMapWidth][m_nMapHeight];//contains tile data about the map
+	//int MapPath[m_nMapWidth][m_nMapHeight];//contains pathfinding info about the map
 	////map marks
-	//bool MapMark[MAPWIDTH][MAPHEIGHT];//contains marked tiles for pathfinding
+	//bool MapMark[m_nMapWidth][m_nMapHeight];//contains marked tiles for pathfinding
 
 
-	int TileSelected;	//currently selected tile
 	list<POINT>  m_vPath;
 
 

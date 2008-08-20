@@ -1,7 +1,8 @@
+//////////////////////////////////////////////////////////////////////////
 // File CAISystem.h
 //
 // Author: Rodney Kite (RK)
-//
+// Last Modified: August 20, 2008
 // Purpose: Contains class definition for CAISystem Class, which handles
 //			all of the unit AI
 //////////////////////////////////////////////////////////////////////////
@@ -23,7 +24,7 @@ void CAISystem::Exit(void)
 	{
 		delete Map[i];
 	}
-	delete Map;
+	delete [] Map;
 
 	for (int i = 0; i < m_nMapWidth; ++i)
 	{
@@ -49,14 +50,12 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 
 	m_vPath.clear();
 
-	if (destination->bIsCollision || destination->bIsOccupied)
+	if (destination->bIsCollision)// || destination->bIsOccupied)
 		return m_vPath;
 
 	POINT ptStart	= m_pTE->IsoMouse(current->ptLocalAnchor.x, current->ptLocalAnchor.y, 0);
 	POINT ptEnd		= m_pTE->IsoMouse(destination->ptLocalAnchor.x, destination->ptLocalAnchor.y, 0);
 	POINT ptPath;
-
-
 	//////////////////////////////////////////////////////////////////////////
 	// array to hold the map tile data
 	Map = new int*[m_nMapWidth];
@@ -83,7 +82,7 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 
 		// Stock the row with -1 for open tile.
 		for (int j = 0; j < m_nMapHeight ; ++j)
-			if (!m_pTE->GetTile(0,i,j)->bIsCollision)
+			if (!m_pTE->GetTile(0,i,j)->bIsCollision && !m_pTE->GetTile(0,i,j)->bIsOccupied)
 			{
 				Map[i][j] = -1; 
 				MapPath[i][j] = -1;
@@ -99,6 +98,7 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 	MapPath[ptStart.x][ptStart.y] =0;
 	Map[ptEnd.x][ptEnd.y]=TILEEND;
 
+
 	ptStart.x=-1;
 	ptEnd.x=-1;
 	int x;
@@ -107,7 +107,6 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 	int ny;
 	bool found;
 	int lowvalue;
-
 	//find the start
 	for(x=0;x<m_nMapWidth;x++)
 	{
@@ -136,7 +135,7 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 	}
 	//if no start or end, exit function
 	if(ptStart.x==-1 || ptEnd.x==-1) return m_vPath;
-	
+
 
 	//scan for path-able tiles
 	do
@@ -238,6 +237,7 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 					ptPath.x+=nx;
 					ptPath.y+=ny;
 					lowvalue=MapPath[ptPath.x][ptPath.y];
+					
 				}
 			}
 			while(!found);
