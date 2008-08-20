@@ -50,7 +50,7 @@ bool CLoseBattleState::Input(float fElapsedTime)
 
 void CLoseBattleState::Render(float fElapsedTime)
 {	
-	CSGD_Direct3D::GetInstance()->Clear(51,75,0);
+	CSGD_Direct3D::GetInstance()->Clear(0,0,0);
 	m_pTM->Draw(m_nImageID,0,100,.78f,.72f,0,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 	m_BF.DrawTextA("Many Were Lost, Retreat!/   Live to Fight Again.",50,50,.5f,.5f,D3DCOLOR_ARGB(m_nAlpha,255,0,0));	
 	
@@ -59,7 +59,10 @@ void CLoseBattleState::Render(float fElapsedTime)
 void CLoseBattleState::Update(float fElapsedTime)
 {
 	if(m_bEsc)
+	{
+		m_fEscTimer += fElapsedTime;
 		return;
+	}
 	m_fTimer += fElapsedTime;
 	if(!m_bAlpha)
 		if(m_fTimer > .002f && m_nAlpha < 255)

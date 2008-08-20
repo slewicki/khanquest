@@ -79,9 +79,7 @@ void CAnimation::Render( int x, int y, float scale, DWORD color,  bool  isfliped
 			m_nAlpha  = (int)Lerp(255, 0, (m_fFadeTimer-2)/3.f);
 
 	}
-	if(m_nAlpha <= 0 || m_fFadeTimer >= 4)
-	{
-	}
+
 
 	if(!isfliped)
 	{
