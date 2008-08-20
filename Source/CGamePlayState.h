@@ -37,7 +37,8 @@ private:
 
 	CParticleEngine*						m_pPE;
 	int m_nTestEmitter;
-
+	int m_nSkyCloudID;
+	int m_nSkyCloudID2;
 	bool									m_bIsPaused;
 	bool									m_bButtonDown;
 	CHUDState*								m_pHUD;
