@@ -46,6 +46,7 @@ CGame::CGame(void)
 
 CGame::~CGame(void)
 {
+	delete m_nPlayList;
 }
 
 CGame* CGame::GetInstance(void)
