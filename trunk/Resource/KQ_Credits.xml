@@ -18,7 +18,7 @@
 <Resource>Re3</Resource>
 <Resource>Re4</Resource>
 <Resource>www</Resource>
-<Resource>Map of Asia from http://www.shadedrelief.com/world/</Resource>
+<Resource>www.shadedrelief.com/world/</Resource>
 <Resource>www.google.com\alpha\beta\gama</Resource>
 <Resource>Age Of Empires</Resource>
 </Resources>
@@ -40,6 +40,7 @@
 </Titles>
 
 </Menu>
+
 
 
 
