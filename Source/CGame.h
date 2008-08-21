@@ -57,10 +57,12 @@ private:
 	float					m_fGameTime;		// Time since the game began
 	int						m_nSFXVolume;		// Sound Effects Volume
 	int						m_nMusicVolume;		// Music Volume
+	bool					m_bUpGrades[6][3];
 	vector<IGameState*>		m_vStates;			// Stack based states
 	int						m_nAttackSoundID[6];
 	int						m_nDeathSoundID[6];
 	int*					m_nPlayList;
+	int						m_nNumSongs;
 	int						m_nCurrentSong;
 	int						m_nPreviousSong;
 	CUnit					m_pPlayerUnitInfo[6];	// Info for player's units
@@ -90,8 +92,6 @@ private:
 	char					m_chJinCount;
 
 	vector<int>				m_vConqueredCities;
-
-
 
 	//Pixel Shader Test variables
 	CPixelShader			m_PixelShader;
@@ -207,7 +207,7 @@ public:
 	int GetDeathSound(int nUnitType){return m_nDeathSoundID[nUnitType];}
 	int GetTerrorLevel() { return m_nTerrorLevel; }
 	int	GetLoses()		{ return m_nLoses; }
-
+	bool GetUpgraded(int j,int i){return m_bUpGrades[j][i];}
 	///////////////////////////////////////////
 	//  Function: "GetNumConquered"
 	//	Last Modified: July 18, 2008
@@ -251,7 +251,12 @@ public:
 	//  Purpose : Modifies the specified type.
 	///////////////////////////////////////////
 	inline void SetIsWindowed(bool bIsWindowed){m_bIsWindowed = bIsWindowed;}
-	inline void SetMusicVolume(int nMusicVolume) {m_nMusicVolume = nMusicVolume; }
+	inline void SetMusicVolume(int nMusicVolume) 
+	{
+		m_nMusicVolume = nMusicVolume;
+		for(int i = 0; i < m_nNumSongs; i++)
+			CSGD_WaveManager::GetInstance()->SetVolume(m_nPlayList[i],m_nMusicVolume);
+	}
 	inline void SetSFXVolume(int nSFXVolume) { m_nSFXVolume = nSFXVolume; }
 	inline void SetWindowOffset(int nX, int nY) { m_ptWindOffset.x = nX; m_ptWindOffset.y = nY; }
 	inline void SetCursorNormal() { SetCursor(LoadCursor(m_hInstance, MAKEINTRESOURCE(IDC_CURSOR_NORMAL))); }
@@ -263,7 +268,8 @@ public:
 	inline void AddGold(int nGold)  { m_nGold += nGold; }
 	void SetSongPlay(int ntoPlay){m_nCurrentSong = ntoPlay;}
 	void SetTerrorLevel(int nTerrorLevel) { m_nTerrorLevel = nTerrorLevel; }
-
+	void SetPlayerUnitInfo(CUnit toChange, int nType){m_pPlayerUnitInfo[nType] = toChange;}
+	void SetUpgraded(int j,int i,bool value){m_bUpGrades[j][i] = value;}
 
 	///////////////////////////////////////////
 	//  Function: ParseXMLUnitInfo
@@ -288,6 +294,12 @@ public:
 	///////////////////////////////////////////
 	void	InitCities();
 
+	///////////////////////////////////////////
+	//  Function: LoadGame
+	//	Last Modified: July 18, 2008
+	//  Purpose : Load game info from file
+	///////////////////////////////////////////
+	bool	LoadGame(const char* szSaveFile);
 
 	///////////////////////////////////////////
 	//  Function: GetPlayerUnitInfo

@@ -22,7 +22,7 @@ CGamePlayState::CGamePlayState(void)
 	m_nHUD_ID = -1;
 
 	m_bButtonDown = false;
-	
+	m_nTerrorLevel = 0;
 
 }
 

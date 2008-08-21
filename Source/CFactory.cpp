@@ -55,7 +55,7 @@ void CFactory::CreateComputerUnit(int nType)
 	CUnit* unit = new CUnit(nType);
 
 	// Use default shallow copy since no dynamic info in creation
-	CUnit temp = CGame::GetInstance()->GetUnitInfo(nType);
+	CUnit temp = CGame::GetInstance()->GetCPUUnitInfo(nType);
 	unit->SetAttackPower(temp.GetAttackPower());
 	unit->SetAttackSpeed(temp.GetAttackSpeed());
 	unit->SetMaxHP(temp.GetMaxHP());
