@@ -53,9 +53,9 @@ bool CLoseGameState::Input(float fElapsedTime)
 
 void CLoseGameState::Render(float fElapsedTime)
 {	
-	CSGD_Direct3D::GetInstance()->Clear(160,80,0);
+
 	m_pTM->Draw(m_nImageID,0,25,.80f,.80f,0,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
-	m_BF.DrawTextA("The War Is Over!/Unfortunatly, You Lost.",25,25,.30f,.30f,D3DCOLOR_ARGB(m_nAlpha,0,0,0));	
+	m_BF.DrawTextA("The War Is Over!/Unfortunately, You have been defeated.",25,25,.30f,.30f,D3DCOLOR_ARGB(m_nAlpha,0,0,0));	
 	
 }
 

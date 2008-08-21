@@ -16,6 +16,7 @@
 #include "WinBattleState.h"
 #include "LoseBattleState.h"
 #include "CTileEngine.h"
+#include <algorithm>
 
 ObjectManager::ObjectManager(void)
 {
@@ -33,6 +34,7 @@ void ObjectManager::CheckCollisions()
 
 }
 
+
 ObjectManager* ObjectManager::GetInstance(void)
 {
 	static ObjectManager instance;	// Lazy instantiation
@@ -42,28 +44,39 @@ ObjectManager* ObjectManager::GetInstance(void)
 
 void ObjectManager::UpdateObjects(float fElapsedTime)
 {
-	static float fTime = 0;
-	fTime += fElapsedTime;
-	if(m_vObjectList.size() > 0)
-	{
+	int nPlayerUnits = 0;
+	int nEnemyUnits = 0;
+	std::sort(m_vObjectList.begin(), m_vObjectList.end(),  SortObjects());
+
 		for (unsigned int i = 0; i < m_vObjectList.size(); ++i)
 		{
-			if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() == true)
+			if(static_cast<CUnit*>(m_vObjectList[i])->IsActive())
 			{
-				if(static_cast<CUnit*>(m_vObjectList[i])->GetAttackSpeed() <= fTime)
-				{
-					CheckCollisions();
-					fTime = 0;
-				}
-			}
-				if(m_vObjectList.size() <= 0)
-					break;
-
+					
 				m_vObjectList[i]->Update(fElapsedTime);
-				
+				if(static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
+					++nPlayerUnits;
+				else
+					++nEnemyUnits;
+			}
+
 		}
-	}
+	
 	pPE->Update(fElapsedTime);
+    if(nEnemyUnits <=0)
+	{
+		CGame::GetInstance()->PopCurrentState();
+		CGame::GetInstance()->PushState(CWinBattleState::GetInstance());
+		CGame::GetInstance()->AddWins();
+
+	}
+	if(nPlayerUnits <= 0)
+	{
+		CGame::GetInstance()->PopCurrentState();
+		CGame::GetInstance()->PushState(CLoseBattleState::GetInstance());
+		CGame::GetInstance()->AddLoses();
+
+	}
 }
 
 void ObjectManager::RenderObjects(float fElapsedTime)
@@ -110,33 +123,7 @@ void ObjectManager::RemoveObject(CBase* pObject)
 			break;
 		}
 	}
-	int nPlayerUnits = 0;
-	int nEnemyUnits = 0;
-	for(vector<CBase*>::iterator iter = m_vObjectList.begin();
-		 iter != m_vObjectList.end();
-		 iter++)
-	{
-		if(static_cast<CUnit*>((*iter))->IsPlayerUnit())
-			++nPlayerUnits;
-		else
-			++nEnemyUnits;
 
-		
-	}
-	if(nEnemyUnits <=0)
-	{
-		CGame::GetInstance()->PopCurrentState();
-		CGame::GetInstance()->PushState(CWinBattleState::GetInstance());
-		CGame::GetInstance()->AddWins();
-
-	}
-	if(nPlayerUnits <= 0)
-	{
-		CGame::GetInstance()->PopCurrentState();
-		CGame::GetInstance()->PushState(CLoseBattleState::GetInstance());
-		CGame::GetInstance()->AddLoses();
-
-	}
 }
 
 void ObjectManager::RemoveAllObjects(void)

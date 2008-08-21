@@ -146,7 +146,7 @@ void CUnit::Update(float fElapsedTime)
 	
 	}
 	else if(m_nState != RETREAT && m_nCurrentHP <= ( m_nMaxHP * .25) && m_bIsAlive == true 
-		&& ( !m_pCurrentTile->bIsEnemySpawn && !m_pCurrentTile->bIsPlayerSpawn ))
+		&& !IsPlayerUnit() && ( !m_pCurrentTile->bIsEnemySpawn && !m_pCurrentTile->bIsPlayerSpawn ))
 	{
 		m_nState = RETREAT;
 		m_pTarget = NULL;

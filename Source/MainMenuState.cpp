@@ -139,12 +139,14 @@ bool CMainMenuState::Input(float fElapsedTime)
 		case WorldMapState:
 			{
 				m_bPaused = true;
+				CGame::GetInstance()->NewGame(0);
 				m_pToSwitchTo = CWorldMapState::GetInstance();
 			}
 			break;
 		case Load:
 			{
 				//TODO: Make Loading State
+				CGame::GetInstance()->LoadSlot(0);
 			}
 			break;
 		case Options:

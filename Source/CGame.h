@@ -31,6 +31,8 @@ using std::string;
 
 //Enum for playlist added this order;
 enum{INTRO,LOSEBATTLE,LOSEGAME,WONBATTLE,WONGAME,CITYSELECT,CREDITS};
+// Saving slots
+enum{SLOT1, SLOT2, SLOT3};
 
 class CGame	
 {
@@ -63,7 +65,13 @@ private:
 	int						m_nPreviousSong;
 	CUnit					m_pPlayerUnitInfo[6];	// Info for player's units
 	CUnit					m_pCPUUnitInfo[6];		// Info for CPU's units
-
+	
+	char					m_szPlayerName[6];		// Name of player's load slot (3 letters)
+	
+	int						m_nCurrentSaveSlot;
+	
+	int						m_nTerrorLevel;			// Terror Level
+	
 	int						m_nGold;				// The player's current gold amount
 	int						m_nFood;				// The player's current food amount.
 	int						m_nWins;				// The player's current wins.
@@ -82,6 +90,8 @@ private:
 	char					m_chJinCount;
 
 	vector<int>				m_vConqueredCities;
+
+
 
 	//Pixel Shader Test variables
 	CPixelShader			m_PixelShader;
@@ -195,6 +205,8 @@ public:
 	}
 	int GetAttackSound(int nUnitType){return m_nAttackSoundID[nUnitType];}
 	int GetDeathSound(int nUnitType){return m_nDeathSoundID[nUnitType];}
+	int GetTerrorLevel() { return m_nTerrorLevel; }
+	int	GetLoses()		{ return m_nLoses; }
 
 	///////////////////////////////////////////
 	//  Function: "GetNumConquered"
@@ -250,6 +262,8 @@ public:
 	inline void SetFPSDisplay(bool bFPS) {m_bFPS = bFPS;}
 	inline void AddGold(int nGold)  { m_nGold += nGold; }
 	void SetSongPlay(int ntoPlay){m_nCurrentSong = ntoPlay;}
+	void SetTerrorLevel(int nTerrorLevel) { m_nTerrorLevel = nTerrorLevel; }
+
 
 	///////////////////////////////////////////
 	//  Function: ParseXMLUnitInfo
@@ -274,12 +288,6 @@ public:
 	///////////////////////////////////////////
 	void	InitCities();
 
-	///////////////////////////////////////////
-	//  Function: LoadGame
-	//	Last Modified: July 18, 2008
-	//  Purpose : Load game info from file
-	///////////////////////////////////////////
-	bool	LoadGame(const char* szSaveFile);
 
 	///////////////////////////////////////////
 	//  Function: GetPlayerUnitInfo
@@ -317,4 +325,34 @@ public:
 
 	void AddWins();
 	void AddLoses();
+
+
+	
+	///////////////////////////////////////////
+	//  Function: LoadSlot
+	//	Last Modified: August 20, 2008
+	//  Purpose : Loads data from slot
+	//	Returns true if loaded, false for empty
+	///////////////////////////////////////////
+	bool LoadSlot(int nSlot);
+
+	///////////////////////////////////////////
+	//  Function: LoadSlot
+	//	Last Modified: August 20, 2008
+	//  Purpose : saves data to current slot
+	//	Returns true if saved
+	///////////////////////////////////////////
+	bool Save();
+
+	///////////////////////////////////////////
+	//  Function: NewGame
+	//	Last Modified: August 20, 2008
+	//  Purpose : Puts all values to start value
+	//	This slot will now be saved over
+	///////////////////////////////////////////
+	void NewGame(int nSlot);
+
+
+	string GetSaveName(int nSlot);
+
 };
