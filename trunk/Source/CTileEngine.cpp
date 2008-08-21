@@ -177,7 +177,7 @@ void CTileEngine::Render(RECT nCamPos)
 				//if( (nCamPosX > pTileArray[Row][Col].ptLocalAnchor.x || nCamPosX < pTileArray[Row][Col].ptLocalAnchor.x) && (nCamPosY > pTileArray[Row][Col].ptLocalAnchor.y || nCamPosY < pTileArray[Row][Col].ptLocalAnchor.y))
 				if(pTileArray[0][Row][Col].bIsVisible == true)
 				{
-					if(nCamPos.left < pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.right > pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.top < pTileArray[nLayer][Row][Col].ptLocalAnchor.y && nCamPos.bottom > pTileArray[nLayer][Row][Col].ptLocalAnchor.y)
+					if(nCamPos.left < pTileArray[nLayer][Row][Col].ptLocalAnchor.x + 32 && nCamPos.right > pTileArray[nLayer][Row][Col].ptLocalAnchor.x - 32 && nCamPos.top < pTileArray[nLayer][Row][Col].ptLocalAnchor.y  + 16 && nCamPos.bottom > pTileArray[nLayer][Row][Col].ptLocalAnchor.y - 16)
 					{
 						//Temp
 						//-------------------------
