@@ -130,13 +130,13 @@ bool COptionsMenuState::Input(float fElapsedTime)
 	{
 		if(Buttons[m_nCurrentButton].Action == MUSIC)
 		{
-			CGame::GetInstance()->SetMusicVolume(CGame::GetInstance()->GetMusicVolume() - 1);
+			CGame::GetInstance()->SetMusicVolume(CGame::GetInstance()->GetMusicVolume() - 3);
 			if(CGame::GetInstance()->GetMusicVolume() < 0)
 				CGame::GetInstance()->SetMusicVolume(0);
 		}
 		if(Buttons[m_nCurrentButton].Action == SFX)
 		{
-			CGame::GetInstance()->SetSFXVolume(CGame::GetInstance()->GetSFXVolume() - 1);
+			CGame::GetInstance()->SetSFXVolume(CGame::GetInstance()->GetSFXVolume() - 3);
 			if(CGame::GetInstance()->GetSFXVolume() < 0)
 				CGame::GetInstance()->SetSFXVolume(0);
 
@@ -170,13 +170,13 @@ bool COptionsMenuState::Input(float fElapsedTime)
 	{
 		if(Buttons[m_nCurrentButton].Action == MUSIC)
 		{
-			CGame::GetInstance()->SetMusicVolume(CGame::GetInstance()->GetMusicVolume() + 1);
+			CGame::GetInstance()->SetMusicVolume(CGame::GetInstance()->GetMusicVolume() + 3);
 			if(CGame::GetInstance()->GetMusicVolume() > 100)
 				CGame::GetInstance()->SetMusicVolume(100);
 		}
 		if(Buttons[m_nCurrentButton].Action == SFX)
 		{
-			CGame::GetInstance()->SetSFXVolume(CGame::GetInstance()->GetSFXVolume() + 1);
+			CGame::GetInstance()->SetSFXVolume(CGame::GetInstance()->GetSFXVolume() + 3);
 			if(CGame::GetInstance()->GetSFXVolume() > 100)
 				CGame::GetInstance()->SetSFXVolume(100);
 			m_pWM->Play(m_nClick);

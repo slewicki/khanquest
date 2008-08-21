@@ -34,7 +34,6 @@ void ObjectManager::CheckCollisions()
 
 }
 
-
 ObjectManager* ObjectManager::GetInstance(void)
 {
 	static ObjectManager instance;	// Lazy instantiation
@@ -160,8 +159,11 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 		{
 			if(static_cast<CUnit*>(m_vObjectList[i])->IsOnScreen())
 			{
-				CSGD_WaveManager::GetInstance()->SetVolume(static_cast<CUnit*>(m_vObjectList[i])->GetAttackSoundID(),CGame::GetInstance()->GetSFXVolume());
-				CSGD_WaveManager::GetInstance()->Play(static_cast<CUnit*>(m_vObjectList[i])->GetAttackSoundID());
+				if(!CSGD_WaveManager::GetInstance()->IsWavePlaying(static_cast<CUnit*>(m_vObjectList[i])->GetAttackSoundID()))
+				{
+					CSGD_WaveManager::GetInstance()->SetVolume(static_cast<CUnit*>(m_vObjectList[i])->GetAttackSoundID(),CGame::GetInstance()->GetSFXVolume()-20);
+					CSGD_WaveManager::GetInstance()->Play(static_cast<CUnit*>(m_vObjectList[i])->GetAttackSoundID());
+				}
 			}
 		}
 	}

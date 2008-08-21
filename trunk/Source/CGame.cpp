@@ -34,8 +34,8 @@ CGame::CGame(void)
 	m_nFPS = 0;	
 	m_dwFrameTimer = GetTickCount();
 	m_fGameTime = 0;
-	m_nSFXVolume = 30;
-	m_nMusicVolume = 1;
+	m_nSFXVolume = 50;
+	m_nMusicVolume = 50;
 	*m_pCities = NULL;
 	m_nGold = 0;
 	m_nWins = 1;
@@ -247,6 +247,7 @@ bool CGame::Main(void)
 
 	if(!m_pWM->IsWavePlaying(m_nPlayList[m_nCurrentSong]))
 	{
+		m_pWM->SetVolume(m_nPlayList[m_nCurrentSong],m_nMusicVolume);
 		m_pWM->Stop(m_nPlayList[m_nPreviousSong]);
 		m_pWM->Play(m_nPlayList[m_nCurrentSong],DSBPLAY_LOOPING);
 		m_nPreviousSong = m_nCurrentSong;
@@ -579,7 +580,8 @@ bool CGame::ParsePlayList(const char* szFileName)
 				//Checks the Attribute name and sets the approiate value
 				if(!strcmp("NumSongs",szName.c_str()))
 				{
-					m_nPlayList = new int[atoi(xml->getNodeName())];
+					m_nNumSongs = atoi(xml->getNodeName());
+					m_nPlayList = new int[m_nNumSongs];
 				}
 				if (!strcmp("Song", szName.c_str()))
 				{

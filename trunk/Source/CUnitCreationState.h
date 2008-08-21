@@ -43,6 +43,7 @@ private:
 	int										m_nBackgroundID;
 	RECT									m_rPlusButtons[6];
 	RECT									m_rMinusButtons[6];
+	RECT									m_rUpgradeButton;
 	RECT									m_rAttackButton;
 	RECT									m_rBackButton;
 
@@ -50,6 +51,8 @@ private:
 	int										m_nTotalUnits;	// Total units
 
 	int										m_nFoodTotal;
+
+	bool									m_bPaused;
 
 	////////////////////////////////////////////
 	//	Function:	"CUnitCreationState(Constructor)"
@@ -134,12 +137,13 @@ public:
 	//	Last Modified: July 23, 2008
 	//  Purpose : Returns the specified type.
 	///////////////////////////////////////////
-	
+	bool GetPaused(){return m_bPaused;}
 
 	///////////////////////////////////////////
 	//  Function: Modifiers
 	//	Last Modified: July 23, 2008
 	//  Purpose : Modifies the specified type.
 	///////////////////////////////////////////
+	void SetPause(bool bPause){m_bPaused = bPause;}
 
 };

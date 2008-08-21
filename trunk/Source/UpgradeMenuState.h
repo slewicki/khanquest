@@ -5,8 +5,11 @@ class  CSGD_TextureManager;
 class  CSGD_DirectInput;
 class  CSGD_WaveManager;	
 class  CCity;
-class  CUnit;
+#include "CUnit.h"
 
+#define SPEED 400
+#define ATTACK 500
+#define ATTACKSPEED 500
 class CUpgradeMenuState : public IGameState
 {
 	//	Wrappers
@@ -21,24 +24,20 @@ class CUpgradeMenuState : public IGameState
 	int										m_nCheckBoxID;
 	int										m_nCheckMarkID;
 	int										m_nClick;
-
-	CCity*									m_pSelectedCity;
+	bool									m_bModified[6];
+	bool									m_bAccept;
+	CUnit									m_pUnit[6];
 	CBitmapFont								m_cFont;
-	CUnit*									m_pPlayerUnitInfo;
 	int										m_nLucidiaWhiteID;
 	int										m_nUnitCosts[6];
-	int										m_nPlusButtonID;
-	int										m_nMinusButtonID;
 	int										m_nBackgroundID;
-	RECT									m_rPlusButtons[6];
-	RECT									m_rMinusButtons[6];
+	RECT									m_rCheckBox[6][3];
+	bool									m_bUpgraded[6][3];
 	RECT									m_rAttackButton;
 	RECT									m_rBackButton;
 
-	int										m_nNumUnits[6];	// Number of units purchased
-	int										m_nTotalUnits;	// Total units
+	int										m_nGoldTotal;
 
-	int										m_nFoodTotal;
 	CUpgradeMenuState(void);
 	~CUpgradeMenuState(void);
 	CUpgradeMenuState(const CUpgradeMenuState&);
@@ -90,5 +89,4 @@ public:
 	void StartEsc();
 	string IntToString(int value);
 	string FloatToString(float value);
-
 };

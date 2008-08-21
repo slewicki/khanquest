@@ -9,6 +9,7 @@
 #include "CUnitCreationState.h"
 #include "CWorldMapState.h"
 #include "UpgradeMenuState.h"
+#include "CGamePlayState.h"
 #include "CGame.h"
 #include "CFactory.h"
 
@@ -128,6 +129,11 @@ void CUnitCreationState::Enter(void)
 		this->m_rPlusButtons[5].bottom = m_rPlusButtons[5].top + 35;
 	}
 
+	m_rUpgradeButton.left	= 215;
+	m_rUpgradeButton.right	= 345;
+	m_rUpgradeButton.top	= 515;
+	m_rUpgradeButton.bottom	= 575;
+
 	m_rAttackButton.left = 415;
 	m_rAttackButton.top = 515;
 	m_rAttackButton.right = 545;
@@ -140,6 +146,7 @@ void CUnitCreationState::Enter(void)
 
 	CGame::GetInstance()->SetSongPlay(CITYSELECT);
 
+	m_bPaused = false;
 	
 }
 
@@ -172,6 +179,8 @@ void CUnitCreationState::Exit(void)
 
 bool CUnitCreationState::Input(float fElapsedTime)
 {
+	if(m_bPaused)
+		return true;
 	for (int i = 0; i < 6; i++)
 	{
 		if(CGame::GetInstance()->IsMouseInRect(m_rMinusButtons[i]))
@@ -222,7 +231,27 @@ bool CUnitCreationState::Input(float fElapsedTime)
 				
 				// Figure out map and enemy units (call factory enemycreates)
 				// Change to on GamePlayState
-				CGame::GetInstance()->ChangeState(CUpgradeMenuState::GetInstance());
+				CGame::GetInstance()->ChangeState(CGamePlayState::GetInstance());
+				
+			}
+		}
+	}
+	if(m_nTotalUnits && CGame::GetInstance()->IsMouseInRect(m_rUpgradeButton))
+	{
+		CGame::GetInstance()->SetCursorClick();
+		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+		{
+			
+			if(m_nTotalUnits > 0)
+			{
+				m_pWM->Play(m_nClick);
+
+				// Ask if they are sure...?
+				
+				// Figure out map and enemy units (call factory enemycreates)
+				// Change to on GamePlayState
+				m_bPaused = true;
+				CGame::GetInstance()->PushState(CUpgradeMenuState::GetInstance());
 				
 			}
 		}
@@ -332,17 +361,21 @@ void CUnitCreationState::Render(float fElapsedTime)
 	else
 		m_cFont.DrawTextA("Locked", 400+40, 410, .25f, .25f, D3DCOLOR_ARGB(255, 150, 0,0));
 	
-	m_cFont.DrawTextA("Food:        " + IntToString(m_nFoodTotal), 50, 500, .25f, .25f, D3DCOLOR_ARGB(255, 255, 0, 0));
-	m_cFont.DrawTextA("Army Size: " + IntToString(m_nTotalUnits), 50, 530, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 255));
-	m_cFont.DrawTextA("Max Size:   " + IntToString(MAX_UNITS), 50, 560, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
+	m_cFont.DrawTextA("Food:        " + IntToString(m_nFoodTotal), 10, 500, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+	m_cFont.DrawTextA("Army Size: " + IntToString(m_nTotalUnits), 10, 530, .2f, .2f, D3DCOLOR_ARGB(255, 0, 0, 255));
+	m_cFont.DrawTextA("Max Size:   " + IntToString(MAX_UNITS), 10, 560, .2f, .2f, D3DCOLOR_ARGB(255, 0, 0, 0));
 
+	m_pTM->Draw(m_nScrollButtonID, m_rUpgradeButton.left, m_rUpgradeButton.top, .4f, .3f);
+	m_cFont.DrawTextA("Upgrades", m_rUpgradeButton.left+25, m_rUpgradeButton.top+24, .15f, .15f, D3DCOLOR_ARGB(255, 255, 0, 0));
 	
 	m_pTM->Draw(m_nScrollButtonID, m_rAttackButton.left, m_rAttackButton.top, .4f, .3f);
 	m_cFont.DrawTextA("Attack!", m_rAttackButton.left+30, m_rAttackButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 
 	if(!m_nTotalUnits)
+	{
 		m_pTM->Draw(m_nScrollButtonID, m_rAttackButton.left, m_rAttackButton.top, .4f, .3f, 0, 0, 0, 0, D3DCOLOR_ARGB(150, 50, 50, 50));
-
+		m_pTM->Draw(m_nScrollButtonID, m_rUpgradeButton.left,m_rAttackButton.top, .4f, .3f,	0, 0, 0, 0, D3DCOLOR_ARGB(150, 50, 50, 50));
+	}
 	m_pTM->Draw(m_nScrollButtonID, m_rBackButton.left, m_rBackButton.top, .4f, .3f);
 	m_cFont.DrawTextA("Back", m_rBackButton.left+40, m_rBackButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 
