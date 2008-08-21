@@ -39,7 +39,7 @@ void CCreditState::Exit()
 
 bool CCreditState::Input(float fElapsedTime)
 {
-	if(m_pDI->GetBufferedKey(DIK_RETURN))
+	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER))
 	{
 		COptionsMenuState::GetInstance()->SetPause(false);
 		CGame::GetInstance()->PopCurrentState();

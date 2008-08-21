@@ -31,7 +31,7 @@ void CAttractMode::Enter()
 bool CAttractMode::Input(float fElapsedTime)
 {
 	CSGD_DirectInput* pDI = CSGD_DirectInput::GetInstance();
-	if(!m_pDS->IsPlaying() || pDI->GetBufferedKey(DIK_ESCAPE) || pDI->GetBufferedKey(DIK_RETURN) || pDI->GetBufferedKey(DIK_SPACE))
+	if(!m_pDS->IsPlaying() || pDI->GetBufferedKey(DIK_ESCAPE) || pDI->GetBufferedKey(DIK_RETURN) || pDI->GetBufferedKey(DIK_NUMPADENTER) || pDI->GetBufferedKey(DIK_SPACE))
 	{
 		m_pDS->Stop(m_nDemoID);
 		CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());

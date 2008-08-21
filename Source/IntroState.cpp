@@ -56,7 +56,7 @@ bool CIntroState::Input(float fElapsedTime)
 	if(m_bTitle == true && m_nTitle == 0)
 		CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
 
-	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedJoyButton(JOYSTICK_SELECT) || m_pDI->GetBufferedJoyButton(JOYSTICK_A))
+	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER) || m_pDI->GetBufferedJoyButton(JOYSTICK_SELECT) || m_pDI->GetBufferedJoyButton(JOYSTICK_A))
 	{	
 		m_bTitle = true;
 	}
@@ -72,7 +72,7 @@ void CIntroState::Render(float fElapsedTime)
 	m_pTM->Draw(m_nImageID,175,0,1.f,1.f, 0,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 	m_BF.DrawTextA("Presents: ",250,250,.5,.5,D3DCOLOR_ARGB(m_nAlpha,0,0,0));
 	m_pTM->Draw(m_nTitleID,225,250,1,1,0,0,0,0,D3DCOLOR_ARGB(m_nTitle,255,255,255));
-	m_BF.DrawTextA("Press Enter To Begin",100,300,.5,.5,D3DCOLOR_ARGB(m_nTitle,255,255,255));
+	m_BF.DrawTextA("Press Enter To Begin", 100,350,.5,.5,D3DCOLOR_ARGB(m_nTitle,255,255,255));
 
 } 
 void CIntroState::Update(float fElapsedTime)

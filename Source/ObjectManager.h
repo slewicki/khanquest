@@ -9,6 +9,7 @@
 #include "CBase.h"
 #include <vector>
 #include "CParticleEngine.h"
+#include "CCamera.h"
 #include "IListener.h"
 #include "CTile.h"
 #include "CTileEngine.h"
@@ -19,9 +20,13 @@ class ObjectManager : public IListener
 {
 private:
 	vector<CBase*> m_vObjectList;
-	CParticleEngine* pPE;
-	CTileEngine* Map;
-	CAISystem*		m_pCAI;
+	CParticleEngine* m_pPE;				// Particle engine
+	float m_fPartTimer;					// Particle render timer
+	int m_nBloodEmiiter;				// blood emitter
+
+	CCamera*	m_pCamera;				// the camera
+	CTileEngine* Map;					// tile engine	
+	CAISystem*		m_pCAI;				// AI system
 	struct SortObjects
 	{
 		 bool operator()(CBase* lhs, CBase* rhs)
@@ -162,6 +167,4 @@ public:
 	void SetSelectedUnitsRetreat();
 
 	void CheckCollisions();
-	
-
 };

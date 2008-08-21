@@ -44,6 +44,9 @@ public:
 	float					m_fUpdateQuarter;
 	int						m_nImageID;
 
+	int						m_nPartCount;
+
+
 	bool					m_bIsRunning;
 	bool					m_bHasParts;
 
@@ -53,6 +56,8 @@ public:
 	DWORD				m_dwCurrentTime;	// current time
 	DWORD				m_dwFrameTimer;		// frame timer
 
+	int					m_nMaxParts;		// max particles in emitter
+	int					m_fPartNumber;		// particle number
 
 	D3DXCOLOR			m_cStartColor;
 	D3DXCOLOR			m_cEndColor;

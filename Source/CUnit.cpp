@@ -139,7 +139,7 @@ void CUnit::Update(float fElapsedTime)
 		m_pAnimInstance->SetLooping(false);
 		m_pAnimInstance->SetPlayer(IsPlayerUnit());
 		m_pAnimInstance->StartFadeTimer(m_nDirectionFacing, m_nState);
-	
+		
 		// Clear the tile
 		GetCurrentTile()->bIsOccupied = false;
 		GetCurrentTile()->pUnit = NULL;

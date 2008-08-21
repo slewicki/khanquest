@@ -70,7 +70,7 @@ void CKeyBindState::Exit(void)
 bool CKeyBindState::Input(float fElapsedTime)
 {	
 	//	Change state if user presses ENTER
-	if (m_pDI->GetBufferedKey(DIK_RETURN) && !m_pDI->GetKey(DIK_LMENU) && !m_pDI->GetKey(DIK_RMENU) )
+	if ( (m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER) ) && !m_pDI->GetKey(DIK_LMENU) && !m_pDI->GetKey(DIK_RMENU) )
 	{
 			if(Buttons[m_nCurrentButton].Action == KeyBind)
 			{

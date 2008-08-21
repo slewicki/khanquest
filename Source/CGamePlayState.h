@@ -140,6 +140,8 @@ public:
 	///////////////////////////////////////////
 	int GetTerrorLevel() { return m_nTerrorLevel; }
 	int GetSelectionID() { return m_nSelectionID; }
+	bool IsPaused()		 { return m_bIsPaused; }
+
 
 	///////////////////////////////////////////
 	//  Function: Modifiers

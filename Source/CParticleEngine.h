@@ -11,6 +11,7 @@
 #include "CSGD_TextureManager.h"
 #include "CEmitter.h"
 #include "CParticle.h"
+#include "CCamera.h"
 
 #define RAND_FLOAT(min,max) (((rand()/(float)RAND_MAX)*((max)-(min)))+(min))
 
@@ -19,6 +20,7 @@ class CParticleEngine
 
 	CSGD_Direct3D*			m_pD3D;			// direct 3D
 	CSGD_TextureManager*	m_pTM;			// Texture Manager
+	CCamera*				m_pCamera;		// Camera
 
 	int						m_nEmitterXLocation; // X location to draw the emitter
 	int						m_nEmitterYLocation; // X location to draw the emitter
@@ -34,13 +36,8 @@ class CParticleEngine
 	float					m_fUpdateFloat;	
 	float					m_fUpdateQuarter;
 	int						m_nImageID;
-
-	//	For calculating elapsed time
-	DWORD				m_dwPreviousTime;	//	Time stamp of the last frame
-	float				m_dElapsedTime;		//	Time elapsed (in seconds) since the previous frame.
-	DWORD				m_dwCurrentTime;	// current time
-	float				m_dwFrameTimer;		// frame timer
-	DWORD				m_dwPartTimer;		// frame timer
+	int						m_nPartCount;
+	float					m_fPartTimer;
 
 	// update colors
 	D3DXCOLOR			m_cStartColor;

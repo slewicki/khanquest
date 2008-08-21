@@ -20,7 +20,10 @@
 
 ObjectManager::ObjectManager(void)
 {
-	pPE = CParticleEngine::GetInstance();
+	m_pPE = CParticleEngine::GetInstance();
+	m_fPartTimer = 0.0f;
+	m_nBloodEmiiter = -1;
+	m_pCamera = CCamera::GetInstance();
 	Map = CTileEngine::GetInstance();
 	m_pCAI = CAISystem::GetInstance();
 }
@@ -61,7 +64,8 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 
 		}
 	
-	pPE->Update(fElapsedTime);
+	m_pPE->Update(fElapsedTime);
+
     if(nEnemyUnits <=0)
 	{
 		CGame::GetInstance()->PopCurrentState();
@@ -76,6 +80,7 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 		CGame::GetInstance()->AddLoses();
 
 	}
+	m_pPE->Update(fElapsedTime);
 }
 
 void ObjectManager::RenderObjects(float fElapsedTime)
@@ -84,8 +89,7 @@ void ObjectManager::RenderObjects(float fElapsedTime)
 	{
 		m_vObjectList[i]->Render(fElapsedTime);
 	}
-	pPE->Render(fElapsedTime);
-
+	m_pPE->Render(fElapsedTime);
 }
 
 void ObjectManager::AddObject(CBase* pObject)
