@@ -27,11 +27,8 @@ void CWinBattleState::Enter()
 
 	// Go back to the map
 	// Call this function if the user wins the battle
-	if(CGamePlayState::GetInstance()->GetTerrorLevel() < 100)
-	{
-		CGamePlayState::GetInstance()->SetTerrorLevel(CGamePlayState::GetInstance()->GetTerrorLevel() + 25);
-	}
-	CGame::GetInstance()->SetCityConquered(CGame::GetInstance()->GetSelectedCity());
+	
+	
 	CGame::GetInstance()->SetSongPlay(WONBATTLE);
 	m_bAlpha = false;
 	m_bEsc = false;

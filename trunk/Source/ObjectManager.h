@@ -22,6 +22,13 @@ private:
 	CParticleEngine* pPE;
 	CTileEngine* Map;
 	CAISystem*		m_pCAI;
+	struct SortObjects
+	{
+		 bool operator()(CBase* lhs, CBase* rhs)
+		 {
+			  return lhs->GetPosY() < rhs->GetPosY();
+		 }
+	};
 
 	////////////////////////////////////////////
 	//	Function:	"ObjectManager(Constructor)"
@@ -155,4 +162,6 @@ public:
 	void SetSelectedUnitsRetreat();
 
 	void CheckCollisions();
+	
+
 };

@@ -22,7 +22,7 @@ CGamePlayState::CGamePlayState(void)
 	m_nHUD_ID = -1;
 
 	m_bButtonDown = false;
-	m_nTerrorLevel = 0;
+	
 
 }
 
@@ -122,6 +122,11 @@ bool CGamePlayState::Input(float fElapsedTime)
 		if(m_pDI->GetBufferedKey(DIK_F3))
 		{
 			m_pOM->SetSelectedUnitsRetreat();
+		}
+		if(m_pDI->GetBufferedKey(DIK_F8))
+		{
+			CGame::GetInstance()->AddWins();
+			CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
 		}
 
 		POINT ptMousePos = CGame::GetInstance()->GetMousePos(); 

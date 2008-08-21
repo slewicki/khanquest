@@ -71,9 +71,9 @@ bool CPausedState::Input(float fElapsedTime)
 		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
-			CGamePlayState::GetInstance()->SetTerrorLevel(CGamePlayState::GetInstance()->GetTerrorLevel() - 25);
-			CGame::GetInstance()->LoseLastCity();
-			CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
+			CGame::GetInstance()->AddLoses();
+
+				
 		}
 	}
 	else if(CGame::GetInstance()->IsMouseInRect(m_rQuitButton))

@@ -17,6 +17,7 @@
 #include "WinGameState.h"
 #include "LoseGameState.h"
 #include "DirectShow.h"
+#include "CWorldMapState.h"
 using namespace std;
 
 CGame::CGame(void)
@@ -27,26 +28,33 @@ CGame::CGame(void)
 	m_pWM	= NULL;
 	m_pDI	= NULL;
 //	m_pMap = NULL;
-	m_pSelectedCity = NULL;
+	m_nTerrorLevel = 0;
 	m_dwPreviousTime = GetTickCount();
 	m_nFrameCounter = 0;
 	m_nFPS = 0;	
 	m_dwFrameTimer = GetTickCount();
 	m_fGameTime = 0;
-	m_nSFXVolume = 50;
-	m_nMusicVolume = 50;
+	m_nSFXVolume = 30;
+	m_nMusicVolume = 1;
 	*m_pCities = NULL;
 	m_nGold = 0;
 	m_nWins = 1;
 	m_nLoses = 0;
 	m_nFood = 0;
+	m_pSelectedCity = NULL;
 	m_chJinCount = m_chKCount = m_chXiaCount = 0;
 	m_bFPS = true;
+	m_szPlayerName[0] = 'E';
+	m_szPlayerName[1] = 'M';
+	m_szPlayerName[2] = 'P';
+	m_szPlayerName[3] = 'T';
+	m_szPlayerName[4] = 'Y';
+	m_szPlayerName[5] = '\0';
+	m_nCurrentSaveSlot = SLOT1;
 }
 
 CGame::~CGame(void)
 {
-	delete m_nPlayList;
 }
 
 CGame* CGame::GetInstance(void)
@@ -890,7 +898,7 @@ void CGame::SetCityConquered(CCity* pCity)
 
 	// This city can no longer be sacked for gold
 	pCity->SetGoldTribute(0);
-	AddWins();
+	//AddWins();
 }
 
 void CGame::LoseLastCity()
@@ -921,9 +929,15 @@ void CGame::LoseLastCity()
 }
 void CGame::AddWins()
 {
+	SetCityConquered(GetSelectedCity());
 	++m_nWins;
 	if(m_nLoses > 0)
 		--m_nLoses;
+	if(GetTerrorLevel() < 100)
+	{
+		SetTerrorLevel(GetTerrorLevel() + 25);
+	}
+	
 	if(m_nWins == TOTAL_CITIES)
 	{
 		while(m_vStates.size() > 0)
@@ -934,20 +948,341 @@ void CGame::AddWins()
 		m_nGold = 0;
 		m_nWins = 1;
 	}
+	else
+		Save();
+
 }
 void CGame::AddLoses()
 {
 	++m_nLoses;
-	LoseLastCity();
-	if(m_nLoses == 2)
+	
+	
+	SetTerrorLevel(GetTerrorLevel() - 25);
+	if(m_nLoses >= 2 && this->GetNumConquered() == 0)
 	{	
 		while(m_vStates.size() > 0)
 			PopCurrentState();
 	
 		PushState(CMainMenuState::GetInstance());
 		PushState(CLoseGameState::GetInstance());
-		InitCities();
-		m_nGold = 0;
-		m_nLoses = 0;
+		
 	}
+	else if(m_nLoses >= 2)
+	{
+		LoseLastCity();
+		m_nLoses = 0;
+		CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
+		
+	}
+	else
+	{
+		Save();
+		CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
+	}
+}
+
+
+bool CGame::LoadSlot(int nSlot)
+{
+	string szSaveSlot;
+	switch (nSlot)
+	{
+	case SLOT1:
+		m_nCurrentSaveSlot = SLOT1;
+		szSaveSlot = "Resource/KQ_Save1.dat";
+		break;
+	case SLOT2:
+		m_nCurrentSaveSlot = SLOT2;
+		szSaveSlot = "Resource/KQ_Save2.dat";
+		break;
+	case SLOT3:
+		m_nCurrentSaveSlot = SLOT3;
+		szSaveSlot = "Resource/KQ_Save3.dat";
+		break;
+	default:
+		m_nCurrentSaveSlot = -1;
+		return false;
+	}
+	try 
+	{	 
+		ifstream input;
+		input.open(szSaveSlot.c_str(),ios_base::binary);
+		if(!input.is_open())
+		{
+			MessageBox(m_hWnd, "Save file not found.  Try making a new one." , "Error", MB_OK);
+
+			return false;
+		}
+		int nLength = 0;
+		input.read((char*)&nLength, sizeof(nLength));
+		input.read(m_szPlayerName, nLength);
+
+		// Food total
+		input.read((char*)&m_nFood  , sizeof(m_nFood));
+		// Gold total
+		input.read((char*)&m_nGold  , sizeof(m_nGold));
+
+		int tempGold = m_nGold;
+
+		//Conquered Cities
+		int nConquered = 0;
+		int nCity = 0;
+		
+		input.read((char*) &nConquered  , sizeof( nConquered));
+		for ( int i = 0; i < nConquered; i++)
+		{
+			input.read((char*)&nCity  , sizeof(nCity ));
+			SetCityConquered(m_pCities[nCity]);
+		}
+
+		input.read((char*)&m_nTerrorLevel, sizeof(m_nTerrorLevel));
+		int nType, nMaxHP, nAttack, nRange, nCost;
+		float fAttack, fSpeed;
+		for (int i = 0; i < 6; i++)
+		{
+			// read out player unit stats (upgrades inside)
+			
+	
+			input.read((char*)&nType,			sizeof(nType));
+			input.read((char*)&nMaxHP,			sizeof(nMaxHP));
+			input.read((char*)&nAttack,			sizeof(nAttack));
+			input.read((char*)&nRange,			sizeof(nRange));
+			input.read((char*)&fAttack,			sizeof(fAttack));
+			input.read((char*)&fSpeed,			sizeof(fSpeed));
+			input.read((char*)&nCost,			sizeof(nCost));
+			
+			m_pPlayerUnitInfo[i].SetType(nType);
+			m_pPlayerUnitInfo[i].SetMaxHP(nMaxHP);
+			m_pPlayerUnitInfo[i].SetAttackPower(nAttack);
+			m_pPlayerUnitInfo[i].SetRange(nRange);
+			m_pPlayerUnitInfo[i].SetAttackSpeed(fAttack);
+			m_pPlayerUnitInfo[i].SetSpeed(fSpeed);
+			m_pPlayerUnitInfo[i].SetCost(nCost);
+
+
+
+		}
+		// read out which upgrades are active
+
+		
+		// Wins total
+		input.read((char*)&m_nWins , sizeof(m_nWins));
+		// Loses total
+		input.read((char*)&m_nLoses  , sizeof(m_nLoses));
+		
+		
+		// Jin Count (num jin conquered)
+		input.read((char*)&m_chJinCount  , sizeof(m_chJinCount));
+		input.read((char*)&m_chXiaCount  , sizeof(m_chXiaCount));
+		input.read((char*)&m_chKCount  , sizeof(m_chKCount));
+
+
+		input.close();
+		
+		// Reset gold since setcityconquered will add on to it
+		m_nGold = tempGold;
+	}
+	
+	
+	catch (std::exception e)
+	{
+		MessageBox(m_hWnd, "Error loading data. My bad...", "Error", MB_OK);
+		return false;
+
+	}
+	PushState(CWorldMapState::GetInstance());
+	return true;
+
+}
+void CGame::NewGame(int nSlot)
+{
+	m_nCurrentSaveSlot = nSlot;
+	*m_pCities = NULL;
+	m_nGold = 0;
+	m_nTerrorLevel = 0;
+	m_nWins = 1;
+	m_nLoses = 0;
+	m_nFood = 0;
+	m_pSelectedCity = NULL;
+	m_chJinCount = m_chKCount = m_chXiaCount = 0;
+	this->ParseBinaryUnitInfo("Resource/KQ_unitStats.dat");
+	InitCities();
+}
+
+bool CGame::Save()
+{
+	string szSaveSlot;
+	switch (m_nCurrentSaveSlot)
+	{
+	case SLOT1:
+		m_nCurrentSaveSlot = SLOT1;
+		szSaveSlot = "Resource/KQ_Save1.dat";
+		m_szPlayerName[0] = 'G';
+		m_szPlayerName[1] = 'A';
+		m_szPlayerName[2] = 'M';
+		m_szPlayerName[3] = 'E';
+		m_szPlayerName[4] = '1';
+		m_szPlayerName[5] = '\0';
+		break;
+	case SLOT2:
+		m_nCurrentSaveSlot = SLOT2;
+		szSaveSlot = "Resource/KQ_Save2.dat";
+		m_szPlayerName[0] = 'G';
+		m_szPlayerName[1] = 'A';
+		m_szPlayerName[2] = 'M';
+		m_szPlayerName[3] = 'E';
+		m_szPlayerName[4] = '2';
+		m_szPlayerName[5] = '\0';
+		break;
+	case SLOT3:
+		m_nCurrentSaveSlot = SLOT3;
+		szSaveSlot = "Resource/KQ_Save3.dat";
+		m_szPlayerName[0] = 'G';
+		m_szPlayerName[1] = 'A';
+		m_szPlayerName[2] = 'M';
+		m_szPlayerName[3] = 'E';
+		m_szPlayerName[4] = '3';
+		m_szPlayerName[5] = '\0';
+		break;
+	default:
+		m_nCurrentSaveSlot = -1;
+		return false;
+	}
+
+	try 
+	{	 
+		ofstream output(szSaveSlot.c_str(),ios_base::binary);
+		int length = sizeof(m_szPlayerName);
+		output.write((char*)&length, sizeof(length));
+		output.write(m_szPlayerName, sizeof(m_szPlayerName));
+
+
+
+		// Food total
+		output.write((char*)&m_nFood  , sizeof(m_nFood));
+		// Gold total
+		output.write((char*)&m_nGold  , sizeof(m_nGold));
+
+		//Conquered Cities
+		int nConquered = (int)m_vConqueredCities.size();
+		output.write((char*)&nConquered   , sizeof( nConquered));
+		for (unsigned int i = 0; i < m_vConqueredCities.size(); i++)
+		{
+			output.write((char*)&m_vConqueredCities[i]  , sizeof(m_vConqueredCities[i] ));
+		}
+
+
+		output.write((char*)&m_nTerrorLevel, sizeof(m_nTerrorLevel));
+		int nType, nMaxHP, nAttack, nRange, nCost;
+		float fAttack, fSpeed;
+		for (int i = 0; i < 6; i++)
+		{
+			// Write out player unit stats (upgrades inside)
+			//output.write(reinterpret_cast<char *>(&m_pPlayerUnitInfo[i])  , sizeof(m_pPlayerUnitInfo[i]));
+			nType	= m_pPlayerUnitInfo[i].GetType();		
+			nMaxHP	=  m_pPlayerUnitInfo[i].GetMaxHP();		
+			nAttack	=  m_pPlayerUnitInfo[i].GetAttackPower();
+			nRange	=  m_pPlayerUnitInfo[i].GetRange();		
+			fAttack	=  m_pPlayerUnitInfo[i].GetAttackSpeed();
+			fSpeed	=  m_pPlayerUnitInfo[i].GetSpeed();	
+			nCost	=  m_pPlayerUnitInfo[i].GetCost();		
+			output.write((char *)(&nType	),			sizeof(nType));
+			output.write((char *)(&nMaxHP	),		sizeof(nMaxHP));
+			output.write((char *)(&nAttack	),	sizeof(nAttack));
+			output.write((char *)(&nRange	),		sizeof(nRange));
+			output.write((char *)(&fAttack	),	sizeof(fAttack));
+			output.write((char *)(&fSpeed	),		sizeof(fSpeed));
+			output.write((char *)(&nCost	),			sizeof(nCost));
+
+		}
+		// Write out which upgrades are active
+
+		
+		// Wins total
+		output.write((char*)&m_nWins , sizeof(m_nWins));
+		// Loses total
+		output.write((char*)&m_nLoses  , sizeof(m_nLoses));
+		
+		
+		// Jin Count (num jin conquered)
+		output.write((char*)&m_chJinCount  , sizeof(m_chJinCount));
+		output.write((char*)&m_chXiaCount  , sizeof(m_chXiaCount));
+		output.write((char*)&m_chKCount  , sizeof(m_chKCount));
+
+
+		output.close();
+	}
+	catch (std::exception e)
+	{
+		MessageBox(m_hWnd, "Error saving data. Reinstalling may fix the problem (yeah right).", "Error", MB_OK);
+		return false;
+
+	}
+	return true;
+}
+string CGame::GetSaveName(int nSlot)
+{
+	string szSaveSlot;
+	char*	szName = NULL;
+	int nFood, nGold, nConquered;
+	switch (nSlot)
+	{
+	case SLOT1:
+		m_nCurrentSaveSlot = SLOT1;
+		szSaveSlot = "Resource/KQ_Save1.dat";
+		break;
+	case SLOT2:
+		m_nCurrentSaveSlot = SLOT2;
+		szSaveSlot = "Resource/KQ_Save2.dat";
+		break;
+	case SLOT3:
+		m_nCurrentSaveSlot = SLOT3;
+		szSaveSlot = "Resource/KQ_Save3.dat";
+		break;
+	default:
+		m_nCurrentSaveSlot = -1;
+		return false;
+	}
+	try 
+	{	 
+		ifstream input;
+		input.open(szSaveSlot.c_str(),ios_base::binary);
+
+		if(!input.is_open())
+		{
+			MessageBox(m_hWnd, "Save file not found.  Try making a new one." , "Error", MB_OK);
+
+			return "Empty";
+		}
+		int nLength = 0;
+		input.read((char*)&nLength, sizeof(nLength));
+		input.read(szName, nLength);
+
+		// Food total
+		input.read((char*)&nFood  , sizeof(nFood));
+		// Gold total
+		input.read((char*)&nGold  , sizeof(nGold));
+
+		
+		
+		input.read((char*) &nConquered  , sizeof( nConquered));
+
+	}
+	catch (std::exception e)
+	{
+		MessageBox(m_hWnd, "Error saving data. Reinstalling may fix the problem (yeah right).", "Error", MB_OK);
+		return false;
+	}
+
+	string szTitle = szName;
+	char buffer[128];
+	sprintf_s(buffer, 128, "/Conquered: %i  Food: %i  Gold: %i", nConquered, nFood, nGold);
+
+	szTitle += buffer;
+
+
+
+
+
+	return szTitle;
 }

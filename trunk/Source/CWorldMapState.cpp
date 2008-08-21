@@ -126,7 +126,7 @@ bool CWorldMapState::Input(float fElapsedTime)
 
 		if(m_clistInputQueue == m_clistCheatCode[0])
 		{
-			CGamePlayState::GetInstance()->SetTerrorLevel(100);
+			CGame::GetInstance()->SetTerrorLevel(100);
 		}
 		else if(m_clistInputQueue == m_clistCheatCode[1])
 		{
@@ -154,7 +154,7 @@ bool CWorldMapState::Input(float fElapsedTime)
 				CGame::GetInstance()->SetSelectedCity(m_pCities[i]);
 				m_bPaused = true;
 
-				if(CGamePlayState::GetInstance()->GetTerrorLevel() < 100)
+				if(CGame::GetInstance()->GetTerrorLevel() < 100)
 				{
 					// Push on CCityInfoState
 					CGame::GetInstance()->PushState(CCityInfoState::GetInstance());
@@ -178,7 +178,7 @@ bool CWorldMapState::Input(float fElapsedTime)
 							}
 						}
 					}
-					CGamePlayState::GetInstance()->SetTerrorLevel(0);
+					CGame::GetInstance()->SetTerrorLevel(0);
 					m_bPaused = false;
 					break;
 				}
@@ -241,7 +241,7 @@ void CWorldMapState::Render(float fElapsedTime)
 	string szFoodVal = szF;
 
 	string szTerrorLevel = "Terror: ";
-	m_cFont.DrawTextA(szTerrorLevel + IntToString(CGamePlayState::GetInstance()->GetTerrorLevel()) + "%", 50,550, 0.2f,0.2f, D3DCOLOR_ARGB(255,255,0,0));
+	m_cFont.DrawTextA(szTerrorLevel + IntToString(CGame::GetInstance()->GetTerrorLevel()) + "%", 50,550, 0.2f,0.2f, D3DCOLOR_ARGB(255,255,0,0));
 	m_cFont.DrawTextA(szFood + szFoodVal, 50, 500, .2f, .2f, D3DCOLOR_ARGB(255, 120, 60, 0));
 	m_cFont.DrawTextA(szGold + szGoldVal, 55, 525, .2f, .2f, D3DCOLOR_ARGB(255, 255, 255, 0));
 
