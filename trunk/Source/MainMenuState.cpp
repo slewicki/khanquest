@@ -133,7 +133,7 @@ bool CMainMenuState::Input(float fElapsedTime)
 		m_fAttractTimer = 0;
 	}
 
-	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedJoyButton(JOY_BUTTON1))
+	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 	{
 		switch(Buttons[m_nCurrentButton].Action)
 		{

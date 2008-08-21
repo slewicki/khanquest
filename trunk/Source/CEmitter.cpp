@@ -35,6 +35,10 @@ CEmitter::CEmitter(void)
 	m_fUpdateFloat		= .25f;
 	m_fUpdateQuarter	= .25f;
 
+	m_fPartNumber = 0;
+
+	m_nPartCount = 0;
+
 	m_dElapsedTime = 0.0f;
 	m_dwCurrentTime = GetTickCount();
 	m_dwPreviousTime = GetTickCount();
@@ -89,6 +93,8 @@ void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY)
 
 	fin.read((char*)&nStringSize, sizeof(int));
 	particle.m_fMaxParticles = (float)nStringSize;
+
+	m_nMaxParts = (int)particle.m_fMaxParticles;
 
 	fin.read((char*)&nStringSize, sizeof(int));
 	particle.m_fMaxLife = (float)nStringSize;

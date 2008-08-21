@@ -204,7 +204,7 @@ bool COptionsMenuState::Input(float fElapsedTime)
 	//}
 #pragma endregion
 #pragma region Selection
-	if(m_pDI->GetBufferedKey(DIK_RETURN))// || m_pDI->GetBufferedJoyButton(JOYSTICK_A))
+	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER) )// || m_pDI->GetBufferedJoyButton(JOYSTICK_A))
 	{
 		if(Buttons[m_nCurrentButton].Action == KEYBIND)
 		{

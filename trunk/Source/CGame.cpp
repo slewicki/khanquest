@@ -55,6 +55,7 @@ CGame::CGame(void)
 
 CGame::~CGame(void)
 {
+	delete m_nPlayList;
 }
 
 CGame* CGame::GetInstance(void)
@@ -83,7 +84,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 
 	//	Call initialize on each wrapper:
 	#pragma region WrapperInit
-	if (!m_pD3D->InitDirect3D(hWnd, nScreenWidth, nScreenHeight, bIsWindowed, true))
+	if (!m_pD3D->InitDirect3D(hWnd, nScreenWidth, nScreenHeight, bIsWindowed, false))
 	{
 		MessageBox(0, "InitDirect3D Failed", " Error", MB_OK);
 		return false;
@@ -216,7 +217,7 @@ bool CGame::Main(void)
 	// Because of this use paused bools to stop input to other states
 	// when pushing on states such as CCityInfoState over CWorldMapState
 	// Fullscreen Toggling
-	if(m_pDI->GetBufferedKey(DIK_RETURN) && (m_pDI->GetKey(DIK_LMENU) || m_pDI->GetKey(DIK_RMENU)))
+	if( (m_pDI->GetBufferedKey(DIK_RETURN)  || m_pDI->GetBufferedKey(DIK_NUMPADENTER) ) && (m_pDI->GetKey(DIK_LMENU) || m_pDI->GetKey(DIK_RMENU)))
 	{
 		m_bIsWindowed = !m_bIsWindowed;
 		m_pD3D->ChangeDisplayParam(800, 600, m_bIsWindowed);

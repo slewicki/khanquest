@@ -79,7 +79,7 @@ bool COutroState::Input(float fElapsedTime)
 	}
 
 
-	if(m_pDI->GetBufferedKey(DIK_RETURN))
+	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER))
 	{	
 		if(Buttons[m_nCurrentButton].Action == YES)
 		{	

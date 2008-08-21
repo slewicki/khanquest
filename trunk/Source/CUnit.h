@@ -95,7 +95,7 @@ public:
 	//	Purpose: Gets the specified type
 	//////////////////////////////////////////////////////
 	// Get unit stats
-	inline int	  GetMaxHP				(void) const { return m_nMaxHP; }
+	inline int	  GetMaxHP			(void) const { return m_nMaxHP; }
 	inline int	  GetHealth			(void) const {return m_nCurrentHP;}
 	inline int	  GetAttackPower	(void) const { return m_nAttack; }
 	inline int	  GetRange			(void) const { return m_nRange; }
@@ -103,9 +103,9 @@ public:
 	inline float  GetSpeed			(void) const { return m_fMovementSpeed; }
 	inline int	  GetCost			(void) const { return m_nCost; }
 	inline CTile* GetDestTile		(void) const { return m_pDestinationTile; }
-	inline CTile* GetCurrentTile		(void) const { return m_pCurrentTile; }
+	inline CTile* GetCurrentTile	(void) const { return m_pCurrentTile; }
 	inline CTile* GetNextTile		(void) const {return m_pNextTile;}
-	inline bool IsPlayerUnit(void) {return m_bIsPlayerUnit;}
+	inline bool IsPlayerUnit		(void) {return m_bIsPlayerUnit;}
 
 	inline CUnit* GetTarget			(void) const { return m_pTarget; }
 	inline bool	  IsSelected		(void) const { return m_bIsSelected; }
@@ -117,7 +117,7 @@ public:
 	inline int    GetState			(void) const { return m_nState; }
 	inline int    GetDirection		(void) const { return m_nDirectionFacing; }
 	inline RECT   GetLocalRect	    (void) const { return m_rLocalRect; }
-	inline RECT   GetGlobalRect	(void) const { return m_rGlobalRect; }
+	inline RECT   GetGlobalRect		(void) const { return m_rGlobalRect; }
 	
 
 

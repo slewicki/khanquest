@@ -7,11 +7,13 @@
 //////////////////////////////////////////////////////////
 	
 // Visual Leak Detector
+#if _DEBUG
 //------------------------------------------------------------------------
 //#define VLD_AGGREGATE_DUPLICATES	// Dont get duplicate copies of leaks
 //#define VLD_MAX_DATA_DUMP 0			// Dont give hex output
 //#include "vld.h"
 //------------------------------------------------------------------------
+#endif
 
 #include <windows.h>	//	Needed for Windows Applications.
 
@@ -89,9 +91,10 @@ int WINAPI WinMain(	HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	winClassEx.cbClsExtra		= 0;
 	winClassEx.cbWndExtra		= 0;
 	winClassEx.hInstance		= hInstance;
-	// Edit for custom icon: LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1) );
+		// Edit for custom icon: LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1) );
+//	winClassEx.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1) );
 	winClassEx.hIcon			= LoadIcon(NULL, IDI_APPLICATION);
-	// Edit for custom cursor
+		// Edit for custom cursor
 	winClassEx.hCursor			= LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR_NORMAL));
 	winClassEx.hbrBackground	= (HBRUSH)GetStockObject(BLACK_BRUSH);
 	winClassEx.lpszMenuName		= NULL; 

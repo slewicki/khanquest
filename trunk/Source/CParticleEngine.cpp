@@ -11,10 +11,10 @@
 #include "SGD_Math.h"
 CParticleEngine::CParticleEngine(void)
 {
-	m_dwFrameTimer = 0;
-	m_dwPartTimer = 0;
 	m_bIsRunning = false;
 	m_nBlendMode = 0;
+	m_fPartTimer = 0;
+	m_pCamera = CCamera::GetInstance();
 }
 
 CParticleEngine::~CParticleEngine(void)
@@ -37,7 +37,7 @@ void CParticleEngine::Render(float fElapsedTime)
 		for (unsigned int i = 0; i < vEmitterList.size(); ++i )
 		{
 
-			for (unsigned int j = 0; j < vEmitterList[i].vParticleList.size(); ++j )
+			for ( int j = 0; j < vEmitterList[i].m_nPartCount; ++j )
 			{
 
 				if (vEmitterList[i].vParticleList[j].m_bAlive == true)
@@ -53,80 +53,75 @@ void CParticleEngine::Render(float fElapsedTime)
 					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 					m_pD3D->GetDirect3DDevice()->SetRenderState (D3DRS_ALPHATESTENABLE, true);
 
-					for (unsigned int k = 0; k < m_dwPartTimer ; ++k)
-					{
+					POINT CamLoc;
+					CamLoc = m_pCamera->TransformToScreen( (int)(vEmitterList[i].vParticleList[j].m_fPartLocX), (int)(vEmitterList[i].vParticleList[j].m_fPartLocY) );
 
-						m_pTM->Draw(vEmitterList[i].vParticleList[j].m_nImageID,
-							(int)vEmitterList[i].vParticleList[j].m_fPartLocX,
-							(int)vEmitterList[i].vParticleList[j].m_fPartLocY,
-							(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleX,
-							(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleY,
-							0, 0, 0, 0,
-							D3DCOLOR_ARGB((int)vEmitterList[i].vParticleList[j].m_cCurrentColor.a, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.r, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.g, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.b)
-							);
-					}
+					m_pTM->Draw(vEmitterList[i].vParticleList[j].m_nImageID,
+						(int)CamLoc.x,
+						(int)CamLoc.y,
+						(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleX,
+						(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleY,
+						0, 0, 0, 0,
+						D3DCOLOR_ARGB((int)vEmitterList[i].vParticleList[j].m_cCurrentColor.a, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.r, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.g, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.b)
+						);
+					//m_pTM->Draw(vEmitterList[i].vParticleList[j].m_nImageID,
+					//	(int)vEmitterList[i].vParticleList[j].m_fPartLocX,
+					//	(int)vEmitterList[i].vParticleList[j].m_fPartLocY,
+					//	(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleX,
+					//	(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleY,
+					//	0, 0, 0, 0,
+					//	D3DCOLOR_ARGB((int)vEmitterList[i].vParticleList[j].m_cCurrentColor.a, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.r, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.g, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.b)
+					//	);
+
 					// reset blend mode to default
 					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND, source );
 					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, dest );
 				}
-
 			}
 		}
 	}
-
 }
 
 void CParticleEngine::Update(float fElapsedTime)
 {
 
-	// timing
-	m_dwPreviousTime = m_dwCurrentTime;
-	m_dwCurrentTime = GetTickCount();
-	m_dElapsedTime = (float)(m_dwCurrentTime - m_dwPreviousTime);// / 1000.0f);
-
-	if (GetTickCount() - m_dwPartTimer > (unsigned int)( 8000 ) )
-	{
-		m_dwPartTimer = 0;
-	}
-
-	// do not update if empty
+	 //do not update if empty
 	if (vEmitterList.size() != 0)
 	{
-		m_dwFrameTimer += m_dElapsedTime; // advance timer
 
-		if ( m_dwFrameTimer > (unsigned int)( 1 ) )
-		{
-			for (unsigned int i = 0; i < vEmitterList.size(); ++i )
+		for (unsigned int i = 0; i < vEmitterList.size(); ++i )
 			{
 				if (vEmitterList[i].m_bIsRunning)
 				{
+					m_fPartTimer += fElapsedTime;
+					if (m_fPartTimer > 1)
+					{
+						if (vEmitterList[i].m_nPartCount < (int)vEmitterList[i].vParticleList.size())
+						{
+							++vEmitterList[i].m_nPartCount;
+						}
+						m_fPartTimer = 0;
+					}
 					for (unsigned int j = 0; j < vEmitterList[i].vParticleList.size(); ++j )
 					{
-
-						if (m_dwPartTimer < vEmitterList.size())
-						{
-							++m_dwPartTimer;
-						}
 						// Update location
-						//////////////////////////////////////////////////////////////////////////
+						////////////////////////////////////////////////////////////////////////
 						UpdateLoc(i, j);
 
-						// Update the scale
-						//////////////////////////////////////////////////////////////////////////
+						 //Update the scale
+						////////////////////////////////////////////////////////////////////////
 						UpdateScale(i, j);
 
 						// Update Age
-						//////////////////////////////////////////////////////////////////////////
+						////////////////////////////////////////////////////////////////////////
 						UpdateAge(i, j);
 
 						// Update Color
-						//////////////////////////////////////////////////////////////////////////
+						////////////////////////////////////////////////////////////////////////
 						UpdateColor(i, j);
 					}
 				}
 			}
-			m_dwFrameTimer = 0;
-		}
 	}
 }
 
@@ -214,10 +209,16 @@ void CParticleEngine::UpdateScale(int i, int j)
 void CParticleEngine::UpdateLoc(int i, int j)
 {
 	// update location
-	m_fPercentGravity = (vEmitterList[i].vParticleList[j].m_fAge / vEmitterList[i].vParticleList[j].m_fLife) ;
+	m_fPercentGravity = (vEmitterList[i].vParticleList[j].m_fAge / vEmitterList[i].vParticleList[j].m_fLife);
 
-	vEmitterList[i].vParticleList[j].m_fPartLocX += (vEmitterList[i].vParticleList[j].m_fVelX + Lerp(0, vEmitterList[i].vParticleList[j].m_fGravityY, m_fPercentGravity));
-	vEmitterList[i].vParticleList[j].m_fPartLocY += (vEmitterList[i].vParticleList[j].m_fVelY + Lerp(0, vEmitterList[i].vParticleList[j].m_fGravityY, m_fPercentGravity));
+	vEmitterList[i].vParticleList[j].m_fPartLocX += ( vEmitterList[i].vParticleList[j].m_fVelX  + Lerp(0, vEmitterList[i].vParticleList[j].m_fGravityY, m_fPercentGravity));
+	vEmitterList[i].vParticleList[j].m_fPartLocY += ( vEmitterList[i].vParticleList[j].m_fVelY  + Lerp(0, vEmitterList[i].vParticleList[j].m_fGravityY, m_fPercentGravity));
+
+	//POINT CamLoc;
+	//CamLoc = m_pCamera->TransformToScreen((int)vEmitterList[i].vParticleList[j].m_fPartLocX, (int)vEmitterList[i].vParticleList[j].m_fPartLocY);
+	//vEmitterList[i].vParticleList[j].m_fPartLocX = CamLoc.x;
+	//vEmitterList[i].vParticleList[j].m_fPartLocY = CamLoc.y;
+
 }
 
 int CParticleEngine::GetBlendMode(string mode)

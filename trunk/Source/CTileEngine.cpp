@@ -177,7 +177,7 @@ void CTileEngine::Render(RECT nCamPos)
 				//if( (nCamPosX > pTileArray[Row][Col].ptLocalAnchor.x || nCamPosX < pTileArray[Row][Col].ptLocalAnchor.x) && (nCamPosY > pTileArray[Row][Col].ptLocalAnchor.y || nCamPosY < pTileArray[Row][Col].ptLocalAnchor.y))
 				if(pTileArray[0][Row][Col].bIsVisible == true)
 				{
-					if(nCamPos.left < pTileArray[nLayer][Row][Col].ptLocalAnchor.x + 32 && nCamPos.right > pTileArray[nLayer][Row][Col].ptLocalAnchor.x - 32 && nCamPos.top < pTileArray[nLayer][Row][Col].ptLocalAnchor.y  + 16 && nCamPos.bottom > pTileArray[nLayer][Row][Col].ptLocalAnchor.y - 16)
+					if(nCamPos.left < pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.right > pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.top < pTileArray[nLayer][Row][Col].ptLocalAnchor.y && nCamPos.bottom > pTileArray[nLayer][Row][Col].ptLocalAnchor.y)
 					{
 						//Temp
 						//-------------------------
@@ -243,15 +243,13 @@ void CTileEngine::RenderMiniMap(RECT nCamPos)
 	rCamera.right	=	rCamera.left+(int)(800*fPercentX);
 	rCamera.top		=	(int)(y*fPercentY)+(528 - (int)(300*fPercentY));
 	rCamera.bottom	=	rCamera.top+(int)(455*fPercentY);
-	CSGD_Direct3D::GetInstance()->SpriteEnd();
-	CSGD_Direct3D::GetInstance()->LineEnd();
 	CSGD_Direct3D::GetInstance()->DeviceEnd();
+	CSGD_Direct3D::GetInstance()->SpriteEnd();
 	
 	CSGD_Direct3D::GetInstance()->DrawPrimitiveRect(rCamera, D3DCOLOR_ARGB(255, 255, 255, 255));
 	
 	
 	CSGD_Direct3D::GetInstance()->DeviceBegin();
-	CSGD_Direct3D::GetInstance()->LineBegin();
 	CSGD_Direct3D::GetInstance()->SpriteBegin();
 
 	

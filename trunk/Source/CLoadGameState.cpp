@@ -123,8 +123,6 @@ bool CLoadGameState::Input(float fElapsedTime)
 		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
-			
-			
 				m_pWM->Play(m_nClickID);
 				
 				if(m_bIsNewGame)

@@ -56,7 +56,7 @@ void CGamePlayState::Enter(void)
 //	m_nTestEmitter = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_DustCload.dat", 128, 128);
 
 	// Register any Events with the GamePlayState
-	Map->LoadFile("Resource/Levels/KQ_Level4.level");
+	Map->LoadFile("Resource/Levels/KQ_Level2.level");
 
 	m_pOM->UpdatePlayerUnitStartTile();
 
@@ -91,6 +91,13 @@ void CGamePlayState::Exit(void)
 //	CEventSystem::GetInstance()->ClearEvents();
 	//Remove all objects from manager?	
 	ObjectManager::GetInstance()->RemoveAllObjects();
+
+	for (unsigned int i = 0; i < m_pPE->vEmitterList.size(); ++i)
+	{
+		m_pPE->SetIsRunning(i, false);
+	}
+	m_pPE->ClearEmitter();
+
 	m_pHUD->Exit();
 	//m_pHUD->Enter();
 }
