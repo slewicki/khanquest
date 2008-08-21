@@ -5,6 +5,7 @@
 #include "AttractMode.h"
 #include "CSGD_WaveManager.h"
 #include "OutroState.h"
+#include "CLoadGameState.h"
 
 #include "irrXML.h"
 #include <fstream>
@@ -139,14 +140,17 @@ bool CMainMenuState::Input(float fElapsedTime)
 		case WorldMapState:
 			{
 				m_bPaused = true;
-				CGame::GetInstance()->NewGame(0);
-				m_pToSwitchTo = CWorldMapState::GetInstance();
+				CLoadGameState::GetInstance()->IsNewGame(true);
+				
+				m_pToSwitchTo = CLoadGameState::GetInstance();
 			}
 			break;
 		case Load:
 			{
+				m_bPaused = true;
 				//TODO: Make Loading State
-				CGame::GetInstance()->LoadSlot(0);
+				CLoadGameState::GetInstance()->IsNewGame(false);
+				m_pToSwitchTo = CLoadGameState::GetInstance();
 			}
 			break;
 		case Options:

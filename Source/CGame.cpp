@@ -34,8 +34,8 @@ CGame::CGame(void)
 	m_nFPS = 0;	
 	m_dwFrameTimer = GetTickCount();
 	m_fGameTime = 0;
-	m_nSFXVolume = 50;
-	m_nMusicVolume = 50;
+	m_nSFXVolume = 30;
+	m_nMusicVolume = 1;
 	*m_pCities = NULL;
 	m_nGold = 0;
 	m_nWins = 1;
@@ -247,7 +247,6 @@ bool CGame::Main(void)
 
 	if(!m_pWM->IsWavePlaying(m_nPlayList[m_nCurrentSong]))
 	{
-		m_pWM->SetVolume(m_nPlayList[m_nCurrentSong],m_nMusicVolume);
 		m_pWM->Stop(m_nPlayList[m_nPreviousSong]);
 		m_pWM->Play(m_nPlayList[m_nCurrentSong],DSBPLAY_LOOPING);
 		m_nPreviousSong = m_nCurrentSong;
@@ -580,8 +579,7 @@ bool CGame::ParsePlayList(const char* szFileName)
 				//Checks the Attribute name and sets the approiate value
 				if(!strcmp("NumSongs",szName.c_str()))
 				{
-					m_nNumSongs = atoi(xml->getNodeName());
-					m_nPlayList = new int[m_nNumSongs];
+					m_nPlayList = new int[atoi(xml->getNodeName())];
 				}
 				if (!strcmp("Song", szName.c_str()))
 				{
@@ -900,6 +898,7 @@ void CGame::SetCityConquered(CCity* pCity)
 
 	// This city can no longer be sacked for gold
 	pCity->SetGoldTribute(0);
+	GetTotalFoodTribute();
 	//AddWins();
 }
 
@@ -928,6 +927,7 @@ void CGame::LoseLastCity()
 	};
 	if(m_nWins > 1)
 		--m_nWins;
+	
 }
 void CGame::AddWins()
 {
@@ -951,7 +951,7 @@ void CGame::AddWins()
 		m_nWins = 1;
 	}
 	else
-		Save();
+		Save(false);
 
 }
 void CGame::AddLoses()
@@ -978,7 +978,7 @@ void CGame::AddLoses()
 	}
 	else
 	{
-		Save();
+		Save(false);
 		CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
 	}
 }
@@ -986,6 +986,7 @@ void CGame::AddLoses()
 
 bool CGame::LoadSlot(int nSlot)
 {
+	NewGame(nSlot);
 	string szSaveSlot;
 	switch (nSlot)
 	{
@@ -1061,8 +1062,6 @@ bool CGame::LoadSlot(int nSlot)
 			m_pPlayerUnitInfo[i].SetSpeed(fSpeed);
 			m_pPlayerUnitInfo[i].SetCost(nCost);
 
-
-
 		}
 		// read out which upgrades are active
 
@@ -1106,12 +1105,13 @@ void CGame::NewGame(int nSlot)
 	m_nLoses = 0;
 	m_nFood = 0;
 	m_pSelectedCity = NULL;
+	m_vConqueredCities.clear();
 	m_chJinCount = m_chKCount = m_chXiaCount = 0;
 	this->ParseBinaryUnitInfo("Resource/KQ_unitStats.dat");
 	InitCities();
 }
 
-bool CGame::Save()
+bool CGame::Save(bool bNewSave)
 {
 	string szSaveSlot;
 	switch (m_nCurrentSaveSlot)
@@ -1149,6 +1149,15 @@ bool CGame::Save()
 	default:
 		m_nCurrentSaveSlot = -1;
 		return false;
+	}
+	if(bNewSave)
+	{
+		m_szPlayerName[0] = 'E';
+		m_szPlayerName[1] = 'M';
+		m_szPlayerName[2] = 'P';
+		m_szPlayerName[3] = 'T';
+		m_szPlayerName[4] = 'Y';
+		m_szPlayerName[5] = '\0';
 	}
 
 	try 
@@ -1222,23 +1231,20 @@ bool CGame::Save()
 	}
 	return true;
 }
-string CGame::GetSaveName(int nSlot)
+string CGame::GetSaveName(int nSlot, bool bTitle)
 {
 	string szSaveSlot;
-	char*	szName = NULL;
+	char	szName[6];
 	int nFood, nGold, nConquered;
 	switch (nSlot)
 	{
 	case SLOT1:
-		m_nCurrentSaveSlot = SLOT1;
 		szSaveSlot = "Resource/KQ_Save1.dat";
 		break;
 	case SLOT2:
-		m_nCurrentSaveSlot = SLOT2;
 		szSaveSlot = "Resource/KQ_Save2.dat";
 		break;
 	case SLOT3:
-		m_nCurrentSaveSlot = SLOT3;
 		szSaveSlot = "Resource/KQ_Save3.dat";
 		break;
 	default:
@@ -1252,7 +1258,7 @@ string CGame::GetSaveName(int nSlot)
 
 		if(!input.is_open())
 		{
-			MessageBox(m_hWnd, "Save file not found.  Try making a new one." , "Error", MB_OK);
+			//MessageBox(m_hWnd, "Save file not found.  Try making a new one." , "Error", MB_OK);
 
 			return "Empty";
 		}
@@ -1272,19 +1278,17 @@ string CGame::GetSaveName(int nSlot)
 	}
 	catch (std::exception e)
 	{
-		MessageBox(m_hWnd, "Error saving data. Reinstalling may fix the problem (yeah right).", "Error", MB_OK);
+		MessageBox(m_hWnd, "Error reading files.", "Error", MB_OK);
 		return false;
 	}
-
-	string szTitle = szName;
+	
+	string szInfo;
 	char buffer[128];
 	sprintf_s(buffer, 128, "/Conquered: %i  Food: %i  Gold: %i", nConquered, nFood, nGold);
 
-	szTitle += buffer;
-
-
-
-
-
-	return szTitle;
+	szInfo = buffer;
+	if(bTitle)
+		return szName;
+	else
+		return szInfo;
 }
