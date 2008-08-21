@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Menu Name ="Options">
       <Image>
-        <ImageLocationX>0</ImageLocationX>
-        <ImageLocationY>0</ImageLocationY>
+        <ImageLocationX>-20</ImageLocationX>
+        <ImageLocationY>-10</ImageLocationY>
         <ImageName>Resource/KQ_PageBkg3.png</ImageName>
         <SizeX>800</SizeX>
         <SizeY>600</SizeY>
