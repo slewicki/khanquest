@@ -118,6 +118,8 @@ bool CLoadGameState::Input(float fElapsedTime)
 	}
 	if(CGame::GetInstance()->IsMouseInRect(m_rAccept))
 	{
+		if(!m_bIsNewGame && m_bIsEmpty[m_nChosenSlot])
+			return true;
 		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
@@ -202,13 +204,21 @@ void CLoadGameState::Render(float fElapsedTime)
 		m_cFont.DrawTextA("Load Game", 310, 10, .3f, .3f, D3DCOLOR_ARGB(255, 255, 0, 0));
 	
 	
-	
 	m_pTM->Draw(m_nScrollButtonID, m_rAccept.left, m_rAccept.top, .4f, .3f);
-	if(m_bIsEmpty[m_nChosenSlot])
-		m_cFont.DrawTextA("Accept", m_rAccept.left+24, m_rAccept.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+	if(m_bIsNewGame)
+	{
+		if(m_bIsEmpty[m_nChosenSlot])
+			m_cFont.DrawTextA("Accept", m_rAccept.left+24, m_rAccept.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+		else
+			m_cFont.DrawTextA("Erase", m_rAccept.left+30, m_rAccept.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+	}
 	else
-		m_cFont.DrawTextA("Erase", m_rAccept.left+30, m_rAccept.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
-
+	{
+		
+			m_cFont.DrawTextA("Accept", m_rAccept.left+24, m_rAccept.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+		if(m_bIsEmpty[m_nChosenSlot])
+			m_pTM->Draw(m_nScrollButtonID, m_rAccept.left, m_rAccept.top, .4f, .3f, 0, 0.f, 0.f, 0.f, D3DCOLOR_ARGB(150, 50, 50, 50));
+	}
 
 	m_pTM->Draw(m_nScrollButtonID, m_rBack.left, m_rBack.top, .4f, .3f);
 	m_cFont.DrawTextA("Back", m_rBack.left+40, m_rBack.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
