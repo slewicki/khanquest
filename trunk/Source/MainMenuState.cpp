@@ -27,6 +27,18 @@ void CMainMenuState::Enter(void)
 	m_pDI = CSGD_DirectInput::GetInstance();
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pWM = CSGD_WaveManager::GetInstance();
+	m_pPE = CParticleEngine::GetInstance();
+
+	// fire and smoke
+
+	m_nSmoke2ID = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_Smoke2.dat", 500, 300);
+	m_pPE->SetIsRunning(m_nSmoke2ID, true);
+
+	m_nFireID = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_Fire1.dat", 500, 300);
+	m_pPE->SetIsRunning(m_nFireID, true);
+
+	m_nLogsID = m_pTM->LoadTexture("Resource/KQ_Logs2.PNG");
+
 	int nFontID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_BF.InitBitmapFont(nFontID,' ',16,128,128);
 	Parse("Resource/KQ_MainMenu.xml");
@@ -59,6 +71,11 @@ void CMainMenuState::Enter(void)
 void CMainMenuState::Exit(void)
 {
 	delete [] Buttons;
+	m_pTM->ReleaseTexture(m_nLogsID);
+	m_pPE->SetIsRunning(m_nFireID, false);
+	m_pPE->SetIsRunning(m_nSmoke2ID, false);
+	m_pPE->UnLoadEmitter(m_nFireID);
+	m_pPE->UnLoadEmitter(m_nSmoke2ID);
 }
 
 bool CMainMenuState::Input(float fElapsedTime)
@@ -141,7 +158,6 @@ bool CMainMenuState::Input(float fElapsedTime)
 			{
 				m_bPaused = true;
 				CLoadGameState::GetInstance()->IsNewGame(true);
-				
 				m_pToSwitchTo = CLoadGameState::GetInstance();
 			}
 			break;
@@ -184,6 +200,8 @@ void CMainMenuState::Update(float fElapsedTime)
 		return;
 	
 	FadeIn(fElapsedTime);
+	m_pPE->Update(fElapsedTime);
+
 }
 
 void CMainMenuState::Render(float fElapsedTime)
@@ -197,6 +215,11 @@ void CMainMenuState::Render(float fElapsedTime)
 			D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
 	}
 	m_pTM->Draw(m_nCursorID,m_ptCursorPosition.x-50,m_ptCursorPosition.y,m_fCurScaleX,m_fCurScaleY,0,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
+	
+	if (!m_bPaused)
+		m_pTM->Draw(m_nLogsID, 375, 300, .50f, .50f, 0);
+	
+	m_pPE->Render(fElapsedTime);
 }
 
 void CMainMenuState::FadeIn(float fElapsedTime)
@@ -212,6 +235,8 @@ void CMainMenuState::FadeIn(float fElapsedTime)
 
 			if(m_nAlpha == 255)
 				m_bAlpha = true;
+			m_pPE->SetIsRunning(m_nFireID, true);
+			m_pPE->SetIsRunning(m_nSmoke2ID, true);
 		}
 }
 void CMainMenuState::FadeOut(float fElapsedTime)
@@ -230,6 +255,9 @@ void CMainMenuState::FadeOut(float fElapsedTime)
 			CGame::GetInstance()->PushState(m_pToSwitchTo);
 			m_pToSwitchTo = NULL;
 			m_bAlpha = false;
+			m_pPE->SetIsRunning(m_nFireID, false);
+			m_pPE->SetIsRunning(m_nSmoke2ID, false);
+
 		}
 	}
 }

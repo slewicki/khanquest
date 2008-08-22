@@ -1,6 +1,7 @@
 #pragma once
 #include "IGameState.h"
 #include "CBitmapFont.h"
+#include "CParticleEngine.h"
 #include <string>
 using namespace std;
 
@@ -14,6 +15,11 @@ class CMainMenuState : public IGameState
 	CSGD_DirectInput*		m_pDI;
 	CBitmapFont				m_BF;
 	CSGD_WaveManager*		m_pWM;
+	CParticleEngine*		m_pPE;
+	int						m_nFireID;
+	int						m_nSmoke2ID;
+	int						m_nLogsID;
+
 	IGameState*				m_pToSwitchTo;
 	bool					m_bPaused;
 	

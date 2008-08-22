@@ -27,6 +27,8 @@ private:
 	//Particles
 	CParticleEngine*						m_pPE;
 	int										m_nTorchID;
+	int										m_nSmokeID1;
+	int										m_nSmokeID2;
 	int										m_nTorchID2;
 	int										m_nTorchPicID;
 

@@ -140,15 +140,15 @@ public:
 	inline void SetCost			(int nCost)				{ m_nCost = nCost; }
 	inline void SetIsPlayerUnit (bool bIsPlayerUnit)	{m_bIsPlayerUnit = bIsPlayerUnit; m_pAnimInstance->SetPlayer(m_bIsPlayerUnit);}
 	inline void SetAttackSpeed	(float fAttackSpeed)	{ m_fAttackSpeed = fAttackSpeed; }
-	inline void SetSpeed		(float fMovementSpeed){ m_fMovementSpeed = fMovementSpeed; }
-	inline void SetDestTile		(CTile* pDestTile)  { m_pDestinationTile = pDestTile; }
-	inline void SetCurrentTile	(CTile* pCurrentTile)  { m_pCurrentTile = pCurrentTile; }
-	inline void SetNextTile		(CTile* pNextTile)  { m_pNextTile = pNextTile; }
-	inline void SetBonus		(int nBonus)		{ m_nBonus = nBonus; }
-	inline void SetSelected		(bool bIsSelected)	{ m_bIsSelected = bIsSelected; }
-	inline void SetGrouped		(bool bIsGrouped)	{ m_bIsGrouped = bIsGrouped; }
-	inline void SetPath(list<POINT> vPath)		{m_vPath = vPath;}
-	inline void ClearPath		(void)			{m_vPath.clear();}
+	inline void SetSpeed		(float fMovementSpeed)	{ m_fMovementSpeed = fMovementSpeed; }
+	inline void SetDestTile		(CTile* pDestTile)  	{ m_pDestinationTile = pDestTile; }
+	inline void SetCurrentTile	(CTile* pCurrentTile)   { m_pCurrentTile = pCurrentTile; }
+	inline void SetNextTile		(CTile* pNextTile)  	{ m_pNextTile = pNextTile; }
+	inline void SetBonus		(int nBonus)			{ m_nBonus = nBonus; }
+	inline void SetSelected		(bool bIsSelected)		{ m_bIsSelected = bIsSelected; }
+	inline void SetGrouped		(bool bIsGrouped)		{ m_bIsGrouped = bIsGrouped; }
+	inline void SetPath			(list<POINT> vPath)		{m_vPath = vPath;}
+	inline void ClearPath		(void)					{m_vPath.clear();}
 
 	void SetTarget(CUnit* pTarget)		
 	{
