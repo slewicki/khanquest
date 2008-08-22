@@ -20,8 +20,9 @@
 #include "CCamera.h"
 #include "ObjectManager.h"
 #include "CParticleEngine.h"
-class CHUDState;
 
+class CHUDState;
+class CGame;
 class CGamePlayState : public IGameState
 {
 private:
@@ -32,6 +33,7 @@ private:
 	CSGD_TextureManager*					m_pTM;
 	CSGD_DirectInput*						m_pDI;
 	CEventSystem*							m_pES;
+	CGame*									m_pCG;
 	CCamera*								m_pCamera;
 	ObjectManager*							m_pOM;
 

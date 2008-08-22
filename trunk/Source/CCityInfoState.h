@@ -14,7 +14,7 @@
 #include "CSGD_WaveManager.h"
 #include "CSGD_DirectInput.h"
 #include "CBitmapFont.h"
-
+#include "CGame.h"
 class CCity;
 
 class CCityInfoState : public IGameState
@@ -25,6 +25,7 @@ private:
 	CSGD_WaveManager*						m_pWM;
 	CSGD_TextureManager*					m_pTM;
 	CSGD_DirectInput*						m_pDI;
+	CGame*									m_pCG;
 	CBitmapFont								m_cFont;
 	string									m_szTitle;
 	string									m_szDescription;

@@ -8,10 +8,11 @@
 #pragma once
 #include "IGameState.h"
 #include "DirectShow.h"
-
+#include "CGame.h"
 class CAttractMode : public IGameState
 {	
 	CDirectShow*	m_pDS;
+	CGame*			m_pCG;
 	int				m_nDemoID;
 
 	CAttractMode(void);

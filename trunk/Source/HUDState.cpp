@@ -3,7 +3,7 @@
 #include "ObjectManager.h"
 #include "CTileEngine.h"
 #include "CCamera.h"
-#include "CGame.h"
+
 CHUDState::CHUDState(void)
 {
 }
@@ -22,6 +22,7 @@ void CHUDState::Enter(void)
 	m_nInfantry = m_nCavalry = m_nCavalryArcher = m_nAxmen = m_nArcher = m_nWarElephant = 0;
 	m_nMiniMapBkgID = m_pTM->LoadTexture("Resource/KQ_MiniMapBack.png");
 	m_fUpdateTimer = 1.f;
+	m_pCG = CGame::GetInstance();
 	
 }
 
@@ -111,7 +112,7 @@ bool CHUDState::Input(float fElapsedTime)
 
 #pragma endregion
 
-	POINT ptMouse = CGame::GetInstance()->GetCursorPosition();
+	POINT ptMouse = m_pCG->GetCursorPosition();
 	if(ptMouse.y > 400)
 	{
 		POINT ptTile = CTileEngine::GetInstance()->IsoMiniMouse(ptMouse.x, ptMouse.y, 0);
