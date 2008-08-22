@@ -64,10 +64,10 @@ void CProfile::Start(LPSTR token)
 	//m_nTimesCalled = 0;
 	//LARGE_INTEGER m_liStart;
 	//LARGE_INTEGER m_liEnd;
-		if(m_szToken != NULL)
+		/*if(m_szToken != NULL)
 		{
 			Stop();
-		}
+		}*/
 
 		m_szToken = token;
 		QueryPerformanceFrequency(&m_liFreq);
