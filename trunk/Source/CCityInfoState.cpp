@@ -19,6 +19,7 @@ CCityInfoState::CCityInfoState(void)
 	m_bRetract = false;
 	m_bClickInvade = false;
 	m_pCG = NULL;
+	STOP("CCityInfoState::CCityInfoState()");
 }
 
 
@@ -87,6 +88,7 @@ void CCityInfoState::Enter(void)
 	m_cFont.InitBitmapFont(m_nFontID, ' ', 16, 128, 128);
 
 	m_pCG->SetSongPlay(CITYSELECT);	
+	STOP("CCityInfoState::Enter()");
 }
 
 void CCityInfoState::Exit(void)
@@ -99,6 +101,7 @@ void CCityInfoState::Exit(void)
 	m_pTM->ReleaseTexture(m_nDisplayID);
 	m_pTM->ReleaseTexture(m_nButtonID);
 	m_pTM->ReleaseTexture(m_nFontID);
+	STOP("CCityInfoState::Exit()");
 }
 
 bool CCityInfoState::Input(float fElapsedTime)
@@ -218,6 +221,7 @@ bool CCityInfoState::Input(float fElapsedTime)
 		}
 
 	}
+	PSTOP("CCityInfoState::Input(float)");
 	return true;
 }
 
@@ -237,6 +241,7 @@ void CCityInfoState::Update(float fElapsedTime)
 	}
 	else if(m_fPositionX >= 270)
 		m_fPositionX  -= 500*fElapsedTime;
+	STOP("CCityInfoState::Update(float)");
 	
 }
 
@@ -266,6 +271,7 @@ void CCityInfoState::Render(float fElapsedTime)
 	// Scout Report: Hints about the city
 	m_cFont.DrawTextA("Scout's Report", (int)m_fPositionX+190, 325, .18f, .18f, D3DCOLOR_ARGB(255, 0, 0, 0));
 	m_cFont.DrawTextA(m_szDescription, (int)m_fPositionX+50, 355, .15f, .15f, D3DCOLOR_ARGB(255, 0, 0, 0));
+	STOP("CCityInfoState::Render(float)");
 
 }
 
