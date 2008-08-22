@@ -221,7 +221,7 @@ bool CCityInfoState::Input(float fElapsedTime)
 		}
 
 	}
-	PSTOP("CCityInfoState::Input(float)");
+	STOP("CCityInfoState::Input(float)");
 	return true;
 }
 
