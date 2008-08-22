@@ -40,7 +40,10 @@ CUnit::CUnit(int nType)
 	SetDestTile(NULL);
 	SetCurrentTile(NULL);
 	m_pAnimInstance = new CAnimInstance(GetType());
-	m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
+
+	m_pAnimInstance->SetPlayer(m_bIsPlayerUnit);
+
+	//m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 
 	m_pTE = CTileEngine::GetInstance();
 	m_pCAI = CAISystem::GetInstance();
@@ -178,7 +181,7 @@ void CUnit::Update(float fElapsedTime)
 		m_nState = DYING;
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
 		m_pAnimInstance->SetLooping(false);
-		m_pAnimInstance->SetPlayer(IsPlayerUnit());
+		//m_pAnimInstance->SetPlayer(IsPlayerUnit());
 		m_pAnimInstance->StartFadeTimer(m_nDirectionFacing, m_nState);
 		CEventSystem::GetInstance()->SendEvent("Dying_Sound", this);
 		// Clear the tile
@@ -595,7 +598,7 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 		m_nDirectionFacing = NORTH_WEST;
 		m_pAnimInstance->SetFlip(false);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
-		m_pAnimInstance->SetPlayer(IsPlayerUnit());
+		//m_pAnimInstance->SetPlayer(IsPlayerUnit());
 		return;
 	}
 	else if(pTileFacing->ptLocalAnchor.y < m_pCurrentTile->ptLocalAnchor.y && pTileFacing->ptLocalAnchor.x > m_pCurrentTile->ptLocalAnchor.x)
@@ -606,7 +609,7 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 		m_nDirectionFacing = NORTH_WEST;
 		m_pAnimInstance->SetFlip(true);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
-		m_pAnimInstance->SetPlayer(IsPlayerUnit());
+		//m_pAnimInstance->SetPlayer(IsPlayerUnit());
 
 		return;
 	}
@@ -618,7 +621,7 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 		m_nDirectionFacing = SOUTH_WEST;
 		m_pAnimInstance->SetFlip(false);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
-		m_pAnimInstance->SetPlayer(IsPlayerUnit());
+		//m_pAnimInstance->SetPlayer(IsPlayerUnit());
 
 		return;
 	}
@@ -630,7 +633,7 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 		m_nDirectionFacing = SOUTH_WEST;
 		m_pAnimInstance->SetFlip(true);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
-		m_pAnimInstance->SetPlayer(IsPlayerUnit());
+		//m_pAnimInstance->SetPlayer(IsPlayerUnit());
 
 		return;
 	}
@@ -642,7 +645,7 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 		m_nDirectionFacing = WEST;
 		m_pAnimInstance->SetFlip(false);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
-		m_pAnimInstance->SetPlayer(IsPlayerUnit());
+		//m_pAnimInstance->SetPlayer(IsPlayerUnit());
 
 		return;
 	}
@@ -654,7 +657,7 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 		m_nDirectionFacing = WEST;
 		m_pAnimInstance->SetFlip(true);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
-		m_pAnimInstance->SetPlayer(IsPlayerUnit());
+		//m_pAnimInstance->SetPlayer(IsPlayerUnit());
 
 		return;
 	}
@@ -666,7 +669,7 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 		m_nDirectionFacing = NORTH;
 		m_pAnimInstance->SetFlip(false);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
-		m_pAnimInstance->SetPlayer(IsPlayerUnit());
+		//m_pAnimInstance->SetPlayer(IsPlayerUnit());
 
 		return;
 	}
@@ -678,7 +681,7 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 		m_nDirectionFacing = SOUTH;
 		m_pAnimInstance->SetFlip(false);
 		m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
-		m_pAnimInstance->SetPlayer(IsPlayerUnit());
+		//m_pAnimInstance->SetPlayer(IsPlayerUnit());
 
 		return;
 	}

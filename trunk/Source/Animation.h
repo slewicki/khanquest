@@ -130,6 +130,6 @@ public:
 // Last Modified: July 27, 2008
 // Purpose: Renders the animation
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-	void Render( int x, int y, float scale, DWORD color,  bool  isfliped,float rotation = 0);
+	void Render( int x, int y, float scale, DWORD color,  bool  isfliped,float rotation = 0, bool bIsPlayer = true);
 
 };

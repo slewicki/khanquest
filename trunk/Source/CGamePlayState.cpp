@@ -95,7 +95,7 @@ void CGamePlayState::Enter(void)
 		
 		break;
 	}
-	Map->LoadFile("Resource/Levels/KQ_Jin1.level");
+	Map->LoadFile("Resource/Levels/KQ_Jin2.level");
 
 	m_pOM->UpdatePlayerUnitStartTile();
 
