@@ -89,7 +89,7 @@ bool CMainMenuState::Input(float fElapsedTime)
 	if(m_bPaused)
 		return true;
 
-	if(m_fAttractTimer > 50)
+	if(m_fAttractTimer > 5)
 	{
 		m_bPaused = true;
 		CGame::GetInstance()->PushState(CAttractMode::GetInstance());
