@@ -33,7 +33,7 @@ void CFactory::CreatePlayerUnit(int nType)
 	unit->SetSpeed(temp.GetSpeed());
 		
 	unit->SetState(IDLE);
-	unit->SetDirection(NORTH);
+	unit->SetDirection(SOUTH_WEST);
 	unit->SetIsPlayerUnit(true);
 	unit->SetAttackSoundID(CGame::GetInstance()->GetAttackSound(unit->GetType()));
 	// Register Events
@@ -64,7 +64,7 @@ void CFactory::CreateComputerUnit(int nType)
 	unit->SetSpeed(temp.GetSpeed());
 
 	unit->SetState(IDLE);
-	unit->SetDirection(NORTH);
+	unit->SetDirection(NORTH_WEST);
 	unit->SetIsPlayerUnit(false);
 	// Register Events
 	unit->SetAttackSoundID(CGame::GetInstance()->GetAttackSound(unit->GetType()));

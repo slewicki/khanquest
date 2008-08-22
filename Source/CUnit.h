@@ -13,6 +13,7 @@
 #include "CTile.h"
 #include "CAISystem.h"
 #include "CTileEngine.h"
+#include "CCamera.h"
 using std::vector;
 #define VISIBILITY 6
 enum	// Unit States
@@ -40,6 +41,7 @@ private:
 	float			m_fMovementSpeed;	// Movement Speed
 	float			m_fAttackTimer;		// Current time between attacks
 	float			m_fHealTimer;		// healing timer
+	float			m_fScanTimer;		// scan for enemies every other second
 	int				m_nBonus;			// Attack bonus or penalty
 
 	bool			m_bIsPlayerUnit;	// Is the unit player controlled
@@ -119,6 +121,7 @@ public:
 	inline RECT   GetLocalRect	    (void) const { return m_rLocalRect; }
 	inline RECT   GetGlobalRect		(void) const { return m_rGlobalRect; }
 	
+	inline bool	IsOnScreen(void) const	{ return CCamera::GetInstance()->IsOnScreen(GetGlobalRect()); }
 
 
 	//////////////////////////////////////////////////////

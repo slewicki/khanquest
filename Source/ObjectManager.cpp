@@ -46,6 +46,7 @@ ObjectManager* ObjectManager::GetInstance(void)
 
 void ObjectManager::UpdateObjects(float fElapsedTime)
 {
+	m_fTimer += fElapsedTime;
 	int nPlayerUnits = 0;
 	int nEnemyUnits = 0;
 	std::sort(m_vObjectList.begin(), m_vObjectList.end(),  SortObjects());
@@ -54,8 +55,15 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 		{
 			if(static_cast<CUnit*>(m_vObjectList[i])->IsActive())
 			{
-					
-				m_vObjectList[i]->Update(fElapsedTime);
+				// if they aren't on screen, update every other second
+				if(!((CUnit*)(m_vObjectList[i]))->IsOnScreen() && m_fTimer<.4f )
+				{
+					m_vObjectList[i]->Update(fElapsedTime);
+				}
+				else if(((CUnit*)(m_vObjectList[i]))->IsOnScreen())
+				{
+					m_vObjectList[i]->Update(fElapsedTime);
+				}
 				if(static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
 					++nPlayerUnits;
 				else
@@ -81,6 +89,8 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 
 	}
 	m_pPE->Update(fElapsedTime);
+	if(m_fTimer > .8f)
+		m_fTimer = 0.f;
 }
 
 void ObjectManager::RenderObjects(float fElapsedTime)
@@ -145,16 +155,16 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 {
 	if(pEvent->GetEventID() == "Play")
 	{
-		Frame* pFrame = (Frame*)pEvent->GetParam();
-		for (unsigned int i = 0; i < m_vObjectList.size(); i++)
-		{
-			if(m_vObjectList[i]->GetType() == UNIT_CAVALRY)
-			{
-				//pPE->SetPostion((int)m_vObjectList[i]->GetPosX() - pFrame->ptAnchorX + pFrame->ptAccessories[0].x, (int)m_vObjectList[i]->GetPosY() - pFrame->ptAnchorY + pFrame->ptAccessories[0].y);
-				//pPE->SetIsRunning(true);
-				return;
-			}
-		}
+		//Frame* pFrame = (Frame*)pEvent->GetParam();
+		//for (unsigned int i = 0; i < m_vObjectList.size(); i++)
+		//{
+		//	if(m_vObjectList[i]->GetType() == UNIT_CAVALRY)
+		//	{
+		//		//pPE->SetPostion((int)m_vObjectList[i]->GetPosX() - pFrame->ptAnchorX + pFrame->ptAccessories[0].x, (int)m_vObjectList[i]->GetPosY() - pFrame->ptAnchorY + pFrame->ptAccessories[0].y);
+		//		//pPE->SetIsRunning(true);
+		//		return;
+		//	}
+		//}
 	}
 
 	if(pEvent->GetEventID() == "Attack")

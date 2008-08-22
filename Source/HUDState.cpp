@@ -84,7 +84,7 @@ void CHUDState::Update(float fElapsedTime)
 			}
 		}
 	}
-	UpdateSelected();
+	
 }
 
 void CHUDState::Render(float fElapsedTime)
