@@ -14,6 +14,7 @@
 
 CCityInfoState::CCityInfoState(void)
 {
+	PROFILE("CCityInfoState::CCityInfoState()");
 	m_pSelectedCity = NULL;
 	m_bRetract = false;
 	m_bClickInvade = false;
@@ -28,6 +29,7 @@ CCityInfoState::~CCityInfoState(void)
 
 void CCityInfoState::Enter(void)
 {
+	PROFILE("CCityInfoState::Enter()");
 	// Get Our Managers Ready
 	m_bRetract = false;
 	m_bClickInvade = false;
@@ -87,6 +89,7 @@ void CCityInfoState::Enter(void)
 
 void CCityInfoState::Exit(void)
 {
+	PROFILE("CCityInfoState::Exit()");
 	if(m_pWM->IsWavePlaying(m_nClick))
 		m_pWM->Stop(m_nClick);
 	m_pWM->UnloadWave(m_nClick);
@@ -98,6 +101,7 @@ void CCityInfoState::Exit(void)
 
 bool CCityInfoState::Input(float fElapsedTime)
 {
+	PROFILE("CCityInfoState::Input(float)");
 	m_JoyTimer += fElapsedTime;
 
 	if(m_fPositionX <= 270.f && !m_bRetract)
@@ -138,6 +142,7 @@ bool CCityInfoState::Input(float fElapsedTime)
 
 void CCityInfoState::Update(float fElapsedTime)
 {
+	PROFILE("CCityInfoState::Update(float)");
 	if(m_bRetract)
 	{
 		m_fPositionX  += 500*fElapsedTime;
@@ -156,6 +161,7 @@ void CCityInfoState::Update(float fElapsedTime)
 
 void CCityInfoState::Render(float fElapsedTime)
 {
+	PROFILE("CCityInfoState::Render(float)");
 	m_pTM->Draw(m_nDisplayID, (int)m_fPositionX, 20);
 	m_pTM->Draw(m_nButtonID, (int)m_fPositionX+87, 465, .4f, .3f);
 	m_cFont.DrawTextA("INVADE", (int)m_fPositionX+99, 489, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));

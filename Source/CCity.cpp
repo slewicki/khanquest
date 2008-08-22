@@ -10,6 +10,7 @@
 
 CCity::CCity() 
 {
+	PROFILE("CCity::CCity()");
 	m_nImageID = -1;
 	m_nGoldTribute = 0;
 	m_nCurrentOwner = -1;
@@ -20,11 +21,13 @@ CCity::CCity()
 }
 CCity::~CCity() 
 {
+	PROFILE("CCity::~CCity()");
 	CSGD_TextureManager::GetInstance()->ReleaseTexture(m_nImageID);
 }
 
 void CCity::SetDefaultColor(int nCityID)
 {
+	PROFILE("CCity::SetDefaultColor(int)");
 	switch(nCityID)
 		{
 		case PCITY:

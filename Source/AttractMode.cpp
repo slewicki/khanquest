@@ -12,6 +12,7 @@
 #include "CGame.h"
 CAttractMode::CAttractMode(void)
 {
+	PROFILE("CAttractMode::CAttractMode()");
 	m_nDemoID = -1;
 }
 
@@ -22,6 +23,7 @@ CAttractMode::~CAttractMode(void)
 
 void CAttractMode::Enter()
 {
+	PROFILE("CAttractMode::Enter()");
 	m_pDS = CDirectShow::GetInstance();
 	m_pDS->Init();
 	m_nDemoID = m_pDS->LoadVideo(L"Resource/KQ_Test.WMV", CGame::GetInstance()->GetWindowHandle(), CGame::GetInstance()->GetIsWindowed());
@@ -30,6 +32,7 @@ void CAttractMode::Enter()
 
 bool CAttractMode::Input(float fElapsedTime)
 {
+	PROFILE("CAttractMode::Input(float)");
 	CSGD_DirectInput* pDI = CSGD_DirectInput::GetInstance();
 	if(!m_pDS->IsPlaying() || pDI->GetBufferedKey(DIK_ESCAPE) || pDI->GetBufferedKey(DIK_RETURN) || pDI->GetBufferedKey(DIK_NUMPADENTER) || pDI->GetBufferedKey(DIK_SPACE))
 	{
@@ -41,6 +44,7 @@ bool CAttractMode::Input(float fElapsedTime)
 
 void CAttractMode::Exit()
 {
+	PROFILE("CAttractMode::Exit()");
 	m_pDS->ShutDown();
 	ShowWindow(CGame::GetInstance()->GetWindowHandle(), SW_RESTORE);
 	SetFocus(CGame::GetInstance()->GetWindowHandle());

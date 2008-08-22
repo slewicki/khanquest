@@ -17,6 +17,7 @@
 
 CGamePlayState::CGamePlayState(void)
 {
+	PROFILE("CGamePlayState::CGamePlayState()");
 	m_pCamera = NULL;
 	m_nButtonID = -1;
 	m_nHUD_ID = -1;
@@ -35,6 +36,7 @@ CGamePlayState::~CGamePlayState(void)
 
 void CGamePlayState::Enter(void)
 {
+	PROFILE("CGamePlayState::Enter()");
 	// Get Our Managers Ready
 	m_bIsPaused = false;
 	m_pTM = CSGD_TextureManager::GetInstance();
@@ -121,6 +123,7 @@ void CGamePlayState::Enter(void)
 
 void CGamePlayState::Exit(void)
 {
+	PROFILE("CGamePlayState::Exit()");
 	m_pTM->ReleaseTexture(m_nButtonID);
 	m_pTM->ReleaseTexture(m_nLucidiaWhiteID);
 	m_pTM->ReleaseTexture(m_nSelectionID);
@@ -140,16 +143,17 @@ void CGamePlayState::Exit(void)
 
 bool CGamePlayState::Input(float fElapsedTime)
 {
+	PROFILE("CGamePlayState::Input(float)");
 	
+	if(m_pDI->GetBufferedKey(DIK_ESCAPE))
+	{
+		m_bIsPaused = true;
+		if(m_bIsPaused)
+			CGame::GetInstance()->PushState(CPausedState::GetInstance());
+	}
 
 	if(!m_bIsPaused)
 	{
-		if(m_pDI->GetBufferedKey(DIK_ESCAPE))
-		{
-			m_bIsPaused = true;
-			if(m_bIsPaused)
-				CGame::GetInstance()->PushState(CPausedState::GetInstance());
-		}
 		m_pHUD->Input(fElapsedTime);
 		if(m_pDI->GetBufferedKey(DIK_F1))
 		{
@@ -250,6 +254,24 @@ bool CGamePlayState::Input(float fElapsedTime)
 				// Move camera Up
 				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_UP))))
 					m_pCamera->SetVelY(-100); 
+				if( m_pDI->GetKey(DIK_SPACE))
+				{
+					POINT ptTest1, ptTest2;
+
+					ptTest1.x = (int)(rand() % 801);
+					ptTest1.y = (int)(rand() % 601);
+					ptTest2.x = ((int)(rand() % 801)) * -1;
+					ptTest2.y = ((int)(rand() % 601)) * -1;
+					m_pCamera->SetVelY(ptTest1.y);
+					m_pCamera->SetVelX(ptTest1.x);
+					Map->Render(m_pCamera->GetScreenArea());
+					m_pCamera->SetVelY((ptTest2.y));
+					m_pCamera->SetVelX((ptTest2.x));
+					Map->Render(m_pCamera->GetScreenArea());
+					m_pCamera->SetVelY(ptTest1.y + ptTest2.y);
+					m_pCamera->SetVelX(ptTest1.x + ptTest2.x);
+					Map->Render(m_pCamera->GetScreenArea());
+				}
 			}
 #pragma endregion		
 	}
@@ -258,6 +280,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 
 void CGamePlayState::Update(float fElapsedTime)
 {
+	PROFILE("CGamePlayState::Update(float)");
 	// Rendered Paused
 	if(!m_bIsPaused)
 	{
@@ -277,6 +300,7 @@ void CGamePlayState::Update(float fElapsedTime)
 void CGamePlayState::Render(float fElapsedTime)
 {
 
+	PROFILE("CGamePlayState::Render(float)");
 	// Render units
 	// Temp for map changes
 	//-----------------------------------------------
@@ -352,12 +376,14 @@ void CGamePlayState::Render(float fElapsedTime)
 
 	// Render selection Box
 	m_pD3D->SpriteEnd();
+	m_pD3D->LineEnd();
 	m_pD3D->DeviceEnd();
 
 	//m_pD3D->DrawLine(0,450,800,450,255,0,0);
 	m_pD3D->DrawPrimitiveRect(m_rSelectionBox, D3DCOLOR_ARGB(255,255,255,255));
 
 	m_pD3D->DeviceBegin();
+	m_pD3D->LineBegin();
 	m_pD3D->SpriteBegin();
 	//---------------------------------------------
 	/*char buffer[128];
@@ -368,6 +394,7 @@ void CGamePlayState::Render(float fElapsedTime)
 
 string CGamePlayState::IntToString(int nNum)
 {
+	PROFILE("CGamePlayState::IntToString(int)");
 	char szNumVal[10];
 	itoa(nNum, szNumVal, 10);
 	string szNum = szNumVal;
@@ -376,6 +403,7 @@ string CGamePlayState::IntToString(int nNum)
 
 RECT CGamePlayState::GetSelectionRect()
 {
+	PROFILE("CGamePlayState::GetSelectionRect()");
 	RECT toDraw;
 	toDraw.top = m_ptBoxLocation.y;
 	toDraw.left = m_ptBoxLocation.x;

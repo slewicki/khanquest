@@ -9,6 +9,7 @@
 
 #pragma once
 #include "CSGD_TextureManager.h"
+#include "CProfile.h"
 
 enum { PLAYER_CITY, XIA_CITY, K_CITY, JIN_CITY };
 enum { PCITY, KCITY1, KCITY2, KCITY3, XCITY1, XCITY2, XCITY3, JCITY1, JCITY2, JCITY3 };

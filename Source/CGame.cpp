@@ -22,6 +22,7 @@ using namespace std;
 
 CGame::CGame(void)
 {
+	PROFILE("CGame::CGame()");
 	m_pD3D	= NULL;
 	m_pTM	= NULL;
 	m_pDS	= NULL;
@@ -60,6 +61,7 @@ CGame::~CGame(void)
 
 CGame* CGame::GetInstance(void)
 {
+	PROFILE("CGame::GetInstance()");
 	static CGame instance;	//	Lazy instantiation
 							//  Since CGame is running the entire time
 	return &instance;
@@ -68,6 +70,7 @@ CGame* CGame::GetInstance(void)
 bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 					   int nScreenWidth, int nScreenHeight, bool bIsWindowed)
 {
+	PROFILE("CGame::Initialize(HWND, HINSTANCE, int, int, bool)");
 	srand(GetTickCount());
 	//	Do game initialization here.
 	m_hWnd = hWnd;
@@ -139,11 +142,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	ChangeState(CIntroState::GetInstance());
 	//	Create the render target.
 	// D3DUSAGE_RENDERTARGET can only be used with D3DPOOL_DEFAULT
-	
-	
-	//m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pRenderTarget, NULL);
-	
-	
+	m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pRenderTarget, NULL);
 	//m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pVisibleTarget, NULL);
 	
 	m_nFontID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
@@ -161,6 +160,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 }
 void CGame::Shutdown(void)
 {
+	PROFILE("CGame::ShutDown()");
 	//	Clean up current state
 	ChangeState(NULL);
 
@@ -201,6 +201,7 @@ void CGame::Shutdown(void)
 
 bool CGame::Main(void)
 {
+	PROFILE("CGame::Main()");
 	// Calculating Elapsed Time
 	DWORD dwCurrentTime = GetTickCount();
 	
@@ -390,6 +391,7 @@ bool CGame::Main(void)
 
 void CGame::ChangeState(IGameState* pNewState)
 {
+	PROFILE("CGame::ChangeState(IGameState*)");
 	// Exit out of all states on the stack
 	for (unsigned int i = 0; i < m_vStates.size(); i++)
 	{
@@ -409,6 +411,7 @@ void CGame::ChangeState(IGameState* pNewState)
 
 void CGame::PushState(IGameState* pNewState)
 {
+	PROFILE("CGame::PushState(IGameState*)");
 	// Add on the new state and Enter it
 	if(pNewState)
 	{
@@ -419,6 +422,7 @@ void CGame::PushState(IGameState* pNewState)
 
 void CGame::PopCurrentState()
 {
+	PROFILE("CGame::PopCurrentState()");
 	// Exit the top state and remove it from the stack
 	m_vStates[m_vStates.size()-1]->Exit();
 	m_vStates.pop_back();
@@ -426,6 +430,7 @@ void CGame::PopCurrentState()
 
 bool CGame::ParseXMLUnitInfo (const char* szFile)
 {
+	PROFILE("CGame::ParseXMLUnitInfo(const char*)");
 	int nUnit, nHP, nAttack, nRange;
 	nUnit = 0;
 	float fAttackSpeed, fMovement;
@@ -490,6 +495,7 @@ bool CGame::ParseXMLUnitInfo (const char* szFile)
 
 bool CGame::ParseBinaryUnitInfo (const char* szFile)
 {
+	PROFILE("CGame::ParseBinaryUnitInfo(const char*)");
 	int nType, nHP, nAttack, nRange, nCost, nBuffer;
 	double dAttackSpeed, dMovement, dBuffer;
 	try 
@@ -562,6 +568,7 @@ bool CGame::ParseBinaryUnitInfo (const char* szFile)
 
 bool CGame::ParsePlayList(const char* szFileName)
 {
+	PROFILE("CGame::ParsePlayList(const char*)");
 	//Function variables - do not change
 	string szName, szTempBool;
 	IrrXMLReader* xml = createIrrXMLReader(szFileName);
@@ -605,6 +612,7 @@ bool CGame::ParsePlayList(const char* szFileName)
 
 CUnit CGame::GetUnitInfo (int nType)
 {
+	PROFILE("CGame::GetUnitInfo(int)");
 	if(nType >=0 && nType <=5)
 		return this->m_pPlayerUnitInfo[nType];
 	else
@@ -616,6 +624,7 @@ CUnit CGame::GetUnitInfo (int nType)
 
 CUnit CGame::GetCPUUnitInfo (int nType)
 {
+	PROFILE("CGame::GetCPUInfo(int)");
 	if(nType >=0 && nType <=5)
 		return this->m_pCPUUnitInfo[nType];
 	else
@@ -627,6 +636,7 @@ CUnit CGame::GetCPUUnitInfo (int nType)
 
 POINT CGame::GetCursorPosition()
 	{
+		PROFILE("CGame::GetCursorPosition()");
 		GetCursorPos(&m_ptMousePos);
 		POINT pos = GetWindowPosition();
 		m_ptMousePos.x -= pos.x;
@@ -636,6 +646,7 @@ POINT CGame::GetCursorPosition()
 
 POINT CGame::GetWindowPosition()
 {
+	PROFILE("CGame::getWindowPosition()");
 	RECT rWindow;
 	GetWindowRect(m_hWnd,&rWindow);
 	POINT pos = {rWindow.left, rWindow.top};
@@ -649,6 +660,7 @@ POINT CGame::GetWindowPosition()
 
 void CGame::InitCities()
 {
+	PROFILE("CGame::InitCities()");
 	for (int i = 0; i < 10; i++)
 	{
 		if(m_pCities[i])
@@ -807,6 +819,7 @@ void CGame::InitCities()
 
 int CGame::GetNumConquered()
 {
+	PROFILE("CGame::getNumConquered()");
 	int nConquered = 0;
 	// Skip the Mongolia (i=0)
 	for (int i = 1; i < 10; i++)
@@ -819,6 +832,7 @@ int CGame::GetNumConquered()
 
 int CGame::GetNextFoodTribute()
 {
+	PROFILE("CGame::GetNextFoodTribute()");
 	int nConquered = GetNumConquered();
 	if(nConquered >= 6)
 		return 0;
@@ -848,6 +862,7 @@ int CGame::GetNextFoodTribute()
 }
 int CGame::GetTotalFoodTribute()
 {
+	PROFILE("CGame::getTotalFoodTribute()");
 	switch(GetNumConquered())
 	{
 	case 0:
@@ -877,6 +892,7 @@ int CGame::GetTotalFoodTribute()
 
 void CGame::SetCityConquered(CCity* pCity)
 {
+	PROFILE("CGame::SetCityConquered(CCity*)");
 
 	switch(pCity->GetOwner())
 	{
@@ -907,6 +923,7 @@ void CGame::SetCityConquered(CCity* pCity)
 
 void CGame::LoseLastCity()
 {
+	PROFILE("CGame::LoseLastCity()");
 	if(m_vConqueredCities.size() < 1)
 		return;
 	int nCityID = m_vConqueredCities[m_vConqueredCities.size()-1];
@@ -934,7 +951,7 @@ void CGame::LoseLastCity()
 }
 void CGame::AddWins()
 {
-	SetCityConquered(GetSelectedCity());
+	PROFILE("CGame::AddWins()");
 	++m_nWins;
 	if(m_nLoses > 0)
 		--m_nLoses;
@@ -959,6 +976,7 @@ void CGame::AddWins()
 }
 void CGame::AddLoses()
 {
+	PROFILE("CGame::AddLoses()");
 	++m_nLoses;
 	
 	
@@ -988,6 +1006,7 @@ void CGame::AddLoses()
 
 bool CGame::LoadSlot(int nSlot)
 {
+	PROFILE("CGame::LoadSlot(int)");
 	NewGame(nSlot);
 	string szSaveSlot;
 	switch (nSlot)
@@ -1099,6 +1118,7 @@ bool CGame::LoadSlot(int nSlot)
 }
 void CGame::NewGame(int nSlot)
 {
+	PROFILE("CGame::NewGame(int)");
 	m_nCurrentSaveSlot = nSlot;
 	*m_pCities = NULL;
 	m_nGold = 0;
@@ -1115,6 +1135,7 @@ void CGame::NewGame(int nSlot)
 
 bool CGame::Save(bool bNewSave)
 {
+	PROFILE("CGame::Save(bool)");
 	string szSaveSlot;
 	switch (m_nCurrentSaveSlot)
 	{
@@ -1235,6 +1256,7 @@ bool CGame::Save(bool bNewSave)
 }
 string CGame::GetSaveName(int nSlot, bool bTitle)
 {
+	PROFILE("CGame::GetSaveName(int, bool)");
 	string szSaveSlot;
 	char	szName[6];
 	int nFood, nGold, nConquered;

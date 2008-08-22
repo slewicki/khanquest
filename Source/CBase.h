@@ -12,6 +12,7 @@
 #include <windows.h>
 #include "SGD_Math.h"
 #include <vector>
+#include "CProfile.h"
 using std::vector;
 
 enum 	// Type of object

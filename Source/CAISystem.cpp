@@ -11,6 +11,7 @@
 
 CAISystem::CAISystem(void)
 {
+	PROFILE("CAISystem::CAISystem()");
 	m_pTE = CTileEngine::GetInstance();
 }
 
@@ -20,6 +21,7 @@ CAISystem::~CAISystem(void)
 
 void CAISystem::Exit(void)
 {
+	PROFILE("CAISystem::Exit()");
 	for (int i = 0; i < m_nMapWidth; ++i)
 	{
 		delete Map[i];
@@ -45,6 +47,7 @@ void CAISystem::UpdateState(void)
 
 list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the path
 {
+	PROFILE("CAISystem::FindPath(CTile*, CTile*)");
 	m_nMapWidth  =	m_pTE->GetMapWidth();
 	m_nMapHeight =	m_pTE->GetMapHeight();
 

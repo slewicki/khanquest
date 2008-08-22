@@ -7,10 +7,12 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "CEventSystem.h"
+#include "CProfile.h"
 
 //	GetInstance.
 CEventSystem* CEventSystem::GetInstance(void)
 {
+	PROFILE("CEventSystem::GetInstance()");
 	//	Make sure that the instance does not exist before trying to make it.
 	static CEventSystem instance;
 	//	Return the memory address pointing to the instance.
@@ -20,6 +22,7 @@ CEventSystem* CEventSystem::GetInstance(void)
 //	Register Client.
 void CEventSystem::RegisterClient(EVENTID eventID, IListener *pClient)
 {
+	PROFILE("CEventSystem::RegisterClient(EVENTID, IListener*)");
 	//	Error check.
 	if (!pClient)	return;
 
@@ -30,6 +33,7 @@ void CEventSystem::RegisterClient(EVENTID eventID, IListener *pClient)
 //	Unregister client
 void CEventSystem::UnregisterClient(IListener *pClient)
 {
+	PROFILE("CEventSystem::UnregisterClient(IListner*)");
 	multimap<string, IListener*>::iterator mmIter = m_Database.begin();
 
 	while (mmIter != m_Database.end())
@@ -45,6 +49,7 @@ void CEventSystem::UnregisterClient(IListener *pClient)
 
 void CEventSystem::DispatchEvent(CEvent *pEvent)
 {
+	PROFILE("CEventSystem::DispatchEvent(CEvent*)");
 	//	Make an iterator that will iterate all of our clients that
 	//	should be receiving an event.
 	pair<multimap<EVENTID, IListener *>::iterator,
@@ -64,6 +69,7 @@ void CEventSystem::DispatchEvent(CEvent *pEvent)
 
 void CEventSystem::SendEvent(EVENTID eventID, void *pData)
 {
+	PROFILE("CEventSystem::SendEvent(EVENTID, void*)");
 	//	Push the event into my list.
 	CEvent newEvent;
 	newEvent.SetEventParams(eventID, pData);
@@ -72,6 +78,7 @@ void CEventSystem::SendEvent(EVENTID eventID, void *pData)
 
 void CEventSystem::ProcessEvents(void)
 {
+	PROFILE("CEventSystem::ProcessEvents()");
 	//	Go through the linked list and process all the events it contains.
 	while (m_CurrentEvents.size())
 	{
@@ -81,6 +88,7 @@ void CEventSystem::ProcessEvents(void)
 }
 void CEventSystem::ClearEvents(void) 
 { 
+	PROFILE("CEventSystem::ClearEvents()");
 	m_CurrentEvents.clear(); 
 	m_Database.clear(); 
 

@@ -9,6 +9,7 @@
 
 CAnimation::CAnimation(void)
 {
+	PROFILE("CAnimation::CAnimation()");
 	m_nCurrentFrame = 0;
 	m_fFrameTimer = 0;
 	m_nAlpha = 255;
@@ -29,6 +30,7 @@ CAnimation::~CAnimation(void)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 bool CAnimation::Update(float fElapsedTime)
 {
+	PROFILE("CAnimation::Update(float)");
 	if(m_bIsFading)
 		m_fFadeTimer += fElapsedTime;
 	if(!m_bIsPlaying)
@@ -68,6 +70,7 @@ bool CAnimation::Update(float fElapsedTime)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimation::Render( int x, int y, float scale, DWORD color,  bool  isfliped, float rotation)
 {
+	PROFILE("CAnimation::Render(int, int, float, DWORD, bool, float)");
 	int width, height;
 	width = m_vFrames[m_nCurrentFrame].rRender.right - m_vFrames[m_nCurrentFrame].rRender.left;
 	height = m_vFrames[m_nCurrentFrame].rRender.bottom - m_vFrames[m_nCurrentFrame].rRender.top;
@@ -111,6 +114,7 @@ void CAnimation::Render( int x, int y, float scale, DWORD color,  bool  isfliped
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimation::Play()
 {
+	PROFILE("CAnimation::Play()");
 	Reset();
 	Resume();
 }
@@ -122,6 +126,7 @@ void CAnimation::Play()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimation::Stop()
 {
+	PROFILE("CAnimation::Stop()");
 	m_bIsPlaying = false;
 }
 
@@ -132,6 +137,7 @@ void CAnimation::Stop()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimation::Resume()
 {
+	PROFILE("CAnimation::Resume()");
 	m_bIsPlaying = true;
 }
 
@@ -142,6 +148,7 @@ void CAnimation::Resume()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimation::Reset()
 {
+	PROFILE("CAnimation::Reset");
 	m_nCurrentFrame = 0;
 	m_fFrameTimer = 0.f;	
 }

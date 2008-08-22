@@ -27,6 +27,7 @@ CAnimationManager::~CAnimationManager(void)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimationManager::BinParse(char* szFileName, char* szPlayerImageName, char* szAIImageName)
 {
+	PROFILE("CAnimationManager::BinParse(char*, char*, char*)");
 	ifstream toRead;
 	toRead.open(szFileName,ios::in | ios::binary);
 
@@ -732,6 +733,7 @@ void CAnimationManager::BinParse(char* szFileName, char* szPlayerImageName, char
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 CSheet CAnimationManager::LookUp(int UnitType)
 {
+	PROFILE("CAnimationManager::LookUp(int)");
 	for(int i = 0; i < 6; i++)
 	{
 		if(UnitType == m_UnitSheets[i].GetUnitType())

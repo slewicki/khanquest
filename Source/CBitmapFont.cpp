@@ -9,8 +9,10 @@
 #include "CBitmapFont.h"
 #include "CSGD_TextureManager.h"
 #include "CSGD_WaveManager.h"
+#include "CProfile.h"
 CBitmapFont::CBitmapFont(void)
 {
+	PROFILE("CBitmapFont::CBitmapFont()");
 	SetImageID(-1);
 	SetNumColumns(0);
 	SetCellWidth(0);
@@ -29,6 +31,7 @@ CBitmapFont::~CBitmapFont(void)
 
 bool CBitmapFont::InitBitmapFont(int nImageID, char chStartCh, int nNumColumns, int nCellWidth, int nCellHeight)
 {
+	PROFILE("CBitmapFont::InitBitmapFont(int, char, int, int, int)");
 	if( nImageID < 0)
 		return false;
 	SetImageID(nImageID);
@@ -45,6 +48,7 @@ bool CBitmapFont::InitBitmapFont(int nImageID, char chStartCh, int nNumColumns, 
 void CBitmapFont::DrawText(string szText, int nPosX, int nPosY, float fScaleX, 
 							float fScaleY, DWORD dwColor)
 {
+	PROFILE("CBitmapFont::DrawText(string, int, int, float, float, DWORD)");
 	RECT rLetterBox;
 	m_nCurrentPosX = nPosX;
 	for (unsigned int i = 0; i < szText.size(); i++)
@@ -67,6 +71,7 @@ void CBitmapFont::DrawText(string szText, int nPosX, int nPosY, float fScaleX,
 
 RECT CBitmapFont::CalcRect(char chLetter)
 {
+	PROFILE("CBitmapFont::CalcRect(char)");
 	int nID = chLetter - m_chStartCharacter;
 
 	// How wide should this character be
