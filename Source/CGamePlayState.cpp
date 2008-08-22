@@ -251,11 +251,11 @@ bool CGamePlayState::Input(float fElapsedTime)
 		{
 			m_pOM->SetSelectedUnitsRetreat();
 		}
-		if(m_pDI->GetBufferedKey(DIK_F8))
+		/*if(m_pDI->GetBufferedKey(DIK_F8))
 		{
 			CGame::GetInstance()->AddWins();
 			CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
-		}
+		}*/
 
 		POINT ptMousePos = CGame::GetInstance()->GetMousePos(); 
 		if(ptMousePos.y <= 450 && ((ptMousePos.x > 0 && ptMousePos.x < 800) && (ptMousePos.y > 0 && ptMousePos.y < 600)))
@@ -335,24 +335,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 				// Move camera Up
 				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_UP))))
 					m_pCamera->SetVelY(-100); 
-				if( m_pDI->GetKey(DIK_SPACE))
-				{
-					POINT ptTest1, ptTest2;
-
-					ptTest1.x = (int)(rand() % 801);
-					ptTest1.y = (int)(rand() % 601);
-					ptTest2.x = ((int)(rand() % 801)) * -1;
-					ptTest2.y = ((int)(rand() % 601)) * -1;
-					m_pCamera->SetVelY(ptTest1.y);
-					m_pCamera->SetVelX(ptTest1.x);
-					Map->Render(m_pCamera->GetScreenArea());
-					m_pCamera->SetVelY((ptTest2.y));
-					m_pCamera->SetVelX((ptTest2.x));
-					Map->Render(m_pCamera->GetScreenArea());
-					m_pCamera->SetVelY(ptTest1.y + ptTest2.y);
-					m_pCamera->SetVelX(ptTest1.x + ptTest2.x);
-					Map->Render(m_pCamera->GetScreenArea());
-				}
+				
 			}
 #pragma endregion		
 	}

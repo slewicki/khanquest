@@ -186,6 +186,7 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 			{
 				CSGD_WaveManager::GetInstance()->SetVolume(pUnit->GetDeathSoundID(),CGame::GetInstance()->GetSFXVolume());
 				CSGD_WaveManager::GetInstance()->Play(pUnit->GetDeathSoundID());
+				
 			}
 		
 	}

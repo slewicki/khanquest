@@ -50,6 +50,10 @@ private:
 	bool			m_bIsSelected;		// Is the unit selected by the player
 	bool			m_bIsActive;
 	float			m_fDeathTimer;
+	float			m_fShakeTimer;
+
+
+	POINT			m_ptCameraPosition;
 
 	CTile*			m_pDestinationTile; // Tile the unit is traveling to
 	CTile*			m_pCurrentTile;		// Current tile the unit is on
@@ -143,7 +147,7 @@ public:
 	inline void SetBonus		(int nBonus)		{ m_nBonus = nBonus; }
 	inline void SetSelected		(bool bIsSelected)	{ m_bIsSelected = bIsSelected; }
 	inline void SetGrouped		(bool bIsGrouped)	{ m_bIsGrouped = bIsGrouped; }
-	inline void SetPath			(list<POINT> vPath)		{m_vPath = vPath;}
+	inline void SetPath(list<POINT> vPath)		{m_vPath = vPath;}
 	inline void ClearPath		(void)			{m_vPath.clear();}
 
 	void SetTarget(CUnit* pTarget)		

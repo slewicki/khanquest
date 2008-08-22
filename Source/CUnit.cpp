@@ -18,6 +18,7 @@ CUnit::CUnit(int nType)
 	m_fAttackSpeed		= 0.f;		
 	m_fMovementSpeed	= 0.f;	
 	m_nCost				= 0;
+	m_fShakeTimer		= 0.f;
 	m_fMovementTimer	= 0.f;
 	m_nBonus			= 0;			
 	m_fHealTimer		= 0.f;
@@ -43,13 +44,13 @@ CUnit::CUnit(int nType)
 
 	m_pTE = CTileEngine::GetInstance();
 	m_pCAI = CAISystem::GetInstance();
+
 }
 
 CUnit::~CUnit(void)
 {
 	PROFILE("CUnit::~CUnit()");
 	delete m_pAnimInstance;
-
 	//CSGD_TextureManager::GetInstance()->ReleaseTexture(m_nSelectionID);
 
 }
@@ -120,7 +121,41 @@ void CUnit::Update(float fElapsedTime)
 	}
 	if(!m_bIsAlive)
 	{
+		if(m_fShakeTimer == 0.f)
+		{
+			m_ptCameraPosition.x = (int)CCamera::GetInstance()->GetPosX();
+			m_ptCameraPosition.y = (int)CCamera::GetInstance()->GetPosY();
+			
+		}
 		m_fDeathTimer += fElapsedTime;
+		if(GetType() == UNIT_WAR_ELEPHANT && m_fDeathTimer > 2.f && m_fDeathTimer < 3.f )
+		{
+			m_fShakeTimer+= fElapsedTime;
+			
+			POINT ptTest1;
+			if(m_fShakeTimer <.1)
+			{
+
+			ptTest1.x = (int)(rand() % 50);
+			ptTest1.y = (int)(rand() % 50);
+			ptTest1.x -= 25;
+			ptTest1.y -= 25;
+			CCamera::GetInstance()->SetPosX(CCamera::GetInstance()->GetPosX() + (float)ptTest1.x);
+			CCamera::GetInstance()->SetPosY(CCamera::GetInstance()->GetPosY() + (float)ptTest1.y);
+			}
+			else if(m_fShakeTimer < .2f)
+			{
+				CCamera::GetInstance()->SetPosX((float)m_ptCameraPosition.x);
+				CCamera::GetInstance()->SetPosY((float)m_ptCameraPosition.y);
+			}
+			else
+				m_fShakeTimer = 0.f;
+			
+		}
+
+
+
+
 		if(m_fDeathTimer >= 7.f)
 			m_bIsActive = false;
 		return;

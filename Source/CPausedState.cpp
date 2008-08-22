@@ -10,6 +10,7 @@
 #include "CGamePlayState.h"
 #include "CWorldMapState.h"
 #include "MainMenuState.h"
+#include "LoseBattleState.h"
 CPausedState::CPausedState(void)
 {
 	m_nButtonID = -1;
@@ -150,6 +151,7 @@ bool CPausedState::Input(float fElapsedTime)
 		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
 		{
+			CGame::GetInstance()->ChangeState(CLoseBattleState::GetInstance());
 			CGame::GetInstance()->AddLoses();
 
 				
@@ -163,11 +165,7 @@ bool CPausedState::Input(float fElapsedTime)
 			CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
 		}
 	}
-	else if(m_pDI->GetBufferedKey(DIK_ESCAPE) || m_pDI->GetBufferedJoyButton(JOYSTICK_Y) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2))
-		{
-			CGamePlayState::GetInstance()->SetPaused(false);
-			CGame::GetInstance()->PopCurrentState();
-		}
+
 	return true;
 }
 
