@@ -21,12 +21,14 @@
 
 ObjectManager::ObjectManager(void)
 {
+	PROFILE("ObjectManager::ObjectManager()");
 	m_pPE = CParticleEngine::GetInstance();
 	m_fPartTimer = 0.0f;
 	m_nBloodEmiiter = -1;
 	m_pCamera = CCamera::GetInstance();
 	Map = CTileEngine::GetInstance();
 	m_pCAI = CAISystem::GetInstance();
+	STOP("ObjectManager::ObjectManager()");
 }
 
 ObjectManager::~ObjectManager(void)
@@ -36,13 +38,16 @@ ObjectManager::~ObjectManager(void)
 
 ObjectManager* ObjectManager::GetInstance(void)
 {
+	PROFILE("ObjectManager::GetInstance()");
 	static ObjectManager instance;	// Lazy instantiation
 									// Since it exists for entire game
+	STOP("ObjectManager::GetInstance()");
 	return &instance;
 }
 
 void ObjectManager::UpdateObjects(float fElapsedTime)
 {
+	PROFILE("ObjectManager::UpdateObjects(float)");
 	m_fTimer += fElapsedTime;
 	int nPlayerUnits = 0;
 	int nEnemyUnits = 0;
@@ -76,6 +81,7 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 		if(CGame::GetInstance()->GetTutorialMode())
 		{
 			CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
+			STOP("ObjectManager::UpdateObjects(float)");
 			return;
 		}
 		CGame::GetInstance()->PopCurrentState();
@@ -88,6 +94,7 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 		if(CGame::GetInstance()->GetTutorialMode())
 		{
 			CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
+			STOP("ObjectManager::UpdateObjects(float)");
 			return;
 		}
 		CGame::GetInstance()->PopCurrentState();
@@ -98,35 +105,48 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 	m_pPE->Update(fElapsedTime);
 	if(m_fTimer > .8f)
 		m_fTimer = 0.f;
+
+	STOP("ObjectManager::UpdateObjects(float)");
 }
 
 void ObjectManager::RenderObjects(float fElapsedTime)
 {
+	PROFILE("ObjectManager::RenderObjects(float)");
 	for (unsigned int i=0; i < m_vObjectList.size(); i++)
 	{
 		m_vObjectList[i]->Render(fElapsedTime);
 	}
 	m_pPE->Render(fElapsedTime);
+	STOP("ObjectManager::RenderObjects(float)");
 }
 
 void ObjectManager::AddObject(CBase* pObject)
 {
+	PROFILE("ObjectManager::AddObject(CBase*)");
 	//	Check for valid pointer
 	if (pObject == NULL)
+	{
+		STOP("ObjectManager::AddObject(CBase*)");
 		return;
+	}
 
 	//	Add object to object list
 	m_vObjectList.push_back(pObject);
 
 	//	Increase its ref count
 	pObject->AddRef();
+	STOP("ObjectManager::AddObject(CBase*)");
 }
 
 void ObjectManager::RemoveObject(CBase* pObject)
 {
+	PROFILE("ObjectManager::RemoveObject(CBase*)");
 	//	Check for valid pointer
 	if (pObject == NULL)
+	{
+		STOP("ObjectManager::RemoveObject(CBase*)");
 		return;
+	}
 
 	for (vector<CBase*>::iterator iter = m_vObjectList.begin();
 		 iter != m_vObjectList.end();
@@ -143,11 +163,12 @@ void ObjectManager::RemoveObject(CBase* pObject)
 			break;
 		}
 	}
-
+STOP("ObjectManager::RemoveObject(CBase*)");
 }
 
 void ObjectManager::RemoveAllObjects(void)
 {
+	PROFILE("ObjectManager::RemoveAllObjects()");
 	//	Call Release() on all objects.
 	for (unsigned int i=0; i < m_vObjectList.size(); i++)
 	{
@@ -157,9 +178,11 @@ void ObjectManager::RemoveAllObjects(void)
 
 	//	Clear the vector
 	m_vObjectList.clear();
+	STOP("ObjectManager::RemoveAllObjects()");
 }
 void ObjectManager::EventHandler(CEvent* pEvent)
 {
+	PROFILE("ObjectManager::Eventhandler(CEvent*)");
 	if(pEvent->GetEventID() == "Play")
 	{
 		//Frame* pFrame = (Frame*)pEvent->GetParam();
@@ -207,10 +230,12 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 				break;
 			}
 	}*/
+	STOP("ObjectManager::Eventhandler(CEvent*)");
 }
 
 void ObjectManager::UpdatePlayerUnitStartTile(void)
 {
+	PROFILE("ObjectManager::UpdatePlayerUnitStartTile()");
 	int nInfantry = 0;
 	int nArcher = 0;
 	int nCavalry = 0;
@@ -323,11 +348,16 @@ void ObjectManager::UpdatePlayerUnitStartTile(void)
 		
 	}
 	
+	STOP("ObjectManager::UpdatePlayerUnitStartTile()");
 }
 void ObjectManager::UpdatePlayerUnitDestTile(CTile* destTile)
 {
+	PROFILE("ObjectManager::UpdatePlayerUnitDestTile(CTile*)");
 	if(!destTile || destTile->bIsCollision)
+	{
+		STOP("ObjectManager::UpdatePlayerUnitDestTile(CTile*)");
 		return;
+	}
 	for (unsigned int i=0; i < m_vObjectList.size(); i++)
 	{
 		if (static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit() )
@@ -355,9 +385,11 @@ void ObjectManager::UpdatePlayerUnitDestTile(CTile* destTile)
 			}
 		}
 	}
+	STOP("ObjectManager::UpdatePlayerUnitDestTile(CTile*)");
 }
 void ObjectManager::SetSelectedUnit(RECT toCheck)
 {
+	PROFILE("ObjectManager::SetSelectedUnit(RECT)");
 	RECT rIntersect;
 	int nSelectedAmount = 0;
 	for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
@@ -385,10 +417,12 @@ void ObjectManager::SetSelectedUnit(RECT toCheck)
 		
 	}
 	CHUDState::GetInstance()->UpdateSelected();
+	STOP("ObjectManager::SetSelectedUnit(RECT)");
 }
 
 vector<CBase*> ObjectManager::GetSelectedUnits()
 {
+	PROFILE("ObjectManager::GetSelectedUnits()");
 	vector<CBase*> vSelectedUnits;
 	for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
 	{
@@ -397,10 +431,12 @@ vector<CBase*> ObjectManager::GetSelectedUnits()
 			vSelectedUnits.push_back(m_vObjectList[i]);
 		}
 	}	
+	STOP("ObjectManager::GetSelectedUnits()");
 	return vSelectedUnits;
 }
 void ObjectManager::MoveSelectedUnits(POINT pMousePos)
 {
+	PROFILE("ObjectManager::MoveSelectedUnits(POINT)");
 	for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
 	{
 		if(static_cast<CUnit*>(m_vObjectList[i])->IsSelected() && static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
@@ -410,20 +446,24 @@ void ObjectManager::MoveSelectedUnits(POINT pMousePos)
 			static_cast<CUnit*>(m_vObjectList[i])->SetPath(m_pCAI->FindPath(static_cast<CUnit*>(m_vObjectList[i])->GetCurrentTile(), static_cast<CUnit*>(m_vObjectList[i])->GetDestTile()));
 		}
 	}	
+	STOP("ObjectManager::MoveSelectedUnits(POINT)");
 }
 
 vector<CBase*> ObjectManager::GetUnits()
 {
+	PROFILE("ObjectManager::GetUnits()");
 	vector<CBase*> vSelectedUnits;
 	for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
 	{
 		vSelectedUnits.push_back(static_cast<CUnit*>(m_vObjectList[i]));
 	}	
+	STOP("ObjectManager::GetUnits()");
 	return vSelectedUnits;
 }
 
 void ObjectManager::GetSpawnPointDest(CUnit* pUnit)
 {
+	PROFILE("ObjectManager::GetSpawnPointDest(CUnit*)");
 	// go through
 	for (unsigned int i = 0; i < m_vObjectList.size(); i++)
 	{
@@ -449,9 +489,11 @@ void ObjectManager::GetSpawnPointDest(CUnit* pUnit)
 			}
 		}
 	}
+	STOP("ObjectManager::GetSpawnPointDest(CUnit*)");
 }
 void ObjectManager::SetSelectedUnitsRetreat()
 {
+	PROFILE("ObjectManager::SetSelectedUnitsRetreat()");
 	for (unsigned int i = 0; i < m_vObjectList.size(); i++)
 	{
 		if ( ((CUnit*)m_vObjectList[i])->IsPlayerUnit() && ((CUnit*)m_vObjectList[i])->IsSelected() )
@@ -459,4 +501,5 @@ void ObjectManager::SetSelectedUnitsRetreat()
 			((CUnit*)m_vObjectList[i])->SetState(RETREAT);
 		}
 	}
+	STOP("ObjectManager::SetSelectedUnitsRetreat()");
 }
