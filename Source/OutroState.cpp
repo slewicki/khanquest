@@ -49,6 +49,8 @@ void COutroState::Exit()
 {
 	if(Buttons)
 		delete [] Buttons;
+
+	CProfile::GetInstance()->Process();
 }
 
 bool COutroState::Input(float fElapsedTime)
