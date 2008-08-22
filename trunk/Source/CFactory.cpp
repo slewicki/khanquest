@@ -46,6 +46,7 @@ void CFactory::CreatePlayerUnit(int nType)
 
 	// Let it know we aren't hanging on to it
 	unit->Release();
+	STOP("CFactory::CreatePlayerUnit(int)");
 
 }
 
@@ -77,6 +78,7 @@ void CFactory::CreateComputerUnit(int nType)
 
 	// Let it know we aren't hanging on to it
 	unit->Release();
+	STOP("CFactory::CreateComputerUnit(int)");
 
 
 }
