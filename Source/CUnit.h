@@ -129,7 +129,7 @@ public:
 	//	Last Modified: July 18, 2008
 	//	Purpose: Sets the specified type
 	//////////////////////////////////////////////////////
-	inline void SetMaxHP			(int nHP)				{ m_nMaxHP = nHP; }
+	inline void SetMaxHP		(int nHP)				{ m_nMaxHP = nHP; }
 	inline void SetCurrentHP	(int nHP)					{ m_nCurrentHP = nHP; }
 	inline void SetAttackPower	(int nAttack)			{ m_nAttack = nAttack; }
 	inline void SetRange		(int nRange)			{ m_nRange = nRange; }
@@ -143,7 +143,7 @@ public:
 	inline void SetBonus		(int nBonus)		{ m_nBonus = nBonus; }
 	inline void SetSelected		(bool bIsSelected)	{ m_bIsSelected = bIsSelected; }
 	inline void SetGrouped		(bool bIsGrouped)	{ m_bIsGrouped = bIsGrouped; }
-	inline void SetPath(list<POINT> vPath)		{m_vPath = vPath;}
+	inline void SetPath			(list<POINT> vPath)		{m_vPath = vPath;}
 	inline void ClearPath		(void)			{m_vPath.clear();}
 
 	void SetTarget(CUnit* pTarget)		

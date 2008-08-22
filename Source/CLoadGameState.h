@@ -14,7 +14,7 @@
 #include "CSGD_DirectInput.h"
 #include "CGame.h"
 #include "CBitmapFont.h"
-
+#include "CParticleEngine.h"
 class CLoadGameState : public IGameState
 {
 private:
@@ -23,7 +23,12 @@ private:
 	CSGD_WaveManager*						m_pWM;
 	CSGD_TextureManager*					m_pTM;
 	CSGD_DirectInput*						m_pDI;
-	
+
+	//Particles
+	CParticleEngine*						m_pPE;
+	int										m_nTorchID;
+	int										m_nTorchID2;
+	int										m_nTorchPicID;
 
 	float									m_fTimer;
 	int										m_nButtonID;

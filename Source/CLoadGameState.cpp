@@ -36,10 +36,18 @@ void CLoadGameState::Enter(void)
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pWM = CSGD_WaveManager::GetInstance();
 	m_pDI = CSGD_DirectInput::GetInstance();
+
+	m_pPE = CParticleEngine::GetInstance();
+
 	m_nLucidiaWhiteID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_nBackgroundID = m_pTM->LoadTexture("Resource/KQ_PageBkg3.png");
 	m_nButtonID = m_pTM->LoadTexture("Resource/KQ_Slot.png");
 	m_nScrollButtonID = m_pTM->LoadTexture("Resource/KQ_ScrollButton.png");
+
+	// torch 
+	m_nTorchPicID = m_pTM->LoadTexture("Resource/KQ_Torch1.png");
+	m_nTorchID = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_Torch2.dat", 100, 300);
+	m_nTorchID2 = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_Torch2.dat", 670, 300);
 
 	m_nClickID =  m_pWM->LoadWave("Resource/KQ_Click.wav");
 	m_nTickID =  m_pWM->LoadWave("Resource/KQ_ButtonTick.wav");
@@ -71,7 +79,9 @@ void CLoadGameState::Enter(void)
 
 	CGame::GetInstance()->SetSongPlay(CITYSELECT);
 
-	
+	//m_pPE->SetPostion(100, 100, m_nTorchID);
+	m_pPE->SetIsRunning(m_nTorchID, true);
+	m_pPE->SetIsRunning(m_nTorchID2, true);
 }
 
 void CLoadGameState::Exit(void)
@@ -86,11 +96,10 @@ void CLoadGameState::Exit(void)
 	m_pTM->ReleaseTexture(m_nButtonID);
 	m_pTM->ReleaseTexture(m_nLucidiaWhiteID);
 	m_pTM->ReleaseTexture(m_nBackgroundID);
-	
+	m_pTM->ReleaseTexture(m_nTorchPicID);
 
-
-
-
+	m_pPE->SetIsRunning(m_nTorchID, false);
+	m_pPE->ClearEmitter();
 }
 
 bool CLoadGameState::Input(float fElapsedTime)
@@ -170,7 +179,7 @@ bool CLoadGameState::Input(float fElapsedTime)
 
 void CLoadGameState::Update(float fElapsedTime)
 {
-	
+	m_pPE->Update(fElapsedTime);
 }
 
 void CLoadGameState::Render(float fElapsedTime)
@@ -221,6 +230,10 @@ void CLoadGameState::Render(float fElapsedTime)
 	m_pTM->Draw(m_nScrollButtonID, m_rBack.left, m_rBack.top, .4f, .3f);
 	m_cFont.DrawTextA("Back", m_rBack.left+40, m_rBack.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 
+	// draw torch and flame
+	m_pTM->Draw(m_nTorchPicID, 80, 300, 0.4f, 0.5f, 0);
+	m_pTM->Draw(m_nTorchPicID, 650, 300, 0.4f, 0.5f, 0);
+	m_pPE->Render(fElapsedTime);
 }
 
 
