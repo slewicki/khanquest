@@ -26,6 +26,8 @@ struct LOGITEM {
 	LPSTR  Function;	//Function that was profiled
 	double  Average;
 	int NumCalled;
+	double MinTime;
+	double MaxTime;
 };
 
 //Profiler class
@@ -63,6 +65,7 @@ public:
 	void Start(LPSTR token);
 	void Stop(LPSTR token);
 	void Process();
+	void MinMaxOutput();
 };
 
 //CProfile useage requires only single declartion at beginning of function
@@ -73,6 +76,7 @@ public:
 #define STOP(token) CProfile::GetInstance()->Stop(#token)
 #else
 	#define PROFILE(token) ((void)0)		//Release
+	#define STOP(token) ((void)0)
 #endif
 
 
