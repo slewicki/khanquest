@@ -78,32 +78,38 @@ void CGamePlayState::Enter(void)
 			break;
 		case KCITY3:
 
-			break;
-		case XCITY1:
+		break;
+	case XCITY1:
+		Map->LoadFile("Resource/Levels/KQ_XIACity1.level");
 
-			break;
-		case XCITY2:
+		break;
+	case XCITY2:
+		Map->LoadFile("Resource/Levels/KQ_XIACity2.level");
 
-			break;
-		case XCITY3:
+		break;
+	case XCITY3:
+		Map->LoadFile("Resource/Levels/KQ_XIACity3.level");
 
-			break;
-		case JCITY1:
+		break;
+	case JCITY1:
+		Map->LoadFile("Resource/Levels/KQ_JinCity1.level");
 
-			break;
-		case JCITY2:
+		break;
+	case JCITY2:
+		Map->LoadFile("Resource/Levels/KQ_JinCity2.level");
 
-			break;
-		case JCITY3:
+		break;
+	case JCITY3:
+		Map->LoadFile("Resource/Levels/KQ_JinCity3.level");
 
-			break;
-		default:
-			// Bad news bears.
-
-			break;
-		}
-		Map->LoadFile("Resource/Levels/KQ_Jin1.level");
+		break;
+	default:
+		Map->LoadFile("Resource/Levels/KQ_Level4.level");
+		// Bad news bears.
+		
+		break;
 	}
+
 	m_pOM->UpdatePlayerUnitStartTile();
 
 
@@ -420,12 +426,12 @@ void CGamePlayState::Render(float fElapsedTime)
 			sprintf_s(buffer, 32, "Tile: %i, %i", TileLoc.x, TileLoc.y);
 			sprintf_s(buffer2, 32, "TileType: %i", Map->GetTile(0,TileLoc.x, TileLoc.y)->nType);
 
-			if(Map->GetTile(0,TileLoc.x, TileLoc.y)->bIsPlayerSpawn == true)
-				sprintf_s(buffer3, 32, "PlayerSpawn: True");
-			else
-				sprintf_s(buffer3, 32, "PlayerSpawn: False");
-
-			POINT miniTileLoc = Map->IsoMiniMouse(m_pCG->GetCursorPosition().x, CGame::GetInstance()->GetCursorPosition().y, 0);
+		if(Map->GetTile(0,TileLoc.x, TileLoc.y)->bIsPlayerSpawn == true)
+			sprintf_s(buffer3, 32, "PlayerSpawn: True");
+		else
+			sprintf_s(buffer3, 32, "PlayerSpawn: False");
+		
+		POINT miniTileLoc = Map->IsoMiniMouse(m_pCG->GetCursorPosition().x, m_pCG->GetCursorPosition().y, 0);
 
 			sprintf_s(buffer4, 32, "Local Anchor: %i, %i", Map->GetTile(0,TileLoc.x, TileLoc.y)->ptLocalAnchor.x, Map->GetTile(0,TileLoc.x, TileLoc.y)->ptLocalAnchor.y);
 			sprintf_s(buffer5, 32, "Global Anchor: %i, %i", MapLoc.x, MapLoc.y);

@@ -15,6 +15,7 @@
 #include "CGame.h"
 #include "WinBattleState.h"
 #include "LoseBattleState.h"
+#include "MainMenuState.h"
 #include "CTileEngine.h"
 #include <algorithm>
 
@@ -72,6 +73,11 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 
     if(nEnemyUnits <=0)
 	{
+		if(CGame::GetInstance()->GetTutorialMode())
+		{
+			CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
+			return;
+		}
 		CGame::GetInstance()->PopCurrentState();
 		CGame::GetInstance()->PushState(CWinBattleState::GetInstance());
 		CGame::GetInstance()->AddWins();
@@ -79,6 +85,11 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 	}
 	if(nPlayerUnits <= 0)
 	{
+		if(CGame::GetInstance()->GetTutorialMode())
+		{
+			CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
+			return;
+		}
 		CGame::GetInstance()->PopCurrentState();
 		CGame::GetInstance()->PushState(CLoseBattleState::GetInstance());
 		CGame::GetInstance()->AddLoses();

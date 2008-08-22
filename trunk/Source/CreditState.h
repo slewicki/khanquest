@@ -80,7 +80,7 @@ public:
 	void Render(float fElapsedTime);
 	
 	//////////////////////////////////////////////////////
-	//	Function: “Render”
+	//	Function: “Parse”
 	//	Last Modified: August 05, 2008
 	//	Purpose: Reads in the xml file containing the names of the credits
 	//////////////////////////////////////////////////////
