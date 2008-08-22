@@ -53,11 +53,14 @@ CGame::CGame(void)
 	m_szPlayerName[4] = 'Y';
 	m_szPlayerName[5] = '\0';
 	m_nCurrentSaveSlot = SLOT1;
+	STOP("CGame::CGame()");
 }
 
 CGame::~CGame(void)
 {
+	PROFILE("CGame::~CGame()");
 	delete m_nPlayList;
+	STOP("CGame::~CGame()");
 }
 
 CGame* CGame::GetInstance(void)
@@ -65,6 +68,7 @@ CGame* CGame::GetInstance(void)
 	PROFILE("CGame::GetInstance()");
 	static CGame instance;	//	Lazy instantiation
 							//  Since CGame is running the entire time
+	STOP("CGame::GetInstance()");
 	return &instance;
 }
 
@@ -91,28 +95,33 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	if (!m_pD3D->InitDirect3D(hWnd, nScreenWidth, nScreenHeight, bIsWindowed, true))
 	{
 		MessageBox(0, "InitDirect3D Failed", " Error", MB_OK);
+		STOP("CGame::Initialize(HWND, HINSTANCE, int, int, bool)");
 		return false;
 	}
 	if (!m_pTM->InitTextureManager(m_pD3D->GetDirect3DDevice(), m_pD3D->GetSprite()))
 	{
 		MessageBox(0, "InitTextureManager Failed", " Error", MB_OK);
+		STOP("CGame::Initialize(HWND, HINSTANCE, int, int, bool)");
 		return false;
 	}
 	if (!m_pDS->InitDirectSound(hWnd))
 	{
 		MessageBox(0, "InitDirectSound Failed", " Error", MB_OK);
+		STOP("CGame::Initialize(HWND, HINSTANCE, int, int, bool)");
 		return false;
 	}
 
 	if (!m_pWM->InitWaveManager(hWnd, m_pDS->GetDSObject()))
 	{
 		MessageBox(0, "InitWaveManager Failed", " Error", MB_OK);
+		STOP("CGame::Initialize(HWND, HINSTANCE, int, int, bool)");
 		return false;
 	}
 
 	if (!m_pDI->InitDevices(hWnd, hInstance))
 	{
 		MessageBox(0, "InitDevices Failed", " Error", MB_OK);
+		STOP("CGame::Initialize(HWND, HINSTANCE, int, int, bool)");
 		return false;
 	} 
 #pragma endregion
@@ -159,6 +168,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
     m_nDeathSoundID[UNIT_CAVALRY] = m_nDeathSoundID[UNIT_CAVALRY_ARCHER] = m_pWM->LoadWave("Resource/KQ_DeathHorse.wav");
 	m_nDeathSoundID[UNIT_WAR_ELEPHANT] = m_pWM->LoadWave("Resource/KQ_DeathElephant.wav");
 	
+	STOP("CGame::Initialize(HWND, HINSTANCE, int, int, bool)");
 	return true;
 }
 void CGame::Shutdown(void)
@@ -200,6 +210,7 @@ void CGame::Shutdown(void)
 		m_pD3D->ShutdownDirect3D();
 		m_pD3D = NULL;
 	}
+	STOP("CGame::ShutDown()");
 }
 
 bool CGame::Main(void)
@@ -234,7 +245,10 @@ bool CGame::Main(void)
 	{
 		// If false is returned, exit the game
 		if(!m_vStates[i]->Input(fElapsedTime))
+		{
+			STOP("CGame::Main()");
 			return false;
+		}
 	}
 
 
@@ -298,7 +312,10 @@ bool CGame::Main(void)
 	//}
 
 	if(/*m_bIsWindowed && */CDirectShow::GetInstance()->IsPlaying() && InvalidateRect(m_hWnd, 0, 0))
+	{
+		STOP("CGame::Main()");
 		return true;
+	}
 
 	m_pD3D->Clear(0, 0, 0);
 	m_pD3D->DeviceBegin();
@@ -392,6 +409,7 @@ bool CGame::Main(void)
 		m_pD3D->Present();
 	}
 	
+	STOP("CGame::Main()");
 	return true;
 }
 
@@ -413,6 +431,7 @@ void CGame::ChangeState(IGameState* pNewState)
 		m_vStates.push_back(pNewState);
 		m_vStates[0]->Enter();
 	}
+	STOP("CGame::ChangeState(IGameState*)");
 }
 
 void CGame::PushState(IGameState* pNewState)
@@ -424,6 +443,7 @@ void CGame::PushState(IGameState* pNewState)
 		pNewState->Enter();
 		m_vStates.push_back(pNewState);
 	}
+	STOP("CGame::PushState(IGameState*)");
 }
 
 void CGame::PopCurrentState()
@@ -432,6 +452,7 @@ void CGame::PopCurrentState()
 	// Exit the top state and remove it from the stack
 	m_vStates[m_vStates.size()-1]->Exit();
 	m_vStates.pop_back();
+	STOP("CGame::PopCurrentState()");
 }
 
 bool CGame::ParseXMLUnitInfo (const char* szFile)
@@ -496,6 +517,7 @@ bool CGame::ParseXMLUnitInfo (const char* szFile)
 	// delete the xml parser after usage
 	delete xml;
 
+	STOP("CGame::ParseXMLUnitInfo(const char*)");
 	return true;
 }
 
@@ -565,9 +587,11 @@ bool CGame::ParseBinaryUnitInfo (const char* szFile)
 	catch (std::exception e)
 	{
 		MessageBox(m_hWnd, "Error reading data. Reinstalling may fix the problem", "Error", MB_OK);
+		STOP("CGame::ParseBinaryUnitInfo(const char*)");
 		return false;
 
 	}
+	STOP("CGame::ParseBinaryUnitInfo(const char*)");
 	return true;
 }
 
@@ -613,6 +637,7 @@ bool CGame::ParsePlayList(const char* szFileName)
 	}
 	//Delete the parser
 	delete xml;
+	STOP("CGame::ParsePlayList(const char*)");
 	return true;
 }
 
@@ -620,10 +645,14 @@ CUnit CGame::GetUnitInfo (int nType)
 {
 	PROFILE("CGame::GetUnitInfo(int)");
 	if(nType >=0 && nType <=5)
+	{
+		STOP("CGame::GetUnitInfo(int)");
 		return this->m_pPlayerUnitInfo[nType];
+	}
 	else
 	{
 		CUnit unit;
+		STOP("CGame::GetUnitInfo(int)");
 		return unit;
 	}
 }
@@ -632,10 +661,14 @@ CUnit CGame::GetCPUUnitInfo (int nType)
 {
 	PROFILE("CGame::GetCPUInfo(int)");
 	if(nType >=0 && nType <=5)
+	{
+		STOP("CGame::GetCPUInfo(int)");
 		return this->m_pCPUUnitInfo[nType];
+	}
 	else
 	{
 		CUnit unit;
+		STOP("CGame::GetCPUInfo(int)");
 		return unit;
 	}
 }
@@ -647,6 +680,7 @@ POINT CGame::GetCursorPosition()
 		POINT pos = GetWindowPosition();
 		m_ptMousePos.x -= pos.x;
 		m_ptMousePos.y -= pos.y;
+		STOP("CGame::GetCursorPosition()");
 		return m_ptMousePos;
 	}
 
@@ -661,6 +695,7 @@ POINT CGame::GetWindowPosition()
 		pos.x += (int)(m_ptWindOffset.x*.5f);
 		pos.y += (int)(m_ptWindOffset.y-m_ptWindOffset.x*.5f);
 	}
+	STOP("CGame::getWindowPosition()");
 	return pos;
 }
 
@@ -820,6 +855,7 @@ void CGame::InitCities()
 	m_pCities[JCITY3]->AddAdjacent(JCITY1);
 	m_pCities[JCITY3]->AddAdjacent(JCITY2);
 	//-------------------------------------------------------------------
+	STOP("CGame::InitCities()");
 
 }
 
@@ -833,6 +869,7 @@ int CGame::GetNumConquered()
 		if(m_pCities[i]->GetOwner() == PLAYER_CITY)
 			nConquered++;
 	}
+	STOP("CGame::getNumConquered()");
 	return nConquered;
 }
 
@@ -841,7 +878,10 @@ int CGame::GetNextFoodTribute()
 	PROFILE("CGame::GetNextFoodTribute()");
 	int nConquered = GetNumConquered();
 	if(nConquered >= 6)
+	{
+		STOP("CGame::GetNextFoodTribute()");
 		return 0;
+	}
 	switch(GetNumConquered()+1)
 	{
 	case 1:
@@ -863,6 +903,7 @@ int CGame::GetNextFoodTribute()
 		return 400;
 		break;
 	default:
+		STOP("CGame::GetNextFoodTribute()");
 		return 0;
 	}
 }
@@ -893,6 +934,7 @@ int CGame::GetTotalFoodTribute()
 		m_nFood = 3000;
 		break;
 	}
+	STOP("CGame::getTotalFoodTribute()");
 	return m_nFood;
 }
 
@@ -925,13 +967,17 @@ void CGame::SetCityConquered(CCity* pCity)
 	pCity->SetGoldTribute(0);
 	GetTotalFoodTribute();
 	//AddWins();
+	STOP("CGame::SetCityConquered(CCity*)");
 }
 
 void CGame::LoseLastCity()
 {
 	PROFILE("CGame::LoseLastCity()");
 	if(m_vConqueredCities.size() < 1)
+	{
+		STOP("CGame::LoseLastCity()");
 		return;
+	}
 	int nCityID = m_vConqueredCities[m_vConqueredCities.size()-1];
 	m_vConqueredCities.pop_back();
 	m_pCities[nCityID]->Revolt();
@@ -953,6 +999,8 @@ void CGame::LoseLastCity()
 	};
 	if(m_nWins > 1)
 		--m_nWins;
+
+	STOP("CGame::LoseLastCity()");
 	
 }
 void CGame::AddWins()
@@ -979,6 +1027,8 @@ void CGame::AddWins()
 	}
 	else
 		Save(false);
+
+	STOP("CGame::AddWins()");
 
 }
 void CGame::AddLoses()
@@ -1008,6 +1058,8 @@ void CGame::AddLoses()
 	{
 		Save(false);
 	}
+
+	STOP("CGame::AddLoses()");
 }
 
 
@@ -1032,6 +1084,7 @@ bool CGame::LoadSlot(int nSlot)
 		break;
 	default:
 		m_nCurrentSaveSlot = -1;
+		STOP("CGame::LoadSlot(int)");
 		return false;
 	}
 	try 
@@ -1042,6 +1095,7 @@ bool CGame::LoadSlot(int nSlot)
 		{
 			MessageBox(m_hWnd, "Save file not found.  Try making a new one." , "Error", MB_OK);
 
+			STOP("CGame::LoadSlot(int)");
 			return false;
 		}
 		int nLength = 0;
@@ -1116,10 +1170,12 @@ bool CGame::LoadSlot(int nSlot)
 	catch (std::exception e)
 	{
 		MessageBox(m_hWnd, "Error loading data. My bad...", "Error", MB_OK);
+		STOP("CGame::LoadSlot(int)");
 		return false;
 
 	}
 	PushState(CWorldMapState::GetInstance());
+	STOP("CGame::LoadSlot(int)");
 	return true;
 
 }
@@ -1138,6 +1194,7 @@ void CGame::NewGame(int nSlot)
 	m_chJinCount = m_chKCount = m_chXiaCount = 0;
 	this->ParseBinaryUnitInfo("Resource/KQ_unitStats.dat");
 	InitCities();
+	STOP("CGame::NewGame(int)");
 }
 
 bool CGame::Save(bool bNewSave)
@@ -1178,6 +1235,7 @@ bool CGame::Save(bool bNewSave)
 		break;
 	default:
 		m_nCurrentSaveSlot = -1;
+		STOP("CGame::Save(bool)");
 		return false;
 	}
 	if(bNewSave)
@@ -1256,9 +1314,11 @@ bool CGame::Save(bool bNewSave)
 	catch (std::exception e)
 	{
 		MessageBox(m_hWnd, "Error saving data. Reinstalling may fix the problem (yeah right).", "Error", MB_OK);
+		STOP("CGame::Save(bool)");
 		return false;
 
 	}
+	STOP("CGame::Save(bool)");
 	return true;
 }
 string CGame::GetSaveName(int nSlot, bool bTitle)
@@ -1280,6 +1340,7 @@ string CGame::GetSaveName(int nSlot, bool bTitle)
 		break;
 	default:
 		m_nCurrentSaveSlot = -1;
+		STOP("CGame::GetSaveName(int, bool)");
 		return false;
 	}
 	try 
@@ -1291,7 +1352,10 @@ string CGame::GetSaveName(int nSlot, bool bTitle)
 		{
 			//MessageBox(m_hWnd, "Save file not found.  Try making a new one." , "Error", MB_OK);
 			if(bTitle)
+			{
+				STOP("CGame::GetSaveName(int, bool)");
 				return "EMPTY";
+			}
 			else
 				" ";
 		}
@@ -1312,6 +1376,7 @@ string CGame::GetSaveName(int nSlot, bool bTitle)
 	catch (std::exception e)
 	{
 		MessageBox(m_hWnd, "Error reading files.", "Error", MB_OK);
+		STOP("CGame::GetSaveName(int, bool)");
 		return false;
 	}
 	
@@ -1321,9 +1386,15 @@ string CGame::GetSaveName(int nSlot, bool bTitle)
 
 	szInfo = buffer;
 	if(bTitle)
+	{
+		STOP("CGame::GetSaveName(int, bool)");
 		return szName;
+	}
 	else
+	{
+		STOP("CGame::GetSaveName(int, bool)");
 		return szInfo;
+	}
 }
 void CGame::ParseOptions(char* szFileName)
 {
@@ -1340,4 +1411,5 @@ void CGame::ParseOptions(char* szFileName)
 	toRead.read((char*)&m_bFPS,sizeof(m_bFPS));	
 	toRead.read((char*)&m_nMusicVolume,sizeof(m_nMusicVolume));
 	toRead.read((char*)&m_nSFXVolume,sizeof(m_nSFXVolume));
+	STOP("CGame::ParseOptions(char*)");
 }
