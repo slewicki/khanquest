@@ -80,6 +80,8 @@ void CProfile::Start(LPSTR token)
 			TempProfile.StartTime = m_liStart;
 			TempProfile.NumCalled = m_nTimesCalled;
 			TempProfile.Average = 0;
+			TempProfile.MinTime = 100;
+			TempProfile.MaxTime = 0;
 
 			Profile.push_back(TempProfile);
 		}
@@ -100,6 +102,8 @@ void CProfile::Start(LPSTR token)
 				TempProfile.StartTime = m_liStart;
 				TempProfile.NumCalled = m_nTimesCalled;
 				TempProfile.Average = 0;
+				TempProfile.MinTime = 100;
+				TempProfile.MaxTime = 0;
 
 				Profile.push_back(TempProfile);
 			}
@@ -137,6 +141,12 @@ void CProfile::Stop(LPSTR token)
 				m_dTotal = (double)((double)(Profile[i].EndTime.QuadPart - Profile[i].StartTime.QuadPart) / (double)m_liFreq.QuadPart);
 				Profile[i].Time.push_back(m_dTotal);
 				Profile[i].NumCalled++;
+
+				if(Profile[i].MinTime > m_dTotal)
+					Profile[i].MinTime = m_dTotal;
+
+				if(Profile[i].MaxTime < m_dTotal)
+					Profile[i].MaxTime = m_dTotal;
 				//m_bChanged = true;
 			}
 		}
@@ -203,6 +213,25 @@ void CProfile::Process()
 
 		fout.write("Times Called: \t", (int)strlen("Times Called: "));
 		fout << Profile[i].NumCalled << '\n' << '\n';
+	}
+
+	fout.close();
+}
+
+void CProfile::MinMaxOutput()
+{
+	fstream fout("Resource\\KQ_TimeCompare.kqp", std::ios_base::out | std::ios_base::app);
+
+	for(unsigned int i = 0; i < Profile.size(); i++)
+	{
+		fout.write("Function: ", (int)strlen("Function "));
+		fout.write(Profile[i].Function, (int)strlen(Profile[i].Function) + 1) << '\n';
+
+		fout.write("Min Time: ", (int)strlen("Min Time: "));
+		fout << Profile[i].MinTime << '\n';
+
+		fout.write("Max Time: ", (int)strlen("Max Time: "));
+		fout << Profile[i].MaxTime << '\n' << '\n';
 	}
 
 	fout.close();
