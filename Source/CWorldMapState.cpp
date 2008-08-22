@@ -376,7 +376,7 @@ void CWorldMapState::Render(float fElapsedTime)
 	{
 		RECT toDraw; toDraw.top = 0; toDraw.left = 0; toDraw.right = 578; toDraw.bottom = 495;
 		int nImage = m_pTM->LoadTexture("Resource/KQ_TutorialBox.png");
-		m_pTM->Draw(nImage,0,2,1.4,1.2,&toDraw);
+		m_pTM->Draw(nImage,0,2,1.4f,1.2f,&toDraw);
 		m_nScrollButtonID = m_pTM->LoadTexture("Resource/KQ_ScrollButton.png");
 		m_pTM->Draw(m_nScrollButtonID,325,400,.4f,.3f);
 		m_cFont.DrawTextA("Accept",350,425,.2f,.2f,D3DCOLOR_ARGB(255,255,0,0));
