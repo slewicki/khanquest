@@ -72,10 +72,40 @@ void CProfile::Start(LPSTR token)
 		m_szToken = token;
 		QueryPerformanceFrequency(&m_liFreq);
 		QueryPerformanceCounter(&m_liStart);
+
+		if(Profile.empty())
+		{
+			LOGITEM TempProfile;
+			TempProfile.Function = m_szToken;
+			TempProfile.StartTime = m_liStart;
+
+			Profile.push_back(TempProfile);
+		}
+		else
+		{
+			for(int i = 0; i < Profile.size(); i++)
+			{
+				if(m_szToken == Profile[i].Function)
+				{
+					Profile[i].StartTime = m_liStart;
+					m_bChanged = true;
+				}
+			}
+			if(!m_bChanged)
+			{
+				LOGITEM TempProfile;
+				TempProfile.Function = m_szToken;
+				TempProfile.StartTime = m_liStart;
+
+				Profile.push_back(TempProfile);
+			}
+			m_bChanged = false;
+		}
 }
 
-void CProfile::Stop()
+void CProfile::Stop(LPSTR token)
 {
+	m_szToken = token;
 	QueryPerformanceCounter(&m_liEnd);
 	m_dTotal = (double)((double)(m_liEnd.QuadPart - m_liStart.QuadPart) / (double)m_liFreq.QuadPart);
 

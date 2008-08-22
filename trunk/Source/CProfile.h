@@ -18,6 +18,8 @@ using std::fstream;
 
 //log file item struct
 struct LOGITEM {
+	LARGE_INTEGER StartTime;
+	LARGE_INTEGER EndTime;
 	//USHORT Line;		//Line number in source file
 	vector<double> Time;		//NULL for function start
 	//LPSTR  Source;		//Source file path and name
@@ -59,7 +61,7 @@ public:
 
 	static CProfile* GetInstance();
 	void Start(LPSTR token);
-	void Stop();
+	void Stop(LPSTR token);
 	void Process();
 };
 
@@ -68,6 +70,7 @@ public:
 #if _DEBUG
 	
 #define PROFILE(token) CProfile::GetInstance()->Start(#token)
+#define STOP(token) CProfile::GetInstance()->Stop(#token)
 #else
 	#define PROFILE(token) ((void)0)		//Release
 #endif
