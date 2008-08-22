@@ -19,6 +19,7 @@ CFactory::~CFactory(void)
 
 void CFactory::CreatePlayerUnit(int nType)
 {
+	PROFILE("CFactory::CreatePlayerUnit(int)");
 	//static float xPos = 100;
 	//static float yPos = 50;
 	CUnit* unit = new CUnit(nType);
@@ -50,6 +51,7 @@ void CFactory::CreatePlayerUnit(int nType)
 
 void CFactory::CreateComputerUnit(int nType)
 {
+	PROFILE("CFactory::CreateComputerUnit(int)");
 	//static float xPos = 100;
 	//static float yPos = 50;
 	CUnit* unit = new CUnit(nType);

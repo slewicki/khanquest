@@ -12,6 +12,7 @@
 
 void CCamera::InitCamera(float fStartPosX, float fStartPosY)
 {
+	PROFILE("CCamera::InitCamera(float, float)");
 	m_vPos.fX = fStartPosX;
 	m_vPos.fY = fStartPosY;
 	m_vVel.fX = 0;
@@ -26,54 +27,63 @@ void CCamera::InitCamera(float fStartPosX, float fStartPosY)
 
 tVector2D CCamera::TransformToScreen(tVector2D vWorldPos)
 {
+	PROFILE("CCamera::TransformToScreen(tVector2D)");
 	tVector2D vScreenPos = vWorldPos - m_vPos;
 	return vScreenPos;
 }
 
 tVector2D CCamera::TransformToScreen(float fWorldPosX, float fWorldPosY)
 {
+	PROFILE("CCamera::TransformToScreen(float, float)");
 	tVector2D vScreenPos = {fWorldPosX - m_vPos.fX, fWorldPosY - m_vPos.fY};
 	return vScreenPos;
 }
 
 POINT CCamera::TransformToScreen(int nWorldPosX, int nWorldPosY)
 {
+	PROFILE("CCamera::TransformToScreen(int, int)");
 	POINT ptScreenPos = {nWorldPosX - (int)m_vPos.fX, nWorldPosY - (int)m_vPos.fY};
 	return ptScreenPos;
 }
 
 POINT CCamera::TransformToScreen(POINT ptWorldPos)
 {
+	PROFILE("CCamera::TransformToScreen(POINT)");
 	POINT ptScreenPos = {ptWorldPos.x - (int)m_vPos.fX, ptWorldPos.y - (int)m_vPos.fY};
 	return ptScreenPos;
 }
 
 tVector2D CCamera::TransformToGlobal(tVector2D vCamPos)
 {
+	PROFILE("CCamera::TransformToGlobal(tVector2D)");
 	tVector2D vGlobalPos = vCamPos + m_vPos;
 	return vGlobalPos;
 }
 
 tVector2D CCamera::TransformToGlobal(float fCamPosX, float fCamPosY)
 {
+	PROFILE("CCamera::TransformToGlobal(float, float)");
 	tVector2D vGlobalPos = {fCamPosX + m_vPos.fX, fCamPosY + m_vPos.fY};
 	return vGlobalPos;
 }
 
 POINT CCamera::TransformToGlobal(int nCamPosX, int nCamPosY)
 {
+	PROFILE("CCamera::TransformToGlobal(int, int)");
 	POINT ptGlobalPos = {nCamPosX + (int)m_vPos.fX, nCamPosY + (int)m_vPos.fY};
 	return ptGlobalPos;
 }
 
 POINT CCamera::TransformToGlobal(POINT ptCamPos)
 {
+	PROFILE("CCamera::TransformToGlobal(POINT)");
 	POINT ptGlobalPos = {ptCamPos.x + (int)m_vPos.fX, ptCamPos.y + (int)m_vPos.fY};
 	return ptGlobalPos;
 }
 
 void CCamera::Update(float fElapsedTime)
 {
+	PROFILE("CCamera::Update(float)");
 	int nMapHeight = CTileEngine::GetInstance()->GetMapHeight();
 	int nMapWidth = CTileEngine::GetInstance()->GetMapWidth();
 	int nTileWidth = CTileEngine::GetInstance()->GetTileWidth();
@@ -126,6 +136,7 @@ void CCamera::Update(float fElapsedTime)
 
 bool CCamera::IsOnScreen(RECT rObjectArea)
 {
+	PROFILE("CCamera::IsOnScreen(RECT)");
 	RECT rBuffer;
 
 	if(IntersectRect(&rBuffer, &m_rScreenArea, &rObjectArea))
@@ -136,6 +147,7 @@ bool CCamera::IsOnScreen(RECT rObjectArea)
 
 void CCamera::CenterCamera(int nPosX, int nPosY)
 {
+	PROFILE("CCamera::CenterCamera(int, int)");
 	m_vPos.fX = (float)(nPosX - 400);
 	m_vPos.fY = (float)(nPosY - 225);
 }

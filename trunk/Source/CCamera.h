@@ -10,6 +10,7 @@
 #pragma once
 #include <windows.h>
 #include "SGD_Math.h"
+#include "CProfile.h"
 
 class CCamera
 {

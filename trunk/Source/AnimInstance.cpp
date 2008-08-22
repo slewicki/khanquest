@@ -9,6 +9,7 @@
 
 CAnimInstance::CAnimInstance(int UnitType)
 {
+	PROFILE("CAnimInstance::CAnimInstance(int)");
 	m_pAM = CAnimationManager::GetInstance();
 	m_Sheet = m_pAM->LookUp(UnitType);
 	m_nUnitType = UnitType;
@@ -30,6 +31,7 @@ CAnimInstance::~CAnimInstance(void)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimInstance::Play(int Direction, int Action)
 {	
+	PROFILE("CAnimInstance::Play(int, int)");
 	string name = GetName(Direction,Action);
 
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
@@ -42,6 +44,7 @@ void CAnimInstance::Play(int Direction, int Action)
 
 void CAnimInstance::StartFadeTimer(int Direction, int Action)
 {	
+	PROFILE("CAnimInstance::StartFadeTimer(int, int)");
 	string name = GetName(Direction,Action);
 
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
@@ -59,6 +62,7 @@ void CAnimInstance::StartFadeTimer(int Direction, int Action)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimInstance::Update(float fElapsedTime)
 {
+	PROFILE("CAnimInstance::Update(float)");
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size(); i++)
 	{
 		string name = m_szAction + "_" + m_szDirection;
@@ -77,6 +81,7 @@ void CAnimInstance::Update(float fElapsedTime)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimInstance::Render()
 {
+	PROFILE("CAnimInstance::Render()");
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size(); i++)
 	{
 		string name = m_szAction + "_" + m_szDirection;
@@ -92,6 +97,7 @@ void CAnimInstance::Render()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 void CAnimInstance::Stop(int Direction,int Action)
 {
+	PROFILE("CAnimInstance::Stop(int, int)");
 	string name = GetName(Direction,Action);
 
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
@@ -101,6 +107,7 @@ void CAnimInstance::Stop(int Direction,int Action)
 
 int CAnimInstance::GetFrameHeight(int Direction, int Action)
 {
+	PROFILE("CAnimInstance::GetFrameHeight(int, int)");
 	string name = GetName(Direction,Action);
 
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
@@ -110,6 +117,7 @@ int CAnimInstance::GetFrameHeight(int Direction, int Action)
 }
 bool CAnimInstance::IsPlaying(int Direction, int Action)
 {
+	PROFILE("CAnimInstance::IsPlaying(int, int)");
 	string name = GetName(Direction,Action);
 
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
@@ -120,6 +128,7 @@ bool CAnimInstance::IsPlaying(int Direction, int Action)
 
 int CAnimInstance::GetFrameWidth(int Direction, int Action)
 {
+	PROFILE("CAnimInstance::GetFrameWidth(int, int)");
 	string name = GetName(Direction,Action);
 
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
@@ -130,6 +139,7 @@ int CAnimInstance::GetFrameWidth(int Direction, int Action)
 
 RECT CAnimInstance::GetRenderRect(int Direction, int Action)
 {
+	PROFILE("CAnimInstance::GetRenderRect(int, int)");
 	string name = GetName(Direction,Action);
 	RECT r = {0,0,0,0};
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
@@ -150,6 +160,7 @@ RECT CAnimInstance::GetRenderRect(int Direction, int Action)
 
 int CAnimInstance::GetOffsetX(int Direction, int Action)
 {
+	PROFILE("CAnimInstance::GetOffsetX(int, int)");
 	string name = GetName(Direction,Action);
 
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
@@ -160,6 +171,7 @@ int CAnimInstance::GetOffsetX(int Direction, int Action)
 
 int CAnimInstance::GetOffsetY(int Direction, int Action)
 {
+	PROFILE("CAnimInstance::GetOffsetY(int, int)");
 	string name = GetName(Direction,Action);
 
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
@@ -170,6 +182,7 @@ int CAnimInstance::GetOffsetY(int Direction, int Action)
 
 void CAnimInstance::SetLooping(bool value)
 {
+	PROFILE("CAnimInstance::SetLooping(bool)");
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size(); i++)
 	{
 		string name = m_szAction + "_" + m_szDirection;
@@ -182,6 +195,7 @@ void CAnimInstance::SetLooping(bool value)
 }
 void CAnimInstance::StopAllAnimations()
 {
+	PROFILE("CAnimInstance::StopAllAnimations()");
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size(); i++)
 	{
 		m_Sheet.GetAnimations()[i].Stop();
@@ -190,6 +204,7 @@ void CAnimInstance::StopAllAnimations()
 
 void CAnimInstance::SetPlayer(bool value)
 {
+	PROFILE("CAnimInstance::SetPlayer(bool)");
 	m_bisPlayer = value;
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size(); i++)
 	{
@@ -204,6 +219,7 @@ void CAnimInstance::SetPlayer(bool value)
 
 string CAnimInstance::GetName(int Direction, int Action)
 {
+	PROFILE("CAnimInstance::GetName(int, int)");
 	switch(Action)
 	{
 	case 0:

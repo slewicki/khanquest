@@ -11,6 +11,7 @@
 #include "CTileEngine.h"
 #include "CTile.h"
 #include <list>
+#include "CProfile.h"
 using std::list;
  
 //names of tiles

@@ -11,6 +11,7 @@
 
 CBase::CBase(void)
 {
+	PROFILE("CBase::CBase()");
 	m_unRefCount = 1;	//	Always start with a reference to yourself
 	SetPosX( 0.0f );
 	SetPosY( 0.0f );
@@ -21,6 +22,7 @@ CBase::CBase(void)
 
 bool CBase::CheckCollisions(CBase* pBase)
 {
+	PROFILE("CBase::CheckCollisions(CBase*)");
 	return false;
 }
 
@@ -36,5 +38,6 @@ void CBase::Update(float fElapsedTime)
 
 void CBase::Render(float fElapsedTime)
 {
+	PROFILE("CBase::Render(float)");
 	CSGD_TextureManager* pTM = CSGD_TextureManager::GetInstance();
 }
