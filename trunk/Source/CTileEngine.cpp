@@ -8,9 +8,11 @@
 #include "CTileEngine.h"
 #include "CUnit.h"
 #include "CCamera.h"
+#include "CProfile.h"
 
 CTileEngine::CTileEngine()
 {
+	PROFILE("CTileEngine::CTileEngine()");
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pD3D = CSGD_Direct3D::GetInstance();
 	m_nImageID = -1;
@@ -25,18 +27,21 @@ CTileEngine::CTileEngine()
 
 CTileEngine::~CTileEngine()
 {
+	PROFILE("CTileEngine::~CTileEngine()");
 	//m_pTM->ReleaseTexture(m_nBlankTileID);
 	Clear();
 }
 
 CTileEngine* CTileEngine::GetInstance()
 {
+	PROFILE("CTileEngine::GetInstance()");
 	static CTileEngine Instance;
 	return &Instance;
 }
 
 void CTileEngine::LoadFile(char* szFileName)
 {
+	PROFILE("CTileEngine::LoadFile(char*)");
 	ifstream fin;
 	int nStringSize = 0;
 	char* szBuffer = NULL;
@@ -160,6 +165,7 @@ void CTileEngine::LoadFile(char* szFileName)
 
 void CTileEngine::Render(RECT nCamPos)
 {
+	PROFILE("CTileEngine::Render(RECT)");
 	for ( int nLayer = 0; nLayer < m_nLayer; nLayer++)
 	{
 		for (int Col = 0; Col < m_nMapHeight; Col++)
@@ -177,7 +183,7 @@ void CTileEngine::Render(RECT nCamPos)
 				//if( (nCamPosX > pTileArray[Row][Col].ptLocalAnchor.x || nCamPosX < pTileArray[Row][Col].ptLocalAnchor.x) && (nCamPosY > pTileArray[Row][Col].ptLocalAnchor.y || nCamPosY < pTileArray[Row][Col].ptLocalAnchor.y))
 				if(pTileArray[0][Row][Col].bIsVisible == true)
 				{
-					if(nCamPos.left < pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.right > pTileArray[nLayer][Row][Col].ptLocalAnchor.x && nCamPos.top < pTileArray[nLayer][Row][Col].ptLocalAnchor.y && nCamPos.bottom > pTileArray[nLayer][Row][Col].ptLocalAnchor.y)
+					if(nCamPos.left < pTileArray[nLayer][Row][Col].ptLocalAnchor.x + 32 && nCamPos.right > pTileArray[nLayer][Row][Col].ptLocalAnchor.x - 32 && nCamPos.top < pTileArray[nLayer][Row][Col].ptLocalAnchor.y  + 16 && nCamPos.bottom > pTileArray[nLayer][Row][Col].ptLocalAnchor.y - 16)
 					{
 						//Temp
 						//-------------------------
@@ -200,6 +206,7 @@ void CTileEngine::Render(RECT nCamPos)
 
 void CTileEngine::RenderMiniMap(RECT nCamPos)
 {
+	PROFILE("CTileEngine::RenderMiniMap(RECT)");
 	float fPercentX, fPercentY;
 	fPercentX = 266.f/(m_nMapWidth*62); 
 	fPercentY = 135.f/(m_nMapHeight*32); 
@@ -243,13 +250,15 @@ void CTileEngine::RenderMiniMap(RECT nCamPos)
 	rCamera.right	=	rCamera.left+(int)(800*fPercentX);
 	rCamera.top		=	(int)(y*fPercentY)+(528 - (int)(300*fPercentY));
 	rCamera.bottom	=	rCamera.top+(int)(455*fPercentY);
-	CSGD_Direct3D::GetInstance()->DeviceEnd();
 	CSGD_Direct3D::GetInstance()->SpriteEnd();
+	CSGD_Direct3D::GetInstance()->LineEnd();
+	CSGD_Direct3D::GetInstance()->DeviceEnd();
 	
 	CSGD_Direct3D::GetInstance()->DrawPrimitiveRect(rCamera, D3DCOLOR_ARGB(255, 255, 255, 255));
 	
 	
 	CSGD_Direct3D::GetInstance()->DeviceBegin();
+	CSGD_Direct3D::GetInstance()->LineBegin();
 	CSGD_Direct3D::GetInstance()->SpriteBegin();
 
 	
@@ -257,6 +266,7 @@ void CTileEngine::RenderMiniMap(RECT nCamPos)
 
 void CTileEngine::SetLocalAnchor()
 {
+	PROFILE("CTileEngine::SetLocalAnchor()");
 	for ( int nLayer = 0; nLayer < m_nLayer; nLayer++)
 	{
 		for (int Col = 0; Col < m_nMapHeight; Col++)
@@ -272,6 +282,7 @@ void CTileEngine::SetLocalAnchor()
 
 POINT CTileEngine::IsoMouse(int x, int y, int z)
 {
+	PROFILE("CTileEngine::IsoMouse(int, int, int)");
 	POINT newPoint;
 
 	newPoint.y = (m_nTileWidth * y + m_nTileHeight * x) / (m_nTileHeight * m_nTileWidth) - 10;
@@ -290,6 +301,7 @@ POINT CTileEngine::IsoMouse(int x, int y, int z)
 }
 POINT CTileEngine::IsoMiniMouse(int nLocalX, int nLocalY, int z)
 {
+	PROFILE("CTileEngine::IsoMiniMouse(int, int, int)");
 	nLocalX -= 512;
 	nLocalY -= 530;
 	float fPercentX, fPercentY;
@@ -328,6 +340,7 @@ POINT CTileEngine::IsoMiniMouse(int nLocalX, int nLocalY, int z)
 
 void CTileEngine::Clear()
 {
+	PROFILE("CTileEngine::Clear()");
 	/*for (int nDelCount = 0; nDelCount < m_nMapWidth; nDelCount++)
 		delete pTileArray[nDelCount];*/
 
@@ -346,6 +359,7 @@ void CTileEngine::Clear()
 
 void CTileEngine::SetOccupy(int x, int y, bool bOccupy, CUnit* Unit)
 {
+	PROFILE("CTileEngine::SetOccupy(int, int, bool, CUnit*)");
 	for(int i = 0; i < m_nLayer; i++)
 	{
 		pTileArray[i][x][y].bIsOccupied = bOccupy;
@@ -355,6 +369,7 @@ void CTileEngine::SetOccupy(int x, int y, bool bOccupy, CUnit* Unit)
 
 void CTileEngine::SetVisible(int x, int y, bool Visible, CUnit* Unit)
 {
+	PROFILE("CTileEngine::SetVisible(int, int, bool, CUnit*)");
 	for(int i = 0; i < m_nLayer; i++)
 	{
 		pTileArray[i][x][y].bIsVisible = true;
@@ -387,6 +402,7 @@ void CTileEngine::SetVisible(int x, int y, bool Visible, CUnit* Unit)
 
 void CTileEngine::ParalaxScroll(bool bIsScrollable, RECT rCamPos)
 {
+	PROFILE("CTileEngine::ParalaxScroll(bool, RECT)");
 	if(!bIsScrollable)
 		return;
 
@@ -405,6 +421,7 @@ void CTileEngine::ParalaxScroll(bool bIsScrollable, RECT rCamPos)
 
 CTile* CTileEngine::MapToTile(int Layer, int x, int y)
 {
+	PROFILE("CTileEngine::MapToTile(int, int, int)");
 	POINT ptNewPoint;
 	ptNewPoint = IsoMouse(x, y, 0);
 
@@ -413,6 +430,7 @@ CTile* CTileEngine::MapToTile(int Layer, int x, int y)
 
 void CTileEngine::SetColor(int Layer, int x, int y, int nRed, int nGreen, int nBlue)
 {
+	PROFILE("CTileEngine::SetColor(int, int, int, int, int, int)");
 	pTileArray[Layer][x][y].vColor.a = 255;
 	pTileArray[Layer][x][y].vColor.r = (float)nRed;
 	pTileArray[Layer][x][y].vColor.g = (float)nGreen;
