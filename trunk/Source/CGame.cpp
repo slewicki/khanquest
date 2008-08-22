@@ -958,6 +958,7 @@ void CGame::LoseLastCity()
 void CGame::AddWins()
 {
 	PROFILE("CGame::AddWins()");
+	SetCityConquered(m_pSelectedCity);
 	++m_nWins;
 	if(m_nLoses > 0)
 		--m_nLoses;
