@@ -61,41 +61,46 @@ void CGamePlayState::Enter(void)
 	// Register any Events with the GamePlayState
 	switch(m_pCG->GetSelectedCity()->GetID())
 	{
-	case PCITY:
-		break;
 	case KCITY1:
-		
+		Map->LoadFile("Resource/Levels/KQ_KWACity1.level");
 		break;
 	case KCITY2:
-		
+		Map->LoadFile("Resource/Levels/KQ_KWACity2.level");
 		break;
 	case KCITY3:
-		
+		Map->LoadFile("Resource/Levels/KQ_KWACity3.level");
+
 		break;
 	case XCITY1:
-		
+		Map->LoadFile("Resource/Levels/KQ_XIACity1.level");
+
 		break;
 	case XCITY2:
-		
+		Map->LoadFile("Resource/Levels/KQ_XIACity2.level");
+
 		break;
 	case XCITY3:
-		
+		Map->LoadFile("Resource/Levels/KQ_XIACity3.level");
+
 		break;
 	case JCITY1:
-		
+		Map->LoadFile("Resource/Levels/KQ_JinCity1.level");
+
 		break;
 	case JCITY2:
-		
+		Map->LoadFile("Resource/Levels/KQ_JinCity2.level");
+
 		break;
 	case JCITY3:
+		Map->LoadFile("Resource/Levels/KQ_JinCity3.level");
 
 		break;
 	default:
+		Map->LoadFile("Resource/Levels/KQ_Level4.level");
 		// Bad news bears.
 		
 		break;
 	}
-	Map->LoadFile("Resource/Levels/KQ_Jin1.level");
 
 	m_pOM->UpdatePlayerUnitStartTile();
 
