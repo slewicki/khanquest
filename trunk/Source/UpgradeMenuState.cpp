@@ -681,8 +681,8 @@ void CUpgradeMenuState::Render(float fElapsedTime)
 		}
 	}	
 	m_cFont.DrawTextA("Speed Cost: "+IntToString(SPEED),50,475,.15f,.15f,D3DCOLOR_ARGB(255,255,0,0));
-	m_cFont.DrawTextA("Attack Speed Cost: "+IntToString(ATTACKSPEED),50,500,.15,.15,D3DCOLOR_ARGB(255,255,0,0));
-	m_cFont.DrawTextA("Attack Power Cost: "+IntToString(ATTACK),50,525,.15,.15,D3DCOLOR_ARGB(255,255,0,0));
+	m_cFont.DrawTextA("Attack Speed Cost: "+IntToString(ATTACKSPEED),50,500,.15f,.15f,D3DCOLOR_ARGB(255,255,0,0));
+	m_cFont.DrawTextA("Attack Power Cost: "+IntToString(ATTACK),50,525,.15f,.15f,D3DCOLOR_ARGB(255,255,0,0));
 
 
 	m_cFont.DrawTextA("Gold: " + IntToString(m_nGoldTotal), 50, 550, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));

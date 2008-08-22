@@ -25,7 +25,6 @@
 #include "CBitmapFont.h"
 //Pixel Shader Testing
 #include "CPixelShader.h"
-#include "CProfile.h"
 
 using std::string;
 #define TOTAL_CITIES 10

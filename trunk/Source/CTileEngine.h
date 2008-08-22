@@ -44,7 +44,7 @@ private:
 	int m_nScrollX;					//Scroll by X value
 	int m_nScrollY;					//Scroll by Y value
 	int m_nBlankTileID;					//Scroll by Y value
-
+	float m_fPercentX, m_fPercentY;
 
 public:
 	CTileEngine();
