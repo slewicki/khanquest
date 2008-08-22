@@ -10,7 +10,7 @@
 #include "CSGD_TextureManager.h"
 #include "CBitmapFont.h"
 #include "CSGD_DirectInput.h"
-
+#include "CGame.h"
 class CUnit;
 
 class CHUDState : public IGameState
@@ -24,6 +24,7 @@ class CHUDState : public IGameState
 	POINT				 m_ptMousePos;
 	vector<CUnit*>		 m_vUnits;
 	float				m_fUpdateTimer;
+	CGame*				m_pCG;
 
 	int m_nInfantry;
 	int m_nCavalry;

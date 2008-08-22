@@ -8,12 +8,12 @@
 
 #include "CGamePlayState.h"
 #include "ObjectManager.h"
-#include "CGame.h"
 #include "CWorldMapState.h"
 #include "CPausedState.h"
 #include "HUDState.h"
 #include "CFactory.h"
 #include "KeyBindState.h"
+#include "CGame.h"
 
 CGamePlayState::CGamePlayState(void)
 {
@@ -53,12 +53,13 @@ void CGamePlayState::Enter(void)
 	//m_pES->RegisterClient("Remove", ObjectManager::GetInstance());
 	m_pCamera = CCamera::GetInstance();
 	m_pCamera->InitCamera(0.f,0.f);
+	m_pCG = CGame::GetInstance();
 
 	m_pPE = CParticleEngine::GetInstance();
 //	m_nTestEmitter = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_DustCload.dat", 128, 128);
 
 	// Register any Events with the GamePlayState
-	switch(CGame::GetInstance()->GetSelectedCity()->GetID())
+	switch(m_pCG->GetSelectedCity()->GetID())
 	{
 	case PCITY:
 		break;
@@ -153,7 +154,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 		{
 			m_bIsPaused = true;
 			if(m_bIsPaused)
-				CGame::GetInstance()->PushState(CPausedState::GetInstance());
+				m_pCG->PushState(CPausedState::GetInstance());
 		}
 		m_pHUD->Input(fElapsedTime);
 
@@ -253,11 +254,11 @@ bool CGamePlayState::Input(float fElapsedTime)
 		}
 		/*if(m_pDI->GetBufferedKey(DIK_F8))
 		{
-			CGame::GetInstance()->AddWins();
-			CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
+			m_pCG->AddWins();
+			m_pCG->ChangeState(CWorldMapState::GetInstance());
 		}*/
 
-		POINT ptMousePos = CGame::GetInstance()->GetMousePos(); 
+		POINT ptMousePos = m_pCG->GetMousePos(); 
 		if(ptMousePos.y <= 450 && ((ptMousePos.x > 0 && ptMousePos.x < 800) && (ptMousePos.y > 0 && ptMousePos.y < 600)))
 		{
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
@@ -285,7 +286,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 				}
 				else
 				{	
-					m_ptCurrentLocation = CGame::GetInstance()->GetMousePos();
+					m_ptCurrentLocation = m_pCG->GetMousePos();
 					m_rSelectionBox = GetSelectionRect();
 				}
 			}
@@ -310,16 +311,16 @@ bool CGamePlayState::Input(float fElapsedTime)
 				// Mouse Camera Movement
 
 				// Move camera Left
-				//if(CGame::GetInstance()->GetCursorPosition().x <= 5)
+				//if(m_pCG->GetCursorPosition().x <= 5)
 				//	m_pCamera->SetVelX(-100);
 				//// Move camera Right
-				//if(CGame::GetInstance()->GetCursorPosition().x >= 795)
+				//if(m_pCG->GetCursorPosition().x >= 795)
 				//	m_pCamera->SetVelX(100);
 				//// Move camera Down
-				//if(CGame::GetInstance()->GetCursorPosition().y >= 595 )
+				//if(m_pCG->GetCursorPosition().y >= 595 )
 				//	m_pCamera->SetVelY(100);
 				//// Move camera Up
-				//if(CGame::GetInstance()->GetCursorPosition().y <= 5)
+				//if(m_pCG->GetCursorPosition().y <= 5)
 				//	m_pCamera->SetVelY(-100); 
 
 				// Keyboard Camera Movement
@@ -375,7 +376,7 @@ void CGamePlayState::Render(float fElapsedTime)
 	else if( m_pDI->GetBufferedKey(DIK_3))
 		Map->LoadFile("Resource/Levels/KQ_Tech_Demo1.level");*/
 
-	POINT MapLoc = m_pCamera->TransformToGlobal(CGame::GetInstance()->GetCursorPosition().x, CGame::GetInstance()->GetCursorPosition().y);
+	POINT MapLoc = m_pCamera->TransformToGlobal(m_pCG->GetCursorPosition().x, m_pCG->GetCursorPosition().y);
 
 	Map->Render(m_pCamera->GetScreenArea());
 
@@ -396,7 +397,7 @@ void CGamePlayState::Render(float fElapsedTime)
 		else
 			sprintf_s(buffer3, 32, "PlayerSpawn: False");
 		
-		POINT miniTileLoc = Map->IsoMiniMouse(CGame::GetInstance()->GetCursorPosition().x, CGame::GetInstance()->GetCursorPosition().y, 0);
+		POINT miniTileLoc = Map->IsoMiniMouse(m_pCG->GetCursorPosition().x, m_pCG->GetCursorPosition().y, 0);
 
 		sprintf_s(buffer4, 32, "Local Anchor: %i, %i", Map->GetTile(0,TileLoc.x, TileLoc.y)->ptLocalAnchor.x, Map->GetTile(0,TileLoc.x, TileLoc.y)->ptLocalAnchor.y);
 		sprintf_s(buffer5, 32, "Global Anchor: %i, %i", MapLoc.x, MapLoc.y);
@@ -451,7 +452,7 @@ void CGamePlayState::Render(float fElapsedTime)
 	m_pD3D->SpriteBegin();
 	//---------------------------------------------
 	/*char buffer[128];
-	sprintf_s(buffer, 128, "%i, %i", CGame::GetInstance()->GetCursorPosition().x, CGame::GetInstance()->GetCursorPosition().y);
+	sprintf_s(buffer, 128, "%i, %i", m_pCG->GetCursorPosition().x, m_pCG->GetCursorPosition().y);
 	m_cFont.DrawTextA(buffer, 0, 0);*/
 
 }

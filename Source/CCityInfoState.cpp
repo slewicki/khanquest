@@ -9,7 +9,7 @@
 #include "CCityInfoState.h"
 #include "CWorldMapState.h"
 #include "CUnitCreationState.h"
-#include "CGame.h"
+
 
 
 CCityInfoState::CCityInfoState(void)
@@ -18,6 +18,7 @@ CCityInfoState::CCityInfoState(void)
 	m_pSelectedCity = NULL;
 	m_bRetract = false;
 	m_bClickInvade = false;
+	m_pCG = m_pCG;
 }
 
 
@@ -37,7 +38,7 @@ void CCityInfoState::Enter(void)
 	m_pWM = CSGD_WaveManager::GetInstance();
 	m_pDI = CSGD_DirectInput::GetInstance();
 	m_nClick = m_pWM->LoadWave("Resource/KQ_Click.wav");
-	m_pWM->SetVolume(m_nClick, CGame::GetInstance()->GetSFXVolume());
+	m_pWM->SetVolume(m_nClick, m_pCG->GetSFXVolume());
 	// Invade Button Rectangle
 	m_rInvade.left = 357;
 	m_rInvade.top = 470;
@@ -51,7 +52,7 @@ void CCityInfoState::Enter(void)
 	m_rCancel.right = 700;
 	m_rCancel.bottom = 530;
 
-	m_pSelectedCity = CGame::GetInstance()->GetSelectedCity();
+	m_pSelectedCity = m_pCG->GetSelectedCity();
 
 	m_fPositionX = 800.f;
 	// Register any Events with the CCityInfoState
@@ -78,13 +79,13 @@ void CCityInfoState::Enter(void)
 		break;
 	default:
 		// We got a problem here
-		CGame::GetInstance()->PopCurrentState();
+		m_pCG->PopCurrentState();
 	}
 	m_nButtonID = m_pTM->LoadTexture("Resource/KQ_ScrollButton.png");
 	m_nFontID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_cFont.InitBitmapFont(m_nFontID, ' ', 16, 128, 128);
 
-	CGame::GetInstance()->SetSongPlay(CITYSELECT);	
+	m_pCG->SetSongPlay(CITYSELECT);	
 }
 
 void CCityInfoState::Exit(void)
@@ -185,24 +186,24 @@ bool CCityInfoState::Input(float fElapsedTime)
 
 	if(m_fPositionX <= 270.f && !m_bRetract)
 	{
-		if(CGame::GetInstance()->IsMouseInRect(m_rInvade))
+		if(m_pCG->IsMouseInRect(m_rInvade))
 		{
-			CGame::GetInstance()->SetCursorClick();
+			m_pCG->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2))
 			{
 				m_pWM->Play(m_nClick);
 				// This function is used only if the city is conquered after battle
 				//--------------------
-				//CGame::GetInstance()->SetCityConquered(m_pSelectedCity);
+				//m_pCG->SetCityConquered(m_pSelectedCity);
 				//--------------------
 				m_bRetract = true;
 				m_bClickInvade = true;
 				
 			}
 		}
-		else if(CGame::GetInstance()->IsMouseInRect(m_rCancel))
+		else if(m_pCG->IsMouseInRect(m_rCancel))
 		{
-			CGame::GetInstance()->SetCursorClick();
+			m_pCG->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_Y))
 			{
 				m_pWM->Play(m_nClick);
@@ -210,7 +211,7 @@ bool CCityInfoState::Input(float fElapsedTime)
 				m_bRetract = true;
 				// This function is used only if the player lost 2 battles
 				//--------------------
-				//CGame::GetInstance()->LoseLastCity();
+				//m_pCG->LoseLastCity();
 				//--------------------
 			}
 		}
@@ -228,9 +229,9 @@ void CCityInfoState::Update(float fElapsedTime)
 		if(m_fPositionX > 805)
 		{
 			if(m_bClickInvade)
-				CGame::GetInstance()->ChangeState(CUnitCreationState::GetInstance());
+				m_pCG->ChangeState(CUnitCreationState::GetInstance());
 			else
-				CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
+				m_pCG->ChangeState(CWorldMapState::GetInstance());
 		}
 	}
 	else if(m_fPositionX >= 270)
@@ -252,7 +253,7 @@ void CCityInfoState::Render(float fElapsedTime)
 	char szG[10];
 	char szF[10];
 	itoa(m_pSelectedCity->GetGoldTribute(), szG, 10);
-	itoa(CGame::GetInstance()->GetNextFoodTribute(), szF, 10);
+	itoa(m_pCG->GetNextFoodTribute(), szF, 10);
 
 	// Print Food and Gold values gained from conquering this city
 	string szFood = "Food Tribute:  ";
