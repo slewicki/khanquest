@@ -23,6 +23,7 @@ class CHUDState : public IGameState
 	float				 m_fJoyTimer;
 	POINT				 m_ptMousePos;
 	vector<CUnit*>		 m_vUnits;
+	float				m_fUpdateTimer;
 
 	int m_nInfantry;
 	int m_nCavalry;

@@ -21,6 +21,7 @@ void CHUDState::Enter(void)
 	m_nIconID = m_pTM->LoadTexture("Resource/KQ_UnitIcons.png");
 	m_nInfantry = m_nCavalry = m_nCavalryArcher = m_nAxmen = m_nArcher = m_nWarElephant = 0;
 	m_nMiniMapBkgID = m_pTM->LoadTexture("Resource/KQ_MiniMapBack.png");
+	m_fUpdateTimer = 1.f;
 	
 }
 
@@ -170,8 +171,14 @@ void CHUDState::Render(float fElapsedTime)
 {
 	m_pTM->Draw(m_nMiniMapBkgID, 0, 0);
 	m_pTM->Draw(m_nHUDID,0,0);
+	m_fUpdateTimer+=fElapsedTime;
+	// about 60 FPS
+	if(m_fUpdateTimer > .002)
+	{
+		CTileEngine::GetInstance()->RenderMiniMap(CCamera::GetInstance()->GetScreenArea());
+		m_fUpdateTimer = 0.f;
+	}
 	
-	CTileEngine::GetInstance()->RenderMiniMap(CCamera::GetInstance()->GetScreenArea());
 	
 	RECT InfIcon;
 	InfIcon.top = 0; InfIcon.left = 200; InfIcon.right = 250; InfIcon.bottom = 50;

@@ -159,7 +159,9 @@ void CTileEngine::LoadFile(char* szFileName)
 		}
 
 		fin.close();
-
+		
+		m_fPercentX = 266.f/(m_nMapWidth*62); 
+		m_fPercentY = 135.f/(m_nMapHeight*32);
 		SetLocalAnchor();
 }
 
@@ -207,9 +209,7 @@ void CTileEngine::Render(RECT nCamPos)
 void CTileEngine::RenderMiniMap(RECT nCamPos)
 {
 	PROFILE("CTileEngine::RenderMiniMap(RECT)");
-	float fPercentX, fPercentY;
-	fPercentX = 266.f/(m_nMapWidth*62); 
-	fPercentY = 135.f/(m_nMapHeight*32); 
+	 
 	for ( int nLayer = 0; nLayer < 1; nLayer++)
 	{
 		for (int Col = 0; Col < m_nMapHeight; Col++)
@@ -222,23 +222,23 @@ void CTileEngine::RenderMiniMap(RECT nCamPos)
 				rTile.right = rTile.left + m_nTileWidth;
 				rTile.bottom = rTile.top + m_nTileHeight;
 
-				POINT ptTilePos = { (int)(((Row * (m_nTileWidth*fPercentX) / 2)) + (Col * (m_nTileWidth*fPercentX) / 2))+510, (int)(((Row * -((m_nTileHeight*fPercentY) / 2)) + (Col * (m_nTileHeight*fPercentY) / 2)))+ 528 };
+				POINT ptTilePos = { (int)(((Row * (m_nTileWidth*m_fPercentX) / 2)) + (Col * (m_nTileWidth*m_fPercentX) / 2))+510, (int)(((Row * -((m_nTileHeight*m_fPercentY) / 2)) + (Col * (m_nTileHeight*m_fPercentY) / 2)))+ 528 };
 				//m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, fPercentX, fPercentY, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 122, 122, 122)); 
 				
 				//if( (nCamPosX > pTileArray[Row][Col].ptLocalAnchor.x || nCamPosX < pTileArray[Row][Col].ptLocalAnchor.x) && (nCamPosY > pTileArray[Row][Col].ptLocalAnchor.y || nCamPosY < pTileArray[Row][Col].ptLocalAnchor.y))
 				if(pTileArray[0][Row][Col].bIsVisible == true)
 				{
 					if(pTileArray[0][Row][Col].bIsOccupied && pTileArray[0][Row][Col].pUnit && pTileArray[0][Row][Col].pUnit->IsPlayerUnit())
-						m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, fPercentX, fPercentY, 0, 0, 0, 0, D3DCOLOR_ARGB(255, 0, 255, 0)); 
+						m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, m_fPercentX, m_fPercentY, 0, 0, 0, 0, D3DCOLOR_ARGB(255, 0, 255, 0)); 
 
 					else if(pTileArray[0][Row][Col].bIsOccupied && pTileArray[0][Row][Col].pUnit && !pTileArray[0][Row][Col].pUnit->IsPlayerUnit())
-						m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, fPercentX, fPercentY, 0, 0, 0, 0, D3DCOLOR_ARGB(255, 255, 0, 0)); 
+						m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, m_fPercentX, m_fPercentY, 0, 0, 0, 0, D3DCOLOR_ARGB(255, 255, 0, 0)); 
 					else 
-						m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, fPercentX, fPercentY, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 255, 255, 255)); 
+						m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, m_fPercentX, m_fPercentY, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 255, 255, 255)); 
 					
 				}
 				else
-					m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, fPercentX, fPercentY, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 0, 0, 0)); 
+					m_pTM->Draw(m_nBlankTileID, ptTilePos.x, ptTilePos.y, m_fPercentX, m_fPercentY, &rTile, 0, 0, 0, D3DCOLOR_ARGB(255, 0, 0, 0)); 
 
 			}
 		}
@@ -246,10 +246,10 @@ void CTileEngine::RenderMiniMap(RECT nCamPos)
 	RECT rCamera;
 	int x = (int)CCamera::GetInstance()->GetPosX();
 	int y = (int)CCamera::GetInstance()->GetPosY();
-	rCamera.left	=	(int)(x*fPercentX)+510;
-	rCamera.right	=	rCamera.left+(int)(800*fPercentX);
-	rCamera.top		=	(int)(y*fPercentY)+(528 - (int)(300*fPercentY));
-	rCamera.bottom	=	rCamera.top+(int)(455*fPercentY);
+	rCamera.left	=	(int)(x*m_fPercentX)+510;
+	rCamera.right	=	rCamera.left+(int)(800*m_fPercentX);
+	rCamera.top		=	(int)(y*m_fPercentY)+(528 - (int)(300*m_fPercentY));
+	rCamera.bottom	=	rCamera.top+(int)(455*m_fPercentY);
 	CSGD_Direct3D::GetInstance()->SpriteEnd();
 	CSGD_Direct3D::GetInstance()->LineEnd();
 	CSGD_Direct3D::GetInstance()->DeviceEnd();
