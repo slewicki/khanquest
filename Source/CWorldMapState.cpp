@@ -14,10 +14,12 @@
 #include "MainMenuState.h"
 // Temporary
 #include "CSGD_Direct3d.h"
+#include "CProfile.h"
 
 
 CWorldMapState::CWorldMapState(void)
 {
+	PROFILE("CWorldMapState::CWorldMapState()");
 	m_dwSelectedColor = D3DCOLOR_ARGB(100, 255, 255, 255);
 	m_pSelectedCity = NULL;
 	m_nTitleID = -1;
@@ -49,6 +51,7 @@ CWorldMapState::~CWorldMapState(void)
 
 void CWorldMapState::Enter(void)
 {
+	PROFILE("CWorldMapState::Enter()");
 	// Get Our Managers Ready
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pWM = CSGD_WaveManager::GetInstance();
@@ -92,6 +95,7 @@ void CWorldMapState::Enter(void)
 
 void CWorldMapState::Exit(void)
 {
+	PROFILE("CWorldMapState::Exit()");
 	if(m_pWM->IsWavePlaying(m_nClick))
 		m_pWM->Stop(m_nClick);
 
@@ -105,6 +109,7 @@ void CWorldMapState::Exit(void)
 
 bool CWorldMapState::Input(float fElapsedTime)
 {
+	PROFILE("CWorldMapState::Input(float)");
 	// Only get input if we aren't paused
 	if(m_bPaused)
 		return true;
@@ -270,6 +275,7 @@ bool CWorldMapState::Input(float fElapsedTime)
 
 void CWorldMapState::Update(float fElapsedTime)
 {
+	PROFILE("CWorldMapState::Update(float)");
 	if(m_bPaused)
 		return;
 	this->m_ptMousePos = CGame::GetInstance()->GetCursorPosition();
@@ -277,6 +283,7 @@ void CWorldMapState::Update(float fElapsedTime)
 
 void CWorldMapState::Render(float fElapsedTime)
 {
+	PROFILE("CWorldMapState::Render(float)");
 	m_pTM->Draw(m_nWorldMapID, 0, 0);
 	POINT ptAttackSymbol;
 
@@ -330,6 +337,7 @@ void CWorldMapState::Render(float fElapsedTime)
 }
 string CWorldMapState::IntToString(int nNum)
 {
+	PROFILE("CWorldMapState::IntToString(int)");
 	char szNumVal[10];
 	itoa(nNum, szNumVal, 10);
 	string szNum = szNumVal;

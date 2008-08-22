@@ -16,6 +16,7 @@
 
 CLoadGameState::CLoadGameState(void)
 {
+	PROFILE("CLoadGameState::CLoadGameState()");
 	m_nButtonID = -1;
 	m_nChosenSlot = 0;
 
@@ -33,6 +34,7 @@ CLoadGameState::~CLoadGameState(void)
 
 void CLoadGameState::Enter(void)
 {
+	PROFILE("CLoadGameState::Enter()");
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pWM = CSGD_WaveManager::GetInstance();
 	m_pDI = CSGD_DirectInput::GetInstance();
@@ -86,6 +88,7 @@ void CLoadGameState::Enter(void)
 
 void CLoadGameState::Exit(void)
 {
+	PROFILE("CLoadGameState::Exit()");
 	if(m_pWM->IsWavePlaying(m_nClickID))
 		m_pWM->Stop(m_nClickID);
 	if(m_pWM->IsWavePlaying(m_nTickID))
@@ -104,6 +107,7 @@ void CLoadGameState::Exit(void)
 
 bool CLoadGameState::Input(float fElapsedTime)
 {
+PROFILE("CLoadGameState::Input(float)");
 		m_fJoyTimer = fElapsedTime;
 #pragma region Controller to Mouse
 	
