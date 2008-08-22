@@ -72,7 +72,7 @@ bool CMainMenuState::Input(float fElapsedTime)
 	if(m_bPaused)
 		return true;
 
-	if(m_fAttractTimer > 5000)
+	if(m_fAttractTimer > 50)
 	{
 		m_bPaused = true;
 		CGame::GetInstance()->PushState(CAttractMode::GetInstance());
@@ -133,7 +133,7 @@ bool CMainMenuState::Input(float fElapsedTime)
 		m_fAttractTimer = 0;
 	}
 
-	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
+	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER) || m_pDI->GetBufferedJoyButton(JOYSTICK_X) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2))
 	{
 		switch(Buttons[m_nCurrentButton].Action)
 		{

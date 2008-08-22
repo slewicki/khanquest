@@ -18,6 +18,7 @@
 #include "LoseGameState.h"
 #include "DirectShow.h"
 #include "CWorldMapState.h"
+#include "KeyBindState.h"
 using namespace std;
 
 CGame::CGame(void)
@@ -131,6 +132,8 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 		
 //	SetCursorNormal();
 	m_nCurrentSong = 0;
+	ParseOptions("Resource/KQ_Options.dat");
+
 	m_pAM = CAnimationManager::GetInstance();
 	m_pAM->BinParse("Resource/KQ_Infantry.dat", "Resource/KQ_Player_Infantry.png","Resource/Enemies/KQ_AI_Infantry.png");
 	m_pAM->BinParse("Resource/KQ_Axmen.dat", "Resource/KQ_Player_Axmen.png","Resource/Enemies/KQ_AI_Axmen.png");
@@ -1317,4 +1320,20 @@ string CGame::GetSaveName(int nSlot, bool bTitle)
 		return szName;
 	else
 		return szInfo;
+}
+void CGame::ParseOptions(char* szFileName)
+{
+	PROFILE("CGame::ParseOptions(char*)");
+	ifstream toRead;
+	toRead.open(szFileName,ios::in | ios::binary);
+	for( int i = 0; i < 4 ;++i)
+	{
+		DWORD temp;
+		toRead.read((char*)&temp,sizeof(temp));
+		CKeyBindState::GetInstance()->BindKey(temp,i);
+	}
+	toRead.read((char*)&m_bIsWindowed,sizeof(m_bIsWindowed));
+	toRead.read((char*)&m_bFPS,sizeof(m_bFPS));	
+	toRead.read((char*)&m_nMusicVolume,sizeof(m_nMusicVolume));
+	toRead.read((char*)&m_nSFXVolume,sizeof(m_nSFXVolume));
 }

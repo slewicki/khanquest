@@ -40,6 +40,8 @@ private:
 	bool									m_bClickInvade;
 	RECT									m_rInvade;
 	RECT									m_rCancel;
+	float									m_fJoyTimer;
+	POINT									m_ptMousePos;
 
 	////////////////////////////////////////////
 	//	Function:	"CCityInfoState(Constructor)"

@@ -72,6 +72,7 @@ class COptionsMenuState : public IGameState
 	////////////////////////////////////////////
 	~COptionsMenuState(void);
 
+	void SaveOptions();
 public:
 	//////////////////////////////////////////////////////
 	// Function: “GetInstance”

@@ -145,16 +145,97 @@ bool CGamePlayState::Input(float fElapsedTime)
 {
 	PROFILE("CGamePlayState::Input(float)");
 	
-	if(m_pDI->GetBufferedKey(DIK_ESCAPE))
-	{
-		m_bIsPaused = true;
-		if(m_bIsPaused)
-			CGame::GetInstance()->PushState(CPausedState::GetInstance());
-	}
 
 	if(!m_bIsPaused)
 	{
+		m_fJoyTimer += fElapsedTime;
+		if(m_pDI->GetBufferedKey(DIK_ESCAPE) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2))
+		{
+			m_bIsPaused = true;
+			if(m_bIsPaused)
+				CGame::GetInstance()->PushState(CPausedState::GetInstance());
+		}
 		m_pHUD->Input(fElapsedTime);
+
+#pragma region Controller to Mouse
+	
+	if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_UP))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y);
+			m_fJoyTimer = 0;
+		}
+	}
+
+
+#pragma endregion
+
+
 		if(m_pDI->GetBufferedKey(DIK_F1))
 		{
 			//Tile  = &Map->GetTile(4,4);
@@ -179,7 +260,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 		POINT ptMousePos = CGame::GetInstance()->GetMousePos(); 
 		if(ptMousePos.y <= 450 && ((ptMousePos.x > 0 && ptMousePos.x < 800) && (ptMousePos.y > 0 && ptMousePos.y < 600)))
 		{
-			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 			{
 				m_ptBoxLocation = ptMousePos;
 				m_ptCurrentLocation.x = m_ptBoxLocation.x + 1;
@@ -189,13 +270,13 @@ bool CGamePlayState::Input(float fElapsedTime)
 				// Only update when selected
 				CHUDState::GetInstance()->UpdateSelected();
 			}
-			else if(m_pDI->GetBufferedMouseButton(M_BUTTON_RIGHT))
+			else if(m_pDI->GetBufferedMouseButton(M_BUTTON_RIGHT) || m_pDI->GetBufferedJoyButton(JOYSTICK_A))
 			{
 				POINT globleMouse = m_pCamera->TransformToGlobal(ptMousePos.x, ptMousePos.y);
 				globleMouse = Map->IsoMouse(globleMouse.x, globleMouse.y, 0);
 				m_pOM->UpdatePlayerUnitDestTile(Map->GetTile(0,globleMouse.x, globleMouse.y));
 			}
-			else if(m_pDI->GetMouseButton(M_BUTTON_LEFT))
+			else if(m_pDI->GetMouseButton(M_BUTTON_LEFT) || m_pDI->GetJoystickButton(JOYSTICK_X))
 			{
 				if(!m_bButtonDown)
 				{
@@ -208,7 +289,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 					m_rSelectionBox = GetSelectionRect();
 				}
 			}
-			if(m_pDI->OnMouseButtonRelease(M_BUTTON_LEFT))
+			if(m_pDI->OnMouseButtonRelease(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_B))
 			{
 				m_pOM->SetSelectedUnit(m_rSelectionBox);
 				m_bButtonDown = false;

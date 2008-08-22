@@ -147,6 +147,7 @@ void CUnitCreationState::Enter(void)
 	CGame::GetInstance()->SetSongPlay(CITYSELECT);
 
 	m_bPaused = false;
+	m_fJoyTimer = 0;
 	
 }
 
@@ -181,13 +182,93 @@ bool CUnitCreationState::Input(float fElapsedTime)
 {
 	if(m_bPaused)
 		return true;
+
+	m_fJoyTimer = fElapsedTime;
+#pragma region Controller to Mouse
+	
+	if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_UP))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y);
+			m_fJoyTimer = 0;
+		}
+	}
+
+
+#pragma endregion
+
 	for (int i = 0; i < 6; i++)
 	{
 		if(CGame::GetInstance()->IsMouseInRect(m_rMinusButtons[i]))
 		{
 			// Change cursor to click icon
 			CGame::GetInstance()->SetCursorClick();
-			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 			{
 				if(m_nNumUnits[i]>0)
 				{
@@ -202,7 +283,7 @@ bool CUnitCreationState::Input(float fElapsedTime)
 		if(CGame::GetInstance()->IsMouseInRect(m_rPlusButtons[i]))
 		{
 			CGame::GetInstance()->SetCursorClick();
-			if(m_nFoodTotal > 0 && m_nTotalUnits < MAX_UNITS && m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+			if((m_nFoodTotal > 0 && m_nTotalUnits < MAX_UNITS && m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT)) || (m_nFoodTotal > 0 && m_nTotalUnits < MAX_UNITS && m_pDI->GetBufferedJoyButton(JOYSTICK_X)))
 			{
 				
 				if(m_nFoodTotal >= m_nUnitCosts[i])
@@ -220,7 +301,7 @@ bool CUnitCreationState::Input(float fElapsedTime)
 	if(m_nTotalUnits && CGame::GetInstance()->IsMouseInRect(m_rAttackButton))
 	{
 		CGame::GetInstance()->SetCursorClick();
-		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 		{
 			
 			if(m_nTotalUnits > 0)
@@ -239,7 +320,7 @@ bool CUnitCreationState::Input(float fElapsedTime)
 	if(m_nTotalUnits && CGame::GetInstance()->IsMouseInRect(m_rUpgradeButton))
 	{
 		CGame::GetInstance()->SetCursorClick();
-		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 		{
 			
 			if(m_nTotalUnits > 0)
@@ -259,7 +340,7 @@ bool CUnitCreationState::Input(float fElapsedTime)
 	if(CGame::GetInstance()->IsMouseInRect(m_rBackButton))
 	{
 		CGame::GetInstance()->SetCursorClick();
-		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 		{
 			m_pWM->Play(m_nClick);
 

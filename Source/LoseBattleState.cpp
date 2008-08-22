@@ -40,7 +40,7 @@ bool CLoseBattleState::Input(float fElapsedTime)
 	if(m_bEsc)
 		StartEsc();
 
-	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER))
+	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 	{	
 		m_bEsc = true;
 	}

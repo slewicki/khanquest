@@ -37,7 +37,8 @@ CWorldMapState::CWorldMapState(void)
 	m_clistCheatCode[2].push_back('o');
 	m_clistCheatCode[2].push_back('r');
 	m_clistCheatCode[2].push_back('d');
-
+	m_fJoyTimer = 0;
+	m_ptMousePos.x = m_ptMousePos.y = 0;
 }
 
 CWorldMapState::~CWorldMapState(void)
@@ -85,6 +86,7 @@ void CWorldMapState::Enter(void)
 	m_nClick = m_pWM->LoadWave("Resource/KQ_Click.wav");
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
 	CGame::GetInstance()->SetSongPlay(CITYSELECT);
+	m_fJoyTimer = 0;
 
 }
 
@@ -106,10 +108,88 @@ bool CWorldMapState::Input(float fElapsedTime)
 	// Only get input if we aren't paused
 	if(m_bPaused)
 		return true;
+	
+	m_fJoyTimer = fElapsedTime;
+#pragma region Controller to Mouse
+	
+	if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_UP))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y);
+			m_fJoyTimer = 0;
+		}
+	}
 
+
+#pragma endregion
 	// Exit game for now
 	//-----------------------------------------
-	if(m_pDI->GetBufferedKey(DIK_ESCAPE))
+	if(m_pDI->GetBufferedKey(DIK_ESCAPE) || m_pDI->GetJoystickButton(JOYSTICK_Y))
 		CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
 	//-----------------------------------------
 
@@ -141,7 +221,7 @@ bool CWorldMapState::Input(float fElapsedTime)
 	// Mouse Input
 	//-----------------------------------------
 
-	if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+	if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 	{
 		// Dont bother with main city (i = 0)
 		for (int i = 1; i < 10; i++)

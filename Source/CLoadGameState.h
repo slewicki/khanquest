@@ -35,7 +35,8 @@ private:
 	int										m_nScrollButtonID;
 	int										m_nClickID;
 	int										m_nTickID;
-
+	float									m_fJoyTimer;
+	POINT									m_ptMousePos;
 	
 	CBitmapFont								m_cFont;
 	
