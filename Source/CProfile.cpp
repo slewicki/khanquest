@@ -25,7 +25,9 @@ CProfile::CProfile()
 
 	//QueryPerformanceFrequency(&m_liFreq);
 	//QueryPerformanceCounter(&m_liStart);
-	m_nTimesCalled = 0;
+	m_nTimesCalled = 1;
+	m_bChanged = false;
+	Profile.clear();
 }
 
 CProfile::~CProfile()
@@ -53,29 +55,23 @@ CProfile* CProfile::GetInstance()
 	return & Instance;
 }
 
-void CProfile::Start(LPSTR token, LPSTR strFile, USHORT nLine)
+void CProfile::Start(LPSTR token)
 {
 	//Intialize members
 	//m_Token = token;	//Function name
-	m_usLine  = nLine;    //Current line
-	m_szFile  = strFile;	//Current source
+	//m_usLine  = nLine;    //Current line
+	//m_szFile  = strFile;	//Current source
 	//m_nTimesCalled = 0;
 	//LARGE_INTEGER m_liStart;
 	//LARGE_INTEGER m_liEnd;
-
-	if(m_szToken != token)
-	{
 		if(m_szToken != NULL)
 		{
 			Stop();
-			m_nTimesCalled = 0;
 		}
 
 		m_szToken = token;
 		QueryPerformanceFrequency(&m_liFreq);
 		QueryPerformanceCounter(&m_liStart);
-		m_nTimesCalled++;
-	}
 }
 
 void CProfile::Stop()
@@ -83,21 +79,86 @@ void CProfile::Stop()
 	QueryPerformanceCounter(&m_liEnd);
 	m_dTotal = (double)((m_liEnd.QuadPart - m_liStart.QuadPart) / m_liFreq.QuadPart);
 
-	for(int i = 0; i < m_nTimesCalled; i++)
-		m_dTotal += m_dTotal;
+	m_dAvg = 0;
 
-	m_fAvg = (float)m_dTotal / m_nTimesCalled;
 
-	LOGITEM logItem = {
+	if(Profile.empty())
+	{
+		LOGITEM TempProfile;
+		TempProfile.Time.push_back(m_dTotal);
+		TempProfile.Average = m_dAvg;
+		TempProfile.Function = m_szToken;
+		TempProfile.NumCalled = m_nTimesCalled;
+
+		Profile.push_back(TempProfile);
+	}
+	else
+	{
+		for(int i = 0; i < Profile.size(); i++)
+		{
+			if(m_szToken == Profile[i].Function)
+			{
+				Profile[i].Time.push_back(m_dTotal);
+				Profile[i].NumCalled++;
+				m_bChanged = true;
+			}
+		}
+		if(!m_bChanged)
+		{
+			LOGITEM TempProfile;
+			TempProfile.Time.push_back(m_dTotal);
+			TempProfile.Average = m_dAvg;
+			TempProfile.Function = m_szToken;
+			TempProfile.NumCalled = m_nTimesCalled;
+
+			Profile.push_back(TempProfile);
+		}
+	}
+
+	//if(m_dTotal < 1)
+	//	m_dTotal = 1;
+
+	//for(int i = 0; i < m_nTimesCalled; i++)
+		//m_dTotal += m_dTotal;
+
+	//m_fAvg = (float)m_dTotal / (m_nTimesCalled);
+
+	/*LOGITEM logItem = {
 		m_usLine,
 		m_dTotal,
 		m_szFile,			  
 		m_szToken,
-		m_fAvg};
+		m_fAvg};*/
 
-		fstream fout("Resource\\KQ_Profile.kqp", std::ios_base::out | std::ios_base::app);
+		/*fstream fout("Resource\\KQ_Profile.kqp", std::ios_base::out | std::ios_base::app);
 		fout.write(logItem.Function, strlen(logItem.Function) + 1) << '\n';
 		fout << logItem.Time << '\n';
-		fout << logItem.Average << '\n';
-		fout.close();
+		fout << logItem.Average << '\n' << '\n';
+		fout.close();*/
+
+	m_bChanged = false;
+}
+
+void CProfile::Process()
+{
+	fstream fout("Resource\\KQ_Profile.kqp", std::ios_base::out | std::ios_base::app);
+
+	for(int i = 0; i < Profile.size(); i++)
+	{
+		fout.write(Profile[i].Function, strlen(Profile[i].Function) + 1) << '\n';
+
+		for(int j = 0; j < Profile[i].Time.size(); j++)
+		{
+			//fout << Profile[i].Time[j] << ", ";
+
+			Profile[i].Average += Profile[i].Time[j];
+			//fout << Profile[i].Average << '\n';
+		}
+
+		fout << Profile[i].Average << '\n';
+		Profile[i].Average /= Profile[i].Time.size();
+		fout << Profile[i].Average << '\n' << '\n';
+	}
+
+	fout.close();
 }

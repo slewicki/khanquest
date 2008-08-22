@@ -10,19 +10,21 @@
 //////////////////////////////////////////////////////////
 #include <windows.h>
 #include <fstream>
+#include <vector>
+
+using std::vector;
 
 using std::fstream;
 
 //log file item struct
 struct LOGITEM {
-	USHORT Line;		//Line number in source file
-	double Time;		//NULL for function start
-	LPSTR  Source;		//Source file path and name
+	//USHORT Line;		//Line number in source file
+	vector<double> Time;		//NULL for function start
+	//LPSTR  Source;		//Source file path and name
 	LPSTR  Function;	//Function that was profiled
-	float  Average;
+	double  Average;
+	int NumCalled;
 };
-
-static char THIS_FILE[] = __FILE__;
 
 //Profiler class
 //QueryPerformanceFrequency();
@@ -35,14 +37,17 @@ private:
 
 	//Location information
 	LPSTR		 m_szToken;
-	LPSTR		 m_szFile;
-	USHORT		 m_usLine;
+	//LPSTR		 m_szFile;
+	//USHORT		 m_usLine;
 	LARGE_INTEGER m_liFreq;
 	LARGE_INTEGER m_liStart;
 	LARGE_INTEGER m_liEnd;
 	double m_dTotal;
-	float m_fAvg;
+	double m_dAvg;
 	int m_nTimesCalled;
+	vector<LOGITEM> Profile;
+	bool m_bChanged;
+
 
 public:
 	//Constructor
@@ -53,15 +58,16 @@ public:
 	~CProfile();
 
 	static CProfile* GetInstance();
-	void Start(LPSTR token, LPSTR strFile, USHORT nLine);
+	void Start(LPSTR token);
 	void Stop();
+	void Process();
 };
 
 //CProfile useage requires only single declartion at beginning of function
 
 #if _DEBUG
 	
-#define PROFILE(token) CProfile::GetInstance()->Start(#token, /*__FILE__*/THIS_FILE, __LINE__)
+#define PROFILE(token) CProfile::GetInstance()->Start(#token)
 #else
 	#define PROFILE(token) ((void)0)		//Release
 #endif
