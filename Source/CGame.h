@@ -31,7 +31,7 @@ using std::string;
 #define TOTAL_CITIES 10
 
 //Enum for playlist added this order;
-enum{INTRO,LOSEBATTLE,LOSEGAME,WONBATTLE,WONGAME,CITYSELECT,CREDITS,BATTLESTATE};
+enum{INTRO,LOSEBATTLE,LOSEGAME,WONBATTLE,WONGAME,CITYSELECT,CREDITS};
 // Saving slots
 enum{SLOT1, SLOT2, SLOT3};
 
@@ -70,7 +70,7 @@ private:
 	CUnit					m_pCPUUnitInfo[6];		// Info for CPU's units
 	
 	char					m_szPlayerName[6];		// Name of player's load slot (3 letters)
-	bool					m_bTutorial;
+	
 	int						m_nCurrentSaveSlot;
 	
 	int						m_nTerrorLevel;			// Terror Level
@@ -209,7 +209,7 @@ public:
 	int GetTerrorLevel() { return m_nTerrorLevel; }
 	int	GetLoses()		{ return m_nLoses; }
 	bool GetUpgraded(int j,int i){return m_bUpGrades[j][i];}
-	bool GetTutorialMode(){return m_bTutorial;}
+
 	///////////////////////////////////////////
 	//  Function: "GetNumConquered"
 	//	Last Modified: July 18, 2008
@@ -272,7 +272,7 @@ public:
 	void SetTerrorLevel(int nTerrorLevel) { m_nTerrorLevel = nTerrorLevel; }
 	void SetPlayerUnitInfo(CUnit toChange, int nType){m_pPlayerUnitInfo[nType] = toChange;}
 	void SetUpgraded(int j,int i,bool value){m_bUpGrades[j][i] = value;}
-	void SetTutorialMode(bool value){m_bTutorial = value;}
+
 	///////////////////////////////////////////
 	//  Function: ParseXMLUnitInfo
 	//	Last Modified: July 18, 2008
@@ -287,6 +287,12 @@ public:
 	///////////////////////////////////////////
 	bool	ParseBinaryUnitInfo (const char* szFile);
 
+
+	///////////////////////////////////////////
+	//  Function: ParsePlayList
+	//	Last Modified: August 22, 2008
+	//  Purpose : Load music playlist
+	///////////////////////////////////////////
 	bool	ParsePlayList		(const char* szFileName);
 
 	///////////////////////////////////////////
@@ -331,10 +337,19 @@ public:
 	///////////////////////////////////////////
 	void LoseLastCity();
 
+	///////////////////////////////////////////
+	//  Function: AddWins
+	//	Last Modified: August 22, 2008
+	//  Purpose : Adds to player wins
+	///////////////////////////////////////////
 	void AddWins();
+
+	///////////////////////////////////////////
+	//  Function: AddLoses
+	//	Last Modified: August 22, 2008
+	//  Purpose : Adds to player loses
+	///////////////////////////////////////////
 	void AddLoses();
-
-
 	
 	///////////////////////////////////////////
 	//  Function: LoadSlot
@@ -360,9 +375,18 @@ public:
 	///////////////////////////////////////////
 	void NewGame(int nSlot);
 
-
+	///////////////////////////////////////////
+	//  Function: GetSaveName
+	//	Last Modified: August 20, 2008
+	//  Purpose : Get save game info
+	///////////////////////////////////////////
 	string GetSaveName(int nSlot, bool bTitle);
 
+	///////////////////////////////////////////
+	//  Function: ParseOptions
+	//	Last Modified: August 20, 2008
+	//  Purpose : Parse options data
+	///////////////////////////////////////////
 	void ParseOptions(char* szFileName);
 
 };

@@ -175,6 +175,12 @@ public:
 	//			 position by its velocity.
 	/////////////////////////////////////////
 	void Update(float fElapsedTime);
+
+	///////////////////////////////////////////
+	//  Function: ParsePlayList
+	//	Last Modified: August 22, 2008
+	//  Purpose : Load music playlist
+	///////////////////////////////////////////
 	void RenderHealth();
 
 
@@ -184,14 +190,13 @@ public:
 	// Purpose: To render unit to the screen its position
 	//////////////////////////////////////////////////////
 	void Render(float fElapsedTime);
+
+	///////////////////////////////////////////
+	//  Function: RenderSelection
+	//	Last Modified: August 22, 2008
+	//  Purpose : Render selection circle
+	///////////////////////////////////////////
 	void RenderSelection();
-
-
-	//////////////////////////////////////////////////////
-	// Function: “CheckCollisions”
-	//	Last Modified: July 18, 2008
-	// Purpose: To check if unit collided with anything
-	//////////////////////////////////////////////////////
 
 
 	//////////////////////////////////////////////////////
@@ -222,13 +227,46 @@ public:
 	//////////////////////////////////////////////////////
 	void UpdateVisibility();
 
+	///////////////////////////////////////////
+	//  Function: PlaceOnSurrounding
+	//	Last Modified: August 22, 2008
+	//  Purpose : Find a surrounding tile
+	///////////////////////////////////////////
 	CTile* PlaceOnSurrounding(CTile* pCenterTile);
-	// True if we reach the next tile
+
+	///////////////////////////////////////////
+	//  Function: MoveUnit
+	//	Last Modified: August 22, 2008
+	//  Purpose : True if we reach the next tile
+	///////////////////////////////////////////
 	bool MoveUnit(float fElapsedTime);
 
+	///////////////////////////////////////////
+	//  Function: IsTargetInRange
+	//	Last Modified: August 22, 2008
+	//  Purpose : Check for target in range
+	///////////////////////////////////////////
 	bool IsTargetInRange();
+
+	///////////////////////////////////////////
+	//  Function: IsTargetInView
+	//	Last Modified: August 22, 2008
+	//  Purpose : Is target in view
+	///////////////////////////////////////////
 	bool IsTargetInView();
+
+	///////////////////////////////////////////
+	//  Function: IsTileAdjacent
+	//	Last Modified: August 22, 2008
+	//  Purpose : Check if two tiles are next to eachother
+	///////////////////////////////////////////
 	bool IsTileAdjacent(CTile* pTile1, CTile* pTile2);
+
+	///////////////////////////////////////////
+	//  Function: ScanForEnemies
+	//	Last Modified: August 22, 2008
+	//  Purpose : Scan for enemies in view
+	///////////////////////////////////////////
 	void ScanForEnemies();
 
 
