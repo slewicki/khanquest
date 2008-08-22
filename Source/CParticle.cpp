@@ -9,6 +9,7 @@
 
 CParticle::CParticle(void)
 {
+	PROFILE("CParticle::CParticle()");
 	m_bAlive = true;
 	m_bContinuous =  true;
 	m_fPartLocX  =  0;
@@ -60,6 +61,7 @@ CParticle::CParticle(void)
 	m_cStartColor	=   D3DCOLOR_RGBA((int)m_fStartRed , (int)m_fStartGreen, (int)m_fStartBlue, (int)m_fStartAlpha);
 	m_cEndColor		=	D3DCOLOR_RGBA((int)m_fEndRed , (int)m_fEndGreen, (int)m_fEndBlue, (int)m_fEndAlpha);
 	m_cCurrentColor =	D3DCOLOR_RGBA((int)m_fCurrentRed , (int)m_fCurrentGreen, (int)m_fCurrentBlue, (int)m_fCurrentAlpha); 
+	STOP("CParticle::CParticle()");
 }
 
 CParticle::~CParticle(void)

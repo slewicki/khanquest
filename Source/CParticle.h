@@ -9,6 +9,7 @@
 #pragma once
 #include <string>
 #include "CSGD_TextureManager.h"
+#include "CProfile.h"
 using std::string;
 
 class CParticle
