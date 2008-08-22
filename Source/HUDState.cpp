@@ -174,11 +174,11 @@ void CHUDState::Render(float fElapsedTime)
 	m_pTM->Draw(m_nHUDID,0,0);
 	m_fUpdateTimer+=fElapsedTime;
 	// about 60 FPS
-	if(m_fUpdateTimer > .002)
-	{
+	/*if(m_fUpdateTimer > .002)
+	{*/
 		CTileEngine::GetInstance()->RenderMiniMap(CCamera::GetInstance()->GetScreenArea());
-		m_fUpdateTimer = 0.f;
-	}
+		/*m_fUpdateTimer = 0.f;
+	}*/
 	
 	
 	RECT InfIcon;

@@ -279,6 +279,7 @@ bool CGame::Main(void)
 
 	//		MessageBox(m_hWnd, "Failed to load texture", "Error", MB_OK);
 	//	}
+	//}
 
 	//	/*hr = m_pD3D->GetDirect3DDevice()->CreateTexture(m_nScreenWidth, m_nScreenHeight, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_pVisibleTarget, NULL);
 	//	if(hr != D3D_OK)
@@ -305,23 +306,23 @@ bool CGame::Main(void)
 	m_pD3D->SpriteBegin();
 
 	//grab the backbuffer
-	//m_pD3D->GetDirect3DDevice()->GetRenderTarget(0, &m_pBackBuffer);
+	m_pD3D->GetDirect3DDevice()->GetRenderTarget(0, &m_pBackBuffer);
 
-	//if(m_vStates[0] == CGamePlayState::GetInstance())
-	//{
+	if(m_vStates[0] == CGamePlayState::GetInstance())
+	{
 
-	//	//Set Render Target
-	//	LPDIRECT3DSURFACE9 pSurface = NULL;
-	//	m_pRenderTarget->GetSurfaceLevel(0, &pSurface);
-	//	m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, pSurface);
-	//	pSurface->Release();
+		//Set Render Target
+		LPDIRECT3DSURFACE9 pSurface = NULL;
+		m_pRenderTarget->GetSurfaceLevel(0, &pSurface);
+		m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, pSurface);
+		pSurface->Release();
 
-	//	//LPDIRECT3DTEXTURE9 pVisible = NULL;
-	//	//D3DXCreateTextureFromFile(m_pD3D->GetDirect3DDevice(), "Resource/KQ_Circle.bmp", &pVisible);
-	//	//m_pVisibleTarget = pVisible;
-	//	////m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, pVisible);
-	//	//pVisible->Release();
-	//}
+		//LPDIRECT3DTEXTURE9 pVisible = NULL;
+		//D3DXCreateTextureFromFile(m_pD3D->GetDirect3DDevice(), "Resource/KQ_Circle.bmp", &pVisible);
+		//m_pVisibleTarget = pVisible;
+		////m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, pVisible);
+		//pVisible->Release();
+	}
 
 	m_pD3D->Clear(0, 0, 0);
 
@@ -361,35 +362,35 @@ bool CGame::Main(void)
 		m_nFrameCounter = 0;		// reset frame counter
 		m_dwFrameTimer = GetTickCount();
 	}
-	//if(m_vStates[0] != CGamePlayState::GetInstance())
+	if(m_vStates[0] != CGamePlayState::GetInstance())
 		m_pD3D->Present();
-	//else if (ObjectManager::GetInstance()->GetUnits().size() > 0)
-	//{
-	//	//Setup Pixel shader for second loop
-	//	m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, m_pBackBuffer);
-	//	m_pBackBuffer->Release();
+	else if (ObjectManager::GetInstance()->GetUnits().size() > 0)
+	{
+		//Setup Pixel shader for second loop
+		m_pD3D->GetDirect3DDevice()->SetRenderTarget(0, m_pBackBuffer);
+		m_pBackBuffer->Release();
 
-	//	
+		
 
-	//	//Pixel Shader Render
-	//	m_pD3D->Clear(0, 0, 0);
-	//	m_pD3D->DeviceBegin();
-	//	m_pD3D->SpriteBegin();
+		//Pixel Shader Render
+		m_pD3D->Clear(0, 0, 0);
+		m_pD3D->DeviceBegin();
+		m_pD3D->SpriteBegin();
 
-	//	//process shader
-	//	m_PixelShader.SetConstantFloat("Pos.x",ObjectManager::GetInstance()->GetUnits()[0]->GetPosX());
-	//	m_PixelShader.SetConstantFloat("Pos.Y", ObjectManager::GetInstance()->GetUnits()[0]->GetPosX());
-	//	//m_PixelShader.SetConstantFloat("texture1", m_pTM->LoadTexture("Resource/KQ_Circle.bmp"));
-	//	m_PixelShader.Begin();
+		//process shader
+		m_PixelShader.SetConstantFloat("Pos.x",ObjectManager::GetInstance()->GetUnits()[0]->GetPosX());
+		m_PixelShader.SetConstantFloat("Pos.Y", ObjectManager::GetInstance()->GetUnits()[0]->GetPosX());
+		//m_PixelShader.SetConstantFloat("texture1", m_pTM->LoadTexture("Resource/KQ_Circle.bmp"));
+		m_PixelShader.Begin();
 
-	//	//Draw to the backbuffer
-	//	m_pD3D->GetSprite()->Draw(m_pRenderTarget, 0, 0, 0, D3DCOLOR_XRGB(255, 255, 255));
+		//Draw to the backbuffer
+		m_pD3D->GetSprite()->Draw(m_pRenderTarget, 0, 0, 0, D3DCOLOR_XRGB(255, 255, 255));
 
-	//	m_pD3D->SpriteEnd();
-	//	m_PixelShader.End();
-	//	m_pD3D->DeviceEnd();
-	//	m_pD3D->Present();
-	//}
+		m_pD3D->SpriteEnd();
+		m_PixelShader.End();
+		m_pD3D->DeviceEnd();
+		m_pD3D->Present();
+	}
 	
 	return true;
 }
