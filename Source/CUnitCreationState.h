@@ -55,6 +55,9 @@ private:
 
 	bool									m_bPaused;
 
+	int					 m_nIconID;
+
+
 	////////////////////////////////////////////
 	//	Function:	"CUnitCreationState(Constructor)"
 	//	Last Modified: July 23, 2008

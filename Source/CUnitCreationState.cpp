@@ -14,6 +14,7 @@
 #include "CFactory.h"
 
 
+
 CUnitCreationState::CUnitCreationState(void)
 {
 	PROFILE("CUnitCreationState::CUnitCreationState()");
@@ -62,7 +63,8 @@ void CUnitCreationState::Enter(void)
 	//m_nUnitID[AXMEN] = m_pTM->LoadTexture("Resource/KQ_Axmen.png");
 	//m_nUnitID[ARCHER] = m_pTM->LoadTexture("Resource/KQ_Archer.png");
 	//m_nUnitID[WAR_ELEPHANT] = m_pTM->LoadTexture("Resource/KQ_WarElephant.png");
-
+	m_nIconID = m_pTM->LoadTexture("Resource/KQ_UnitIcons.png");
+	
 	// Register any Events with the CUnitCreationState
 	m_nLucidiaWhiteID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_nPlusButtonID = m_pTM->LoadTexture("Resource/KQ_PlusButton.png");
@@ -82,6 +84,7 @@ void CUnitCreationState::Enter(void)
 	m_nUnitCosts[UNIT_AXMEN] = 65;
 	m_nUnitCosts[UNIT_ARCHER] = 60;
 	m_nUnitCosts[UNIT_WAR_ELEPHANT] = 300;
+
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -168,6 +171,7 @@ void CUnitCreationState::Exit(void)
 	m_pTM->ReleaseTexture(m_nLucidiaWhiteID);
 	m_pTM->ReleaseTexture(m_nBackgroundID);
 	m_pTM->ReleaseTexture(m_nScrollButtonID);
+	m_pTM->ReleaseTexture(m_nIconID);
 
 	for (int i = 0; i < m_nNumUnits[UNIT_INFANTRY] ; i++)
 		CFactory::CreatePlayerUnit(UNIT_INFANTRY);
@@ -373,6 +377,37 @@ void CUnitCreationState::Render(float fElapsedTime)
 {
 	PROFILE("CUnitCreationState::Render(float)");
 	m_pTM->Draw(m_nBackgroundID, -20, -10);
+
+
+	RECT InfIcon;
+	InfIcon.top = 0; InfIcon.left = 200; InfIcon.right = 250; InfIcon.bottom = 50;
+	m_pTM->Draw(m_nIconID,75,50,1.f,1.f,&InfIcon);
+
+
+	RECT CavIcon;
+	CavIcon.top = 100; CavIcon.left = 0; CavIcon.right = 50; CavIcon.bottom = 150;
+	m_pTM->Draw(m_nIconID,75,220,1.f,1.f,&CavIcon);
+	
+
+	RECT CAIcon;
+	CAIcon.top = 100; CAIcon.left = 200; CAIcon.right = 250; CAIcon.bottom = 150;
+	m_pTM->Draw(m_nIconID,75,390,1.f,1.f,&CAIcon);
+	
+
+	RECT AXIcon;
+	AXIcon.top = 0; AXIcon.left = 0; AXIcon.right = 50; AXIcon.bottom = 50;
+	m_pTM->Draw(m_nIconID,465,50,1.f,1.f,&AXIcon);
+
+
+	RECT ArcIcon;
+	ArcIcon.top = 0; ArcIcon.left = 100; ArcIcon.right = 150; ArcIcon.bottom = 50;
+	m_pTM->Draw(m_nIconID,465,220,1.f,1.f,&ArcIcon);
+
+
+	RECT EleIcon;
+	EleIcon.top = 100; EleIcon.left = 100; EleIcon.right = 150; EleIcon.bottom = 150;
+	m_pTM->Draw(m_nIconID,465,390,1.f,1.f,&EleIcon);
+
 	
 	int nPosY = 40;
 	int nPosX = 200;
