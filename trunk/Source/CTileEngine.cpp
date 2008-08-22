@@ -189,10 +189,10 @@ void CTileEngine::Render(RECT nCamPos)
 					{
 						//Temp
 						//-------------------------
-						pTileArray[nLayer][Row][Col].vColor = D3DCOLOR_ARGB(255, 255, 255, 255);
+						/*pTileArray[nLayer][Row][Col].vColor = D3DCOLOR_ARGB(255, 255, 255, 255);
 						
 						if(pTileArray[nLayer][Row][Col].bIsOccupied) 
-							pTileArray[nLayer][Row][Col].vColor = D3DCOLOR_ARGB(255,255, 0, 0);
+							pTileArray[nLayer][Row][Col].vColor = D3DCOLOR_ARGB(255,255, 0, 0);*/
 						//----------------------------
 						m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0, pTileArray[0][Row][Col].vColor); 
 						// Temp for anchors
