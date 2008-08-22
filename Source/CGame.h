@@ -25,7 +25,6 @@
 #include "CBitmapFont.h"
 //Pixel Shader Testing
 #include "CPixelShader.h"
-#include "CProfile.h"
 
 using std::string;
 #define TOTAL_CITIES 10
@@ -361,5 +360,7 @@ public:
 
 
 	string GetSaveName(int nSlot, bool bTitle);
+
+	void ParseOptions(char* szFileName);
 
 };
