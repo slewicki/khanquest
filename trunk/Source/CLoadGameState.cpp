@@ -23,6 +23,7 @@ CLoadGameState::CLoadGameState(void)
 	m_nBackgroundID = -1;
 
 	m_bIsNewGame = false;
+	STOP("CLoadGameState::CLoadGameState()");
 }
 
 
@@ -97,6 +98,7 @@ void CLoadGameState::Enter(void)
 	}
 	else
 		m_bTutorial = false;
+	STOP("CLoadGameState::Enter()");
 }
 
 void CLoadGameState::Exit(void)
@@ -122,6 +124,8 @@ void CLoadGameState::Exit(void)
 
 	m_pPE->UnLoadEmitter(m_nTorchID);
 	m_pPE->UnLoadEmitter(m_nTorchID2);
+
+	STOP("CLoadGameState::Exit()");
 }
 
 bool CLoadGameState::Input(float fElapsedTime)
@@ -230,7 +234,10 @@ bool CLoadGameState::Input(float fElapsedTime)
 		if(CGame::GetInstance()->IsMouseInRect(m_rAccept))
 		{
 			if(!m_bIsNewGame && m_bIsEmpty[m_nChosenSlot])
+			{
+				STOP("CLoadGameState::Input(float)");
 				return true;
+			}
 			CGame::GetInstance()->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 			{
@@ -282,16 +289,20 @@ bool CLoadGameState::Input(float fElapsedTime)
 			}
 		}
 	}
+	STOP("CLoadGameState::Input(float)");
 	return true;
 }
 
 void CLoadGameState::Update(float fElapsedTime)
 {
+	PROFILE("CLoadGameState::Update(float)");
 	m_pPE->Update(fElapsedTime);
+	STOP("CLoadGameState::Update(float)");
 }
 
 void CLoadGameState::Render(float fElapsedTime)
 {
+	PROFILE("CLoadGameState::Render(float)");
 	m_pTM->Draw(m_nBackgroundID, -20, -10, 1.f, 1.f, 0, 0.f, 0.f, 0.f, D3DCOLOR_ARGB(255, 0, 0, 0));
 	if(!m_bTutorial)
 	{
@@ -353,6 +364,7 @@ void CLoadGameState::Render(float fElapsedTime)
 		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
 		m_cFont.DrawTextA("This next screen is the new game screen./The current file will be selected/and is highlighted in yellow./Feel free to pick a different file if you like./Click accept to continue.",100,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
 	}		
+	STOP("CLoadGameState::Render(float)");
 }
 
 
