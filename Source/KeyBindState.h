@@ -141,9 +141,22 @@ public:
 	//  Purpose : Binds a given key to the players control
 	///////////////////////////////////////////
 	bool BindKey(DWORD dwDIK, int nID);
-
+	///////////////////////////////////////////
+	//  Function: "FadeIn"
+	//  Last Modified: August 11, 2008
+	//  Purpose : Fades the current state in.
+	///////////////////////////////////////////
 	void FadeIn(float fElapsedTime);
+	///////////////////////////////////////////
+	//  Function: "FadeOut"
+	//  Last Modified: August 11, 2008
+	//  Purpose : Fades the current state out.
+	///////////////////////////////////////////
 	void FadeOut(float fElapsedTime);
-
+	///////////////////////////////////////////
+	//  Function: "Parse"
+	//  Last Modified: August 11, 2008
+	//  Purpose : Reads in the specified file.
+	///////////////////////////////////////////
 	bool Parse(char* szFileName);
 };

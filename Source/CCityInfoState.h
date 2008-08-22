@@ -43,7 +43,8 @@ private:
 	RECT									m_rCancel;
 	float									m_fJoyTimer;
 	POINT									m_ptMousePos;
-
+	bool									m_bTutorial;
+	RECT									m_rTutorial;
 	////////////////////////////////////////////
 	//	Function:	"CCityInfoState(Constructor)"
 	//	Last Modified: July 23, 2008

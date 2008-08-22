@@ -38,6 +38,8 @@ class CUpgradeMenuState : public IGameState
 	float									m_fJoyTimer;
 	POINT									m_ptMousePos;
 	int										m_nGoldTotal;
+	bool									m_bTutorial;
+	RECT									m_rTutorial;
 
 	CUpgradeMenuState(void);
 	~CUpgradeMenuState(void);
@@ -87,7 +89,22 @@ public:
 	//	 Purpose: To render our information to the screen
 	//////////////////////////////////////////////////////
 	void Render(float fElapsedTime);
+	/////////////////////////////////////////////////////
+	//	Function: “FadeOut”
+	//	Last Modified: Aug 2, 2008
+	//	 Purpose: Fades the current state out
+	//////////////////////////////////////////////////////
 	void StartEsc();
+	/////////////////////////////////////////////////////
+	//	Function: “IntToString”
+	//	Last Modified: Aug 2, 2008
+	//	 Purpose: Converts int values to strings
+	//////////////////////////////////////////////////////
 	string IntToString(int value);
+	/////////////////////////////////////////////////////
+	//	Function: “FloatToString”
+	//	Last Modified: Aug 2, 2008
+	//	 Purpose: Converts float values to strings
+	//////////////////////////////////////////////////////
 	string FloatToString(float value);
 };

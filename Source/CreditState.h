@@ -78,6 +78,11 @@ public:
 	//	Purpose: To render our information to the screen
 	//////////////////////////////////////////////////////
 	void Render(float fElapsedTime);
-
+	
+	//////////////////////////////////////////////////////
+	//	Function: “Render”
+	//	Last Modified: August 05, 2008
+	//	Purpose: Reads in the xml file containing the names of the credits
+	//////////////////////////////////////////////////////
 	bool Parse(char* szFileName);
 };

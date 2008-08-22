@@ -28,7 +28,7 @@ CLoadGameState::CLoadGameState(void)
 
 CLoadGameState::~CLoadGameState(void)
 {
-	
+
 }
 
 
@@ -60,9 +60,6 @@ void CLoadGameState::Enter(void)
 
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
 
-
-
-
 	for (int i = 0; i < 3; i++)
 	{
 		m_rClickRect[i].left = 291;
@@ -70,12 +67,12 @@ void CLoadGameState::Enter(void)
 		m_rClickRect[i].right = m_rClickRect[i].left + 219;
 		m_rClickRect[i].bottom = m_rClickRect[i].top + 30;
 	}
-	
+
 	m_rAccept.left = 415;
 	m_rAccept.top = 515;
 	m_rAccept.right = 545;
 	m_rAccept.bottom = 575;	
-	
+
 	m_rBack.left = 615;
 	m_rBack.top = 515;
 	m_rBack.right = 745;
@@ -87,10 +84,19 @@ void CLoadGameState::Enter(void)
 	//m_pPE->SetPostion(100, 100, m_nTorchID);
 	m_pPE->SetIsRunning(m_nTorchID, true);
 	m_pPE->SetIsRunning(m_nSmokeID1, true);
-
-	m_pPE->SetIsRunning(m_nTorchID2, true);
 	m_pPE->SetIsRunning(m_nSmokeID2, true);
+	m_pPE->SetIsRunning(m_nTorchID2, true);
 
+	if(CGame::GetInstance()->GetTutorialMode())
+	{
+		m_bTutorial = true;
+		m_rTutorial.top = 400;
+		m_rTutorial.left = 350;
+		m_rTutorial.bottom = m_rTutorial.top + 64;
+		m_rTutorial.right = m_rTutorial.left + 128;
+	}
+	else
+		m_bTutorial = false;
 }
 
 void CLoadGameState::Exit(void)
@@ -120,116 +126,116 @@ void CLoadGameState::Exit(void)
 
 bool CLoadGameState::Input(float fElapsedTime)
 {
-PROFILE("CLoadGameState::Input(float)");
+	PROFILE("CLoadGameState::Input(float)");
+	if(!m_bTutorial)
+	{
 		m_fJoyTimer = fElapsedTime;
 #pragma region Controller to Mouse
-	
-	if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
-	{
-		if(m_fJoyTimer > .002f)
+
+		if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y-3);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y-3);
+				m_fJoyTimer = 0;
+			}
 		}
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
-	{
-		if(m_fJoyTimer > .002f)
+		else if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y-3);
-			m_fJoyTimer = 0;
-		}	
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
-	{
-		if(m_fJoyTimer > .002f)
-		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y+3);
-			m_fJoyTimer = 0;
-		}	
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
-	{
-		if(m_fJoyTimer > .002f)
-		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y+3);
-			m_fJoyTimer = 0;
-		}	
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_UP))
-	{
-		if(m_fJoyTimer > .002f)
-		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y-3);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y-3);
+				m_fJoyTimer = 0;
+			}	
 		}
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
-	{
-		if(m_fJoyTimer > .002f)
+		else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y+3);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y+3);
+				m_fJoyTimer = 0;
+			}	
 		}
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
-	{
-		if(m_fJoyTimer > .002f)
+		else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y+3);
+				m_fJoyTimer = 0;
+			}	
 		}
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
-	{
-		if(m_fJoyTimer > .002f)
+		else if(m_pDI->GetJoystickDir(JOYSTICK_UP))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x,m_ptMousePos.y-3);
+				m_fJoyTimer = 0;
+			}
 		}
-	}
+		else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
+		{
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x,m_ptMousePos.y+3);
+				m_fJoyTimer = 0;
+			}
+		}
+		else if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+		{
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y);
+				m_fJoyTimer = 0;
+			}
+		}
+		else if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+		{
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y);
+				m_fJoyTimer = 0;
+			}
+		}
 
 
 #pragma endregion
 
-	for (int i = 0; i < 3; i++)
-	{
-		if(CGame::GetInstance()->GetSaveName(i, true) == "EMPTY")
-			m_bIsEmpty[i] = true;
-		else
-			m_bIsEmpty[i] = false;
-
-		if(CGame::GetInstance()->IsMouseInRect(m_rClickRect[i]))
+		for (int i = 0; i < 3; i++)
 		{
-			// Change cursor to click icon
-			CGame::GetInstance()->SetCursorClick();
-			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
+			if(CGame::GetInstance()->GetSaveName(i, true) == "EMPTY")
+				m_bIsEmpty[i] = true;
+			else
+				m_bIsEmpty[i] = false;
+			if(CGame::GetInstance()->IsMouseInRect(m_rClickRect[i]))
 			{
+				// Change cursor to click icon
+				CGame::GetInstance()->SetCursorClick();
+				if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
+				{
 					m_pWM->Play(m_nTickID);
 
 					m_nChosenSlot = i;
-				
+
+				}
 			}
 		}
-		
-	}
-	if(CGame::GetInstance()->IsMouseInRect(m_rAccept))
-	{
-		if(!m_bIsNewGame && m_bIsEmpty[m_nChosenSlot])
-			return true;
-		CGame::GetInstance()->SetCursorClick();
-		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
+		if(CGame::GetInstance()->IsMouseInRect(m_rAccept))
 		{
+			if(!m_bIsNewGame && m_bIsEmpty[m_nChosenSlot])
+				return true;
+			CGame::GetInstance()->SetCursorClick();
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
+			{
 				m_pWM->Play(m_nClickID);
-				
+
 				if(m_bIsNewGame)
 				{
 					if(m_bIsEmpty[m_nChosenSlot])
@@ -245,31 +251,37 @@ PROFILE("CLoadGameState::Input(float)");
 						CGame::GetInstance()->PopCurrentState();
 						CGame::GetInstance()->PushState(this);
 					}
-
-					
 				}
 				else
 					if(CGame::GetInstance()->LoadSlot(m_nChosenSlot))
-						CGame::GetInstance()->PushState(CWorldMapState::GetInstance());
-
-
-				
-			
+						CGame::GetInstance()->PushState(CWorldMapState::GetInstance());			
+			}
 		}
-	}
-	if(CGame::GetInstance()->IsMouseInRect(m_rBack) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
-	{
-		CGame::GetInstance()->SetCursorClick();
-		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+		if(CGame::GetInstance()->IsMouseInRect(m_rBack) )
 		{
-			m_pWM->Play(m_nClickID);
-
-			// Go back to the map
-			CMainMenuState::GetInstance()->SetPause(false);
-			CGame::GetInstance()->PopCurrentState();
+			CGame::GetInstance()->SetCursorClick();
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT)|| m_pDI->GetBufferedJoyButton(JOYSTICK_X))
+			{
+				m_pWM->Play(m_nClickID);
+				// Go back to the map
+				
+				CMainMenuState::GetInstance()->SetPause(false);
+				CGame::GetInstance()->PopCurrentState();
+			}
 		}
 	}
-
+	else
+	{
+		if(CGame::GetInstance()->IsMouseInRect(m_rTutorial))
+		{
+			CGame::GetInstance()->SetCursorClick();
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT)|| m_pDI->GetBufferedJoyButton(JOYSTICK_X))
+			{
+				m_pWM->Play(m_nClickID);
+				m_bTutorial = false;
+			}
+		}
+	}
 	return true;
 }
 
@@ -281,55 +293,66 @@ void CLoadGameState::Update(float fElapsedTime)
 void CLoadGameState::Render(float fElapsedTime)
 {
 	m_pTM->Draw(m_nBackgroundID, -20, -10, 1.f, 1.f, 0, 0.f, 0.f, 0.f, D3DCOLOR_ARGB(255, 0, 0, 0));
-	
-		
-	for (int i = 0; i < 3; i++)
+	if(!m_bTutorial)
 	{
-		m_pTM->Draw(m_nButtonID, m_rClickRect[i].left, m_rClickRect[i].top, 1.f, 1.f);
-		
-		
-		if(i == m_nChosenSlot)
+		for (int i = 0; i < 3; i++)
 		{
-			string szInfo = CGame::GetInstance()->GetSaveName(i, false);
-			m_cFont.DrawTextA(CGame::GetInstance()->GetSaveName(i, true), m_rClickRect[i].left+50, m_rClickRect[i].top, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));
-			m_cFont.DrawTextA(szInfo, (int)(((800-(15*szInfo.length()))*.5f)), m_rClickRect[i].top+20, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));
+			m_pTM->Draw(m_nButtonID, m_rClickRect[i].left, m_rClickRect[i].top, 1.f, 1.f);
+
+
+			if(i == m_nChosenSlot)
+			{
+				string szInfo = CGame::GetInstance()->GetSaveName(i, false);
+				m_cFont.DrawTextA(CGame::GetInstance()->GetSaveName(i, true), m_rClickRect[i].left+50, m_rClickRect[i].top, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));
+				m_cFont.DrawTextA(szInfo, (int)(((800-(15*szInfo.length()))*.5f)), m_rClickRect[i].top+20, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));
+			}
+
+			else	
+				m_cFont.DrawTextA(CGame::GetInstance()->GetSaveName(i, true), m_rClickRect[i].left+50, m_rClickRect[i].top, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
+
 		}
-		
-		else	
-			m_cFont.DrawTextA(CGame::GetInstance()->GetSaveName(i, true), m_rClickRect[i].left+50, m_rClickRect[i].top, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
-
-	}
-	if(m_bIsNewGame)
-	{
-		m_cFont.DrawTextA("New Game", 320, 10, .3f, .3f, D3DCOLOR_ARGB(255, 255, 0, 0));
-	}
-	else
-		m_cFont.DrawTextA("Load Game", 310, 10, .3f, .3f, D3DCOLOR_ARGB(255, 255, 0, 0));
-	
-	
-	m_pTM->Draw(m_nScrollButtonID, m_rAccept.left, m_rAccept.top, .4f, .3f);
-	if(m_bIsNewGame)
-	{
-		if(m_bIsEmpty[m_nChosenSlot])
-			m_cFont.DrawTextA("Accept", m_rAccept.left+24, m_rAccept.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+		if(m_bIsNewGame)
+		{
+			m_cFont.DrawTextA("New Game", 320, 10, .3f, .3f, D3DCOLOR_ARGB(255, 255, 0, 0));
+		}
 		else
-			m_cFont.DrawTextA("Erase", m_rAccept.left+30, m_rAccept.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
-	}
-	else
-	{
-		
+			m_cFont.DrawTextA("Load Game", 310, 10, .3f, .3f, D3DCOLOR_ARGB(255, 255, 0, 0));
+
+
+		m_pTM->Draw(m_nScrollButtonID, m_rAccept.left, m_rAccept.top, .4f, .3f);
+		if(m_bIsNewGame)
+		{
+			if(m_bIsEmpty[m_nChosenSlot])
+				m_cFont.DrawTextA("Accept", m_rAccept.left+24, m_rAccept.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+			else
+				m_cFont.DrawTextA("Erase", m_rAccept.left+30, m_rAccept.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+		}
+		else
+		{
+
 			m_cFont.DrawTextA("Accept", m_rAccept.left+24, m_rAccept.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
-		if(m_bIsEmpty[m_nChosenSlot])
-			m_pTM->Draw(m_nScrollButtonID, m_rAccept.left, m_rAccept.top, .4f, .3f, 0, 0.f, 0.f, 0.f, D3DCOLOR_ARGB(150, 50, 50, 50));
+			if(m_bIsEmpty[m_nChosenSlot])
+				m_pTM->Draw(m_nScrollButtonID, m_rAccept.left, m_rAccept.top, .4f, .3f, 0, 0.f, 0.f, 0.f, D3DCOLOR_ARGB(150, 50, 50, 50));
+		}
+
+		m_pTM->Draw(m_nScrollButtonID, m_rBack.left, m_rBack.top, .4f, .3f);
+		m_cFont.DrawTextA("Back", m_rBack.left+40, m_rBack.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+
+		// draw torch and flame
+		m_pTM->Draw(m_nTorchPicID, 80, 300, 0.4f, 0.5f, 0);
+		m_pTM->Draw(m_nTorchPicID, 650, 300, 0.4f, 0.5f, 0);
+		m_pPE->Render(fElapsedTime);
 	}
-
-	m_pTM->Draw(m_nScrollButtonID, m_rBack.left, m_rBack.top, .4f, .3f);
-	m_cFont.DrawTextA("Back", m_rBack.left+40, m_rBack.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
-
-	// draw torch and flame
-	m_pTM->Draw(m_nTorchPicID, 80, 300, 0.4f, 0.5f, 0);
-	m_pTM->Draw(m_nTorchPicID, 650, 300, 0.4f, 0.5f, 0);
-	m_pPE->Render(fElapsedTime);
+	else if(CGame::GetInstance()->GetTutorialMode() && m_bTutorial)
+	{
+		RECT toDraw; toDraw.top = 0; toDraw.left = 0; toDraw.right = 578; toDraw.bottom = 495;
+		int nImage = m_pTM->LoadTexture("Resource/KQ_TutorialBox.png");
+		m_pTM->Draw(nImage,0,2,1.4f,1.2f,&toDraw);
+		m_pTM->Draw(m_nScrollButtonID,325,400,.4f,.3f);
+		m_cFont.DrawTextA("Accept",350,425,.2f,.2f,D3DCOLOR_ARGB(255,255,0,0));
+		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
+		m_cFont.DrawTextA("This next screen is the new game screen./The current file will be selected/and is highlighted in yellow./Feel free to pick a different file if you like./Click accept to continue.",100,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+	}		
 }
 
 

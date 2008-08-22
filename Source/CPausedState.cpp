@@ -45,7 +45,7 @@ void CPausedState::Enter(void)
 
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
 	
-	CGame::GetInstance()->SetSongPlay(CITYSELECT);
+	CGame::GetInstance()->SetSongPlay(BATTLESTATE);
 	m_fJoyTimer = 0;
 }
 

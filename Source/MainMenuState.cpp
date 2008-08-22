@@ -89,7 +89,7 @@ bool CMainMenuState::Input(float fElapsedTime)
 	if(m_bPaused)
 		return true;
 
-	if(m_fAttractTimer > 30)
+	if(m_fAttractTimer > 5)
 	{
 		m_bPaused = true;
 		CGame::GetInstance()->PushState(CAttractMode::GetInstance());
@@ -154,15 +154,27 @@ bool CMainMenuState::Input(float fElapsedTime)
 	{
 		switch(Buttons[m_nCurrentButton].Action)
 		{
-		case WorldMapState:
+		case Tutorial:
 			{
 				m_bPaused = true;
+				CGame::GetInstance()->SetTutorialMode(true);
+
 				CLoadGameState::GetInstance()->IsNewGame(true);
+				m_pToSwitchTo = CLoadGameState::GetInstance();
+			}
+			break;
+		case WorldMapState:
+			{
+				CGame::GetInstance()->SetTutorialMode(false);
+				m_bPaused = true;
+				CLoadGameState::GetInstance()->IsNewGame(true);
+				
 				m_pToSwitchTo = CLoadGameState::GetInstance();
 			}
 			break;
 		case Load:
 			{
+				CGame::GetInstance()->SetTutorialMode(false);
 				m_bPaused = true;
 				//TODO: Make Loading State
 				CLoadGameState::GetInstance()->IsNewGame(false);
@@ -171,12 +183,14 @@ bool CMainMenuState::Input(float fElapsedTime)
 			break;
 		case Options:
 			{
+				CGame::GetInstance()->SetTutorialMode(false);
 				m_bPaused = true;
 				m_pToSwitchTo = COptionsMenuState::GetInstance();
 			}
 			break;
 		case ExitGame:
 			{
+				CGame::GetInstance()->SetTutorialMode(false);
 				//TODO: ExitGameState
 				m_bPaused = true;
 				m_pToSwitchTo = COutroState::GetInstance();

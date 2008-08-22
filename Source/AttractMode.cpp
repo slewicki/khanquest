@@ -9,6 +9,7 @@
 #include "CSGD_Direct3D.h"
 #include "CSGD_DirectInput.h"
 #include "MainMenuState.h"
+#include "CGame.h"
 CAttractMode::CAttractMode(void)
 {
 	PROFILE("CAttractMode::CAttractMode()");

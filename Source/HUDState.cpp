@@ -3,7 +3,7 @@
 #include "ObjectManager.h"
 #include "CTileEngine.h"
 #include "CCamera.h"
-
+#include "CGame.h"
 CHUDState::CHUDState(void)
 {
 }
