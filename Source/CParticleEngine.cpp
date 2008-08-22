@@ -37,51 +37,42 @@ void CParticleEngine::Render(float fElapsedTime)
 		for (unsigned int i = 0; i < vEmitterList.size(); ++i )
 		{
 
-			for ( int j = 0; j < vEmitterList[i].m_nPartCount; ++j )
+			if (vEmitterList[i].m_bIsRunning)
 			{
-
-				if (vEmitterList[i].vParticleList[j].m_bAlive == true)
+				for ( int j = 0; j < vEmitterList[i].m_nPartCount; ++j )
 				{
-					// Set blend mode
-					m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_SRCBLEND, &source);
-					m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_DESTBLEND, &dest);
-
-					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND,  GetBlendMode(vEmitterList[i].vParticleList[j].m_szSourceBlend) );
-					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, GetBlendMode(vEmitterList[i].vParticleList[j].m_szDestBlend) );
-
-					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ZWRITEENABLE, false);
-					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
-					m_pD3D->GetDirect3DDevice()->SetRenderState (D3DRS_ALPHATESTENABLE, true);
-
-					if (m_pCamera)
-				{
-						POINT CamLoc;
-						CamLoc = m_pCamera->TransformToScreen( (int)(vEmitterList[i].vParticleList[j].m_fPartLocX), (int)(vEmitterList[i].vParticleList[j].m_fPartLocY) );
+	
+					if (vEmitterList[i].vParticleList[j].m_bAlive == true )
+					{
+						// Set blend mode
+						m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_SRCBLEND, &source);
+						m_pD3D->GetDirect3DDevice()->GetRenderState(D3DRS_DESTBLEND, &dest);
+	
+						m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND,  GetBlendMode(vEmitterList[i].vParticleList[j].m_szSourceBlend) );
+						m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, GetBlendMode(vEmitterList[i].vParticleList[j].m_szDestBlend) );
+	
+						m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ZWRITEENABLE, false);
+						m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+						m_pD3D->GetDirect3DDevice()->SetRenderState (D3DRS_ALPHATESTENABLE, true);
+	
+						//if (m_pCamera)
+						//{
+						//	POINT CamLoc;
+						//	CamLoc = m_pCamera->TransformToScreen( (int)(vEmitterList[i].vParticleList[j].m_fPartLocX), (int)(vEmitterList[i].vParticleList[j].m_fPartLocY) );
 	
 						m_pTM->Draw(vEmitterList[i].vParticleList[j].m_nImageID,
-							(int)CamLoc.x,
-							(int)CamLoc.y,
+							(int)vEmitterList[i].vParticleList[j].m_fPartLocX,
+							(int)vEmitterList[i].vParticleList[j].m_fPartLocY,
 							(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleX,
 							(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleY,
 							0, 0, 0, 0,
 							D3DCOLOR_ARGB((int)vEmitterList[i].vParticleList[j].m_cCurrentColor.a, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.r, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.g, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.b)
 							);
+	
+						// reset blend mode to default
+						m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND, source );
+						m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, dest );
 					}
-//					else
-//					{
-//					m_pTM->Draw(vEmitterList[i].vParticleList[j].m_nImageID,
-//						(int)vEmitterList[i].vParticleList[j].m_fPartLocX,
-//						(int)vEmitterList[i].vParticleList[j].m_fPartLocY,
-//						(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleX,
-//						(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleY,
-//						0, 0, 0, 0,
-//						D3DCOLOR_ARGB((int)vEmitterList[i].vParticleList[j].m_cCurrentColor.a, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.r, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.g, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.b)
-//						);
-//					}
-
-					// reset blend mode to default
-					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND, source );
-					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_DESTBLEND, dest );
 				}
 			}
 		}
@@ -96,38 +87,38 @@ void CParticleEngine::Update(float fElapsedTime)
 	{
 
 		for (unsigned int i = 0; i < vEmitterList.size(); ++i )
+		{
+			if (vEmitterList[i].m_bIsRunning)
 			{
-				if (vEmitterList[i].m_bIsRunning)
+				m_fPartTimer += fElapsedTime;
+				if (m_fPartTimer > .5)
 				{
-					m_fPartTimer += fElapsedTime;
-					if (m_fPartTimer > .5)
+					if (vEmitterList[i].m_nPartCount < (int)vEmitterList[i].vParticleList.size())
 					{
-						if (vEmitterList[i].m_nPartCount < (int)vEmitterList[i].vParticleList.size())
-						{
-							++vEmitterList[i].m_nPartCount;
-						}
-						m_fPartTimer = 0;
+						++vEmitterList[i].m_nPartCount;
 					}
-					for (unsigned int j = 0; j < vEmitterList[i].vParticleList.size(); ++j )
-					{
-						// Update location
-						////////////////////////////////////////////////////////////////////////
-						UpdateLoc(i, j);
+					m_fPartTimer = 0;
+				}
+				for (unsigned int j = 0; j < vEmitterList[i].vParticleList.size(); ++j )
+				{
+					// Update location
+					////////////////////////////////////////////////////////////////////////
+					UpdateLoc(i, j);
 
-						 //Update the scale
-						////////////////////////////////////////////////////////////////////////
-						UpdateScale(i, j);
+					//Update the scale
+					////////////////////////////////////////////////////////////////////////
+					UpdateScale(i, j);
 
-						// Update Age
-						////////////////////////////////////////////////////////////////////////
-						UpdateAge(i, j);
+					// Update Age
+					////////////////////////////////////////////////////////////////////////
+					UpdateAge(i, j);
 
-						// Update Color
-						////////////////////////////////////////////////////////////////////////
-						UpdateColor(i, j);
-					}
+					// Update Color
+					////////////////////////////////////////////////////////////////////////
+					UpdateColor(i, j);
 				}
 			}
+		}
 	}
 }
 

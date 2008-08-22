@@ -49,7 +49,10 @@ void CLoadGameState::Enter(void)
 	// torch 
 	m_nTorchPicID = m_pTM->LoadTexture("Resource/KQ_Torch1.png");
 	m_nTorchID = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_Torch2.dat", 100, 300);
+	m_nSmokeID1 = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_Smoke.dat", 100, 300);
+
 	m_nTorchID2 = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_Torch2.dat", 670, 300);
+	m_nSmokeID2 = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_Smoke.dat", 670, 300);
 
 	m_nClickID =  m_pWM->LoadWave("Resource/KQ_Click.wav");
 	m_nTickID =  m_pWM->LoadWave("Resource/KQ_ButtonTick.wav");
@@ -83,7 +86,11 @@ void CLoadGameState::Enter(void)
 
 	//m_pPE->SetPostion(100, 100, m_nTorchID);
 	m_pPE->SetIsRunning(m_nTorchID, true);
+	m_pPE->SetIsRunning(m_nSmokeID1, true);
+
 	m_pPE->SetIsRunning(m_nTorchID2, true);
+	m_pPE->SetIsRunning(m_nSmokeID2, true);
+
 }
 
 void CLoadGameState::Exit(void)
@@ -102,7 +109,13 @@ void CLoadGameState::Exit(void)
 	m_pTM->ReleaseTexture(m_nTorchPicID);
 
 	m_pPE->SetIsRunning(m_nTorchID, false);
-	m_pPE->ClearEmitter();
+	m_pPE->SetIsRunning(m_nSmokeID1, false);
+
+	m_pPE->SetIsRunning(m_nTorchID2, false);
+	m_pPE->SetIsRunning(m_nSmokeID2, false);
+
+	m_pPE->UnLoadEmitter(m_nTorchID);
+	m_pPE->UnLoadEmitter(m_nTorchID2);
 }
 
 bool CLoadGameState::Input(float fElapsedTime)
