@@ -324,9 +324,11 @@ bool CGame::Main(void)
 	//}
 
 	m_pD3D->Clear(0, 0, 0);
-	char buffer2[128];
-	sprintf_s(buffer2, _countof(buffer2), "Position: %i %i", m_ptMousePos.x, m_ptMousePos.y);
-	CSGD_Direct3D::GetInstance()->DrawTextA(buffer2, 120,20,255,255,255);
+
+	////Print mouse position
+	//char buffer2[128];
+	//sprintf_s(buffer2, _countof(buffer2), "Position: %i %i", m_ptMousePos.x, m_ptMousePos.y);
+	//CSGD_Direct3D::GetInstance()->DrawTextA(buffer2, 120,20,255,255,255);
 
 	// Render all states on the stack
 	for(unsigned int i = 0; i < m_vStates.size(); i++)
