@@ -51,6 +51,7 @@ void COutroState::Exit()
 		delete [] Buttons;
 
 	CProfile::GetInstance()->Process();
+	CProfile::GetInstance()->MinMaxOutput();
 }
 
 bool COutroState::Input(float fElapsedTime)
