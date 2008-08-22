@@ -16,6 +16,7 @@ CEventSystem* CEventSystem::GetInstance(void)
 	//	Make sure that the instance does not exist before trying to make it.
 	static CEventSystem instance;
 	//	Return the memory address pointing to the instance.
+	STOP("CEventSystem::GetInstance()");
 	return &instance;
 }
 
@@ -24,10 +25,15 @@ void CEventSystem::RegisterClient(EVENTID eventID, IListener *pClient)
 {
 	PROFILE("CEventSystem::RegisterClient(EVENTID, IListener*)");
 	//	Error check.
-	if (!pClient)	return;
+	if (!pClient)
+	{
+		STOP("CEventSystem::RegisterClient(EVENTID, IListener*)");
+		return;
+	}
 
 	//	Register (push) our client into the database.
 	m_Database.insert(make_pair(eventID, pClient));
+	STOP("CEventSystem::RegisterClient(EVENTID, IListener*)");
 }
 
 //	Unregister client
@@ -45,6 +51,7 @@ void CEventSystem::UnregisterClient(IListener *pClient)
 		}
 		++mmIter;
 	}
+	STOP("CEventSystem::UnregisterClient(IListner*)");
 }
 
 void CEventSystem::DispatchEvent(CEvent *pEvent)
@@ -65,6 +72,7 @@ void CEventSystem::DispatchEvent(CEvent *pEvent)
 		//	Pass the event to this client.
  		(*mmIter).second->EventHandler(pEvent);
 	}
+	STOP("CEventSystem::DispatchEvent(CEvent*)");
 }
 
 void CEventSystem::SendEvent(EVENTID eventID, void *pData)
@@ -74,6 +82,7 @@ void CEventSystem::SendEvent(EVENTID eventID, void *pData)
 	CEvent newEvent;
 	newEvent.SetEventParams(eventID, pData);
 	m_CurrentEvents.push_back(newEvent);
+	STOP("CEventSystem::SendEvent(EVENTID, void*)");
 }
 
 void CEventSystem::ProcessEvents(void)
@@ -85,12 +94,14 @@ void CEventSystem::ProcessEvents(void)
 		DispatchEvent(&m_CurrentEvents.front());
 		m_CurrentEvents.pop_front();
 	}
+	STOP("CEventSystem::ProcessEvents()");
 }
 void CEventSystem::ClearEvents(void) 
 { 
 	PROFILE("CEventSystem::ClearEvents()");
 	m_CurrentEvents.clear(); 
 	m_Database.clear(); 
+	STOP("CEventSystem::ClearEvents()");
 
 
 }
