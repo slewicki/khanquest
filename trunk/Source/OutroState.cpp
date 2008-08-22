@@ -127,9 +127,9 @@ bool COutroState::Input(float fElapsedTime)
 }
 void COutroState::Render(float fElapsedTime)
 {
-	RECT toDraw = {0,0,512,512};
+	
 	//m_pTM->Draw(m_nImageID,0,0,3.f,3.f, 0,0,0,0,D3DCOLOR_ARGB(255,0,0,0));
-	m_pTM->Draw(m_nImageID,0,0,1.25f,1.25f, &toDraw,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
+	m_pTM->Draw(m_nImageID,0,0,1.5f,1.5f, 0,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 	
 	for(int i = 0; i < m_nNumButtons; i++)
 	{
