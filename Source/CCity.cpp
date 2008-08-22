@@ -18,11 +18,13 @@ CCity::CCity()
 	m_bIsAttackable = false;
 	m_ptAttackPoint.x = 0;
 	m_ptAttackPoint.y = 0;
+	STOP("CCity::CCity()");
 }
 CCity::~CCity() 
 {
 	PROFILE("CCity::~CCity()");
 	CSGD_TextureManager::GetInstance()->ReleaseTexture(m_nImageID);
+	STOP("CCity::~CCity()");
 }
 
 void CCity::SetDefaultColor(int nCityID)
@@ -61,4 +63,5 @@ void CCity::SetDefaultColor(int nCityID)
 			m_dwColor = D3DCOLOR_ARGB(255, 132, 0, 140); 
 			break;
 		}
+	STOP("CCity::SetDefaultColor(int)");
 }

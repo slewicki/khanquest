@@ -45,6 +45,7 @@ CEmitter::CEmitter(void)
 	m_dwPreviousTime = GetTickCount();
 	m_dwFrameTimer = GetTickCount();
 	m_cCurrentColor = D3DCOLOR_ARGB(0,0,0,0);
+	STOP("CEmitter::CEmitter()");
 }
 
 
@@ -83,7 +84,10 @@ void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY)
 
 	fin.open(emitterFileName, std::ios_base::in | std::ios_base::binary);
 	if(!fin.is_open())
+	{
+		STOP("CEmitter::LoadBinaryEmitter(char*, float, float)");
 		return;	
+	}
 
 #pragma region Read In
 	fin.read((char*)&nContinue, sizeof(short));
@@ -212,6 +216,8 @@ void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY)
 	}
 	if(vParticleList.size() > 0)
 		m_bHasParts = true;
+
+	STOP("CEmitter::LoadBinaryEmitter(char*, float, float)");
 }
 
 void CEmitter::LoadXMLEmitter(char* emitterFileName, float locX, float locY)
@@ -300,6 +306,7 @@ void CEmitter::LoadXMLEmitter(char* emitterFileName, float locX, float locY)
 	{
 		vParticleList.push_back(particle);
 	}
+	STOP("CEmitter::LoadXMLEmitter(char*, float, float)");
 
 }
 
