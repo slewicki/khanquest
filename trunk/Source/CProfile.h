@@ -18,36 +18,24 @@ using std::fstream;
 
 //log file item struct
 struct LOGITEM {
-	LARGE_INTEGER StartTime;
-	LARGE_INTEGER EndTime;
-	//USHORT Line;		//Line number in source file
-	vector<double> Time;		//NULL for function start
-	//LPSTR  Source;		//Source file path and name
-	LPSTR  Function;	//Function that was profiled
-	double  Average;
-	int NumCalled;
-	double MinTime;
-	double MaxTime;
+	LARGE_INTEGER StartTime;	//Function's Start Time
+	LARGE_INTEGER EndTime;		//Function's End Time
+	vector<double> Time;		//Vector storing all the times
+	LPSTR  Function;			//Function that was profiled
+	double  Average;			//Average of all the times together
+	int NumCalled;				//Number of times the function has been called
+	double MinTime;				//Minimum time a function ran
+	double MaxTime;				//Maximum time a function ran
 };
-
-//Profiler class
-//QueryPerformanceFrequency();
-//QueryPerformanceCounter();
-//LARGE_INTEGER
 
 class CProfile  
 {
 private:
-
-	//Location information
-	LPSTR		 m_szToken;
-	//LPSTR		 m_szFile;
-	//USHORT		 m_usLine;
-	LARGE_INTEGER m_liFreq;
-	LARGE_INTEGER m_liStart;
-	LARGE_INTEGER m_liEnd;
-	double m_dTotal;
-	double m_dAvg;
+	LPSTR m_szToken;			//Function name
+	LARGE_INTEGER m_liFreq;		//Frequency
+	LARGE_INTEGER m_liStart;	//Timer Start
+	LARGE_INTEGER m_liEnd;		//Timer End
+	double m_dTotal;			//Total time
 	int m_nTimesCalled;
 	vector<LOGITEM> Profile;
 	bool m_bChanged;
@@ -55,7 +43,6 @@ private:
 
 public:
 	//Constructor
-	//CProfile(LPSTR token, LPSTR strFile, USHORT nLine);
 	CProfile();
 	
 	//Destructor
@@ -69,7 +56,6 @@ public:
 };
 
 //CProfile useage requires only single declartion at beginning of function
-
 #if _DEBUG
 	
 #define PROFILE(token) CProfile::GetInstance()->Start(#token)
