@@ -78,6 +78,8 @@ void CProfile::Start(LPSTR token)
 			LOGITEM TempProfile;
 			TempProfile.Function = m_szToken;
 			TempProfile.StartTime = m_liStart;
+			TempProfile.NumCalled = m_nTimesCalled;
+			TempProfile.Average = 0;
 
 			Profile.push_back(TempProfile);
 		}
@@ -96,6 +98,8 @@ void CProfile::Start(LPSTR token)
 				LOGITEM TempProfile;
 				TempProfile.Function = m_szToken;
 				TempProfile.StartTime = m_liStart;
+				TempProfile.NumCalled = m_nTimesCalled;
+				TempProfile.Average = 0;
 
 				Profile.push_back(TempProfile);
 			}
@@ -112,7 +116,7 @@ void CProfile::Stop(LPSTR token)
 	m_dAvg = 0;
 
 
-	if(Profile.empty())
+	/*if(Profile.empty())
 	{
 		LOGITEM TempProfile;
 		TempProfile.EndTime = m_liEnd;
@@ -124,13 +128,13 @@ void CProfile::Stop(LPSTR token)
 		Profile.push_back(TempProfile);
 	}
 	else
-	{
+	{*/
 		for(unsigned int i = 0; i < Profile.size(); i++)
 		{
 			if(m_szToken == Profile[i].Function)
 			{
 				Profile[i].EndTime = m_liEnd;
-				m_dTotal = (double)((double)(m_liEnd.QuadPart - m_liStart.QuadPart) / (double)m_liFreq.QuadPart);
+				m_dTotal = (double)((double)(Profile[i].EndTime.QuadPart - Profile[i].StartTime.QuadPart) / (double)m_liFreq.QuadPart);
 				Profile[i].Time.push_back(m_dTotal);
 				Profile[i].NumCalled++;
 				//m_bChanged = true;
@@ -147,7 +151,7 @@ void CProfile::Stop(LPSTR token)
 
 			Profile.push_back(TempProfile);*/
 		//}
-	}
+	//}
 
 	//if(m_dTotal < 1)
 	//	m_dTotal = 1;
