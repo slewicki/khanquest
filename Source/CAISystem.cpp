@@ -13,6 +13,7 @@ CAISystem::CAISystem(void)
 {
 	PROFILE("CAISystem::CAISystem()");
 	m_pTE = CTileEngine::GetInstance();
+	STOP("CAISystem::CAISystem()");
 }
 
 CAISystem::~CAISystem(void)
@@ -39,6 +40,7 @@ void CAISystem::Exit(void)
 		delete MapPath[i];
 	}
 	delete [] MapPath;
+	STOP("CAISystem::Exit()");
 }
 void CAISystem::UpdateState(void)
 {
@@ -54,6 +56,7 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 	m_vPath.clear();
 
 	if (destination->bIsCollision)// || destination->bIsOccupied)
+		STOP("CAISystem::FindPath(CTile*, CTile*)");
 		return m_vPath;
 
 	POINT ptStart	= m_pTE->IsoMouse(current->ptLocalAnchor.x, current->ptLocalAnchor.y, 0);
@@ -249,6 +252,7 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 		Map[ptEnd.x][ptEnd.y]=TILEEND;
 	}
 	Exit();
+	STOP("CAISystem::FindPath(CTile*, CTile*)");
 	return m_vPath;
 }
 
