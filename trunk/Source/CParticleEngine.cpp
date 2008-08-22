@@ -53,25 +53,31 @@ void CParticleEngine::Render(float fElapsedTime)
 					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 					m_pD3D->GetDirect3DDevice()->SetRenderState (D3DRS_ALPHATESTENABLE, true);
 
-					POINT CamLoc;
-					CamLoc = m_pCamera->TransformToScreen( (int)(vEmitterList[i].vParticleList[j].m_fPartLocX), (int)(vEmitterList[i].vParticleList[j].m_fPartLocY) );
-
-					m_pTM->Draw(vEmitterList[i].vParticleList[j].m_nImageID,
-						(int)CamLoc.x,
-						(int)CamLoc.y,
-						(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleX,
-						(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleY,
-						0, 0, 0, 0,
-						D3DCOLOR_ARGB((int)vEmitterList[i].vParticleList[j].m_cCurrentColor.a, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.r, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.g, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.b)
-						);
-					//m_pTM->Draw(vEmitterList[i].vParticleList[j].m_nImageID,
-					//	(int)vEmitterList[i].vParticleList[j].m_fPartLocX,
-					//	(int)vEmitterList[i].vParticleList[j].m_fPartLocY,
-					//	(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleX,
-					//	(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleY,
-					//	0, 0, 0, 0,
-					//	D3DCOLOR_ARGB((int)vEmitterList[i].vParticleList[j].m_cCurrentColor.a, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.r, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.g, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.b)
-					//	);
+					if (m_pCamera)
+				{
+						POINT CamLoc;
+						CamLoc = m_pCamera->TransformToScreen( (int)(vEmitterList[i].vParticleList[j].m_fPartLocX), (int)(vEmitterList[i].vParticleList[j].m_fPartLocY) );
+	
+						m_pTM->Draw(vEmitterList[i].vParticleList[j].m_nImageID,
+							(int)CamLoc.x,
+							(int)CamLoc.y,
+							(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleX,
+							(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleY,
+							0, 0, 0, 0,
+							D3DCOLOR_ARGB((int)vEmitterList[i].vParticleList[j].m_cCurrentColor.a, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.r, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.g, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.b)
+							);
+					}
+//					else
+//					{
+//					m_pTM->Draw(vEmitterList[i].vParticleList[j].m_nImageID,
+//						(int)vEmitterList[i].vParticleList[j].m_fPartLocX,
+//						(int)vEmitterList[i].vParticleList[j].m_fPartLocY,
+//						(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleX,
+//						(float)vEmitterList[i].vParticleList[j].m_fCurrentScaleY,
+//						0, 0, 0, 0,
+//						D3DCOLOR_ARGB((int)vEmitterList[i].vParticleList[j].m_cCurrentColor.a, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.r, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.g, (int)vEmitterList[i].vParticleList[j].m_cCurrentColor.b)
+//						);
+//					}
 
 					// reset blend mode to default
 					m_pD3D->GetDirect3DDevice()->SetRenderState(D3DRS_SRCBLEND, source );
@@ -94,7 +100,7 @@ void CParticleEngine::Update(float fElapsedTime)
 				if (vEmitterList[i].m_bIsRunning)
 				{
 					m_fPartTimer += fElapsedTime;
-					if (m_fPartTimer > 1)
+					if (m_fPartTimer > .5)
 					{
 						if (vEmitterList[i].m_nPartCount < (int)vEmitterList[i].vParticleList.size())
 						{
