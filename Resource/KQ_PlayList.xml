@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PlayList>
-          <NumSongs>7</NumSongs>
+          <NumSongs>8</NumSongs>
           <Song>Resource/KQ_Intro.wav</Song>
           <Song>Resource/KQ_LoseBattle.wav</Song>
           <Song>Resource/KQ_LoseGame.wav</Song>
           <Song>Resource/KQ_WonBattle.wav</Song>
           <Song>Resource/KQ_WonGame.wav</Song>
           <Song>Resource/KQ_CitySelect.wav</Song>
-          <Song>resource/KQ_Credits.wav</Song>
+          <Song>Resource/KQ_Credits.wav</Song>
+          <Song>Resource/KQ_BattleSong.wav</Song>
 </PlayList>
+
+
+
 
