@@ -67,85 +67,85 @@ void CGamePlayState::Enter(void)
 	{
 		switch(CGame::GetInstance()->GetSelectedCity()->GetID())
 		{
-		case PCITY:
-
-			break;
 		case KCITY1:
+			Map->LoadFile("Resource/Levels/KQ_KWACity1.level");
 
 			break;
 		case KCITY2:
+			Map->LoadFile("Resource/Levels/KQ_KWACity2.level");
 
 			break;
 		case KCITY3:
+			Map->LoadFile("Resource/Levels/KQ_KWACity3.level");
 
-		break;
-	case XCITY1:
-		Map->LoadFile("Resource/Levels/KQ_XIACity1.level");
+			break;
+		case XCITY1:
+			Map->LoadFile("Resource/Levels/KQ_XIACity1.level");
 
-		break;
-	case XCITY2:
-		Map->LoadFile("Resource/Levels/KQ_XIACity2.level");
+			break;
+		case XCITY2:
+			Map->LoadFile("Resource/Levels/KQ_XIACity2.level");
 
-		break;
-	case XCITY3:
-		Map->LoadFile("Resource/Levels/KQ_XIACity3.level");
+			break;
+		case XCITY3:
+			Map->LoadFile("Resource/Levels/KQ_XIACity3.level");
 
-		break;
-	case JCITY1:
-		Map->LoadFile("Resource/Levels/KQ_JinCity1.level");
+			break;
+		case JCITY1:
+			Map->LoadFile("Resource/Levels/KQ_JinCity1.level");
 
-		break;
-	case JCITY2:
-		Map->LoadFile("Resource/Levels/KQ_JinCity2.level");
+			break;
+		case JCITY2:
+			Map->LoadFile("Resource/Levels/KQ_JinCity2.level");
 
-		break;
-	case JCITY3:
-		Map->LoadFile("Resource/Levels/KQ_JinCity3.level");
+			break;
+		case JCITY3:
+			Map->LoadFile("Resource/Levels/KQ_JinCity3.level");
 
-		break;
-	default:
-		Map->LoadFile("Resource/Levels/KQ_Level4.level");
-		// Bad news bears.
-		
-		break;
+			break;
+		default:
+			Map->LoadFile("Resource/Levels/KQ_Level4.level");
+			// Bad news bears.
+
+			break;
+		}
+
+		m_pOM->UpdatePlayerUnitStartTile();
+
+
+		//---------------------------------
+		m_rVictoryButton.left = 100;
+		m_rVictoryButton.top = 500;
+		m_rVictoryButton.right = 230;
+		m_rVictoryButton.bottom = 560;
+
+		m_nHUD_ID = m_pTM->LoadTexture("Resource/KQ_HUD.png");
+		m_nButtonID = m_pTM->LoadTexture("Resource/KQ_ScrollButton.png");
+
+		m_nLucidiaWhiteID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
+		m_nSelectionID = CSGD_TextureManager::GetInstance()->LoadTexture("Resource/KQ_SelectionCircle1.png");
+
+		m_nSkyCloudID   = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_SkyClouds.dat", -10, 200);
+		m_nSkyCloudID2  = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_SkyClouds2.dat", -10, 200);
+		CEventSystem::GetInstance()->RegisterClient("Attack_Sound",m_pOM);
+		CEventSystem::GetInstance()->RegisterClient("Dying_Sound",m_pOM);
+
+		m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
+		CGame::GetInstance()->SetSongPlay(BATTLESTATE);
+		m_pHUD->Enter();
+
+		if(CGame::GetInstance()->GetTutorialMode())
+		{
+			m_bTutorial = true;
+			m_rTutorial.top = 400;
+			m_rTutorial.left = 350;
+			m_rTutorial.bottom = m_rTutorial.top + 64;
+			m_rTutorial.right = m_rTutorial.left + 128;
+		}
+		else
+			m_bTutorial = false;
 	}
-
-	m_pOM->UpdatePlayerUnitStartTile();
-
-
-	//---------------------------------
-	m_rVictoryButton.left = 100;
-	m_rVictoryButton.top = 500;
-	m_rVictoryButton.right = 230;
-	m_rVictoryButton.bottom = 560;
-
-	m_nHUD_ID = m_pTM->LoadTexture("Resource/KQ_HUD.png");
-	m_nButtonID = m_pTM->LoadTexture("Resource/KQ_ScrollButton.png");
-
-	m_nLucidiaWhiteID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
-	m_nSelectionID = CSGD_TextureManager::GetInstance()->LoadTexture("Resource/KQ_SelectionCircle1.png");
-
-	m_nSkyCloudID   = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_SkyClouds.dat", -10, 200);
-	m_nSkyCloudID2  = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_SkyClouds2.dat", -10, 200);
-	CEventSystem::GetInstance()->RegisterClient("Attack_Sound",m_pOM);
-	CEventSystem::GetInstance()->RegisterClient("Dying_Sound",m_pOM);
-
-	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
-	CGame::GetInstance()->SetSongPlay(BATTLESTATE);
-	m_pHUD->Enter();
-
-	if(CGame::GetInstance()->GetTutorialMode())
-	{
-		m_bTutorial = true;
-		m_rTutorial.top = 400;
-		m_rTutorial.left = 350;
-		m_rTutorial.bottom = m_rTutorial.top + 64;
-		m_rTutorial.right = m_rTutorial.left + 128;
-	}
-	else
-		m_bTutorial = false;
 }
-
 void CGamePlayState::Exit(void)
 {
 	PROFILE("CGamePlayState::Exit()");
@@ -328,19 +328,18 @@ bool CGamePlayState::Input(float fElapsedTime)
 				m_pCamera->SetVelY(0);
 
 				// Mouse Camera Movement
-
-				// Move camera Left
-				//if(m_pCG->GetCursorPosition().x <= 5)
-				//	m_pCamera->SetVelX(-100);
-				//// Move camera Right
-				//if(m_pCG->GetCursorPosition().x >= 795)
-				//	m_pCamera->SetVelX(100);
-				//// Move camera Down
-				//if(m_pCG->GetCursorPosition().y >= 595 )
-				//	m_pCamera->SetVelY(100);
-				//// Move camera Up
-				//if(m_pCG->GetCursorPosition().y <= 5)
-				//	m_pCamera->SetVelY(-100); 
+				 //Move camera Left
+				if(m_pCG->GetCursorPosition().x <= 5)
+					m_pCamera->SetVelX(-100);
+				// Move camera Right
+				if(m_pCG->GetCursorPosition().x >= 795)
+					m_pCamera->SetVelX(100);
+				// Move camera Down
+				if(m_pCG->GetCursorPosition().y >= 595 )
+					m_pCamera->SetVelY(100);
+				// Move camera Up
+				if(m_pCG->GetCursorPosition().y <= 5)
+					m_pCamera->SetVelY(-100); 
 
 				// Keyboard Camera Movement
 				// Move camera Left
@@ -355,7 +354,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 				// Move camera Up
 				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_UP))))
 					m_pCamera->SetVelY(-100); 
-			
+
 			}
 #pragma endregion		
 		}
@@ -426,12 +425,12 @@ void CGamePlayState::Render(float fElapsedTime)
 			sprintf_s(buffer, 32, "Tile: %i, %i", TileLoc.x, TileLoc.y);
 			sprintf_s(buffer2, 32, "TileType: %i", Map->GetTile(0,TileLoc.x, TileLoc.y)->nType);
 
-		if(Map->GetTile(0,TileLoc.x, TileLoc.y)->bIsPlayerSpawn == true)
-			sprintf_s(buffer3, 32, "PlayerSpawn: True");
-		else
-			sprintf_s(buffer3, 32, "PlayerSpawn: False");
-		
-		POINT miniTileLoc = Map->IsoMiniMouse(m_pCG->GetCursorPosition().x, m_pCG->GetCursorPosition().y, 0);
+			if(Map->GetTile(0,TileLoc.x, TileLoc.y)->bIsPlayerSpawn == true)
+				sprintf_s(buffer3, 32, "PlayerSpawn: True");
+			else
+				sprintf_s(buffer3, 32, "PlayerSpawn: False");
+
+			POINT miniTileLoc = Map->IsoMiniMouse(m_pCG->GetCursorPosition().x, m_pCG->GetCursorPosition().y, 0);
 
 			sprintf_s(buffer4, 32, "Local Anchor: %i, %i", Map->GetTile(0,TileLoc.x, TileLoc.y)->ptLocalAnchor.x, Map->GetTile(0,TileLoc.x, TileLoc.y)->ptLocalAnchor.y);
 			sprintf_s(buffer5, 32, "Global Anchor: %i, %i", MapLoc.x, MapLoc.y);
