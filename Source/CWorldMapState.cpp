@@ -41,6 +41,7 @@ CWorldMapState::CWorldMapState(void)
 	m_clistCheatCode[2].push_back('d');
 	m_fJoyTimer = 0;
 	m_ptMousePos.x = m_ptMousePos.y = 0;
+	STOP("CWorldMapState::CWorldMapState()");
 }
 
 CWorldMapState::~CWorldMapState(void)
@@ -90,6 +91,7 @@ void CWorldMapState::Enter(void)
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
 	CGame::GetInstance()->SetSongPlay(CITYSELECT);
 	m_fJoyTimer = 0;
+	STOP("CWorldMapState::Enter()");
 
 }
 
@@ -105,6 +107,7 @@ void CWorldMapState::Exit(void)
 	m_pTM->ReleaseTexture(m_nAttackSymbolID);
 	m_pTM->ReleaseTexture(m_nTitleID);
 	m_pTM->ReleaseTexture(m_nLucidiaWhiteID);
+	STOP("CWorldMapState::Exit()");
 }
 
 bool CWorldMapState::Input(float fElapsedTime)
@@ -112,7 +115,10 @@ bool CWorldMapState::Input(float fElapsedTime)
 	PROFILE("CWorldMapState::Input(float)");
 	// Only get input if we aren't paused
 	if(m_bPaused)
+	{
+		STOP("CWorldMapState::Input(float)");
 		return true;
+	}
 	
 	m_fJoyTimer = fElapsedTime;
 #pragma region Controller to Mouse
@@ -270,6 +276,7 @@ bool CWorldMapState::Input(float fElapsedTime)
 			}
 		}
 	}
+	STOP("CWorldMapState::Input(float)");
 	return true;
 }
 
@@ -277,8 +284,12 @@ void CWorldMapState::Update(float fElapsedTime)
 {
 	PROFILE("CWorldMapState::Update(float)");
 	if(m_bPaused)
+	{
+		STOP("CWorldMapState::Update(float)");
 		return;
+	}
 	this->m_ptMousePos = CGame::GetInstance()->GetCursorPosition();
+	STOP("CWorldMapState::Update(float)");
 }
 
 void CWorldMapState::Render(float fElapsedTime)
@@ -333,6 +344,7 @@ void CWorldMapState::Render(float fElapsedTime)
 	m_cFont.DrawTextA(szGold + szGoldVal, 55, 525, .2f, .2f, D3DCOLOR_ARGB(255, 255, 255, 0));
 
 	//------------------------------------
+	STOP("CWorldMapState::Render(float)");
 
 }
 string CWorldMapState::IntToString(int nNum)
@@ -341,5 +353,6 @@ string CWorldMapState::IntToString(int nNum)
 	char szNumVal[10];
 	itoa(nNum, szNumVal, 10);
 	string szNum = szNumVal;
+	STOP("CWorldMapState::IntToString(int)");
 	return szNum;
 }

@@ -16,6 +16,7 @@
 
 CUnitCreationState::CUnitCreationState(void)
 {
+	PROFILE("CUnitCreationState::CUnitCreationState()");
 	m_nPlusButtonID = -1;
 	m_nMinusButtonID = -1;
 	m_nTotalUnits = 0;
@@ -23,6 +24,7 @@ CUnitCreationState::CUnitCreationState(void)
 	m_nBackgroundID = -1;
 	m_nFoodTotal = 0;
 	m_nScrollButtonID = -1;
+	STOP("CUnitCreationState::CUnitCreationState()");
 }
 
 
@@ -34,6 +36,7 @@ CUnitCreationState::~CUnitCreationState(void)
 
 void CUnitCreationState::Enter(void)
 {
+	PROFILE("CUnitCreationState::Enter()");
 	// Get Our Managers Ready
 	m_fTimer = 0.f;
 	
@@ -148,11 +151,14 @@ void CUnitCreationState::Enter(void)
 
 	m_bPaused = false;
 	m_fJoyTimer = 0;
+
+	STOP("CUnitCreationState::Enter()");
 	
 }
 
 void CUnitCreationState::Exit(void)
 {
+	PROFILE("CUnitCreationState::Exit()");
 	if(m_pWM->IsWavePlaying(m_nClick))
 		m_pWM->Stop(m_nClick);
 	m_pWM->UnloadWave(m_nClick);
@@ -175,13 +181,18 @@ void CUnitCreationState::Exit(void)
 		CFactory::CreatePlayerUnit(UNIT_ARCHER);
 	for (int i = 0; i < m_nNumUnits[UNIT_WAR_ELEPHANT] ; i++)
 		CFactory::CreatePlayerUnit(UNIT_WAR_ELEPHANT);
+	STOP("CUnitCreationState::Exit()");
 
 }
 
 bool CUnitCreationState::Input(float fElapsedTime)
 {
+	PROFILE("CUnitCreationState::Input(float)");
 	if(m_bPaused)
+	{
+		STOP("CUnitCreationState::Input(float)");
 		return true;
+	}
 
 	m_fJoyTimer = fElapsedTime;
 #pragma region Controller to Mouse
@@ -349,6 +360,7 @@ bool CUnitCreationState::Input(float fElapsedTime)
 		}
 	}
 
+	STOP("CUnitCreationState::Input(float)");
 	return true;
 }
 
@@ -359,6 +371,7 @@ void CUnitCreationState::Update(float fElapsedTime)
 
 void CUnitCreationState::Render(float fElapsedTime)
 {
+	PROFILE("CUnitCreationState::Render(float)");
 	m_pTM->Draw(m_nBackgroundID, -20, -10);
 	
 	int nPosY = 40;
@@ -460,21 +473,26 @@ void CUnitCreationState::Render(float fElapsedTime)
 	m_pTM->Draw(m_nScrollButtonID, m_rBackButton.left, m_rBackButton.top, .4f, .3f);
 	m_cFont.DrawTextA("Back", m_rBackButton.left+40, m_rBackButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 
+	STOP("CUnitCreationState::Render(float)");
 }
 
 string CUnitCreationState::IntToString(int nNum)
 {
+	PROFILE("CUnitCreationState::IntToString(int)");
 	char szNumVal[10];
 	itoa(nNum, szNumVal, 10);
 	string szNum = szNumVal;
+	STOP("CUnitCreationState::IntToString(int)");
 	return szNum;
 }
 
 string CUnitCreationState::FloatToString(float fNum)
 {
+	PROFILE("CUnitCreationState::FloatToString(float)");
 	char szNumVal[10];
 	sprintf_s(szNumVal, 10, "%.2f", fNum);
 	string szNum = szNumVal;
+	STOP("CUnitCreationState::FloatToString(float)");
 	return szNum;
 }
 
