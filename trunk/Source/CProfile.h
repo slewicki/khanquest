@@ -36,22 +36,59 @@ private:
 	LARGE_INTEGER m_liStart;	//Timer Start
 	LARGE_INTEGER m_liEnd;		//Timer End
 	double m_dTotal;			//Total time
-	int m_nTimesCalled;
-	vector<LOGITEM> Profile;
-	bool m_bChanged;
+	int m_nTimesCalled;			//Initial number of times called
+	vector<LOGITEM> Profile;	//Vector of profiles
+	bool m_bChanged;			//Check to see if profile is in the struct
 
 
 public:
-	//Constructor
+	/////////////////////////////////
+	//	Function:	"CProfile"
+	//
+	//	Purpose: Default Constructor
+	/////////////////////////////////
 	CProfile();
 	
-	//Destructor
+	/////////////////////////////////
+	//	Function:	"~CProfile"
+	//
+	//	Purpose: Destructor
+	/////////////////////////////////
 	~CProfile();
 
+	/////////////////////////////////
+	//	Function:	"GetInstance"
+	//
+	//	Purpose: Gets the instance to the class
+	/////////////////////////////////
 	static CProfile* GetInstance();
+
+	/////////////////////////////////
+	//	Function:	"Start"
+	//
+	//	Purpose: Starts the timer
+	/////////////////////////////////
 	void Start(LPSTR token);
+
+	/////////////////////////////////
+	//	Function:	"Stop"
+	//
+	//	Purpose: Stops the timer
+	/////////////////////////////////
 	void Stop(LPSTR token);
+
+	/////////////////////////////////
+	//	Function:	"Process"
+	//
+	//	Purpose: Calculates all variables
+	/////////////////////////////////
 	void Process();
+
+	/////////////////////////////////
+	//	Function:	"MinMaxOutput"
+	//
+	//	Purpose: Displays the min and max times of each function
+	/////////////////////////////////
 	void MinMaxOutput();
 };
 
