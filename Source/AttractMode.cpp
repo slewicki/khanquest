@@ -9,12 +9,11 @@
 #include "CSGD_Direct3D.h"
 #include "CSGD_DirectInput.h"
 #include "MainMenuState.h"
-
 CAttractMode::CAttractMode(void)
 {
 	PROFILE("CAttractMode::CAttractMode()");
 	m_nDemoID = -1;
-	
+	STOP("CAttractMode::CAttractMode()");
 }
 
 CAttractMode::~CAttractMode(void)
@@ -30,6 +29,7 @@ void CAttractMode::Enter()
 	m_nDemoID = m_pDS->LoadVideo(L"Resource/KQ_Test.WMV", m_pCG->GetWindowHandle(), m_pCG->GetIsWindowed());
 	m_pDS->Play(m_nDemoID);
 	m_pCG = CGame::GetInstance();
+	STOP("CAttractMode::Enter()");
 }
 
 bool CAttractMode::Input(float fElapsedTime)
@@ -41,6 +41,7 @@ bool CAttractMode::Input(float fElapsedTime)
 		m_pDS->Stop(m_nDemoID);
 		m_pCG->ChangeState(CMainMenuState::GetInstance());
 	}
+	STOP("CAttractMode::Input(float)");
 	return true;
 }
 
