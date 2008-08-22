@@ -573,7 +573,6 @@ void CHUDState::UpdateSelected()
 	m_vUnits.clear();
 	if(ObjectManager::GetInstance()->GetSelectedUnits().size() == 0)
 	{
-		m_vUnits.clear();
 		return;
 	}
 	for(unsigned int i = 0; i < ObjectManager::GetInstance()->GetSelectedUnits().size(); i++)

@@ -286,39 +286,27 @@ void ObjectManager::SetSelectedUnit(RECT toCheck)
 	int nSelectedAmount = 0;
 	for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
 	{
-
+		static_cast<CUnit*>(m_vObjectList[i])->SetSelected(false);
 		if(IntersectRect(&rIntersect, &static_cast<CUnit*>(m_vObjectList[i])->GetLocalRect(), &toCheck))
 		{
 			if(nSelectedAmount == 0 && static_cast<CUnit*>(m_vObjectList[i])->IsAlive() && static_cast<CUnit*>(m_vObjectList[i])->IsSelected() == false && !static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
 			{	
 				static_cast<CUnit*>(m_vObjectList[i])->SetSelected(true);
-				nSelectedAmount = 7;
+				nSelectedAmount = 8;
 			}
 			else if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() && static_cast<CUnit*>(m_vObjectList[i])->IsSelected() == false && static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
 			{
-				if(nSelectedAmount > 7)
-				{
-					static_cast<CUnit*>(m_vObjectList[i])->SetSelected(false);
-
-				}
-				else
+				if(nSelectedAmount <= 7)
 				{
 					static_cast<CUnit*>(m_vObjectList[i])->SetSelected(true);
 					++nSelectedAmount;
+
 				}
+				
 			}
 			
 		}
-		else
-		{
-			static_cast<CUnit*>(m_vObjectList[i])->SetSelected(false);
-		}
-		/*if(nSelectedAmount > 8)
-		{
-			for(unsigned int j = i; j < m_vObjectList.size(); j++)
-				static_cast<CUnit*>(m_vObjectList[j])->SetSelected(false);
-			break;
-		}*/
+		
 	}
 	CHUDState::GetInstance()->UpdateSelected();
 }
@@ -339,7 +327,7 @@ void ObjectManager::MoveSelectedUnits(POINT pMousePos)
 {
 	for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
 	{
-		if(static_cast<CUnit*>(m_vObjectList[i])->IsSelected())
+		if(static_cast<CUnit*>(m_vObjectList[i])->IsSelected() && static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
 		{
 			static_cast<CUnit*>(m_vObjectList[i])->ChangeDirection(CTileEngine::GetInstance()->GetTile(0,CTileEngine::GetInstance()->IsoMouse(pMousePos.x, pMousePos.y, 0).x, CTileEngine::GetInstance()->IsoMouse(pMousePos.x, pMousePos.y, 0).y));
 			static_cast<CUnit*>(m_vObjectList[i])->ClearPath();

@@ -8,6 +8,7 @@
 #include "CSGD_TextureManager.h"
 #include "CGamePlayState.h"
 #include "CEventSystem.h"
+#include "HUDState.h"
 CUnit::CUnit(int nType)
 {
 	PROFILE("CUnit::CUnit(int)");
@@ -29,7 +30,6 @@ CUnit::CUnit(int nType)
 	m_fDeathTimer		= 0.f;
 	m_fScanTimer		= 0.f;
 	m_bIsActive			= true;
-
 	m_pTarget			= NULL;		
 
 	m_nDirectionFacing	= SOUTH_WEST; 
@@ -172,7 +172,7 @@ void CUnit::Update(float fElapsedTime)
 	{
 		m_bIsAlive = false;
 		m_bIsSelected = false;
-		
+		CHUDState::GetInstance()->UpdateSelected();
 		//Start death animation and fading
 		m_pAnimInstance->Stop(m_nDirectionFacing, m_nState);
 		m_nState = DYING;
@@ -258,6 +258,7 @@ void CUnit::Update(float fElapsedTime)
 					ChangeDirection(m_pCurrentTile);
 				}
 			}
+			
 		}
 
 		break;
@@ -453,8 +454,12 @@ void CUnit::RenderSelection()
 	int nPosX = m_rLocalRect.left+ (int)((m_rLocalRect.right - m_rLocalRect.left)*.5f) - 32;
 	int nPosY = m_rLocalRect.top+ (int)((m_rLocalRect.bottom - m_rLocalRect.top)*.5f);
 
-	CSGD_TextureManager::GetInstance()->Draw(CGamePlayState::GetInstance()->GetSelectionID(), nPosX, nPosY);
-	if(m_pTarget)
+	if(m_bIsPlayerUnit)
+		CSGD_TextureManager::GetInstance()->Draw(CGamePlayState::GetInstance()->GetSelectionID(), nPosX, nPosY);
+	else
+		CSGD_TextureManager::GetInstance()->Draw(CGamePlayState::GetInstance()->GetSelectionID(), nPosX, nPosY, 1.f, 1.f, 0, 0, 0, 0, D3DCOLOR_ARGB(255, 255, 0, 0));
+
+	if(m_pTarget && m_bIsPlayerUnit)
 	{
 		int nPosX = m_pTarget->GetLocalRect().left+ (int)((m_pTarget->GetLocalRect().right - m_pTarget->GetLocalRect().left)*.5f) - 32;
 		int nPosY = m_pTarget->GetLocalRect().top+ (int)((m_pTarget->GetLocalRect().bottom - m_pTarget->GetLocalRect().top)*.5f);
@@ -536,6 +541,7 @@ void CUnit::ScanForEnemies()
 					{
 						// If unit finds an enemy, set the target
 						SetTarget(pUnit);
+						
 						return;
 					}
 				}
