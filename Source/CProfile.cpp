@@ -145,6 +145,7 @@ void CProfile::Process()
 
 	for(int i = 0; i < Profile.size(); i++)
 	{
+		fout.write("Function: ", strlen("Function "));
 		fout.write(Profile[i].Function, strlen(Profile[i].Function) + 1) << '\n';
 
 		for(int j = 0; j < Profile[i].Time.size(); j++)
@@ -155,9 +156,15 @@ void CProfile::Process()
 			//fout << Profile[i].Average << '\n';
 		}
 
+		fout.write("Total Time: \t", strlen("Total Time: "));
 		fout << Profile[i].Average << '\n';
+
+		fout.write("Avg. Time: \t", strlen("Avg. Time: "));
 		Profile[i].Average /= Profile[i].Time.size();
-		fout << Profile[i].Average << '\n' << '\n';
+		fout << Profile[i].Average << '\n';
+
+		fout.write("Times Called: \t", strlen("Times Called: "));
+		fout << Profile[i].NumCalled << '\n' << '\n';
 	}
 
 	fout.close();
