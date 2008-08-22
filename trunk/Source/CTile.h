@@ -31,7 +31,6 @@ public:
 	bool bIsVisible;		//Used to see if the tile had been explored
 	CUnit* pUnit;			//Used to check which unit is on a tile
 	D3DXCOLOR vColor;		//Used to change the tiles color
-	
 	CTile()
 	{
 		ptPos.x = ptPos.y = 0;

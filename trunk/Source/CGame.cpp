@@ -88,7 +88,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 
 	//	Call initialize on each wrapper:
 	#pragma region WrapperInit
-	if (!m_pD3D->InitDirect3D(hWnd, nScreenWidth, nScreenHeight, bIsWindowed, false))
+	if (!m_pD3D->InitDirect3D(hWnd, nScreenWidth, nScreenHeight, bIsWindowed, true))
 	{
 		MessageBox(0, "InitDirect3D Failed", " Error", MB_OK);
 		return false;
@@ -958,7 +958,6 @@ void CGame::LoseLastCity()
 void CGame::AddWins()
 {
 	PROFILE("CGame::AddWins()");
-	SetCityConquered(m_pSelectedCity);
 	++m_nWins;
 	if(m_nLoses > 0)
 		--m_nLoses;

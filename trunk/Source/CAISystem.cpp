@@ -60,7 +60,6 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 		STOP("CAISystem::FindPath(CTile*, CTile*)");
 		return m_vPath;
 	}
-
 	POINT ptStart	= m_pTE->IsoMouse(current->ptLocalAnchor.x, current->ptLocalAnchor.y, 0);
 	POINT ptEnd		= m_pTE->IsoMouse(destination->ptLocalAnchor.x, destination->ptLocalAnchor.y, 0);
 	POINT ptPath;

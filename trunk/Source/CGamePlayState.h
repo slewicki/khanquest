@@ -20,7 +20,6 @@
 #include "CCamera.h"
 #include "ObjectManager.h"
 #include "CParticleEngine.h"
-
 class CHUDState;
 class CGame;
 class CGamePlayState : public IGameState
@@ -56,6 +55,7 @@ private:
 	// REMOVE AFTER DEMO
 	RECT									m_rVictoryButton;
 	//------------------------------------------------------
+	int										m_nScrollButtonID;
 	int										m_nButtonID;
 	int										m_nHUD_ID;
 	CBitmapFont								m_cFont;
@@ -64,6 +64,8 @@ private:
 	int										m_nSelectionID;
 	float									m_fJoyTimer;
 	POINT									m_ptMousePos;
+	bool									m_bTutorial;
+	RECT									m_rTutorial;
 	// Create a vector of list of selected units (CUnit*) and make an accessor
 	// for the HUD to use.  The HUD should disply up to 8 units, the max that can be selected.
 

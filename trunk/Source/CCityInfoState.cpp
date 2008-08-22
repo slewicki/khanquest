@@ -9,7 +9,7 @@
 #include "CCityInfoState.h"
 #include "CWorldMapState.h"
 #include "CUnitCreationState.h"
-
+#include "CGame.h"
 
 
 CCityInfoState::CCityInfoState(void)
@@ -25,7 +25,7 @@ CCityInfoState::CCityInfoState(void)
 
 CCityInfoState::~CCityInfoState(void)
 {
-	
+
 }
 
 
@@ -64,20 +64,20 @@ void CCityInfoState::Enter(void)
 		m_nDisplayID = m_pTM->LoadTexture("Resource/KQ_KInfoBkg.png");
 		m_szTitle = " KHWAREZMIAN";
 		m_szDescription = 
-		"The Khwarezmian Empire controls this city.  Their /strength lies in their entirely mounted army.  Be /wary of their War Elephants, Khan, for their power /is unmatched in the known world.";
+			"The Khwarezmian Empire controls this city.  Their /strength lies in their entirely mounted army.  Be /wary of their War Elephants, Khan, for their power /is unmatched in the known world.";
 		break;
 	case XIA_CITY:
 		m_nDisplayID = m_pTM->LoadTexture("Resource/KQ_XiaInfoBkg.png");
 		m_szTitle = "          XIA";
 		m_szDescription = 
-		"The Xia Dynasty controls this city.  Their axmen are /vicious barbarians, thirsty for blood.  They travel /only by foot, Sire, and we should take advantage /of that."; 
-		
+			"The Xia Dynasty controls this city.  Their axmen are /vicious barbarians, thirsty for blood.  They travel /only by foot, Sire, and we should take advantage /of that."; 
+
 		break;
 	case JIN_CITY:
 		m_nDisplayID = m_pTM->LoadTexture("Resource/KQ_JinInfoBkg.png");
 		m_szTitle = "          JIN";
 		m_szDescription = 
-		"The Jin Dynasty controls this city.  The Jin boast of /their untouchable, ranged army.  They live and die /by their archers, my lord, surely we will put them to /the test.";
+			"The Jin Dynasty controls this city.  The Jin boast of /their untouchable, ranged army.  They live and die /by their archers, my lord, surely we will put them to /the test.";
 		break;
 	default:
 		// We got a problem here
@@ -87,7 +87,19 @@ void CCityInfoState::Enter(void)
 	m_nFontID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_cFont.InitBitmapFont(m_nFontID, ' ', 16, 128, 128);
 
-	m_pCG->SetSongPlay(CITYSELECT);	
+	m_pCG->SetSongPlay(CITYSELECT);		
+
+	if(CGame::GetInstance()->GetTutorialMode())
+	{
+		m_bTutorial = true;
+		m_rTutorial.top = 400;
+		m_rTutorial.left = 350;
+		m_rTutorial.bottom = m_rTutorial.top + 64;
+		m_rTutorial.right = m_rTutorial.left + 128;
+	}
+	else
+		m_bTutorial = false;
+
 	STOP("CCityInfoState::Enter()");
 }
 
@@ -107,123 +119,140 @@ void CCityInfoState::Exit(void)
 bool CCityInfoState::Input(float fElapsedTime)
 {
 	PROFILE("CCityInfoState::Input(float)");
-	m_JoyTimer += fElapsedTime;
-	m_fJoyTimer += fElapsedTime;
+	if(!m_bTutorial)
+	{
+		m_JoyTimer += fElapsedTime;
+		m_fJoyTimer += fElapsedTime;
 
 #pragma region Controller to Mouse
-	
-	if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
-	{
-		if(m_fJoyTimer > .0002f)
+
+		if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y-3);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .0002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y-3);
+				m_fJoyTimer = 0;
+			}
 		}
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
-	{
-		if(m_fJoyTimer > .0002f)
+		else if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y-3);
-			m_fJoyTimer = 0;
-		}	
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
-	{
-		if(m_fJoyTimer > .0002f)
-		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y+3);
-			m_fJoyTimer = 0;
-		}	
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
-	{
-		if(m_fJoyTimer > .0002f)
-		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y+3);
-			m_fJoyTimer = 0;
-		}	
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_UP))
-	{
-		if(m_fJoyTimer > .0002f)
-		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y-3);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .0002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y-3);
+				m_fJoyTimer = 0;
+			}	
 		}
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
-	{
-		if(m_fJoyTimer > .0002f)
+		else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y+3);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .0002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y+3);
+				m_fJoyTimer = 0;
+			}	
 		}
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
-	{
-		if(m_fJoyTimer > .0002f)
+		else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .0002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y+3);
+				m_fJoyTimer = 0;
+			}	
 		}
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
-	{
-		if(m_fJoyTimer > .0002f)
+		else if(m_pDI->GetJoystickDir(JOYSTICK_UP))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .0002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x,m_ptMousePos.y-3);
+				m_fJoyTimer = 0;
+			}
 		}
-	}
+		else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
+		{
+			if(m_fJoyTimer > .0002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x,m_ptMousePos.y+3);
+				m_fJoyTimer = 0;
+			}
+		}
+		else if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+		{
+			if(m_fJoyTimer > .0002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y);
+				m_fJoyTimer = 0;
+			}
+		}
+		else if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+		{
+			if(m_fJoyTimer > .0002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y);
+				m_fJoyTimer = 0;
+			}
+		}
 
 
 #pragma endregion
 
-	if(m_fPositionX <= 270.f && !m_bRetract)
-	{
-		if(m_pCG->IsMouseInRect(m_rInvade))
+		if(m_fPositionX <= 270.f && !m_bRetract)
 		{
-			m_pCG->SetCursorClick();
-			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2))
+			if(m_pCG->IsMouseInRect(m_rInvade))
 			{
-				m_pWM->Play(m_nClick);
-				// This function is used only if the city is conquered after battle
-				//--------------------
-				//m_pCG->SetCityConquered(m_pSelectedCity);
-				//--------------------
-				m_bRetract = true;
-				m_bClickInvade = true;
-				
+				m_pCG->SetCursorClick();
+				if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2))
+				{
+					m_pWM->Play(m_nClick);
+					// This function is used only if the city is conquered after battle
+					//--------------------
+					//m_pCG->SetCityConquered(m_pSelectedCity);
+					//--------------------
+					m_bRetract = true;
+					m_bClickInvade = true;
+
+				}
+			}
+			else if(m_pCG->IsMouseInRect(m_rCancel))
+			{
+				m_pCG->SetCursorClick();
+				if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_Y))
+				{
+					m_pWM->Play(m_nClick);
+
+					m_bRetract = true;
+					// This function is used only if the player lost 2 battles
+					//--------------------
+					//m_pCG->LoseLastCity();
+					//--------------------
+				}
+			}
+
+		}
+		}
+		else 
+		{
+			if(CGame::GetInstance()->IsMouseInRect(m_rTutorial))
+			{
+				CGame::GetInstance()->SetCursorClick();
+				if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT)|| m_pDI->GetBufferedJoyButton(JOYSTICK_X))
+				{
+					m_pWM->Play(m_nClick);
+					m_bTutorial = false;
+				}
 			}
 		}
-		else if(m_pCG->IsMouseInRect(m_rCancel))
-		{
-			m_pCG->SetCursorClick();
-			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_Y))
-			{
-				m_pWM->Play(m_nClick);
-
-				m_bRetract = true;
-				// This function is used only if the player lost 2 battles
-				//--------------------
-				//m_pCG->LoseLastCity();
-				//--------------------
-			}
-		}
-
-	}
-	STOP("CCityInfoState::Input(float)");
-	return true;
+		
+		STOP("CCityInfoState::Input(float)");
+		return true;
 }
+
 
 void CCityInfoState::Update(float fElapsedTime)
 {
@@ -242,36 +271,47 @@ void CCityInfoState::Update(float fElapsedTime)
 	else if(m_fPositionX >= 270)
 		m_fPositionX  -= 500*fElapsedTime;
 	STOP("CCityInfoState::Update(float)");
-	
+
 }
 
 void CCityInfoState::Render(float fElapsedTime)
 {
 	PROFILE("CCityInfoState::Render(float)");
-	m_pTM->Draw(m_nDisplayID, (int)m_fPositionX, 20);
-	m_pTM->Draw(m_nButtonID, (int)m_fPositionX+87, 465, .4f, .3f);
-	m_cFont.DrawTextA("INVADE", (int)m_fPositionX+99, 489, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
-	m_pTM->Draw(m_nButtonID, (int)m_fPositionX+300, 465, .4f, .3f);
-	m_cFont.DrawTextA("CANCEL", (int)m_fPositionX+318, 489, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
-	
-	m_cFont.DrawTextA(m_szTitle, (int)m_fPositionX+90, 40, .3f, .3f, D3DCOLOR_ARGB(255, 0, 0, 0));
-	
-	char szG[10];
-	char szF[10];
-	itoa(m_pSelectedCity->GetGoldTribute(), szG, 10);
-	itoa(m_pCG->GetNextFoodTribute(), szF, 10);
+	if(!m_bTutorial)
+	{
+		m_pTM->Draw(m_nDisplayID, (int)m_fPositionX, 20);
+		m_pTM->Draw(m_nButtonID, (int)m_fPositionX+87, 465, .4f, .3f);
+		m_cFont.DrawTextA("INVADE", (int)m_fPositionX+99, 489, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+		m_pTM->Draw(m_nButtonID, (int)m_fPositionX+300, 465, .4f, .3f);
+		m_cFont.DrawTextA("CANCEL", (int)m_fPositionX+318, 489, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 
-	// Print Food and Gold values gained from conquering this city
-	string szFood = "Food Tribute:  ";
-	string szGold = "/Sackable Gold: ";
-	string szGoldVal = szG;
-	string szFoodVal = szF;
-	m_cFont.DrawTextA(szFood + szFoodVal + szGold + szGoldVal, (int)m_fPositionX+50, 275, .15f, .15f, D3DCOLOR_ARGB(255, 0, 0, 0));
-	
-	// Scout Report: Hints about the city
-	m_cFont.DrawTextA("Scout's Report", (int)m_fPositionX+190, 325, .18f, .18f, D3DCOLOR_ARGB(255, 0, 0, 0));
-	m_cFont.DrawTextA(m_szDescription, (int)m_fPositionX+50, 355, .15f, .15f, D3DCOLOR_ARGB(255, 0, 0, 0));
+		m_cFont.DrawTextA(m_szTitle, (int)m_fPositionX+90, 40, .3f, .3f, D3DCOLOR_ARGB(255, 0, 0, 0));
+
+		char szG[10];
+		char szF[10];
+		itoa(m_pSelectedCity->GetGoldTribute(), szG, 10);
+		itoa(m_pCG->GetNextFoodTribute(), szF, 10);
+
+		// Print Food and Gold values gained from conquering this city
+		string szFood = "Food Tribute:  ";
+		string szGold = "/Sackable Gold: ";
+		string szGoldVal = szG;
+		string szFoodVal = szF;
+		m_cFont.DrawTextA(szFood + szFoodVal + szGold + szGoldVal, (int)m_fPositionX+50, 275, .15f, .15f, D3DCOLOR_ARGB(255, 0, 0, 0));
+
+		// Scout Report: Hints about the city
+		m_cFont.DrawTextA("Scout's Report", (int)m_fPositionX+190, 325, .18f, .18f, D3DCOLOR_ARGB(255, 0, 0, 0));
+		m_cFont.DrawTextA(m_szDescription, (int)m_fPositionX+50, 355, .15f, .15f, D3DCOLOR_ARGB(255, 0, 0, 0));
+	}
+	else if(CGame::GetInstance()->GetTutorialMode())
+	{
+		RECT toDraw; toDraw.top = 0; toDraw.left = 0; toDraw.right = 578; toDraw.bottom = 495;
+		int nImage = m_pTM->LoadTexture("Resource/KQ_TutorialBox.png");
+		m_pTM->Draw(nImage,0,2,1.4f,1.2f,&toDraw);
+		m_pTM->Draw(m_nButtonID,325,400,.4f,.3f);
+		m_cFont.DrawTextA("Accept",350,425,.2f,.2f,D3DCOLOR_ARGB(255,255,0,0));
+		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
+		m_cFont.DrawTextA("This next screen will tell you/who you are about to attack/and how much of a tribute they are worth./See the Scout's Reportfor more/important information.",100,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+	}		
 	STOP("CCityInfoState::Render(float)");
-
 }
-

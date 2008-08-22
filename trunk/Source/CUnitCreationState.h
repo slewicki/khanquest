@@ -54,9 +54,8 @@ private:
 	int										m_nFoodTotal;
 
 	bool									m_bPaused;
-
-	int					 m_nIconID;
-
+	bool									m_bTutorial;
+	RECT									m_rTutorial;
 
 	////////////////////////////////////////////
 	//	Function:	"CUnitCreationState(Constructor)"

@@ -89,7 +89,16 @@ static COutroState* GetInstance(void)
 	//	 Purpose: To render our information to the screen
 	//////////////////////////////////////////////////////
 	void Render(float fElapsedTime);
-	
+	/////////////////////////////////////////////////////
+	//	Function: “Parse”
+	//	Last Modified: Aug 2, 2008
+	//	 Purpose: Reads in the outro state using xml
+	//////////////////////////////////////////////////////
 	bool Parse(char* szFilename);
+	/////////////////////////////////////////////////////
+	//	Function: “FadeOut”
+	//	Last Modified: Aug 2, 2008
+	//	 Purpose: Fades the current state out
+	//////////////////////////////////////////////////////
 	void FadeOut(float fElapsedTime);
 };

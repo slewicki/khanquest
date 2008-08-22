@@ -58,6 +58,7 @@ class CMainMenuState : public IGameState
 		Load,
 		Options,
 		ExitGame,
+		Tutorial,
 	};
 
 	////////////////////////////////////////////
@@ -136,11 +137,23 @@ public:
 	//  Purpose : Modifies the specified type.
 	///////////////////////////////////////////
 	void SetPause(bool value){m_bPaused = value;}
-
-
+	/////////////////////////////////////////////////////
+	//	Function: “Parse”
+	//	Last Modified: Aug 2, 2008
+	//	 Purpose: Reads in the menu through xml
+	//////////////////////////////////////////////////////
 	bool Parse(char* szFileName);
-
+	/////////////////////////////////////////////////////
+	//	Function: “FadeIn”
+	//	Last Modified: Aug 2, 2008
+	//	 Purpose: Fades the current state in
+	//////////////////////////////////////////////////////
 	void FadeIn(float fElpasedTime);
+	/////////////////////////////////////////////////////
+	//	Function: “FadeOut”
+	//	Last Modified: Aug 2, 2008
+	//	 Purpose: Fades the current state out
+	//////////////////////////////////////////////////////
 	void FadeOut(float fElpasedTime);
 
 };

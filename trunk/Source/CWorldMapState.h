@@ -41,7 +41,10 @@ private:
 	int								m_nClick;
 	float							m_fJoyTimer;
 	bool							m_bPaused;
-	
+	int								m_nScrollButtonID;
+	bool							m_bTutorial;
+	RECT							m_rTutorial;
+
 	// cheat codes
 	list<char> m_clistInputQueue;
 	list<char> m_clistCheatCode[NUM_CHEATS];

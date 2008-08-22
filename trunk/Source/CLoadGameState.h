@@ -43,7 +43,8 @@ private:
 	CBitmapFont								m_cFont;
 	
 	int										m_nLucidiaWhiteID;
-
+	bool									m_bTutorial;
+	RECT									m_rTutorial;
 	RECT									m_rClickRect[3];
 	RECT									m_rAccept;
 	RECT									m_rBack;

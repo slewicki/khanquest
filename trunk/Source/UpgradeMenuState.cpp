@@ -73,6 +73,16 @@ void CUpgradeMenuState::Enter()
 	m_fJoyTimer = 0;
 	CGame::GetInstance()->SetSongPlay(CITYSELECT);
 	m_nGoldTotal = CGame::GetInstance()->GetTotalGold();
+	if(CGame::GetInstance()->GetTutorialMode())
+	{
+		m_bTutorial = true;
+		m_rTutorial.top = 400;
+		m_rTutorial.left = 350;
+		m_rTutorial.bottom = m_rTutorial.top + 64;
+		m_rTutorial.right = m_rTutorial.left + 128;
+	}
+	else
+		m_bTutorial = false;
 }
 
 void CUpgradeMenuState::Exit()
@@ -110,7 +120,7 @@ void CUpgradeMenuState::Exit()
 	}
 	if(m_bAccept)
 	{
-	CGame::GetInstance()->SetTotalGold(m_nGoldTotal);
+		CGame::GetInstance()->SetTotalGold(m_nGoldTotal);
 		for(int j = 0; j < 6; ++j)
 		{	
 			for(int i = 0; i < 3; ++i)
@@ -124,7 +134,7 @@ void CUpgradeMenuState::Exit()
 		m_pWM->Stop(m_nClick);
 	m_pWM->UnloadWave(m_nClick);
 
-	
+
 	m_pTM->ReleaseTexture(m_nLucidiaWhiteID);
 	m_pTM->ReleaseTexture(m_nBackgroundID);
 	m_pTM->ReleaseTexture(m_nScrollButtonID);
@@ -132,109 +142,111 @@ void CUpgradeMenuState::Exit()
 
 bool CUpgradeMenuState::Input(float fElapsedTime)
 {
-		m_fJoyTimer = fElapsedTime;
+	m_fJoyTimer = fElapsedTime;
+	if(!m_bTutorial)
+	{
 #pragma region Controller to Mouse
-	
-	if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
-	{
-		if(m_fJoyTimer > .002f)
+
+		if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y-3);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y-3);
+				m_fJoyTimer = 0;
+			}
 		}
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
-	{
-		if(m_fJoyTimer > .002f)
+		else if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y-3);
-			m_fJoyTimer = 0;
-		}	
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
-	{
-		if(m_fJoyTimer > .002f)
-		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y+3);
-			m_fJoyTimer = 0;
-		}	
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
-	{
-		if(m_fJoyTimer > .002f)
-		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y+3);
-			m_fJoyTimer = 0;
-		}	
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_UP))
-	{
-		if(m_fJoyTimer > .002f)
-		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y-3);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y-3);
+				m_fJoyTimer = 0;
+			}	
 		}
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
-	{
-		if(m_fJoyTimer > .002f)
+		else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y+3);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y+3);
+				m_fJoyTimer = 0;
+			}	
 		}
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
-	{
-		if(m_fJoyTimer > .002f)
+		else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y+3);
+				m_fJoyTimer = 0;
+			}	
 		}
-	}
-	else if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
-	{
-		if(m_fJoyTimer > .002f)
+		else if(m_pDI->GetJoystickDir(JOYSTICK_UP))
 		{
-			GetCursorPos(&m_ptMousePos);
-			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y);
-			m_fJoyTimer = 0;
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x,m_ptMousePos.y-3);
+				m_fJoyTimer = 0;
+			}
 		}
-	}
+		else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
+		{
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x,m_ptMousePos.y+3);
+				m_fJoyTimer = 0;
+			}
+		}
+		else if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+		{
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y);
+				m_fJoyTimer = 0;
+			}
+		}
+		else if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+		{
+			if(m_fJoyTimer > .002f)
+			{
+				GetCursorPos(&m_ptMousePos);
+				SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y);
+				m_fJoyTimer = 0;
+			}
+		}
 
 
 #pragma endregion
 
-	if(CGame::GetInstance()->IsMouseInRect(m_rAttackButton))
-	{
-		CGame::GetInstance()->SetCursorClick();
-		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
+		if(CGame::GetInstance()->IsMouseInRect(m_rAttackButton))
 		{
-			m_pWM->Play(m_nClick);
-			m_bAccept = true;
-			CUnitCreationState::GetInstance()->SetPause(false);
-			CGame::GetInstance()->PopCurrentState();
+			CGame::GetInstance()->SetCursorClick();
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
+			{
+				m_pWM->Play(m_nClick);
+				m_bAccept = true;
+				CUnitCreationState::GetInstance()->SetPause(false);
+				CGame::GetInstance()->PopCurrentState();
+			}
 		}
-	}
-	if(CGame::GetInstance()->IsMouseInRect(m_rBackButton))
-	{
-		CGame::GetInstance()->SetCursorClick();
-		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X) )
+		if(CGame::GetInstance()->IsMouseInRect(m_rBackButton))
 		{
-			m_pWM->Play(m_nClick);
-			for( int i = 0; i < 6; ++i)
-				m_bModified[i] = false;
-			m_bAccept = false;
-			CUnitCreationState::GetInstance()->SetPause(false);
-			CGame::GetInstance()->PopCurrentState();
+			CGame::GetInstance()->SetCursorClick();
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X) )
+			{
+				m_pWM->Play(m_nClick);
+				for( int i = 0; i < 6; ++i)
+					m_bModified[i] = false;
+				m_bAccept = false;
+				CUnitCreationState::GetInstance()->SetPause(false);
+				CGame::GetInstance()->PopCurrentState();
+			}
 		}
-	}
 
 		for (int j = 0; j < 6; j++)
 		{
@@ -622,6 +634,19 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 							}break;
 						}	
 					}
+				}
+			}
+		}
+	}
+	else 
+	{
+		if(CGame::GetInstance()->IsMouseInRect(m_rTutorial))
+		{
+			CGame::GetInstance()->SetCursorClick();
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT)|| m_pDI->GetBufferedJoyButton(JOYSTICK_X))
+			{
+				m_pWM->Play(m_nClick);
+				m_bTutorial = false;
 			}
 		}
 	}
@@ -631,67 +656,79 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 void CUpgradeMenuState::Render(float fElapsedTime)
 {
 	m_pTM->Draw(m_nBackgroundID, -20, -10);
-	m_cFont.DrawTextA("Upgrades",225,0,.5,.5,D3DCOLOR_ARGB(255,255,0,0));
-
-	for( int j = 0; j < 6; ++j)
+	if(!m_bTutorial)
 	{
-		for(int i = 0; i < 3; ++i)
+		m_cFont.DrawTextA("Upgrades",225,0,.5,.5,D3DCOLOR_ARGB(255,255,0,0));
+
+		for( int j = 0; j < 6; ++j)
 		{
-			m_pTM->Draw(m_nCheckBoxID,m_rCheckBox[j][i].left,m_rCheckBox[j][i].top);
-			if(m_bUpgraded[j][i])
-				m_pTM->Draw(m_nCheckMarkID,m_rCheckBox[j][i].left,m_rCheckBox[j][i].top);
-		}
-
-		m_cFont.DrawTextA("Speed:",185,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
-		m_cFont.DrawTextA("Attack Speed:",330,100+j*64,.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
-		m_cFont.DrawTextA("Attack Power:",560,100+j*64,.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
-
-		switch(j)
-		{	
-		case 0:
+			for(int i = 0; i < 3; ++i)
 			{
-				m_cFont.DrawTextA("Infantry:",		20,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
+				m_pTM->Draw(m_nCheckBoxID,m_rCheckBox[j][i].left,m_rCheckBox[j][i].top);
+				if(m_bUpgraded[j][i])
+					m_pTM->Draw(m_nCheckMarkID,m_rCheckBox[j][i].left,m_rCheckBox[j][i].top);
 			}
-			break;
-		case 1:
-			{
-				m_cFont.DrawTextA("Cavalry:",		20,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
+
+			m_cFont.DrawTextA("Speed:",185,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
+			m_cFont.DrawTextA("Attack Speed:",330,100+j*64,.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
+			m_cFont.DrawTextA("Attack Power:",560,100+j*64,.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
+
+			switch(j)
+			{	
+			case 0:
+				{
+					m_cFont.DrawTextA("Infantry:",		20,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
+				}
+				break;
+			case 1:
+				{
+					m_cFont.DrawTextA("Cavalry:",		20,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
+				}
+				break;
+			case 2:
+				{
+					m_cFont.DrawTextA("Cavalry Archer:",20,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
+				}
+				break;
+			case 3:
+				{
+					m_cFont.DrawTextA("Axmen:",			20,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
+				}
+				break;
+			case 4:
+				{
+					m_cFont.DrawTextA("Archer:",		20,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
+				}
+				break;
+			case 5:
+				{
+					m_cFont.DrawTextA("War Elephant:",	20,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
+				}
+				break;
 			}
-			break;
-		case 2:
-			{
-				m_cFont.DrawTextA("Cavalry Archer:",20,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
-			}
-			break;
-		case 3:
-			{
-				m_cFont.DrawTextA("Axmen:",			20,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
-			}
-			break;
-		case 4:
-			{
-				m_cFont.DrawTextA("Archer:",		20,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
-			}
-			break;
-		case 5:
-			{
-				m_cFont.DrawTextA("War Elephant:",	20,100 + (j*64),.15f,.15f,D3DCOLOR_ARGB(255,0,0,0));
-			}
-			break;
-		}
-	}	
-	m_cFont.DrawTextA("Speed Cost: "+IntToString(SPEED),50,475,.15f,.15f,D3DCOLOR_ARGB(255,255,0,0));
-	m_cFont.DrawTextA("Attack Speed Cost: "+IntToString(ATTACKSPEED),50,500,.15f,.15f,D3DCOLOR_ARGB(255,255,0,0));
-	m_cFont.DrawTextA("Attack Power Cost: "+IntToString(ATTACK),50,525,.15f,.15f,D3DCOLOR_ARGB(255,255,0,0));
+		}	
+		m_cFont.DrawTextA("Speed Cost: "+IntToString(SPEED),50,475,.15f,.15f,D3DCOLOR_ARGB(255,255,0,0));
+		m_cFont.DrawTextA("Attack Speed Cost: "+IntToString(ATTACKSPEED),50,500,.15f,.15f,D3DCOLOR_ARGB(255,255,0,0));
+		m_cFont.DrawTextA("Attack Power Cost: "+IntToString(ATTACK),50,525,.15f,.15f,D3DCOLOR_ARGB(255,255,0,0));
 
 
-	m_cFont.DrawTextA("Gold: " + IntToString(m_nGoldTotal), 50, 550, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));
-	m_pTM->Draw(m_nScrollButtonID, m_rAttackButton.left, m_rAttackButton.top, .4f, .3f);
-	m_cFont.DrawTextA("Accept", m_rAttackButton.left+30, m_rAttackButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+		m_cFont.DrawTextA("Gold: " + IntToString(m_nGoldTotal), 50, 550, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));
+		m_pTM->Draw(m_nScrollButtonID, m_rAttackButton.left, m_rAttackButton.top, .4f, .3f);
+		m_cFont.DrawTextA("Accept", m_rAttackButton.left+30, m_rAttackButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 
-	m_pTM->Draw(m_nScrollButtonID, m_rBackButton.left, m_rBackButton.top, .4f, .3f);
-	m_cFont.DrawTextA("Cancel", m_rBackButton.left+40, m_rBackButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
-
+		m_pTM->Draw(m_nScrollButtonID, m_rBackButton.left, m_rBackButton.top, .4f, .3f);
+		m_cFont.DrawTextA("Cancel", m_rBackButton.left+40, m_rBackButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+	}
+	else if(CGame::GetInstance()->GetTutorialMode())
+	{
+		RECT toDraw; toDraw.top = 0; toDraw.left = 0; toDraw.right = 578; toDraw.bottom = 495;
+		int nImage = m_pTM->LoadTexture("Resource/KQ_TutorialBox.png");
+		m_pTM->Draw(nImage,0,2,1.4f,1.2f,&toDraw);
+		m_pTM->Draw(m_nScrollButtonID,325,400,.4f,.3f);
+		m_cFont.DrawTextA("Accept",350,425,.2f,.2f,D3DCOLOR_ARGB(255,255,0,0));
+		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
+		m_cFont.DrawTextA("       This next screen will let you upgrade units./The cost of upgrades are in the bottom left corner./The total ammount of gold you currently possess/is directly below them.",30,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+	}		
 }
 
 string CUpgradeMenuState::IntToString(int nNum)

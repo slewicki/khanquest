@@ -14,7 +14,6 @@
 #include "CFactory.h"
 
 
-
 CUnitCreationState::CUnitCreationState(void)
 {
 	PROFILE("CUnitCreationState::CUnitCreationState()");
@@ -63,8 +62,7 @@ void CUnitCreationState::Enter(void)
 	//m_nUnitID[AXMEN] = m_pTM->LoadTexture("Resource/KQ_Axmen.png");
 	//m_nUnitID[ARCHER] = m_pTM->LoadTexture("Resource/KQ_Archer.png");
 	//m_nUnitID[WAR_ELEPHANT] = m_pTM->LoadTexture("Resource/KQ_WarElephant.png");
-	m_nIconID = m_pTM->LoadTexture("Resource/KQ_UnitIcons.png");
-	
+
 	// Register any Events with the CUnitCreationState
 	m_nLucidiaWhiteID = m_pTM->LoadTexture("Resource/KQ_FontLucidiaWhite.png");
 	m_nPlusButtonID = m_pTM->LoadTexture("Resource/KQ_PlusButton.png");
@@ -84,7 +82,6 @@ void CUnitCreationState::Enter(void)
 	m_nUnitCosts[UNIT_AXMEN] = 65;
 	m_nUnitCosts[UNIT_ARCHER] = 60;
 	m_nUnitCosts[UNIT_WAR_ELEPHANT] = 300;
-
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -154,9 +151,17 @@ void CUnitCreationState::Enter(void)
 
 	m_bPaused = false;
 	m_fJoyTimer = 0;
-
-	STOP("CUnitCreationState::Enter()");
-	
+	if(CGame::GetInstance()->GetTutorialMode())
+	{
+		m_bTutorial = true;
+		m_rTutorial.top = 400;
+		m_rTutorial.left = 350;
+		m_rTutorial.bottom = m_rTutorial.top + 64;
+		m_rTutorial.right = m_rTutorial.left + 128;
+	}
+	else
+		m_bTutorial = false;
+		STOP("CUnitCreationState::Enter()");
 }
 
 void CUnitCreationState::Exit(void)
@@ -171,7 +176,6 @@ void CUnitCreationState::Exit(void)
 	m_pTM->ReleaseTexture(m_nLucidiaWhiteID);
 	m_pTM->ReleaseTexture(m_nBackgroundID);
 	m_pTM->ReleaseTexture(m_nScrollButtonID);
-	m_pTM->ReleaseTexture(m_nIconID);
 
 	for (int i = 0; i < m_nNumUnits[UNIT_INFANTRY] ; i++)
 		CFactory::CreatePlayerUnit(UNIT_INFANTRY);
@@ -197,6 +201,8 @@ bool CUnitCreationState::Input(float fElapsedTime)
 		STOP("CUnitCreationState::Input(float)");
 		return true;
 	}
+if(!m_bTutorial)
+	{
 
 	m_fJoyTimer = fElapsedTime;
 #pragma region Controller to Mouse
@@ -363,8 +369,20 @@ bool CUnitCreationState::Input(float fElapsedTime)
 			CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
 		}
 	}
-
-	STOP("CUnitCreationState::Input(float)");
+}
+else 
+	{
+		if(CGame::GetInstance()->IsMouseInRect(m_rTutorial))
+		{
+			CGame::GetInstance()->SetCursorClick();
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT)|| m_pDI->GetBufferedJoyButton(JOYSTICK_X))
+			{
+				m_pWM->Play(m_nClick);
+				m_bTutorial = false;
+			}
+		}
+	}
+		STOP("CUnitCreationState::Input(float)");
 	return true;
 }
 
@@ -377,38 +395,8 @@ void CUnitCreationState::Render(float fElapsedTime)
 {
 	PROFILE("CUnitCreationState::Render(float)");
 	m_pTM->Draw(m_nBackgroundID, -20, -10);
-
-
-	RECT InfIcon;
-	InfIcon.top = 0; InfIcon.left = 200; InfIcon.right = 250; InfIcon.bottom = 50;
-	m_pTM->Draw(m_nIconID,75,50,1.f,1.f,&InfIcon);
-
-
-	RECT CavIcon;
-	CavIcon.top = 100; CavIcon.left = 0; CavIcon.right = 50; CavIcon.bottom = 150;
-	m_pTM->Draw(m_nIconID,75,220,1.f,1.f,&CavIcon);
-	
-
-	RECT CAIcon;
-	CAIcon.top = 100; CAIcon.left = 200; CAIcon.right = 250; CAIcon.bottom = 150;
-	m_pTM->Draw(m_nIconID,75,390,1.f,1.f,&CAIcon);
-	
-
-	RECT AXIcon;
-	AXIcon.top = 0; AXIcon.left = 0; AXIcon.right = 50; AXIcon.bottom = 50;
-	m_pTM->Draw(m_nIconID,465,50,1.f,1.f,&AXIcon);
-
-
-	RECT ArcIcon;
-	ArcIcon.top = 0; ArcIcon.left = 100; ArcIcon.right = 150; ArcIcon.bottom = 50;
-	m_pTM->Draw(m_nIconID,465,220,1.f,1.f,&ArcIcon);
-
-
-	RECT EleIcon;
-	EleIcon.top = 100; EleIcon.left = 100; EleIcon.right = 150; EleIcon.bottom = 150;
-	m_pTM->Draw(m_nIconID,465,390,1.f,1.f,&EleIcon);
-
-	
+	if(!m_bTutorial)
+	{
 	int nPosY = 40;
 	int nPosX = 200;
 	for (int i = 0; i < 6; i++)
@@ -507,8 +495,17 @@ void CUnitCreationState::Render(float fElapsedTime)
 	}
 	m_pTM->Draw(m_nScrollButtonID, m_rBackButton.left, m_rBackButton.top, .4f, .3f);
 	m_cFont.DrawTextA("Back", m_rBackButton.left+40, m_rBackButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
-
-	STOP("CUnitCreationState::Render(float)");
+	}
+	else if(CGame::GetInstance()->GetTutorialMode())
+	{
+		RECT toDraw; toDraw.top = 0; toDraw.left = 0; toDraw.right = 578; toDraw.bottom = 495;
+		int nImage = m_pTM->LoadTexture("Resource/KQ_TutorialBox.png");
+		m_pTM->Draw(nImage,0,2,1.4f,1.2f,&toDraw);
+		m_pTM->Draw(m_nScrollButtonID,325,400,.4f,.3f);
+		m_cFont.DrawTextA("Accept",350,425,.2f,.2f,D3DCOLOR_ARGB(255,255,0,0));
+		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
+		m_cFont.DrawTextA("This next screen will let you purchase units./You purchase units using food./It is in the bottom left corner of your screen./ The cost of the unit and there stats are all displayed./Wieght your options and make the best choice.",30,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+	}		
 }
 
 string CUnitCreationState::IntToString(int nNum)
