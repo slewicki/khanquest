@@ -167,30 +167,27 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 		//}
 	}
 
-	if(pEvent->GetEventID() == "Attack")
+	if(pEvent->GetEventID() == "Attack_Sound")
 	{
-		for(unsigned int i = 0; i < m_vObjectList.size(); i++)
-		{
-			if(static_cast<CUnit*>(m_vObjectList[i])->IsOnScreen())
-			{
-				if(!CSGD_WaveManager::GetInstance()->IsWavePlaying(static_cast<CUnit*>(m_vObjectList[i])->GetAttackSoundID()))
-				{
-					CSGD_WaveManager::GetInstance()->SetVolume(static_cast<CUnit*>(m_vObjectList[i])->GetAttackSoundID(),CGame::GetInstance()->GetSFXVolume()-20);
-					CSGD_WaveManager::GetInstance()->Play(static_cast<CUnit*>(m_vObjectList[i])->GetAttackSoundID());
-				}
-			}
-		}
+		CUnit* pUnit = (CUnit*)pEvent->GetParam();
+		//if(!CSGD_WaveManager::GetInstance()->IsWavePlaying(pUnit->GetAttackSoundID()))
+		//{
+			CSGD_WaveManager::GetInstance()->SetVolume(pUnit->GetAttackSoundID(),CGame::GetInstance()->GetSFXVolume()+20);
+			CSGD_WaveManager::GetInstance()->Play(pUnit->GetAttackSoundID());
+		//}
+			
+		
 	}
-	if(pEvent->GetEventID() == "Dying")
+	if(pEvent->GetEventID() == "Dying_Sound")
 	{
-		for(unsigned int i = 0; i < m_vObjectList.size(); i++)
-		{
-			if(static_cast<CUnit*>(m_vObjectList[i])->IsOnScreen())
+		CUnit* pUnit = (CUnit*)pEvent->GetParam();
+		
+			if(pUnit->IsOnScreen())
 			{
-				CSGD_WaveManager::GetInstance()->SetVolume(static_cast<CUnit*>(m_vObjectList[i])->GetDeathSoundID(),CGame::GetInstance()->GetSFXVolume());
-				CSGD_WaveManager::GetInstance()->Play(static_cast<CUnit*>(m_vObjectList[i])->GetDeathSoundID());
+				CSGD_WaveManager::GetInstance()->SetVolume(pUnit->GetDeathSoundID(),CGame::GetInstance()->GetSFXVolume());
+				CSGD_WaveManager::GetInstance()->Play(pUnit->GetDeathSoundID());
 			}
-		}
+		
 	}
 	
 	/*if(pEvent->GetEventID() == "Remove")

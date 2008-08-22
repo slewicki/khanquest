@@ -76,7 +76,7 @@ void CAnimation::Render( int x, int y, float scale, DWORD color,  bool  isfliped
 	if(m_bIsFading)
 	{
 		if(m_fFadeTimer > 4.f)
-			m_nAlpha  = (int)Lerp(255, 0, (m_fFadeTimer-4)/3.f);
+			m_nAlpha  = (int)Lerp(255, 0, (m_fFadeTimer-4)*.333f);
 
 	}
 
@@ -84,12 +84,12 @@ void CAnimation::Render( int x, int y, float scale, DWORD color,  bool  isfliped
 	if(!isfliped)
 	{
 		if(m_bIsPlayer)
-			CSGD_TextureManager::GetInstance()->Draw(m_nPlayerAnimationID, x+width/2 - m_vFrames[m_nCurrentFrame].ptAnchorX,
+			CSGD_TextureManager::GetInstance()->Draw(m_nPlayerAnimationID, x+width*.5f - m_vFrames[m_nCurrentFrame].ptAnchorX,
 													 y- m_vFrames[m_nCurrentFrame].ptAnchorY,
 													 scale, scale, &m_vFrames[m_nCurrentFrame].rRender,
 													 rotation, rotation, rotation, D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 		else
-			CSGD_TextureManager::GetInstance()->Draw(m_nAIAnimationID, x+width/2- m_vFrames[m_nCurrentFrame].ptAnchorX,
+			CSGD_TextureManager::GetInstance()->Draw(m_nAIAnimationID, x+width*.5f- m_vFrames[m_nCurrentFrame].ptAnchorX,
 													 y-m_vFrames[m_nCurrentFrame].ptAnchorY,
 													 scale, scale, &m_vFrames[m_nCurrentFrame].rRender,
 													 rotation, rotation, rotation, D3DCOLOR_ARGB(m_nAlpha,255,255,255));
@@ -97,10 +97,10 @@ void CAnimation::Render( int x, int y, float scale, DWORD color,  bool  isfliped
 	else
 	{
 		if(m_bIsPlayer)
-			CSGD_TextureManager::GetInstance()->Draw(m_nPlayerAnimationID, x+width/2 - m_vFrames[m_nCurrentFrame].ptAnchorX+(m_vFrames[m_nCurrentFrame].rRender.right - m_vFrames[m_nCurrentFrame].rRender.left), y - m_vFrames[m_nCurrentFrame].ptAnchorY,-scale,scale,
+			CSGD_TextureManager::GetInstance()->Draw(m_nPlayerAnimationID, x+width*.5f - m_vFrames[m_nCurrentFrame].ptAnchorX+(m_vFrames[m_nCurrentFrame].rRender.right - m_vFrames[m_nCurrentFrame].rRender.left), y - m_vFrames[m_nCurrentFrame].ptAnchorY,-scale,scale,
 													 &m_vFrames[m_nCurrentFrame].rRender,rotation,rotation,rotation, D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 		else
-			CSGD_TextureManager::GetInstance()->Draw(m_nAIAnimationID, x+width/2 - m_vFrames[m_nCurrentFrame].ptAnchorX+(m_vFrames[m_nCurrentFrame].rRender.right - m_vFrames[m_nCurrentFrame].rRender.left), y - m_vFrames[m_nCurrentFrame].ptAnchorY,-scale,scale,
+			CSGD_TextureManager::GetInstance()->Draw(m_nAIAnimationID, x+width*.5f - m_vFrames[m_nCurrentFrame].ptAnchorX+(m_vFrames[m_nCurrentFrame].rRender.right - m_vFrames[m_nCurrentFrame].rRender.left), y - m_vFrames[m_nCurrentFrame].ptAnchorY,-scale,scale,
 													 &m_vFrames[m_nCurrentFrame].rRender,rotation,rotation,rotation, D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 	}
 }

@@ -7,6 +7,7 @@
 #include "CAISystem.h"
 #include "CSGD_TextureManager.h"
 #include "CGamePlayState.h"
+#include "CEventSystem.h"
 CUnit::CUnit(int nType)
 {
 	m_nMaxHP				= 0;
@@ -140,7 +141,7 @@ void CUnit::Update(float fElapsedTime)
 		m_pAnimInstance->SetLooping(false);
 		m_pAnimInstance->SetPlayer(IsPlayerUnit());
 		m_pAnimInstance->StartFadeTimer(m_nDirectionFacing, m_nState);
-		
+		CEventSystem::GetInstance()->SendEvent("Dying_Sound", this);
 		// Clear the tile
 		m_pCurrentTile->bIsOccupied = false;
 		m_pCurrentTile->pUnit = NULL;
@@ -318,7 +319,7 @@ void CUnit::Update(float fElapsedTime)
 			// Clear next tile, will be reset next run if path exists
 			SetNextTile(NULL);
 			
-			if(m_pTarget && !IsTargetInView())
+			if(!m_bIsPlayerUnit && m_pTarget && !IsTargetInView())
 			{
 				m_pTarget = NULL;
 				m_nState = IDLE;
@@ -642,6 +643,12 @@ void CUnit::ResolveCombat()
 	{
 		m_pTarget->SetCurrentHP(m_pTarget->GetHealth() - GetAttackPower()+m_nBonus);
 		m_fAttackTimer = 0.f;
+		if(IsOnScreen())
+		{
+		
+			CEventSystem::GetInstance()->SendEvent("Attack_Sound", this);
+			
+		}
 	}
 	if(m_pTarget->GetHealth() <= 0)
 	{
