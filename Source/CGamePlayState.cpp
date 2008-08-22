@@ -111,8 +111,8 @@ void CGamePlayState::Enter(void)
 
 	m_nSkyCloudID   = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_SkyClouds.dat", -10, 200);
 	m_nSkyCloudID2  = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_SkyClouds2.dat", -10, 200);
-	CEventSystem::GetInstance()->RegisterClient("Attack",m_pOM);
-	CEventSystem::GetInstance()->RegisterClient("Dying",m_pOM);
+	CEventSystem::GetInstance()->RegisterClient("Attack_Sound",m_pOM);
+	CEventSystem::GetInstance()->RegisterClient("Dying_Sound",m_pOM);
 
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
 	

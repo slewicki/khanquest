@@ -34,7 +34,7 @@ CGame::CGame(void)
 	m_nFPS = 0;	
 	m_dwFrameTimer = GetTickCount();
 	m_fGameTime = 0;
-	m_nSFXVolume = 50;
+	m_nSFXVolume = 100;
 	m_nMusicVolume = 50;
 	*m_pCities = NULL;
 	m_nGold = 0;
@@ -641,8 +641,8 @@ POINT CGame::GetWindowPosition()
 	POINT pos = {rWindow.left, rWindow.top};
 	if(this->m_bIsWindowed)
 	{
-		pos.x += m_ptWindOffset.x/2;
-		pos.y += m_ptWindOffset.y-m_ptWindOffset.x/2;
+		pos.x += (int)(m_ptWindOffset.x*.5f);
+		pos.y += (int)(m_ptWindOffset.y-m_ptWindOffset.x*.5f);
 	}
 	return pos;
 }
