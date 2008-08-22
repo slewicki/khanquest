@@ -43,6 +43,7 @@ void COutroState::Enter()
 	m_nCurrentButton = 1;
 	m_bPaused = false;
 	m_bAlpha = false;
+	m_fJoyTimer = 0;
 }
 void COutroState::Exit()
 {
@@ -53,6 +54,7 @@ void COutroState::Exit()
 bool COutroState::Input(float fElapsedTime)
 {
 	m_fEscTimer += fElapsedTime;
+	m_fJoyTimer += fElapsedTime;
 	if(m_bAlpha)
 		FadeOut(fElapsedTime);
 	if(m_bAlpha == true && m_nAlpha == 0)
@@ -67,6 +69,20 @@ bool COutroState::Input(float fElapsedTime)
 			m_nCurrentButton = m_nNumButtons-1;
 		}
 	}
+	if(!m_bAlpha && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer >= .2f)
+		{
+			m_nCurrentButton--;
+			m_ptCursorPosition.x = Buttons[m_nCurrentButton].ptPosition.x;
+			if(m_ptCursorPosition.x < Buttons[1].ptPosition.x)
+			{
+				m_ptCursorPosition.x = Buttons[m_nNumButtons-1].ptPosition.x;
+				m_nCurrentButton = m_nNumButtons-1;
+			}
+			m_fJoyTimer = 0;
+		}
+	}
 	if(!m_bAlpha && m_pDI->GetBufferedKey(DIK_RIGHT))
 	{
 		m_nCurrentButton++;
@@ -77,9 +93,23 @@ bool COutroState::Input(float fElapsedTime)
 			m_nCurrentButton = 1;
 		}
 	}
+	if(!m_bAlpha && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer >= .2f)
+		{
+			m_nCurrentButton++;
+			m_ptCursorPosition.x = Buttons[m_nCurrentButton].ptPosition.x;
+			if(m_nCurrentButton > m_nNumButtons-1)
+			{
+				m_ptCursorPosition.x = Buttons[1].ptPosition.x;
+				m_nCurrentButton = 1;
+			}
+			m_fJoyTimer = 0;
+		}
+	}
 
 
-	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER))
+	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedJoyButton(JOYSTICK_X) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2))
 	{	
 		if(Buttons[m_nCurrentButton].Action == YES)
 		{	

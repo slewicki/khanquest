@@ -31,16 +31,95 @@ void CHUDState::Exit(void)
 
 bool CHUDState::Input(float fElapsedTime)
 {
+	m_fJoyTimer += fElapsedTime;
+	#pragma region Controller to Mouse
+	
+	if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_UP))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y);
+			m_fJoyTimer = 0;
+		}
+	}
+
+
+#pragma endregion
+
 	POINT ptMouse = CGame::GetInstance()->GetCursorPosition();
 	if(ptMouse.y > 400)
 	{
 		POINT ptTile = CTileEngine::GetInstance()->IsoMiniMouse(ptMouse.x, ptMouse.y, 0);
-		if(m_pDI->GetBufferedMouseButton(M_BUTTON_RIGHT) && ptTile.x>=0 && ptTile.y>=0)
+		if((m_pDI->GetBufferedMouseButton(M_BUTTON_RIGHT) && ptTile.x>=0 && ptTile.y>=0) || (m_pDI->GetBufferedJoyButton(JOYSTICK_X) && ptTile.x>=0 && ptTile.y>=0))
 		{
 			ObjectManager::GetInstance()->UpdatePlayerUnitDestTile(CTileEngine::GetInstance()->GetTile(0,ptTile.x, ptTile.y));
 			//CTileEngine::GetInstance()->GetTile(0, ptTile.x, ptTile.y)->bIsVisible = false;
 		}
-		if(m_pDI->GetMouseButton(M_BUTTON_LEFT) && ptTile.x>=0 && ptTile.y>=0)
+		if((m_pDI->GetMouseButton(M_BUTTON_LEFT) && ptTile.x>=0 && ptTile.y>=0) || (m_pDI->GetBufferedJoyButton(JOYSTICK_X) && ptTile.x>=0 && ptTile.y>=0))
 		{
 			CCamera::GetInstance()->CenterCamera(CTileEngine::GetInstance()->GetTile(0,ptTile.x, ptTile.y)->ptLocalAnchor.x, CTileEngine::GetInstance()->GetTile(0,ptTile.x, ptTile.y)->ptLocalAnchor.y);
 		}

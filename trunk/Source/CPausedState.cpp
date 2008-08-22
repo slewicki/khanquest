@@ -45,7 +45,7 @@ void CPausedState::Enter(void)
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
 	
 	CGame::GetInstance()->SetSongPlay(CITYSELECT);
-
+	m_fJoyTimer = 0;
 }
 
 void CPausedState::Exit(void)
@@ -57,16 +57,95 @@ void CPausedState::Exit(void)
 
 bool CPausedState::Input(float fElapsedTime)
 {
+	m_fJoyTimer = fElapsedTime;
+#pragma region Controller to Mouse
+	
+	if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_UP))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y);
+			m_fJoyTimer = 0;
+		}
+	}
+
+
+#pragma endregion
+
 	if(CGame::GetInstance()->IsMouseInRect(m_rResumeButton))
 	{
 		CGame::GetInstance()->SetCursorClick();
-		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 		{
 			CGamePlayState::GetInstance()->SetPaused(false);
 			CGame::GetInstance()->PopCurrentState();
 		}	
 	}
-	else if(CGame::GetInstance()->IsMouseInRect(m_rRetreatButton))
+	else if(CGame::GetInstance()->IsMouseInRect(m_rRetreatButton)|| m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 	{
 		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
@@ -76,7 +155,7 @@ bool CPausedState::Input(float fElapsedTime)
 				
 		}
 	}
-	else if(CGame::GetInstance()->IsMouseInRect(m_rQuitButton))
+	else if(CGame::GetInstance()->IsMouseInRect(m_rQuitButton) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 	{
 		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
@@ -84,7 +163,7 @@ bool CPausedState::Input(float fElapsedTime)
 			CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
 		}
 	}
-	else if(m_pDI->GetBufferedKey(DIK_ESCAPE))
+	else if(m_pDI->GetBufferedKey(DIK_ESCAPE) || m_pDI->GetBufferedJoyButton(JOYSTICK_Y) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2))
 		{
 			CGamePlayState::GetInstance()->SetPaused(false);
 			CGame::GetInstance()->PopCurrentState();

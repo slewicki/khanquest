@@ -49,7 +49,7 @@ bool CWinBattleState::Input(float fElapsedTime)
 	if(m_bEsc)
 		StartEsc();
 
-	if(m_pDI->GetBufferedKey(DIK_RETURN))
+	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 	{	
 		m_bEsc = true;
 	}

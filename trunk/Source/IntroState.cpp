@@ -56,7 +56,7 @@ bool CIntroState::Input(float fElapsedTime)
 	if(m_bTitle == true && m_nTitle == 0)
 		CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
 
-	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER) || m_pDI->GetBufferedJoyButton(JOYSTICK_SELECT) || m_pDI->GetBufferedJoyButton(JOYSTICK_A))
+	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 	{	
 		m_bTitle = true;
 	}

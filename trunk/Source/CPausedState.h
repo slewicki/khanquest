@@ -22,7 +22,8 @@ private:
 	RECT									m_rResumeButton;
 	RECT									m_rRetreatButton;
 	RECT									m_rQuitButton;
-
+	float									m_fJoyTimer;
+	POINT									m_ptMousePos;
 
 	CBitmapFont								m_cFont;
 	CSGD_TextureManager*					m_pTM;

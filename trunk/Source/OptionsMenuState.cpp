@@ -53,6 +53,7 @@ void COptionsMenuState::Enter()
 }
 void COptionsMenuState::Exit()
 {
+	SaveOptions();
 	if(m_pWM->IsWavePlaying(m_nClick))
 		m_pWM->Stop(m_nClick);
 	
@@ -78,11 +79,10 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			m_nCurrentButton = m_nNumButtons-1;
 		}
 	}
-	/*if(m_pDI->GetJoystickDir(JOYSTICK_UP))
+	if(m_pDI->GetJoystickDir(JOYSTICK_UP))
 	{
 		if(m_JoyTimer > .2)
 		{
-			m_pWM->Stop(m_nSongID);
 			m_nCurrentButton--;
 			m_ptCursorPosition.y = Buttons[m_nCurrentButton].ptPosition.y;
 			if(m_ptCursorPosition.y < Buttons[1].ptPosition.y)
@@ -90,11 +90,10 @@ bool COptionsMenuState::Input(float fElapsedTime)
 				m_ptCursorPosition.y = Buttons[m_nNumButtons-1].ptPosition.y;
 				m_nCurrentButton = m_nNumButtons-1;
 			}
-			if(Buttons[m_nCurrentButton].Action == MUSIC)
-				m_pWM->Play(m_nSongID);
+			/*if(Buttons[m_nCurrentButton].Action == MUSIC)*/
 			m_JoyTimer = 0;
 		}
-	}*/
+	}
 #pragma endregion
 #pragma region DOWN
 	if(m_pDI->GetBufferedKey(DIK_DOWN))
@@ -107,11 +106,10 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			m_nCurrentButton = 1;
 		}
 	}
-	/*if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
+	if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
 	{
 		if(m_JoyTimer > .2)
 		{
-			m_pWM->Stop(m_nSongID);
 			m_nCurrentButton++;
 			m_ptCursorPosition.y = Buttons[m_nCurrentButton].ptPosition.y;
 			if(m_nCurrentButton > m_nNumButtons-1)
@@ -119,11 +117,10 @@ bool COptionsMenuState::Input(float fElapsedTime)
 				m_ptCursorPosition.y = Buttons[1].ptPosition.y;
 				m_nCurrentButton = 1;
 			}
-			if(Buttons[m_nCurrentButton].Action == MUSIC)
-				m_pWM->Play(m_nSongID);
+			//if(Buttons[m_nCurrentButton].Action == MUSIC)
 			m_JoyTimer = 0;
 		}
-	}*/
+	}
 #pragma endregion
 #pragma region Left
 	if(m_pDI->GetBufferedKey(DIK_LEFT))
@@ -143,19 +140,19 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			m_pWM->Play(m_nClick);
 		}
 	}
-	/*if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
 	{	
 		if(m_JoyTimer > .2)
 		{
 			if(Buttons[m_nCurrentButton].Action == MUSIC)
 			{
-				CGame::GetInstance()->SetMusicVolume(CGame::GetInstance()->GetMusicVolume() - 1);
+				CGame::GetInstance()->SetMusicVolume(CGame::GetInstance()->GetMusicVolume() - 3);
 				if(CGame::GetInstance()->GetMusicVolume() < 0)
 					CGame::GetInstance()->SetMusicVolume(0);
 			}
 			if(Buttons[m_nCurrentButton].Action == SFX)
 			{
-				CGame::GetInstance()->SetSFXVolume(CGame::GetInstance()->GetSFXVolume() - 1);
+				CGame::GetInstance()->SetSFXVolume(CGame::GetInstance()->GetSFXVolume() - 3);
 				if(CGame::GetInstance()->GetSFXVolume() < 0)
 					CGame::GetInstance()->SetSFXVolume(0);
 
@@ -163,7 +160,7 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			}
 			m_JoyTimer = 0;
 		}
-	}*/
+	}
 #pragma endregion 
 #pragma region RIGHT
 	if(m_pDI->GetBufferedKey(DIK_RIGHT))
@@ -182,29 +179,29 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			m_pWM->Play(m_nClick);
 		}
 	}
-	//if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
-	//{	
-	//	if(m_JoyTimer > .2)
-	//	{
-	//		if(Buttons[m_nCurrentButton].Action == MUSIC)
-	//		{
-	//			CGame::GetInstance()->SetMusicVolume(CGame::GetInstance()->GetMusicVolume() + 1);
-	//			if(CGame::GetInstance()->GetMusicVolume() > 100)
-	//				CGame::GetInstance()->SetMusicVolume(100);
-	//		}
-	//		if(Buttons[m_nCurrentButton].Action == SFX)
-	//		{
-	//			CGame::GetInstance()->SetSFXVolume(CGame::GetInstance()->GetSFXVolume() + 1);
-	//			if(CGame::GetInstance()->GetSFXVolume() > 100)
-	//				CGame::GetInstance()->SetSFXVolume(100);
-	//			m_pWM->Play(m_nClick);
-	//		}
-	//		m_JoyTimer = 0;
-	//	}
-	//}
+	if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{	
+		if(m_JoyTimer > .2)
+		{
+			if(Buttons[m_nCurrentButton].Action == MUSIC)
+			{
+				CGame::GetInstance()->SetMusicVolume(CGame::GetInstance()->GetMusicVolume() + 3);
+				if(CGame::GetInstance()->GetMusicVolume() > 100)
+					CGame::GetInstance()->SetMusicVolume(100);
+			}
+			if(Buttons[m_nCurrentButton].Action == SFX)
+			{
+				CGame::GetInstance()->SetSFXVolume(CGame::GetInstance()->GetSFXVolume() + 3);
+				if(CGame::GetInstance()->GetSFXVolume() > 100)
+					CGame::GetInstance()->SetSFXVolume(100);
+				m_pWM->Play(m_nClick);
+			}
+			m_JoyTimer = 0;
+		}
+	}
 #pragma endregion
 #pragma region Selection
-	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedKey(DIK_NUMPADENTER) )// || m_pDI->GetBufferedJoyButton(JOYSTICK_A))
+	if(m_pDI->GetBufferedKey(DIK_RETURN)|| m_pDI->GetBufferedKey(DIK_NUMPADENTER) || m_pDI->GetBufferedJoyButton(JOYSTICK_X) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2))
 	{
 		if(Buttons[m_nCurrentButton].Action == KEYBIND)
 		{
@@ -449,4 +446,22 @@ bool COptionsMenuState::Parse(char* szFileName)
 	delete xml;
 	return true;
 }
+void COptionsMenuState::SaveOptions()
+{
+	ofstream output("Resource/KQ_Options.dat",ios_base::binary);
+	
+	for( int i = 0; i < 4 ;++i)
+	{
+		DWORD temp = CKeyBindState::GetInstance()->GetBoundKey(i);
+		output.write((char*)&temp,sizeof(temp));
+	}
 
+	bool bFullScreen = CGame::GetInstance()->GetIsWindowed();
+	output.write((char*)&bFullScreen,sizeof(bFullScreen));
+	bool bFPS = CGame::GetInstance()->GetFPSDisplay();
+	output.write((char*)&bFPS,sizeof(bFPS));	
+	int nMusicVol = CGame::GetInstance()->GetMusicVolume();
+	output.write((char*)&nMusicVol,sizeof(nMusicVol));
+	int nSFXVol = CGame::GetInstance()->GetSFXVolume();
+	output.write((char*)&nSFXVol,sizeof(nSFXVol));
+}

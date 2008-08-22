@@ -35,7 +35,8 @@ class CUpgradeMenuState : public IGameState
 	bool									m_bUpgraded[6][3];
 	RECT									m_rAttackButton;
 	RECT									m_rBackButton;
-
+	float									m_fJoyTimer;
+	POINT									m_ptMousePos;
 	int										m_nGoldTotal;
 
 	CUpgradeMenuState(void);

@@ -103,13 +103,92 @@ bool CCityInfoState::Input(float fElapsedTime)
 {
 	PROFILE("CCityInfoState::Input(float)");
 	m_JoyTimer += fElapsedTime;
+	m_fJoyTimer += fElapsedTime;
+
+#pragma region Controller to Mouse
+	
+	if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_UP) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN) && m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}	
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_UP))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y-3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_DOWN))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x,m_ptMousePos.y+3);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_LEFT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x-3,m_ptMousePos.y);
+			m_fJoyTimer = 0;
+		}
+	}
+	else if(m_pDI->GetJoystickDir(JOYSTICK_RIGHT))
+	{
+		if(m_fJoyTimer > .0002f)
+		{
+			GetCursorPos(&m_ptMousePos);
+			SetCursorPos(m_ptMousePos.x+3,m_ptMousePos.y);
+			m_fJoyTimer = 0;
+		}
+	}
+
+
+#pragma endregion
 
 	if(m_fPositionX <= 270.f && !m_bRetract)
 	{
 		if(CGame::GetInstance()->IsMouseInRect(m_rInvade))
 		{
 			CGame::GetInstance()->SetCursorClick();
-			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2))
 			{
 				m_pWM->Play(m_nClick);
 				// This function is used only if the city is conquered after battle
@@ -124,7 +203,7 @@ bool CCityInfoState::Input(float fElapsedTime)
 		else if(CGame::GetInstance()->IsMouseInRect(m_rCancel))
 		{
 			CGame::GetInstance()->SetCursorClick();
-			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))//m_pDI->GetBufferedJoyButton(JOYSTICK_A))
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_Y))
 			{
 				m_pWM->Play(m_nClick);
 

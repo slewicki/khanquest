@@ -14,7 +14,7 @@ class COutroState : public IGameState
 	bool					m_bPaused;
 	float					m_fTimer;
 	float					m_fEscTimer;
-
+	float					m_fJoyTimer;
 	int m_nImageID;
 	POINT m_ptImageLoc, m_ptImageSize;
 	string m_szImageFile;

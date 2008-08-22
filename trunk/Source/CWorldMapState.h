@@ -39,7 +39,7 @@ private:
 	int								m_nTitleID;
 	int								m_nLucidiaWhiteID;
 	int								m_nClick;
-
+	float							m_fJoyTimer;
 	bool							m_bPaused;
 	
 	// cheat codes

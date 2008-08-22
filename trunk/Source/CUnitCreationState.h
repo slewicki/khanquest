@@ -32,7 +32,8 @@ private:
 	float									m_fTimer;
 	int										m_nScrollButtonID;
 	int										m_nClick;
-
+	float									m_fJoyTimer;
+	POINT									m_ptMousePos;
 	CCity*									m_pSelectedCity;
 	CBitmapFont								m_cFont;
 	CUnit*									m_pPlayerUnitInfo;
