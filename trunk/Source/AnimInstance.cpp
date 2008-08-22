@@ -16,6 +16,7 @@ CAnimInstance::CAnimInstance(int UnitType)
 	x = 0;
 	y = 0;
 	m_bisFliped = false;
+	STOP("CAnimInstance::CAnimInstance(int)");
 
 }
 
@@ -40,6 +41,7 @@ void CAnimInstance::Play(int Direction, int Action)
 			m_Sheet.GetAnimations()[i].Play();
 			break;
 		}
+		STOP("CAnimInstance::Play(int, int)");
 }
 
 void CAnimInstance::StartFadeTimer(int Direction, int Action)
@@ -53,6 +55,7 @@ void CAnimInstance::StartFadeTimer(int Direction, int Action)
 			m_Sheet.GetAnimations()[i].StartFadeTimer();
 			break;
 		}
+		STOP("CAnimInstance::StartFadeTimer(int, int)");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -72,6 +75,7 @@ void CAnimInstance::Update(float fElapsedTime)
 				m_Sheet.GetAnimations()[i].Update(fElapsedTime);
 		//}
 	}
+	STOP("CAnimInstance::Update(float)");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -88,6 +92,7 @@ void CAnimInstance::Render()
 		if(name == m_Sheet.GetAnimations()[i].GetName())
 			m_Sheet.GetAnimations()[i].Render(x,y,1,0,m_bisFliped,0, m_bisPlayer);
 	}
+	STOP("CAnimInstance::Render()");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -103,6 +108,7 @@ void CAnimInstance::Stop(int Direction,int Action)
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
 		if(name == m_Sheet.GetAnimations()[i].GetName())
 			m_Sheet.GetAnimations()[i].Stop();
+	STOP("CAnimInstance::Stop(int, int)");
 }
 
 int CAnimInstance::GetFrameHeight(int Direction, int Action)
@@ -112,7 +118,11 @@ int CAnimInstance::GetFrameHeight(int Direction, int Action)
 
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
 		if(name == m_Sheet.GetAnimations()[i].GetName())
+		{
+			STOP("CAnimInstance::Stop(int, int)");
 			return m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].rRender.bottom - m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].rRender.top;
+		}
+		STOP("CAnimInstance::Stop(int, int)");
 	return -1;
 }
 bool CAnimInstance::IsPlaying(int Direction, int Action)
@@ -122,7 +132,11 @@ bool CAnimInstance::IsPlaying(int Direction, int Action)
 
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
 		if(name == m_Sheet.GetAnimations()[i].GetName())
+		{
+			STOP("CAnimInstance::IsPlaying(int, int)");
 			return m_Sheet.GetAnimations()[i].IsPlaying();
+		}
+		STOP("CAnimInstance::IsPlaying(int, int)");
 	return false;
 }
 
@@ -133,7 +147,11 @@ int CAnimInstance::GetFrameWidth(int Direction, int Action)
 
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
 		if(name == m_Sheet.GetAnimations()[i].GetName())
+		{
+			STOP("CAnimInstance::GetFrameWidth(int, int)");
 			return m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].rRender.right - m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].rRender.left;
+		}
+		STOP("CAnimInstance::GetFrameWidth(int, int)");
 	return -1;
 }
 
@@ -155,6 +173,7 @@ RECT CAnimInstance::GetRenderRect(int Direction, int Action)
 		
 		}
 
+		STOP("CAnimInstance::GetRenderRect(int, int)");
 	return r;
 }
 
@@ -165,7 +184,11 @@ int CAnimInstance::GetOffsetX(int Direction, int Action)
 
 	for(unsigned int i = 0; i < m_Sheet.GetAnimations().size();i++)
 		if(name == m_Sheet.GetAnimations()[i].GetName())
+		{
+			STOP("CAnimInstance::GetOffsetX(int, int)");
 			return m_Sheet.GetAnimations()[i].GetFrames()[m_Sheet.GetAnimations()[i].GetCurrentFrame()].ptAnchorX;
+		}
+		STOP("CAnimInstance::GetOffsetX(int, int)");
 	return -1;
 }
 
@@ -258,5 +281,6 @@ string CAnimInstance::GetName(int Direction, int Action)
 		break;
 	};
 	string name = m_szAction + "_" + m_szDirection;
+	STOP("CAnimInstance::GetName(int, int)");
 	return name;
 }

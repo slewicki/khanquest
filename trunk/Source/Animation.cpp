@@ -18,6 +18,7 @@ CAnimation::CAnimation(void)
 	m_bIsPlayer = true;
 	m_bIsFading = false;
 	m_fFadeTimer = 0.f;
+	STOP("CAnimation::CAnimation()");
 }
 
 CAnimation::~CAnimation(void)
@@ -34,7 +35,10 @@ bool CAnimation::Update(float fElapsedTime)
 	if(m_bIsFading)
 		m_fFadeTimer += fElapsedTime;
 	if(!m_bIsPlaying)
+	{
+		STOP("CAnimation::Update(float)");
 		return false;
+	}
 	
 	m_fFrameTimer += fElapsedTime * m_fSpeed *5;
 	if(m_fFrameTimer > m_vFrames[m_nCurrentFrame].fDuration)
@@ -61,6 +65,7 @@ bool CAnimation::Update(float fElapsedTime)
 //			}
 		}
 	}
+	STOP("CAnimation::Update(float)");
 	return true;
 }	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -106,6 +111,7 @@ void CAnimation::Render( int x, int y, float scale, DWORD color,  bool  isfliped
 			CSGD_TextureManager::GetInstance()->Draw(m_nAIAnimationID, x+(int)(width*.5f) - m_vFrames[m_nCurrentFrame].ptAnchorX+(m_vFrames[m_nCurrentFrame].rRender.right - m_vFrames[m_nCurrentFrame].rRender.left), y - m_vFrames[m_nCurrentFrame].ptAnchorY,-scale,scale,
 													 &m_vFrames[m_nCurrentFrame].rRender,rotation,rotation,rotation, D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 	}
+	STOP("CAnimation::Render(int, int, float, DWORD, bool, float)");
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 // Function: “Play” 
@@ -117,6 +123,7 @@ void CAnimation::Play()
 	PROFILE("CAnimation::Play()");
 	Reset();
 	Resume();
+	STOP("CAnimation::Play()");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -128,6 +135,7 @@ void CAnimation::Stop()
 {
 	PROFILE("CAnimation::Stop()");
 	m_bIsPlaying = false;
+	STOP("CAnimation::Stop()");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -139,6 +147,7 @@ void CAnimation::Resume()
 {
 	PROFILE("CAnimation::Resume()");
 	m_bIsPlaying = true;
+	STOP("CAnimation::Resume()");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -151,4 +160,5 @@ void CAnimation::Reset()
 	PROFILE("CAnimation::Reset");
 	m_nCurrentFrame = 0;
 	m_fFrameTimer = 0.f;	
+	STOP("CAnimation::Reset");
 }
