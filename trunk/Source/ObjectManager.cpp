@@ -200,11 +200,11 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 	if(pEvent->GetEventID() == "Attack_Sound")
 	{
 		CUnit* pUnit = (CUnit*)pEvent->GetParam();
-		//if(!CSGD_WaveManager::GetInstance()->IsWavePlaying(pUnit->GetAttackSoundID()))
-		//{
-			CSGD_WaveManager::GetInstance()->SetVolume(pUnit->GetAttackSoundID(),CGame::GetInstance()->GetSFXVolume()+20);
+		if(!CSGD_WaveManager::GetInstance()->IsWavePlaying(pUnit->GetAttackSoundID()))
+		{
+			CSGD_WaveManager::GetInstance()->SetVolume(pUnit->GetAttackSoundID(),CGame::GetInstance()->GetSFXVolume());
 			CSGD_WaveManager::GetInstance()->Play(pUnit->GetAttackSoundID());
-		//}
+		}
 			
 		
 	}
@@ -214,9 +214,11 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 		
 			if(pUnit->IsOnScreen())
 			{
+				if(!CSGD_WaveManager::GetInstance()->IsWavePlaying(pUnit->GetDeathSoundID()))
+				{
 				CSGD_WaveManager::GetInstance()->SetVolume(pUnit->GetDeathSoundID(),CGame::GetInstance()->GetSFXVolume());
 				CSGD_WaveManager::GetInstance()->Play(pUnit->GetDeathSoundID());
-				
+				}
 			}
 		
 	}
