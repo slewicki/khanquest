@@ -12,6 +12,7 @@
 #include "CSGD_TextureManager.h"
 #include "CParticle.h"
 #include "irrXML.h"
+#include "CProfile.h"
 //using std::list;
 using namespace irr;
 using namespace io;
