@@ -56,6 +56,7 @@ private:
 	bool									m_bPaused;
 	bool									m_bTutorial;
 	RECT									m_rTutorial;
+	int					 m_nIconID;
 
 	////////////////////////////////////////////
 	//	Function:	"CUnitCreationState(Constructor)"
