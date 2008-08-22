@@ -77,7 +77,7 @@ void CProfile::Start(LPSTR token)
 void CProfile::Stop()
 {
 	QueryPerformanceCounter(&m_liEnd);
-	m_dTotal = (double)((m_liEnd.QuadPart - m_liStart.QuadPart) / m_liFreq.QuadPart);
+	m_dTotal = (double)((double)(m_liEnd.QuadPart - m_liStart.QuadPart) / (double)m_liFreq.QuadPart);
 
 	m_dAvg = 0;
 
@@ -94,7 +94,7 @@ void CProfile::Stop()
 	}
 	else
 	{
-		for(int i = 0; i < Profile.size(); i++)
+		for(unsigned int i = 0; i < Profile.size(); i++)
 		{
 			if(m_szToken == Profile[i].Function)
 			{
@@ -143,12 +143,12 @@ void CProfile::Process()
 {
 	fstream fout("Resource\\KQ_Profile.kqp", std::ios_base::out | std::ios_base::app);
 
-	for(int i = 0; i < Profile.size(); i++)
+	for(unsigned int i = 0; i < Profile.size(); i++)
 	{
-		fout.write("Function: ", strlen("Function "));
-		fout.write(Profile[i].Function, strlen(Profile[i].Function) + 1) << '\n';
+		fout.write("Function: ", (int)strlen("Function "));
+		fout.write(Profile[i].Function, (int)strlen(Profile[i].Function) + 1) << '\n';
 
-		for(int j = 0; j < Profile[i].Time.size(); j++)
+		for(unsigned int j = 0; j < Profile[i].Time.size(); j++)
 		{
 			//fout << Profile[i].Time[j] << ", ";
 
@@ -156,14 +156,14 @@ void CProfile::Process()
 			//fout << Profile[i].Average << '\n';
 		}
 
-		fout.write("Total Time: \t", strlen("Total Time: "));
+		fout.write("Total Time: \t", (int)strlen("Total Time: "));
 		fout << Profile[i].Average << '\n';
 
-		fout.write("Avg. Time: \t", strlen("Avg. Time: "));
+		fout.write("Avg. Time: \t", (int)strlen("Avg. Time: "));
 		Profile[i].Average /= Profile[i].Time.size();
 		fout << Profile[i].Average << '\n';
 
-		fout.write("Times Called: \t", strlen("Times Called: "));
+		fout.write("Times Called: \t", (int)strlen("Times Called: "));
 		fout << Profile[i].NumCalled << '\n' << '\n';
 	}
 
