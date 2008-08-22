@@ -20,7 +20,8 @@ class CHUDState : public IGameState
 	CBitmapFont			 m_BF;
 	int					 m_nHUDID;
 	int					 m_nIconID;
-	
+	float				 m_fJoyTimer;
+	POINT				 m_ptMousePos;
 	vector<CUnit*>		 m_vUnits;
 
 	int m_nInfantry;

@@ -60,6 +60,8 @@ private:
 	int										m_nLucidiaWhiteID;
 	int										m_nTerrorLevel;
 	int										m_nSelectionID;
+	float									m_fJoyTimer;
+	POINT									m_ptMousePos;
 	// Create a vector of list of selected units (CUnit*) and make an accessor
 	// for the HUD to use.  The HUD should disply up to 8 units, the max that can be selected.
 
@@ -140,8 +142,6 @@ public:
 	///////////////////////////////////////////
 	int GetTerrorLevel() { return m_nTerrorLevel; }
 	int GetSelectionID() { return m_nSelectionID; }
-	bool IsPaused()		 { return m_bIsPaused; }
-
 
 	///////////////////////////////////////////
 	//  Function: Modifiers
