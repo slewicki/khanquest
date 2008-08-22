@@ -17,12 +17,14 @@ CBase::CBase(void)
 	SetPosY( 0.0f );
 	SetVelX( 1.0f );
 	SetVelY( 1.0f );
+	STOP("CBase::CBase()");
 }
 
 
 bool CBase::CheckCollisions(CBase* pBase)
 {
 	PROFILE("CBase::CheckCollisions(CBase*)");
+	STOP("CBase::CBase()");
 	return false;
 }
 
@@ -40,4 +42,5 @@ void CBase::Render(float fElapsedTime)
 {
 	PROFILE("CBase::Render(float)");
 	CSGD_TextureManager* pTM = CSGD_TextureManager::GetInstance();
+	STOP("CBase::CBase()");
 }
