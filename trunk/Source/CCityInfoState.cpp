@@ -18,7 +18,7 @@ CCityInfoState::CCityInfoState(void)
 	m_pSelectedCity = NULL;
 	m_bRetract = false;
 	m_bClickInvade = false;
-	m_pCG = m_pCG;
+	m_pCG = NULL;
 }
 
 
@@ -34,6 +34,7 @@ void CCityInfoState::Enter(void)
 	// Get Our Managers Ready
 	m_bRetract = false;
 	m_bClickInvade = false;
+	m_pCG = CGame::GetInstance();
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pWM = CSGD_WaveManager::GetInstance();
 	m_pDI = CSGD_DirectInput::GetInstance();
