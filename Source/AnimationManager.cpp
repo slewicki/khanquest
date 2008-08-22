@@ -724,6 +724,7 @@ void CAnimationManager::BinParse(char* szFileName, char* szPlayerImageName, char
 		}
 #pragma endregion
 	}
+	STOP("CAnimationManager::BinParse(char*, char*, char*)");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -739,6 +740,7 @@ CSheet CAnimationManager::LookUp(int UnitType)
 		if(UnitType == m_UnitSheets[i].GetUnitType())
 			return m_UnitSheets[i];
 	}
+	STOP("CAnimationManager::LookUp(int)");
 	return CSheet();
 }
 
