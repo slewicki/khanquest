@@ -24,6 +24,7 @@ CGamePlayState::CGamePlayState(void)
 
 	m_bButtonDown = false;
 	m_nTerrorLevel = 0;
+	STOP("CGamePlayState::CGamePlayState()");
 
 }
 
@@ -134,18 +135,21 @@ void CGamePlayState::Enter(void)
 		CGame::GetInstance()->SetSongPlay(BATTLESTATE);
 		m_pHUD->Enter();
 
-		if(CGame::GetInstance()->GetTutorialMode())
-		{
-			m_bTutorial = true;
-			m_rTutorial.top = 400;
-			m_rTutorial.left = 350;
-			m_rTutorial.bottom = m_rTutorial.top + 64;
-			m_rTutorial.right = m_rTutorial.left + 128;
-		}
-		else
-			m_bTutorial = false;
+	if(CGame::GetInstance()->GetTutorialMode())
+	{
+		m_bTutorial = true;
+		m_rTutorial.top = 400;
+		m_rTutorial.left = 350;
+		m_rTutorial.bottom = m_rTutorial.top + 64;
+		m_rTutorial.right = m_rTutorial.left + 128;
+	}
+	else
+		m_bTutorial = false;
+
+		STOP("CGamePlayState::Enter()");
 	}
 }
+
 void CGamePlayState::Exit(void)
 {
 	PROFILE("CGamePlayState::Exit()");
@@ -164,6 +168,7 @@ void CGamePlayState::Exit(void)
 
 	m_pHUD->Exit();
 	//m_pHUD->Enter();
+	STOP("CGamePlayState::Exit()");
 }
 
 bool CGamePlayState::Input(float fElapsedTime)
@@ -370,6 +375,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 			}
 		}
 	}
+	STOP("CGamePlayState::Input(float)");
 	return true;
 }
 
@@ -380,7 +386,10 @@ void CGamePlayState::Update(float fElapsedTime)
 	if(!m_bIsPaused)
 	{
 		if(m_bIsPaused)
+		{
+			STOP("CGamePlayState::Update(float)");
 			return;
+		}
 		m_pCamera->Update(fElapsedTime);
 		// Update units
 		m_pOM->UpdateObjects(fElapsedTime);
@@ -390,6 +399,7 @@ void CGamePlayState::Update(float fElapsedTime)
 		m_pES->ProcessEvents();
 	}
 
+	STOP("CGamePlayState::Update(float)");
 }
 
 void CGamePlayState::Render(float fElapsedTime)
@@ -499,6 +509,7 @@ void CGamePlayState::Render(float fElapsedTime)
 		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
 		m_cFont.DrawTextA("Press Arrow Keys to move the camera/These settings are adjustable through the options menu./Click and hold the left mouse button./Drag the mouse over units to select them./Right click any tiles to move the selected units.",30,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
 	}		
+	STOP("CGamePlayState::Render(float)");
 }
 
 string CGamePlayState::IntToString(int nNum)
@@ -507,6 +518,7 @@ string CGamePlayState::IntToString(int nNum)
 	char szNumVal[10];
 	itoa(nNum, szNumVal, 10);
 	string szNum = szNumVal;
+	STOP("CGamePlayState::IntToString(int)");
 	return szNum;
 }
 
@@ -535,5 +547,6 @@ RECT CGamePlayState::GetSelectionRect()
 		toDraw.left = toDraw.right;
 		toDraw.right = nSwap;
 	}
+	STOP("CGamePlayState::GetSelectionRect()");
 	return toDraw;
 }
