@@ -30,7 +30,7 @@
                   <ButtonPositionX>575</ButtonPositionX>
                   <ButtonPositionY>250</ButtonPositionY>
                   <TextColorA>200</TextColorA>
-                  <TextColorR>0</TextColorR>
+                  <TextColorR>255</TextColorR>
                   <TextColorG>0</TextColorG>
                   <TextColorB>0</TextColorB>
                   <TextScaleX>.3</TextScaleX>
@@ -42,7 +42,7 @@
                   <ButtonPositionX>650</ButtonPositionX>
                   <ButtonPositionY>250</ButtonPositionY>
                   <TextColorA>200</TextColorA>
-                  <TextColorR>0</TextColorR>
+                  <TextColorR>255</TextColorR>
                   <TextColorG>0</TextColorG>
                   <TextColorB>0</TextColorB>
                   <TextScaleX>.3</TextScaleX>
@@ -51,6 +51,7 @@
                   <ButtonText>No</ButtonText>
           </Button>
 </Menu>
+
 
 
 
