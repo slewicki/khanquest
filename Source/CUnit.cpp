@@ -10,6 +10,7 @@
 #include "CEventSystem.h"
 CUnit::CUnit(int nType)
 {
+	PROFILE("CUnit::CUnit(int)");
 	m_nMaxHP				= 0;
 	m_nCurrentHP		= 0;
 	m_nAttack			= 0;			
@@ -46,6 +47,7 @@ CUnit::CUnit(int nType)
 
 CUnit::~CUnit(void)
 {
+	PROFILE("CUnit::~CUnit()");
 	delete m_pAnimInstance;
 
 	//CSGD_TextureManager::GetInstance()->ReleaseTexture(m_nSelectionID);
@@ -54,6 +56,7 @@ CUnit::~CUnit(void)
 
 void CUnit::RenderHealth()
 {
+	PROFILE("CUnit::RenderHealth()");
 	POINT ptPos = CCamera::GetInstance()->TransformToScreen((int)GetPosX(), (int)GetPosY());
 	// Set Health Rect
 	//-------------------------------
@@ -94,6 +97,7 @@ void CUnit::RenderHealth()
 }
 void CUnit::Update(float fElapsedTime)
 {
+	PROFILE("CUnit::Update(float)");
 	if(m_bIsActive)
 	{
 		m_pAnimInstance->Update(fElapsedTime);
@@ -410,6 +414,7 @@ void CUnit::Update(float fElapsedTime)
 
 void CUnit::RenderSelection()
 {
+	PROFILE("CUnit::RenderSelection()");
 	int nPosX = m_rLocalRect.left+ (int)((m_rLocalRect.right - m_rLocalRect.left)*.5f) - 32;
 	int nPosY = m_rLocalRect.top+ (int)((m_rLocalRect.bottom - m_rLocalRect.top)*.5f);
 
@@ -425,6 +430,7 @@ void CUnit::RenderSelection()
 }
 void CUnit::Render(float fElapsedTime)
 {
+	PROFILE("CUnit::Render(float)");
 	if(!m_bIsActive)
 		return;
 
@@ -447,6 +453,7 @@ void CUnit::Render(float fElapsedTime)
 
 void CUnit::ScanForEnemies()
 {
+	PROFILE("CUnit::ScanForEnemies()");
 	ObjectManager* pOM = ObjectManager::GetInstance();
 	// If we are dead or already in combat, do not check
 	if(!m_bIsAlive || this->GetState() == COMBAT || GetState() == RETREAT)
@@ -505,6 +512,7 @@ void CUnit::ScanForEnemies()
 }
 void CUnit::UpdateVisibility()
 {
+	PROFILE("CUnit::UpdateVisibility()");
 	CTileEngine* Map = CTileEngine::GetInstance();
 
 	POINT ptTileID = m_pCurrentTile->ptTileLoc;
@@ -530,6 +538,7 @@ void CUnit::UpdateVisibility()
 
 void CUnit::ChangeDirection(CTile* pTileFacing)
 {
+	PROFILE("CUnit::ChangeDirection(CTile*)");
 	if(pTileFacing == m_pCurrentTile || pTileFacing == NULL)
 	{
 		m_pAnimInstance->StopAllAnimations();
@@ -636,6 +645,7 @@ void CUnit::ChangeDirection(CTile* pTileFacing)
 
 void CUnit::ResolveCombat()
 {
+	PROFILE("CUnit::ResolveCombat()");
 	if(!m_pTarget)
 		return;
 	CalcAttackBonus();
@@ -658,6 +668,7 @@ void CUnit::ResolveCombat()
 
 void CUnit::CalcAttackBonus()
 {
+	PROFILE("CUnit::CalcAttackBonus()");
 	if(!m_pTarget)
 		return;
 	m_nBonus = 0;
@@ -701,6 +712,7 @@ void CUnit::CalcAttackBonus()
 
 CTile* CUnit::PlaceOnSurrounding(CTile* pCenterTile)
 {
+	PROFILE("CUnit::PlaceOnSurrounding(CTile*)");
 	CTileEngine* Map = CTileEngine::GetInstance();
 
 	POINT ptTileID = pCenterTile->ptTileLoc;
@@ -742,6 +754,7 @@ CTile* CUnit::PlaceOnSurrounding(CTile* pCenterTile)
 
 bool CUnit::MoveUnit(float fElapsedTime)
 {
+	PROFILE("CUnit::MoveUnit(float)");
 	m_fMovementTimer += fElapsedTime;
 
 	POINT ptStart = m_pCurrentTile->ptLocalAnchor;
@@ -763,6 +776,7 @@ bool CUnit::MoveUnit(float fElapsedTime)
 
 bool CUnit::IsTargetInRange()
 {
+	PROFILE("CUnit::IsTargetInRange()");
 
 	if((m_pTarget->m_pCurrentTile->ptTileLoc.x <= m_pCurrentTile->ptTileLoc.x + m_nRange 
 		&& m_pTarget->m_pCurrentTile->ptTileLoc.x >= m_pCurrentTile->ptTileLoc.x - m_nRange)
@@ -775,6 +789,7 @@ bool CUnit::IsTargetInRange()
 
 bool CUnit::IsTargetInView()
 {
+	PROFILE("CUnit::IsTargetInView()");
 
 	if((m_pTarget->m_pCurrentTile->ptTileLoc.x <= m_pCurrentTile->ptTileLoc.x + VISIBILITY 
 		&& m_pTarget->m_pCurrentTile->ptTileLoc.x >= m_pCurrentTile->ptTileLoc.x - VISIBILITY)
@@ -786,6 +801,7 @@ bool CUnit::IsTargetInView()
 }
 bool CUnit::IsTileAdjacent(CTile* pTile1, CTile* pTile2)
 {
+	PROFILE("CUnit::IsTileAdjacent(CTile*, CTile*)");
 
 	if((pTile1->ptTileLoc.x		<= pTile2->ptTileLoc.x + 1 
 		&& pTile1->ptTileLoc.x	>= pTile2->ptTileLoc.x - 1)
