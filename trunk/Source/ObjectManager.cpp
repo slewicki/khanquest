@@ -15,7 +15,6 @@
 #include "CGame.h"
 #include "WinBattleState.h"
 #include "LoseBattleState.h"
-#include "MainMenuState.h"
 #include "CTileEngine.h"
 #include <algorithm>
 
@@ -32,11 +31,7 @@ ObjectManager::ObjectManager(void)
 ObjectManager::~ObjectManager(void)
 {
 }
-void ObjectManager::CheckCollisions()
-{
 
-
-}
 
 ObjectManager* ObjectManager::GetInstance(void)
 {
@@ -77,11 +72,6 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 
     if(nEnemyUnits <=0)
 	{
-		if(CGame::GetInstance()->GetTutorialMode())
-		{
-			CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
-			return;
-		}
 		CGame::GetInstance()->PopCurrentState();
 		CGame::GetInstance()->PushState(CWinBattleState::GetInstance());
 		CGame::GetInstance()->AddWins();
@@ -89,11 +79,6 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 	}
 	if(nPlayerUnits <= 0)
 	{
-		if(CGame::GetInstance()->GetTutorialMode())
-		{
-			CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
-			return;
-		}
 		CGame::GetInstance()->PopCurrentState();
 		CGame::GetInstance()->PushState(CLoseBattleState::GetInstance());
 		CGame::GetInstance()->AddLoses();
@@ -197,6 +182,7 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 			{
 				CSGD_WaveManager::GetInstance()->SetVolume(pUnit->GetDeathSoundID(),CGame::GetInstance()->GetSFXVolume());
 				CSGD_WaveManager::GetInstance()->Play(pUnit->GetDeathSoundID());
+				
 			}
 		
 	}
@@ -214,16 +200,85 @@ void ObjectManager::EventHandler(CEvent* pEvent)
 
 void ObjectManager::UpdatePlayerUnitStartTile(void)
 {
-	for (int i = 0; i < Map->GetMapWidth(); ++i)
+	int nInfantry = 0;
+	int nArcher = 0;
+	int nCavalry = 0;
+	int nCavalryArcher = 0;
+	int nWarElephant = 0;
+	int nAxmen = 0;
+	switch(CGame::GetInstance()->GetSelectedCity()->GetID())
 	{
-		for (int j = 0; j < Map->GetMapHeight(); ++j)
-		{
-			if (Map->GetTile(0, i, j)->bIsEnemySpawn)
-			{
-				CFactory::CreateComputerUnit(rand()%6);
-			}
-		}
+	case KCITY1:
+		nCavalry = 2;
+		nWarElephant = 2;
+		break;
+	case KCITY2:
+		nCavalry = 3;
+		nWarElephant = 4;
+		nCavalryArcher = 2;
+		break;
+	case KCITY3:
+		nCavalry = 4;
+		nWarElephant = 6;
+		nCavalryArcher = 3;
+		break;
+	case XCITY1:
+		nInfantry = 6;
+		nAxmen = 6;
+		break;
+	case XCITY2:
+		nInfantry = 10;
+		nAxmen = 12;
+		nCavalry = 2;
+		break;
+	case XCITY3:
+		nInfantry = 15;
+		nAxmen = 16;
+		nCavalry = 5;
+		break;
+	case JCITY1:
+		nCavalry = 0;
+		nInfantry = 4;
+		nCavalryArcher = 3;
+		nArcher = 3;
+		break;
+	case JCITY2:
+		nCavalry = 3;
+		nInfantry = 6;
+		nCavalryArcher = 4;
+		nArcher = 6;
+		break;
+	case JCITY3:
+		nCavalry = 4;
+		nInfantry = 12;
+		nCavalryArcher = 4;
+		nArcher = 18;
+		break;
+	default:
+		// Bad news bears.
+		
+		break;
 	}
+	
+	for (int i = 0; i < nInfantry; i++)
+		CFactory::CreateComputerUnit(UNIT_INFANTRY);
+
+	for (int i = 0; i < nCavalry; i++)
+		CFactory::CreateComputerUnit(UNIT_CAVALRY);
+
+	for (int i = 0; i < nCavalryArcher; i++)
+		CFactory::CreateComputerUnit(UNIT_CAVALRY_ARCHER);
+
+	for (int i = 0; i < nAxmen; i++)
+		CFactory::CreateComputerUnit(UNIT_AXMEN);
+
+	for (int i = 0; i < nArcher; i++)
+		CFactory::CreateComputerUnit(UNIT_ARCHER);
+
+	for (int i = 0; i < nWarElephant; i++)
+		CFactory::CreateComputerUnit(UNIT_WAR_ELEPHANT);
+
+
 	for (unsigned int i = 0; i < m_vObjectList.size(); i++)
 	{
 		
