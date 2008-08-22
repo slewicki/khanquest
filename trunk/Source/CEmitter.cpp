@@ -17,6 +17,7 @@ using namespace io;
 
 CEmitter::CEmitter(void)
 {
+	PROFILE("CEmitter::CEmitter()");
 	m_pD3D	= NULL;
 	m_pTM	= NULL;
 	m_fPercentAlpha		= 0;
@@ -72,6 +73,7 @@ void CEmitter::Exit(void)
 }
 void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY)
 {
+	PROFILE("CEmitter::LoadBinaryEmitter(char*, float, float)");
 	ifstream fin;
 
 	int nStringSize = 0;;
@@ -214,6 +216,7 @@ void CEmitter::LoadBinaryEmitter(char* emitterFileName, float locX, float locY)
 
 void CEmitter::LoadXMLEmitter(char* emitterFileName, float locX, float locY)
 {
+	PROFILE("CEmitter::LoadXMLEmitter(char*, float, float)");
 	string filename = emitterFileName;
 
 	//filename = "Resource/" + filename; 
