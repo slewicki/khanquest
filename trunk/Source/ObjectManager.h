@@ -27,6 +27,7 @@ private:
 	CCamera*	m_pCamera;				// the camera
 	CTileEngine* Map;					// tile engine	
 	CAISystem*		m_pCAI;				// AI system
+float			m_fTimer;
 	struct SortObjects
 	{
 		 bool operator()(CBase* lhs, CBase* rhs)

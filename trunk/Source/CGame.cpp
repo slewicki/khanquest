@@ -976,13 +976,12 @@ void CGame::AddLoses()
 	{
 		LoseLastCity();
 		m_nLoses = 0;
-		CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
+
 		
 	}
 	else
 	{
 		Save(false);
-		CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
 	}
 }
 
@@ -1262,8 +1261,10 @@ string CGame::GetSaveName(int nSlot, bool bTitle)
 		if(!input.is_open())
 		{
 			//MessageBox(m_hWnd, "Save file not found.  Try making a new one." , "Error", MB_OK);
-
-			return "Empty";
+			if(bTitle)
+				return "EMPTY";
+			else
+				" ";
 		}
 		int nLength = 0;
 		input.read((char*)&nLength, sizeof(nLength));

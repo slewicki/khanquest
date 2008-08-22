@@ -56,7 +56,43 @@ void CGamePlayState::Enter(void)
 //	m_nTestEmitter = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_DustCload.dat", 128, 128);
 
 	// Register any Events with the GamePlayState
-	Map->LoadFile("Resource/Levels/KQ_Level2.level");
+	switch(CGame::GetInstance()->GetSelectedCity()->GetID())
+	{
+	case PCITY:
+		break;
+	case KCITY1:
+		
+		break;
+	case KCITY2:
+		
+		break;
+	case KCITY3:
+		
+		break;
+	case XCITY1:
+		
+		break;
+	case XCITY2:
+		
+		break;
+	case XCITY3:
+		
+		break;
+	case JCITY1:
+		
+		break;
+	case JCITY2:
+		
+		break;
+	case JCITY3:
+
+		break;
+	default:
+		// Bad news bears.
+		
+		break;
+	}
+	Map->LoadFile("Resource/Levels/KQ_Jin1.level");
 
 	m_pOM->UpdatePlayerUnitStartTile();
 
@@ -146,6 +182,8 @@ bool CGamePlayState::Input(float fElapsedTime)
 				m_ptCurrentLocation.y = m_ptBoxLocation.y +1;
 				m_rSelectionBox = GetSelectionRect();
 				m_pOM->SetSelectedUnit(m_rSelectionBox);
+				// Only update when selected
+				CHUDState::GetInstance()->UpdateSelected();
 			}
 			else if(m_pDI->GetBufferedMouseButton(M_BUTTON_RIGHT))
 			{
@@ -173,6 +211,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 				m_ptBoxLocation.x = m_ptBoxLocation.y = 0;
 				m_ptCurrentLocation.x = m_ptCurrentLocation.y = 0;;
 				m_rSelectionBox = GetSelectionRect();
+				CHUDState::GetInstance()->UpdateSelected();
 			}
 		}
 			
@@ -241,12 +280,12 @@ void CGamePlayState::Render(float fElapsedTime)
 	// Render units
 	// Temp for map changes
 	//-----------------------------------------------
-	if( m_pDI->GetBufferedKey(DIK_1))
+	/*if( m_pDI->GetBufferedKey(DIK_1))
 		Map->LoadFile("Resource/Levels/KQ_Wawa.level");
 	else if( m_pDI->GetBufferedKey(DIK_2))
 		Map->LoadFile("Resource/Levels/KQ_Wee.level");
 	else if( m_pDI->GetBufferedKey(DIK_3))
-		Map->LoadFile("Resource/Levels/KQ_Tech_Demo1.level");
+		Map->LoadFile("Resource/Levels/KQ_Tech_Demo1.level");*/
 
 	POINT MapLoc = m_pCamera->TransformToGlobal(CGame::GetInstance()->GetCursorPosition().x, CGame::GetInstance()->GetCursorPosition().y);
 

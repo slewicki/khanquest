@@ -58,7 +58,7 @@ public:
 	inline float GetVelX(void) const	{ return m_vVel.fX; }
 	inline float GetVelY(void) const	{ return m_vVel.fY; }
 	inline int	GetType(void) const	{ return m_nType; }
-	inline bool	IsOnScreen(void) const	{ return m_bIsOnScreen; }
+	
 	inline int GetAttackSoundID(void) const { return m_nAttackSoundID; }
 	inline int GetDeathSoundID(void) const { return m_nDeathSoundID; }
 
