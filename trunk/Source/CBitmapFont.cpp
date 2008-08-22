@@ -21,6 +21,7 @@ CBitmapFont::CBitmapFont(void)
 	m_nCustomWidth = 0;
 	m_nOffsetX = 0;
 	m_nCurrentPosX = 0;
+	STOP("CBitmapFont::CBitmapFont()");
 }
 
 CBitmapFont::~CBitmapFont(void)
@@ -33,7 +34,10 @@ bool CBitmapFont::InitBitmapFont(int nImageID, char chStartCh, int nNumColumns, 
 {
 	PROFILE("CBitmapFont::InitBitmapFont(int, char, int, int, int)");
 	if( nImageID < 0)
+	{
+		STOP("CBitmapFont::InitBitmapFont(int, char, int, int, int)");
 		return false;
+	}
 	SetImageID(nImageID);
 	SetNumColumns(nNumColumns);
 	SetCellWidth(nCellWidth);
@@ -41,6 +45,7 @@ bool CBitmapFont::InitBitmapFont(int nImageID, char chStartCh, int nNumColumns, 
 	SetStartCharacter(chStartCh);
 	m_nCustomWidth = m_nCellWidth;
 	m_nCurrentPosX = 0;
+	STOP("CBitmapFont::InitBitmapFont(int, char, int, int, int)");
 	return true;
 }
 
@@ -67,6 +72,7 @@ void CBitmapFont::DrawText(string szText, int nPosX, int nPosY, float fScaleX,
 			m_nCurrentPosX += (int)(m_nCustomWidth*fScaleX);
 		}
 	}
+	STOP("CBitmapFont::DrawText(string, int, int, float, float, DWORD)");
 }
 
 RECT CBitmapFont::CalcRect(char chLetter)
@@ -328,6 +334,7 @@ RECT CBitmapFont::CalcRect(char chLetter)
 	rCell.right = rCell.left + m_nCustomWidth;
 	rCell.bottom = rCell.top + m_nCellHeight;
 	
+	STOP("CBitmapFont::CalcRect(char)");
 	return rCell;
 }
 
