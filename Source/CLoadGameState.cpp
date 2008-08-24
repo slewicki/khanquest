@@ -23,7 +23,6 @@ CLoadGameState::CLoadGameState(void)
 	m_nBackgroundID = -1;
 
 	m_bIsNewGame = false;
-	STOP("CLoadGameState::CLoadGameState()");
 }
 
 
@@ -98,7 +97,6 @@ void CLoadGameState::Enter(void)
 	}
 	else
 		m_bTutorial = false;
-	STOP("CLoadGameState::Enter()");
 }
 
 void CLoadGameState::Exit(void)
@@ -124,8 +122,6 @@ void CLoadGameState::Exit(void)
 
 	m_pPE->UnLoadEmitter(m_nTorchID);
 	m_pPE->UnLoadEmitter(m_nTorchID2);
-
-	STOP("CLoadGameState::Exit()");
 }
 
 bool CLoadGameState::Input(float fElapsedTime)
@@ -218,7 +214,7 @@ bool CLoadGameState::Input(float fElapsedTime)
 				m_bIsEmpty[i] = true;
 			else
 				m_bIsEmpty[i] = false;
-			if(CGame::GetInstance()->IsMouseInRect(m_rClickRect[i]))
+			if(m_nChosenSlot != i && CGame::GetInstance()->IsMouseInRect(m_rClickRect[i]))
 			{
 				// Change cursor to click icon
 				CGame::GetInstance()->SetCursorClick();
@@ -234,10 +230,7 @@ bool CLoadGameState::Input(float fElapsedTime)
 		if(CGame::GetInstance()->IsMouseInRect(m_rAccept))
 		{
 			if(!m_bIsNewGame && m_bIsEmpty[m_nChosenSlot])
-			{
-				STOP("CLoadGameState::Input(float)");
 				return true;
-			}
 			CGame::GetInstance()->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 			{
@@ -249,7 +242,7 @@ bool CLoadGameState::Input(float fElapsedTime)
 					{
 						CGame::GetInstance()->NewGame(m_nChosenSlot);
 						CGame::GetInstance()->Save(false);
-						CGame::GetInstance()->PushState(CWorldMapState::GetInstance());
+						CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
 					}
 					else
 					{
@@ -261,7 +254,7 @@ bool CLoadGameState::Input(float fElapsedTime)
 				}
 				else
 					if(CGame::GetInstance()->LoadSlot(m_nChosenSlot))
-						CGame::GetInstance()->PushState(CWorldMapState::GetInstance());			
+						CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());			
 			}
 		}
 		if(CGame::GetInstance()->IsMouseInRect(m_rBack) )
@@ -289,21 +282,21 @@ bool CLoadGameState::Input(float fElapsedTime)
 			}
 		}
 	}
-	STOP("CLoadGameState::Input(float)");
 	return true;
 }
 
 void CLoadGameState::Update(float fElapsedTime)
 {
-	PROFILE("CLoadGameState::Update(float)");
 	m_pPE->Update(fElapsedTime);
-	STOP("CLoadGameState::Update(float)");
 }
 
 void CLoadGameState::Render(float fElapsedTime)
 {
-	PROFILE("CLoadGameState::Render(float)");
 	m_pTM->Draw(m_nBackgroundID, -20, -10, 1.f, 1.f, 0, 0.f, 0.f, 0.f, D3DCOLOR_ARGB(255, 0, 0, 0));
+	// draw torch and flame
+		m_pTM->Draw(m_nTorchPicID, 80, 300, 0.4f, 0.5f, 0);
+		m_pTM->Draw(m_nTorchPicID, 650, 300, 0.4f, 0.5f, 0);
+		m_pPE->Render(fElapsedTime);
 	if(!m_bTutorial)
 	{
 		for (int i = 0; i < 3; i++)
@@ -315,7 +308,8 @@ void CLoadGameState::Render(float fElapsedTime)
 			{
 				string szInfo = CGame::GetInstance()->GetSaveName(i, false);
 				m_cFont.DrawTextA(CGame::GetInstance()->GetSaveName(i, true), m_rClickRect[i].left+50, m_rClickRect[i].top, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));
-				m_cFont.DrawTextA(szInfo, (int)(((800-(15*szInfo.length()))*.5f)), m_rClickRect[i].top+20, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));
+				if(!m_bIsEmpty[i])
+					m_cFont.DrawTextA(szInfo, (int)(((800-(15*szInfo.length()))*.5f)), m_rClickRect[i].top+20, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));
 			}
 
 			else	
@@ -334,7 +328,7 @@ void CLoadGameState::Render(float fElapsedTime)
 		if(m_bIsNewGame)
 		{
 			if(m_bIsEmpty[m_nChosenSlot])
-				m_cFont.DrawTextA("Accept", m_rAccept.left+24, m_rAccept.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
+				m_cFont.DrawTextA("Accept", m_rAccept.left+24, m_rAccept.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 0, 155, 0));
 			else
 				m_cFont.DrawTextA("Erase", m_rAccept.left+30, m_rAccept.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 		}
@@ -349,10 +343,7 @@ void CLoadGameState::Render(float fElapsedTime)
 		m_pTM->Draw(m_nScrollButtonID, m_rBack.left, m_rBack.top, .4f, .3f);
 		m_cFont.DrawTextA("Back", m_rBack.left+40, m_rBack.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));
 
-		// draw torch and flame
-		m_pTM->Draw(m_nTorchPicID, 80, 300, 0.4f, 0.5f, 0);
-		m_pTM->Draw(m_nTorchPicID, 650, 300, 0.4f, 0.5f, 0);
-		m_pPE->Render(fElapsedTime);
+		
 	}
 	else if(CGame::GetInstance()->GetTutorialMode() && m_bTutorial)
 	{
@@ -364,7 +355,6 @@ void CLoadGameState::Render(float fElapsedTime)
 		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
 		m_cFont.DrawTextA("This next screen is the new game screen./The current file will be selected/and is highlighted in yellow./Feel free to pick a different file if you like./Click accept to continue.",100,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
 	}		
-	STOP("CLoadGameState::Render(float)");
 }
 
 

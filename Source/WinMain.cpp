@@ -17,7 +17,7 @@
 
 #include <windows.h>	//	Needed for Windows Applications.
 
-//#include "../resource.h"	//  For icon/cursor ID
+#include "../resource.h"	//  For icon/cursor ID
 
 #include "CGame.h"		//	Game class
 
@@ -92,8 +92,8 @@ int WINAPI WinMain(	HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	winClassEx.cbWndExtra		= 0;
 	winClassEx.hInstance		= hInstance;
 		// Edit for custom icon: LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1) );
-//	winClassEx.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1) );
-	winClassEx.hIcon			= LoadIcon(NULL, IDI_APPLICATION);
+	winClassEx.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1) );
+	//winClassEx.hIcon			= LoadIcon(NULL, IDI_APPLICATION);
 		// Edit for custom cursor
 	winClassEx.hCursor			= LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR_NORMAL));
 	winClassEx.hbrBackground	= (HBRUSH)GetStockObject(BLACK_BRUSH);

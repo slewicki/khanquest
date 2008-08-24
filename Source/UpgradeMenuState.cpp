@@ -257,7 +257,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 					CGame::GetInstance()->SetCursorClick();
 					if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 					{
-						m_pWM->Play(m_nClick);
+						
 						switch(j)
 						{
 						case UNIT_INFANTRY:
@@ -269,6 +269,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 									{
 										if(!m_bUpgraded[j][i] && m_nGoldTotal >= SPEED)
 										{
+											m_pWM->Play(m_nClick);
 											m_pUnit[UNIT_INFANTRY].SetSpeed(m_pUnit[UNIT_INFANTRY].GetSpeed() + (m_pUnit[UNIT_INFANTRY].GetSpeed() * .5f));
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -= SPEED;
@@ -277,6 +278,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 										{
 											if(!CGame::GetInstance()->GetUpgraded(j,i) && m_bUpgraded[j][i])
 											{
+												m_pWM->Play(m_nClick);
 												m_pUnit[UNIT_INFANTRY].SetSpeed(m_pUnit[UNIT_INFANTRY].GetSpeed() - (m_pUnit[UNIT_INFANTRY].GetSpeed() * .5f));
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal +=SPEED;
@@ -287,14 +289,17 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 									{
 										if(!m_bUpgraded[j][i] && m_nGoldTotal >= ATTACKSPEED)
 										{
+											m_pWM->Play(m_nClick);
 											m_pUnit[UNIT_INFANTRY].SetAttackSpeed(m_pUnit[UNIT_INFANTRY].GetAttackSpeed() - (m_pUnit[UNIT_INFANTRY].GetAttackSpeed() * .2f));
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -= ATTACKSPEED;
+
 										}	
 										else
 										{
 											if(!CGame::GetInstance()->GetUpgraded(j,i) && m_bUpgraded[j][i])
 											{
+												m_pWM->Play(m_nClick);
 												m_pUnit[UNIT_INFANTRY].SetAttackSpeed(m_pUnit[UNIT_INFANTRY].GetAttackSpeed() + (m_pUnit[UNIT_INFANTRY].GetAttackSpeed() * .2f));
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal += ATTACKSPEED;
@@ -308,6 +313,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_INFANTRY].SetAttackPower(m_pUnit[UNIT_INFANTRY].GetAttackPower() + 2);
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -= ATTACK;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -316,6 +322,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_INFANTRY].SetAttackPower(m_pUnit[UNIT_INFANTRY].GetAttackPower() - 2);
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal += ATTACK;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -334,6 +341,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_CAVALRY].SetSpeed(m_pUnit[UNIT_CAVALRY].GetSpeed() + (m_pUnit[UNIT_CAVALRY].GetSpeed() * .5f));
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -= SPEED;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -342,6 +350,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_CAVALRY].SetSpeed(m_pUnit[UNIT_CAVALRY].GetSpeed() - (m_pUnit[UNIT_CAVALRY].GetSpeed() * .5f));
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal += SPEED;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -352,6 +361,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_CAVALRY].SetAttackSpeed(m_pUnit[UNIT_CAVALRY].GetAttackSpeed() - (m_pUnit[UNIT_CAVALRY].GetAttackSpeed() * .2f));
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -= ATTACKSPEED;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -360,6 +370,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_CAVALRY].SetAttackSpeed(m_pUnit[UNIT_CAVALRY].GetAttackSpeed() + (m_pUnit[UNIT_CAVALRY].GetAttackSpeed() * .2f));
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal+=ATTACKSPEED;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -370,6 +381,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_CAVALRY].SetAttackPower(m_pUnit[UNIT_CAVALRY].GetAttackPower() + 2);
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -= ATTACK;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -378,6 +390,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_CAVALRY].SetAttackPower(m_pUnit[UNIT_CAVALRY].GetAttackPower() - 2);
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal += ATTACK;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -396,6 +409,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_CAVALRY_ARCHER].SetSpeed(m_pUnit[UNIT_CAVALRY_ARCHER].GetSpeed() + (m_pUnit[UNIT_CAVALRY_ARCHER].GetSpeed() * .5f));
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -=SPEED;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -404,6 +418,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_CAVALRY_ARCHER].SetSpeed(m_pUnit[UNIT_CAVALRY_ARCHER].GetSpeed() - (m_pUnit[UNIT_CAVALRY_ARCHER].GetSpeed() * .5f));
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal += SPEED;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -414,6 +429,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_CAVALRY_ARCHER].SetAttackSpeed(m_pUnit[UNIT_CAVALRY_ARCHER].GetAttackSpeed() - (m_pUnit[UNIT_CAVALRY_ARCHER].GetAttackSpeed() * .2f));
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -= ATTACKSPEED;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -422,6 +438,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_CAVALRY_ARCHER].SetAttackSpeed(m_pUnit[UNIT_CAVALRY_ARCHER].GetAttackSpeed() + (m_pUnit[UNIT_CAVALRY_ARCHER].GetAttackSpeed() * .2f));
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal +=ATTACKSPEED;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -432,6 +449,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_CAVALRY_ARCHER].SetAttackPower(m_pUnit[UNIT_CAVALRY_ARCHER].GetAttackPower() + 2);
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -= ATTACK;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -440,6 +458,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_CAVALRY_ARCHER].SetAttackPower(m_pUnit[UNIT_CAVALRY_ARCHER].GetAttackPower() - 2);
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal += ATTACK;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -458,6 +477,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_AXMEN].SetSpeed(m_pUnit[UNIT_AXMEN].GetSpeed() + (m_pUnit[UNIT_AXMEN].GetSpeed() * .5f));
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -=SPEED;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -466,6 +486,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_AXMEN].SetSpeed(m_pUnit->GetSpeed() - (m_pUnit[UNIT_AXMEN].GetSpeed() * .5f));
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal += SPEED;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -476,6 +497,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_AXMEN].SetAttackSpeed(m_pUnit[UNIT_AXMEN].GetAttackSpeed() - (m_pUnit[UNIT_AXMEN].GetAttackSpeed() * .2f));
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -= ATTACKSPEED;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -484,6 +506,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_AXMEN].SetAttackSpeed(m_pUnit[UNIT_AXMEN].GetAttackSpeed() + (m_pUnit[UNIT_AXMEN].GetAttackSpeed() * .2f));
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal+=ATTACKSPEED;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -494,6 +517,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_AXMEN].SetAttackPower(m_pUnit[UNIT_AXMEN].GetAttackPower() + 2);
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -= ATTACK;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -502,6 +526,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_AXMEN].SetAttackPower(m_pUnit[UNIT_AXMEN].GetAttackPower() - 2);
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal+=ATTACK;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -520,6 +545,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_ARCHER].SetSpeed(m_pUnit[UNIT_ARCHER].GetSpeed() + (m_pUnit[UNIT_ARCHER].GetSpeed() * .5f));
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -= SPEED;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -528,6 +554,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_ARCHER].SetSpeed(m_pUnit[UNIT_ARCHER].GetSpeed() - (m_pUnit[UNIT_ARCHER].GetSpeed() * .5f));
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal += SPEED;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -538,6 +565,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_ARCHER].SetAttackSpeed(m_pUnit[UNIT_ARCHER].GetAttackSpeed() - (m_pUnit[UNIT_ARCHER].GetAttackSpeed() * .2f));
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal-=ATTACKSPEED;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -546,6 +574,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_ARCHER].SetAttackSpeed(m_pUnit[UNIT_ARCHER].GetAttackSpeed() + (m_pUnit[UNIT_ARCHER].GetAttackSpeed() * .2f));
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal+=ATTACKSPEED;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -556,6 +585,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_ARCHER].SetAttackPower(m_pUnit[UNIT_ARCHER].GetAttackPower() + 2);
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal-=ATTACK;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -564,6 +594,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_ARCHER].SetAttackPower(m_pUnit[UNIT_ARCHER].GetAttackPower() - 2);
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal += ATTACK;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -582,6 +613,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_WAR_ELEPHANT].SetSpeed(m_pUnit[UNIT_WAR_ELEPHANT].GetSpeed() + (m_pUnit[UNIT_WAR_ELEPHANT].GetSpeed() * .5f));
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal-= SPEED;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -590,6 +622,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_WAR_ELEPHANT].SetSpeed(m_pUnit[UNIT_WAR_ELEPHANT].GetSpeed() - (m_pUnit[UNIT_WAR_ELEPHANT].GetSpeed() * .5f));
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal +=SPEED;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -600,6 +633,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_WAR_ELEPHANT].SetAttackSpeed(m_pUnit[UNIT_WAR_ELEPHANT].GetAttackSpeed() - (m_pUnit[UNIT_WAR_ELEPHANT].GetAttackSpeed() * .2f));
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -= ATTACKSPEED;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -608,6 +642,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_WAR_ELEPHANT].SetAttackSpeed(m_pUnit[UNIT_WAR_ELEPHANT].GetAttackSpeed() + (m_pUnit[UNIT_WAR_ELEPHANT].GetAttackSpeed() * .2f));
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal += ATTACKSPEED;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
@@ -618,6 +653,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 											m_pUnit[UNIT_WAR_ELEPHANT].SetAttackPower(m_pUnit[UNIT_WAR_ELEPHANT].GetAttackPower() + 2);
 											m_bUpgraded[j][i] = true;
 											m_nGoldTotal -= ATTACK;
+											m_pWM->Play(m_nClick);
 										}	
 										else
 										{
@@ -626,6 +662,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 												m_pUnit[UNIT_WAR_ELEPHANT].SetAttackPower(m_pUnit[UNIT_WAR_ELEPHANT].GetAttackPower() - 2);
 												m_bUpgraded[j][i] = false;
 												m_nGoldTotal += ATTACK;
+												m_pWM->Play(m_nClick);
 											}
 										}
 									}break;
