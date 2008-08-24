@@ -345,7 +345,7 @@ public:
 	//	Last Modified: August 22, 2008
 	//  Purpose : Adds to player wins
 	///////////////////////////////////////////
-	void AddWins();
+	void AddWins(bool bUsedTerror);
 
 	///////////////////////////////////////////
 	//  Function: AddLoses

@@ -34,6 +34,7 @@ void CWinGameState::Enter()
 void CWinGameState::Exit()
 {
 	CMainMenuState::GetInstance()->SetPause(false);
+	CGame::GetInstance()->SetSongPlay(CITYSELECT);
 
 }
 
@@ -53,7 +54,6 @@ bool CWinGameState::Input(float fElapsedTime)
 }
 void CWinGameState::Render(float fElapsedTime)
 {
-	CSGD_Direct3D::GetInstance()->Clear(160,80,0);
 	RECT toDraw = {0,0,400,668};
 	m_pTM->Draw(m_nImageID,0,0,1,1, &toDraw,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
 
@@ -74,7 +74,7 @@ void CWinGameState::Update(float fElapsedTime)
 			if(m_nAlpha == 255)
 				m_bAlpha = true;
 		}
-	if(m_bAlpha)
+	if(m_bAlpha && m_bEsc)
 	{
 		if(m_fTimer > 2.f)
 			if(m_fTimer > 6.f)
@@ -83,7 +83,7 @@ void CWinGameState::Update(float fElapsedTime)
 				m_fTimer;
 
 				if(m_nAlpha == 0)
-					CGame::GetInstance()->PopCurrentState();
+					CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
 			}
 	}
 }
@@ -97,7 +97,7 @@ void CWinGameState::StartEsc()
 		
 		if(m_nAlpha == 0)
 		{
-				CGame::GetInstance()->PopCurrentState();
+					CGame::GetInstance()->ChangeState(CMainMenuState::GetInstance());
 		}
 	}
 }

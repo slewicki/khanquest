@@ -86,7 +86,7 @@ void ObjectManager::UpdateObjects(float fElapsedTime)
 		}
 		CGame::GetInstance()->PopCurrentState();
 		CGame::GetInstance()->PushState(CWinBattleState::GetInstance());
-		CGame::GetInstance()->AddWins();
+		CGame::GetInstance()->AddWins(false);
 
 	}
 	if(nPlayerUnits <= 0)
@@ -399,12 +399,7 @@ void ObjectManager::SetSelectedUnit(RECT toCheck)
 		static_cast<CUnit*>(m_vObjectList[i])->SetSelected(false);
 		if(IntersectRect(&rIntersect, &static_cast<CUnit*>(m_vObjectList[i])->GetLocalRect(), &toCheck))
 		{
-			if(nSelectedAmount == 0 && static_cast<CUnit*>(m_vObjectList[i])->IsAlive() && static_cast<CUnit*>(m_vObjectList[i])->IsSelected() == false && !static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
-			{	
-				static_cast<CUnit*>(m_vObjectList[i])->SetSelected(true);
-				nSelectedAmount = 8;
-			}
-			else if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() && static_cast<CUnit*>(m_vObjectList[i])->IsSelected() == false && static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
+			if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() && static_cast<CUnit*>(m_vObjectList[i])->IsSelected() == false && static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
 			{
 				if(nSelectedAmount <= 7)
 				{
@@ -417,6 +412,26 @@ void ObjectManager::SetSelectedUnit(RECT toCheck)
 			
 		}
 		
+	}
+	if(nSelectedAmount == 0)
+	{
+		for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
+		{
+			static_cast<CUnit*>(m_vObjectList[i])->SetSelected(false);
+			if(IntersectRect(&rIntersect, &static_cast<CUnit*>(m_vObjectList[i])->GetLocalRect(), &toCheck))
+			{
+				if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() && static_cast<CUnit*>(m_vObjectList[i])->IsSelected() == false && !static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
+				{
+
+						static_cast<CUnit*>(m_vObjectList[i])->SetSelected(true);
+						++nSelectedAmount;
+						break;
+					
+				}
+			
+			}
+		
+		}
 	}
 	CHUDState::GetInstance()->UpdateSelected();
 	STOP("ObjectManager::SetSelectedUnit(RECT)");
