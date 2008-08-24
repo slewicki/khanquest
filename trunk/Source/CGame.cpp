@@ -234,14 +234,14 @@ bool CGame::Main(void)
 	// Because of this use paused bools to stop input to other states
 	// when pushing on states such as CCityInfoState over CWorldMapState
 	// Fullscreen Toggling
-	if( (m_pDI->GetBufferedKey(DIK_RETURN)  || m_pDI->GetBufferedKey(DIK_NUMPADENTER) ) && (m_pDI->GetKey(DIK_LMENU) || m_pDI->GetKey(DIK_RMENU)))
+	/*if( (m_pDI->GetBufferedKey(DIK_RETURN)  || m_pDI->GetBufferedKey(DIK_NUMPADENTER) ) && (m_pDI->GetKey(DIK_LMENU) || m_pDI->GetKey(DIK_RMENU)))
 	{
 		m_bIsWindowed = !m_bIsWindowed;
 		m_pD3D->ChangeDisplayParam(800, 600, m_bIsWindowed);
 		ShowCursor(true);
 
 		
-	}
+	}*/
 
 	for(unsigned int i = 0; i < m_vStates.size(); i++)
 	{
