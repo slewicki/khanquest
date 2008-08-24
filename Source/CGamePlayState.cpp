@@ -326,30 +326,30 @@ bool CGamePlayState::Input(float fElapsedTime)
 				// Mouse Camera Movement
 				 //Move camera Left
 				if(m_pCG->GetCursorPosition().x <= 5)
-					m_pCamera->SetVelX(-200);
+					m_pCamera->SetVelX(-100);
 				// Move camera Right
 				if(m_pCG->GetCursorPosition().x >= 795)
-					m_pCamera->SetVelX(200);
+					m_pCamera->SetVelX(100);
 				// Move camera Down
 				if(m_pCG->GetCursorPosition().y >= 595 )
-					m_pCamera->SetVelY(200);
+					m_pCamera->SetVelY(100);
 				// Move camera Up
 				if(m_pCG->GetCursorPosition().y <= 5)
-					m_pCamera->SetVelY(-200); 
+					m_pCamera->SetVelY(-100); 
 
 				// Keyboard Camera Movement
 				// Move camera Left
 				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_RIGHT))))
-					m_pCamera->SetVelX(200);
+					m_pCamera->SetVelX(100);
 				// Move camera Right
 				if( m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_LEFT))))
-					m_pCamera->SetVelX(-200);
+					m_pCamera->SetVelX(-100);
 				// Move camera Down
 				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_DOWN))))
-					m_pCamera->SetVelY(200);
+					m_pCamera->SetVelY(100);
 				// Move camera Up
 				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_UP))))
-					m_pCamera->SetVelY(-200); 
+					m_pCamera->SetVelY(-100); 
 
 			}
 #pragma endregion		
@@ -409,6 +409,7 @@ void CGamePlayState::Render(float fElapsedTime)
 
 		Map->Render(m_pCamera->GetScreenArea());
 
+#if _DEBUG
 		if(m_pDI->GetMouseButton(M_BUTTON_RIGHT))
 		{
 			char buffer[32];	//Tile Pos
@@ -438,10 +439,8 @@ void CGamePlayState::Render(float fElapsedTime)
 			m_cFont.DrawTextA(buffer5, 500, 120, .2f, .2f);
 			sprintf_s(buffer5, 32, "Minimap Tile: %i, %i", miniTileLoc.x, miniTileLoc.y);
 			m_cFont.DrawTextA(buffer5, 500, 150, .2f, .2f);
-
-
 		}
-
+#endif
 		m_pOM->RenderObjects(fElapsedTime);
 
 		// Temp for demo
