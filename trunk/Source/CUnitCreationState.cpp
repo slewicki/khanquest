@@ -362,8 +362,12 @@ if(!m_bTutorial)
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 		{
 			m_pWM->Play(m_nClick);
-
 			// Go back to the map
+			for (int i = 0; i < 6; ++i)
+			{
+			m_nNumUnits[i] = 0;
+			}
+			m_nTotalUnits =  0;
 			CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
 		}
 	}
