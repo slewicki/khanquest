@@ -91,10 +91,11 @@ void CWorldMapState::Enter(void)
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
 	CGame::GetInstance()->SetSongPlay(CITYSELECT);
 	m_fJoyTimer = 0;
-
+	m_bFirst = true;
 	if(CGame::GetInstance()->GetTutorialMode())
 	{
 		m_bTutorial = true;
+		m_bFirst = false;
 		m_rTutorial.top = 400;
 		m_rTutorial.left = 350;
 		m_rTutorial.bottom = m_rTutorial.top + 64;
@@ -296,8 +297,11 @@ bool CWorldMapState::Input(float fElapsedTime)
 			CGame::GetInstance()->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT)|| m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 			{
-				
-				m_bTutorial = false;
+				if(m_bFirst && m_bSecond)
+					m_bTutorial = false;
+				else if(m_bFirst)
+					m_bSecond = true;
+				m_bFirst = true;
 			}
 		}
 	}
@@ -381,7 +385,16 @@ void CWorldMapState::Render(float fElapsedTime)
 		m_pTM->Draw(m_nScrollButtonID,325,400,.4f,.3f);
 		m_cFont.DrawTextA("Accept",350,425,.2f,.2f,D3DCOLOR_ARGB(255,255,0,0));
 		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
-		m_cFont.DrawTextA("Pick a city within a territory to attack./",30,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+		if(!m_bFirst && !m_bSecond)
+			m_cFont.DrawTextA("It is early in the 13th century and you are /Genghis Khan. Your empire of Mongolia has /grown large and it is time for you begin your /campaign of expansion and terror. To the West /is the Khwarezmian Empire with their mighty /War Elephants, to the South is the Xia Empire /with their barbaric Axmen, and to the East is /the Jin Empire with their countless archers.",80,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+
+		else if(m_bFirst && !m_bSecond)
+			m_cFont.DrawTextA("Choose a city within an empire to attack./The darker the territory, the better defended /it is. Each empire controls three cities. If /you conquer an entire empire, you will unlock /their unique unit for your own use in battle.//If you lose two battles in a row, the last /conquered city will revolt.",80,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+
+		else
+			m_cFont.DrawTextA("You will gain gold once for each city you /sack. Gold is used to upgrade your units. All /cities that you control will pay you a tribute /of food before each battle. Your Terror Level /grows as you wreak havok through Asia. Once /your Terror Level reaches 100%, the next city /you attack will surrender to you without a fight.",80,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+
+
 	}	
 		STOP("CWorldMapState::Render(float)");	
 }

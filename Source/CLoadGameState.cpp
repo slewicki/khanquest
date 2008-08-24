@@ -353,7 +353,7 @@ void CLoadGameState::Render(float fElapsedTime)
 		m_pTM->Draw(m_nScrollButtonID,325,400,.4f,.3f);
 		m_cFont.DrawTextA("Accept",350,425,.2f,.2f,D3DCOLOR_ARGB(255,255,0,0));
 		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
-		m_cFont.DrawTextA("This next screen is the new game screen./The current file will be selected/and is highlighted in yellow./Feel free to pick a different file if you like./Click accept to continue.",100,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+		m_cFont.DrawTextA("This next screen is the new game screen./The current file will be selected and is /highlighted in yellow. Feel free to pick /a different file if you like.//Click accept to continue.",100,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
 	}		
 }
 

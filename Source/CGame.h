@@ -15,6 +15,8 @@
 #include "CSGD_WaveManager.h"
 #include "CSGD_DirectInput.h"
 #include "AnimationManager.h"
+#include "MainMenuState.h"
+
 #include "CTileEngine.h"
 #include "IGameState.h"
 #include <windows.h>
@@ -198,6 +200,7 @@ public:
 	inline int IsWarElephantUnlocked() { return m_chKCount>=3; }
 	bool GetIsWindowed(){return m_bIsWindowed;}
 	HWND GetWindowHandle(){return m_hWnd;}
+	HINSTANCE GetHInstance() { return m_hInstance;}
 	bool GetFPSDisplay(){return m_bFPS;}
 	inline bool IsMouseInRect(RECT rIsMouseHere)
 	{
@@ -388,5 +391,16 @@ public:
 	//  Purpose : Parse options data
 	///////////////////////////////////////////
 	void ParseOptions(char* szFileName);
+
+	void SwitchFullScreen(bool bIsWindowed)
+	{
+		Shutdown();
+		this->Initialize(m_hWnd, m_hInstance, 800, 600, bIsWindowed);
+		if(!bIsWindowed)
+			SetWindowOffset(0, 0);
+		else
+			SetWindowOffset(8, 31);
+		ChangeState(CMainMenuState::GetInstance());
+	}
 
 };

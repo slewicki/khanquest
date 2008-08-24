@@ -43,6 +43,8 @@ private:
 	bool							m_bPaused;
 	int								m_nScrollButtonID;
 	bool							m_bTutorial;
+	bool							m_bFirst;
+	bool							m_bSecond;
 	RECT							m_rTutorial;
 
 	// cheat codes

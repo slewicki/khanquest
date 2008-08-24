@@ -535,7 +535,7 @@ void CUnitCreationState::Render(float fElapsedTime)
 		m_pTM->Draw(m_nScrollButtonID,325,400,.4f,.3f);
 		m_cFont.DrawTextA("Accept",350,425,.2f,.2f,D3DCOLOR_ARGB(255,255,0,0));
 		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
-		m_cFont.DrawTextA("This next screen will let you purchase units./You purchase units using food./It is in the bottom left corner of your screen./ The cost of the unit and there stats are all displayed./Wieght your options and make the best choice.",30,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+		m_cFont.DrawTextA("This next screen will let you purchase units./Food is used to purchase units. Your current /food total is listed in the bottom left corner /of your screen. The cost of each unit /and their stats are all displayed.//Weigh your options and construct an army!",80,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
 	}	
 	
 	STOP("CUnitCreationState::Render(float)");	
