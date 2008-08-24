@@ -3,21 +3,16 @@
 
 <NumCoders>5</NumCoders>
 <Coders>
-<Code>Sean Hamstra</Code>
-<Code>Rodney Kite</Code>
-<Code>Sebastian Lewicki</Code>
-<Code>Dennis Wallace</Code>
-<Code>Thomas Impellitteri</Code>
+<Code>Sean Hamstra - Gameplay Officer</Code>
+<Code>Rodney Kite - Project Officer</Code>
+<Code>Sebastian Lewicki - Technology Officer</Code>
+<Code>Dennis Wallace - Interface Officer</Code>
+<Code>Thomas Impellitteri (Second) Gameplay Officer</Code>
 <Code/>
 </Coders>
 
-<NumResources>8</NumResources>
+<NumResources>3</NumResources>
 <Resources>
-<Resource>Re1</Resource>
-<Resource>Re2</Resource>
-<Resource>Re3</Resource>
-<Resource>Re4</Resource>
-<Resource>www</Resource>
 <Resource>www.shadedrelief.com/world/</Resource>
 <Resource>www.google.com\alpha\beta\gama</Resource>
 <Resource>Age Of Empires</Resource>
@@ -40,6 +35,7 @@
 </Titles>
 
 </Menu>
+
 
 
 
