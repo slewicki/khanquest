@@ -83,6 +83,15 @@ void CUpgradeMenuState::Enter()
 	}
 	else
 		m_bTutorial = false;
+
+	m_pUnit[UNIT_INFANTRY] = CGame::GetInstance()->GetUnitInfo(UNIT_INFANTRY);
+	m_pUnit[UNIT_AXMEN] = CGame::GetInstance()->GetUnitInfo(UNIT_AXMEN);
+	m_pUnit[UNIT_CAVALRY] = CGame::GetInstance()->GetUnitInfo(UNIT_CAVALRY);
+	m_pUnit[UNIT_CAVALRY_ARCHER] = CGame::GetInstance()->GetUnitInfo(UNIT_CAVALRY_ARCHER);
+	m_pUnit[UNIT_WAR_ELEPHANT] = CGame::GetInstance()->GetUnitInfo(UNIT_WAR_ELEPHANT);
+	m_pUnit[UNIT_ARCHER] = CGame::GetInstance()->GetUnitInfo(UNIT_ARCHER);
+
+
 }
 
 void CUpgradeMenuState::Exit()
@@ -115,6 +124,11 @@ void CUpgradeMenuState::Exit()
 			{
 				if(m_bModified[i])
 					CGame::GetInstance()->SetPlayerUnitInfo(m_pUnit[UNIT_WAR_ELEPHANT],UNIT_WAR_ELEPHANT);
+			}break;
+		case UNIT_ARCHER:
+			{
+				if(m_bModified[i])
+					CGame::GetInstance()->SetPlayerUnitInfo(m_pUnit[UNIT_ARCHER],UNIT_ARCHER);
 			}break;
 		}
 	}
@@ -262,7 +276,6 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 						{
 						case UNIT_INFANTRY:
 							{
-								m_pUnit[UNIT_INFANTRY] = CGame::GetInstance()->GetUnitInfo(UNIT_INFANTRY);
 								switch(i)
 								{
 								case 0:
@@ -331,7 +344,6 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 							}break;
 						case UNIT_CAVALRY:
 							{
-								m_pUnit[UNIT_CAVALRY] = CGame::GetInstance()->GetUnitInfo(UNIT_CAVALRY);
 								switch(i)
 								{
 								case 0:
@@ -399,7 +411,6 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 							}break;
 						case UNIT_CAVALRY_ARCHER:
 							{
-								m_pUnit[UNIT_CAVALRY_ARCHER] = CGame::GetInstance()->GetUnitInfo(UNIT_CAVALRY_ARCHER);
 								switch(i)
 								{
 								case 0:
@@ -467,7 +478,6 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 							}break;
 						case UNIT_AXMEN:
 							{
-								m_pUnit[UNIT_AXMEN] = CGame::GetInstance()->GetUnitInfo(UNIT_AXMEN);
 								switch(i)
 								{
 								case 0:
@@ -535,7 +545,6 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 							}break;
 						case UNIT_ARCHER:
 							{
-								m_pUnit[UNIT_ARCHER] = CGame::GetInstance()->GetUnitInfo(UNIT_ARCHER);
 								switch(i)
 								{
 								case 0:
@@ -603,7 +612,7 @@ bool CUpgradeMenuState::Input(float fElapsedTime)
 							}break;
 						case UNIT_WAR_ELEPHANT:
 							{
-								m_pUnit[UNIT_WAR_ELEPHANT] = CGame::GetInstance()->GetUnitInfo(UNIT_WAR_ELEPHANT);
+								
 								switch(i)
 								{
 								case 0:

@@ -1005,27 +1005,23 @@ void CGame::LoseLastCity()
 	STOP("CGame::LoseLastCity()");
 	
 }
-void CGame::AddWins()
+void CGame::AddWins(bool bUsedTerror)
 {
 	PROFILE("CGame::AddWins()");
 	SetCityConquered(m_pSelectedCity);
 	++m_nWins;
 	if(m_nLoses > 0)
 		--m_nLoses;
-	if(GetTerrorLevel() < 100)
+	if(GetTerrorLevel() < 100 && !bUsedTerror)
 	{
 		SetTerrorLevel(GetTerrorLevel() + 25);
 	}
+	else if(bUsedTerror)
+		SetTerrorLevel(0);
 	
-	if(m_nWins == (TOTAL_CITIES-1))
+	if(m_vConqueredCities.size() == (TOTAL_CITIES-1))
 	{
-		while(m_vStates.size() > 0)
-			PopCurrentState();
-		PushState(CMainMenuState::GetInstance());
-		PushState(CWinGameState::GetInstance());
-		InitCities();
-		m_nGold = 0;
-		m_nWins = 1;
+		ChangeState(CWinGameState::GetInstance());
 	}
 	else
 		Save(false);
@@ -1198,6 +1194,13 @@ void CGame::NewGame(int nSlot)
 	m_chJinCount = m_chKCount = m_chXiaCount = 0;
 	this->ParseBinaryUnitInfo("Resource/KQ_unitStats.dat");
 	InitCities();
+	for(int j = 0; j < 6; ++j)
+		{	
+			for(int i = 0; i < 3; ++i)
+			{
+				m_bUpGrades[j][i] = false;
+			}
+		}
 	STOP("CGame::NewGame(int)");
 }
 

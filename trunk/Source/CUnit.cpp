@@ -298,6 +298,7 @@ void CUnit::Update(float fElapsedTime)
 			SetState(IDLE);
 			SetNextTile(NULL);
 			ChangeDirection(m_pCurrentTile);
+			break;
 		}
 		// Reached destination or in range of target
 		if((m_pCurrentTile == m_pDestinationTile) || (m_pTarget && IsTargetInRange()))
@@ -378,6 +379,7 @@ void CUnit::Update(float fElapsedTime)
 			SetState(IDLE);
 			SetNextTile(NULL);
 			ChangeDirection(m_pCurrentTile);
+			break;
 		}
 		// Reached destination or in range of target
 		if((m_pCurrentTile == m_pDestinationTile) || (!IsPlayerUnit() && m_pCurrentTile->bIsEnemySpawn) || (IsPlayerUnit() && m_pCurrentTile->bIsPlayerSpawn))

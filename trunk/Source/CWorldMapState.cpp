@@ -266,7 +266,7 @@ bool CWorldMapState::Input(float fElapsedTime)
 					}
 					else
 					{
-						CGame::GetInstance()->SetCityConquered(m_pCities[i]);
+						/*CGame::GetInstance()->SetCityConquered(m_pCities[i]);
 
 						m_pPlayerOwnedCities.clear();
 						for (unsigned int i = 0; i < 10; i++)
@@ -281,9 +281,12 @@ bool CWorldMapState::Input(float fElapsedTime)
 										m_pCities[vAdjacent[i]]->SetAttackable(true);
 								}
 							}
-						}
+						}*/
 						CGame::GetInstance()->SetTerrorLevel(0);
+						CGame::GetInstance()->AddWins(true);
 						m_bPaused = false;
+						if(CGame::GetInstance()->GetNumConquered() < 9)
+							CGame::GetInstance()->ChangeState(this);
 						break;
 					}
 				}
