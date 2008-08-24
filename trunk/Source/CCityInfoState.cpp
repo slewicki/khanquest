@@ -311,7 +311,7 @@ void CCityInfoState::Render(float fElapsedTime)
 		m_pTM->Draw(m_nButtonID,325,400,.4f,.3f);
 		m_cFont.DrawTextA("Accept",350,425,.2f,.2f,D3DCOLOR_ARGB(255,255,0,0));
 		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
-		m_cFont.DrawTextA("This next screen will tell you/who you are about to attack/and how much of a tribute they are worth./See the Scout's Reportfor more/important information.",100,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+		m_cFont.DrawTextA("The City Info screen will tell you who /controls this city and how much of a tribute /it is worth.//See the Scout's Report for more important /information.",100,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
 	}		
 	STOP("CCityInfoState::Render(float)");
 }

@@ -764,7 +764,7 @@ void CUpgradeMenuState::Render(float fElapsedTime)
 		m_pTM->Draw(m_nScrollButtonID,325,400,.4f,.3f);
 		m_cFont.DrawTextA("Accept",350,425,.2f,.2f,D3DCOLOR_ARGB(255,255,0,0));
 		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
-		m_cFont.DrawTextA("       This next screen will let you upgrade units./The cost of upgrades are in the bottom left corner./The total ammount of gold you currently possess/is directly below them.",30,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+		m_cFont.DrawTextA("This next screen will let you upgrade units./The cost of upgrades are in the bottom left /corner. The total amount of gold you currently /possess is directly below them. Each upgrade /may be purchased only once and will remain /throughout your campaign.",80,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
 	}		
 }
 

@@ -221,9 +221,11 @@ bool COptionsMenuState::Input(float fElapsedTime)
 		}
 		if(Buttons[m_nCurrentButton].Action == FULLSCREEN)
 		{
-			CGame::GetInstance()->SetIsWindowed(!CGame::GetInstance()->GetIsWindowed());
-			CSGD_Direct3D::GetInstance()->ChangeDisplayParam(800, 600, CGame::GetInstance()->GetIsWindowed());
-			ShowCursor(true);
+			CGame::GetInstance()->SwitchFullScreen(!CGame::GetInstance()->GetIsWindowed());
+			//CGame::GetInstance()->Initialize(CGame::GetInstance()->GetWindowHandle(), CGame::GetInstance()->GetHInstance(), 800, 600, !CGame::GetInstance()->GetIsWindowed());
+			//CSGD_Direct3D::GetInstance()->ChangeDisplayParam(800, 600, CGame::GetInstance()->GetIsWindowed());
+			//ShowCursor(true);
+			return true;
 		}
 		if(Buttons[m_nCurrentButton].Action == BACK)
 		{

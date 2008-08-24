@@ -326,30 +326,30 @@ bool CGamePlayState::Input(float fElapsedTime)
 				// Mouse Camera Movement
 				 //Move camera Left
 				if(m_pCG->GetCursorPosition().x <= 5)
-					m_pCamera->SetVelX(-100);
+					m_pCamera->SetVelX(-200);
 				// Move camera Right
 				if(m_pCG->GetCursorPosition().x >= 795)
-					m_pCamera->SetVelX(100);
+					m_pCamera->SetVelX(200);
 				// Move camera Down
 				if(m_pCG->GetCursorPosition().y >= 595 )
-					m_pCamera->SetVelY(100);
+					m_pCamera->SetVelY(200);
 				// Move camera Up
 				if(m_pCG->GetCursorPosition().y <= 5)
-					m_pCamera->SetVelY(-100); 
+					m_pCamera->SetVelY(-200); 
 
 				// Keyboard Camera Movement
 				// Move camera Left
 				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_RIGHT))))
-					m_pCamera->SetVelX(100);
+					m_pCamera->SetVelX(200);
 				// Move camera Right
 				if( m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_LEFT))))
-					m_pCamera->SetVelX(-100);
+					m_pCamera->SetVelX(-200);
 				// Move camera Down
 				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_DOWN))))
-					m_pCamera->SetVelY(100);
+					m_pCamera->SetVelY(200);
 				// Move camera Up
 				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_UP))))
-					m_pCamera->SetVelY(-100); 
+					m_pCamera->SetVelY(-200); 
 
 			}
 #pragma endregion		
@@ -492,7 +492,7 @@ void CGamePlayState::Render(float fElapsedTime)
 		m_pTM->Draw(m_nScrollButtonID,325,400,.4f,.3f);
 		m_cFont.DrawTextA("Accept",350,425,.2f,.2f,D3DCOLOR_ARGB(255,255,0,0));
 		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
-		m_cFont.DrawTextA("Press Arrow Keys to move the camera/These settings are adjustable through the options menu./Click and hold the left mouse button./Drag the mouse over units to select them./Right click any tiles to move the selected units.",30,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+		m_cFont.DrawTextA("Press Arrow Keys to move the camera. These /settings are adjustable through the options /menu. Click and hold the left mouse button./Drag the mouse over units to select them./Right click to move the selected units.//Your object here is to seek out all enemies /on the map and defeat them.",80,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
 	}		
 }
 
