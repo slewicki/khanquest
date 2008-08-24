@@ -24,7 +24,6 @@ CGamePlayState::CGamePlayState(void)
 
 	m_bButtonDown = false;
 	m_nTerrorLevel = 0;
-	STOP("CGamePlayState::CGamePlayState()");
 
 }
 
@@ -60,12 +59,7 @@ void CGamePlayState::Enter(void)
 	//	m_nTestEmitter = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_DustCload.dat", 128, 128);
 
 	// Register any Events with the GamePlayState
-	if(CGame::GetInstance()->GetTutorialMode())
-	{
-		Map->LoadFile("Resource/Levels/KQ_Jin1.level");
-	}
-	else
-	{
+	
 		switch(CGame::GetInstance()->GetSelectedCity()->GetID())
 		{
 		case KCITY1:
@@ -110,6 +104,7 @@ void CGamePlayState::Enter(void)
 
 			break;
 		}
+		
 
 		m_pOM->UpdatePlayerUnitStartTile();
 
@@ -135,21 +130,18 @@ void CGamePlayState::Enter(void)
 		CGame::GetInstance()->SetSongPlay(BATTLESTATE);
 		m_pHUD->Enter();
 
-	if(CGame::GetInstance()->GetTutorialMode())
-	{
-		m_bTutorial = true;
-		m_rTutorial.top = 400;
-		m_rTutorial.left = 350;
-		m_rTutorial.bottom = m_rTutorial.top + 64;
-		m_rTutorial.right = m_rTutorial.left + 128;
-	}
-	else
-		m_bTutorial = false;
-
-		STOP("CGamePlayState::Enter()");
-	}
+		if(CGame::GetInstance()->GetTutorialMode())
+		{
+			m_bTutorial = true;
+			m_rTutorial.top = 400;
+			m_rTutorial.left = 350;
+			m_rTutorial.bottom = m_rTutorial.top + 64;
+			m_rTutorial.right = m_rTutorial.left + 128;
+		}
+		else
+			m_bTutorial = false;
+	
 }
-
 void CGamePlayState::Exit(void)
 {
 	PROFILE("CGamePlayState::Exit()");
@@ -168,7 +160,6 @@ void CGamePlayState::Exit(void)
 
 	m_pHUD->Exit();
 	//m_pHUD->Enter();
-	STOP("CGamePlayState::Exit()");
 }
 
 bool CGamePlayState::Input(float fElapsedTime)
@@ -335,30 +326,30 @@ bool CGamePlayState::Input(float fElapsedTime)
 				// Mouse Camera Movement
 				 //Move camera Left
 				if(m_pCG->GetCursorPosition().x <= 5)
-					m_pCamera->SetVelX(-100);
+					m_pCamera->SetVelX(-200);
 				// Move camera Right
 				if(m_pCG->GetCursorPosition().x >= 795)
-					m_pCamera->SetVelX(100);
+					m_pCamera->SetVelX(200);
 				// Move camera Down
 				if(m_pCG->GetCursorPosition().y >= 595 )
-					m_pCamera->SetVelY(100);
+					m_pCamera->SetVelY(200);
 				// Move camera Up
 				if(m_pCG->GetCursorPosition().y <= 5)
-					m_pCamera->SetVelY(-100); 
+					m_pCamera->SetVelY(-200); 
 
 				// Keyboard Camera Movement
 				// Move camera Left
 				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_RIGHT))))
-					m_pCamera->SetVelX(100);
+					m_pCamera->SetVelX(200);
 				// Move camera Right
 				if( m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_LEFT))))
-					m_pCamera->SetVelX(-100);
+					m_pCamera->SetVelX(-200);
 				// Move camera Down
 				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_DOWN))))
-					m_pCamera->SetVelY(100);
+					m_pCamera->SetVelY(200);
 				// Move camera Up
 				if(m_pDI->GetKey((UCHAR)(CKeyBindState::GetInstance()->GetBoundKey(CAMERA_UP))))
-					m_pCamera->SetVelY(-100); 
+					m_pCamera->SetVelY(-200); 
 
 			}
 #pragma endregion		
@@ -375,7 +366,6 @@ bool CGamePlayState::Input(float fElapsedTime)
 			}
 		}
 	}
-	STOP("CGamePlayState::Input(float)");
 	return true;
 }
 
@@ -386,10 +376,7 @@ void CGamePlayState::Update(float fElapsedTime)
 	if(!m_bIsPaused)
 	{
 		if(m_bIsPaused)
-		{
-			STOP("CGamePlayState::Update(float)");
 			return;
-		}
 		m_pCamera->Update(fElapsedTime);
 		// Update units
 		m_pOM->UpdateObjects(fElapsedTime);
@@ -399,7 +386,6 @@ void CGamePlayState::Update(float fElapsedTime)
 		m_pES->ProcessEvents();
 	}
 
-	STOP("CGamePlayState::Update(float)");
 }
 
 void CGamePlayState::Render(float fElapsedTime)
@@ -509,7 +495,6 @@ void CGamePlayState::Render(float fElapsedTime)
 		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
 		m_cFont.DrawTextA("Press Arrow Keys to move the camera/These settings are adjustable through the options menu./Click and hold the left mouse button./Drag the mouse over units to select them./Right click any tiles to move the selected units.",30,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
 	}		
-	STOP("CGamePlayState::Render(float)");
 }
 
 string CGamePlayState::IntToString(int nNum)
@@ -518,7 +503,6 @@ string CGamePlayState::IntToString(int nNum)
 	char szNumVal[10];
 	itoa(nNum, szNumVal, 10);
 	string szNum = szNumVal;
-	STOP("CGamePlayState::IntToString(int)");
 	return szNum;
 }
 
@@ -547,6 +531,5 @@ RECT CGamePlayState::GetSelectionRect()
 		toDraw.left = toDraw.right;
 		toDraw.right = nSwap;
 	}
-	STOP("CGamePlayState::GetSelectionRect()");
 	return toDraw;
 }

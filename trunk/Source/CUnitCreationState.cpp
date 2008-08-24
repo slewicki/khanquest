@@ -340,24 +340,20 @@ if(!m_bTutorial)
 			}
 		}
 	}
-	if(m_nTotalUnits && CGame::GetInstance()->IsMouseInRect(m_rUpgradeButton))
+	if(CGame::GetInstance()->IsMouseInRect(m_rUpgradeButton))
 	{
 		CGame::GetInstance()->SetCursorClick();
 		if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 		{
 			
-			if(m_nTotalUnits > 0)
-			{
+			
 				m_pWM->Play(m_nClick);
 
-				// Ask if they are sure...?
 				
-				// Figure out map and enemy units (call factory enemycreates)
-				// Change to on GamePlayState
 				m_bPaused = true;
 				CGame::GetInstance()->PushState(CUpgradeMenuState::GetInstance());
 				
-			}
+			
 		}
 	}
 	if(CGame::GetInstance()->IsMouseInRect(m_rBackButton))
@@ -523,7 +519,6 @@ void CUnitCreationState::Render(float fElapsedTime)
 	if(!m_nTotalUnits)
 	{
 		m_pTM->Draw(m_nScrollButtonID, m_rAttackButton.left, m_rAttackButton.top, .4f, .3f, 0, 0, 0, 0, D3DCOLOR_ARGB(150, 50, 50, 50));
-		m_pTM->Draw(m_nScrollButtonID, m_rUpgradeButton.left,m_rAttackButton.top, .4f, .3f,	0, 0, 0, 0, D3DCOLOR_ARGB(150, 50, 50, 50));
 	}
 	m_pTM->Draw(m_nScrollButtonID, m_rBackButton.left, m_rBackButton.top, .4f, .3f);
 	m_cFont.DrawTextA("Back", m_rBackButton.left+40, m_rBackButton.top+24, .2f, .2f, D3DCOLOR_ARGB(255, 255, 0, 0));

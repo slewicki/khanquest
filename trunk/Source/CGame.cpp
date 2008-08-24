@@ -92,7 +92,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 
 	//	Call initialize on each wrapper:
 	#pragma region WrapperInit
-	if (!m_pD3D->InitDirect3D(hWnd, nScreenWidth, nScreenHeight, bIsWindowed, true))
+	if (!m_pD3D->InitDirect3D(hWnd, nScreenWidth, nScreenHeight, bIsWindowed, false))
 	{
 		MessageBox(0, "InitDirect3D Failed", " Error", MB_OK);
 		STOP("CGame::Initialize(HWND, HINSTANCE, int, int, bool)");
@@ -161,8 +161,8 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	m_BF.InitBitmapFont(m_nFontID,' ',16,128,128);
 	
 	this->ParsePlayList("Resource/KQ_PlayList.xml");
-	m_nAttackSoundID[UNIT_AXMEN] = m_nAttackSoundID[UNIT_INFANTRY] = m_pWM->LoadWave("Resource/KQ_SwordAttack.wav");
-	m_nAttackSoundID[UNIT_CAVALRY] = m_nAttackSoundID[UNIT_CAVALRY_ARCHER] = m_nAttackSoundID[UNIT_ARCHER] = m_pWM->LoadWave("Resource/KQ_ArrowAttack.wav");
+	m_nAttackSoundID[UNIT_CAVALRY] =m_nAttackSoundID[UNIT_AXMEN] = m_nAttackSoundID[UNIT_INFANTRY] = m_pWM->LoadWave("Resource/KQ_SwordAttack.wav");
+	m_nAttackSoundID[UNIT_CAVALRY_ARCHER] = m_nAttackSoundID[UNIT_ARCHER] = m_pWM->LoadWave("Resource/KQ_ArrowAttack.wav");
 	m_nAttackSoundID[UNIT_WAR_ELEPHANT] = m_pWM->LoadWave("Resource/KQ_AttackElephant.wav");
 	m_nDeathSoundID[UNIT_AXMEN] = m_nDeathSoundID[UNIT_INFANTRY] = m_nDeathSoundID[UNIT_ARCHER] = m_pWM->LoadWave("Resource/KQ_DeathMen.wav");
     m_nDeathSoundID[UNIT_CAVALRY] = m_nDeathSoundID[UNIT_CAVALRY_ARCHER] = m_pWM->LoadWave("Resource/KQ_DeathHorse.wav");
@@ -1015,7 +1015,7 @@ void CGame::AddWins()
 		SetTerrorLevel(GetTerrorLevel() + 25);
 	}
 	
-	if(m_nWins == TOTAL_CITIES)
+	if(m_nWins == (TOTAL_CITIES-1))
 	{
 		while(m_vStates.size() > 0)
 			PopCurrentState();
@@ -1158,6 +1158,8 @@ bool CGame::LoadSlot(int nSlot)
 		input.read((char*)&m_chJinCount  , sizeof(m_chJinCount));
 		input.read((char*)&m_chXiaCount  , sizeof(m_chXiaCount));
 		input.read((char*)&m_chKCount  , sizeof(m_chKCount));
+
+		input.read((char*)&m_bUpGrades, sizeof(m_bUpGrades));
 
 
 		input.close();
@@ -1307,6 +1309,8 @@ bool CGame::Save(bool bNewSave)
 		output.write((char*)&m_chJinCount  , sizeof(m_chJinCount));
 		output.write((char*)&m_chXiaCount  , sizeof(m_chXiaCount));
 		output.write((char*)&m_chKCount  , sizeof(m_chKCount));
+
+		output.write((char*)&m_bUpGrades, sizeof(m_bUpGrades));
 
 
 		output.close();

@@ -107,7 +107,7 @@ void CCamera::Update(float fElapsedTime)
 	else if(m_vPos.fY < -(nMapWidth * nTileHeight)+455)
 	{
 		m_vVel.fY = 0.f;
-		m_vPos.fY = - (float)((nMapWidth * nTileHeight)+455);
+		m_vPos.fY =  (float)(-(nMapWidth * nTileHeight)+455);
 	}
 
 	if(m_vPos.fX < -400.f)
