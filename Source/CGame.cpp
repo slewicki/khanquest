@@ -125,8 +125,8 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	} 
 #pragma endregion
 
-	if(bIsWindowed)
-		m_pD3D->ChangeDisplayParam(800, 600, bIsWindowed);
+	/*if(bIsWindowed)
+		m_pD3D->ChangeDisplayParam(800, 600, bIsWindowed);*/
 	// Init the Pixel Shader
 	if (!m_PixelShader.Create("Resource/KQ_FoW.fx", m_pD3D->GetDirect3DDevice()))
 		MessageBox(hWnd, "Failed to load Pixel Shader", "Error", MB_OK);
