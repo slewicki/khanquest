@@ -168,7 +168,6 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	m_nDeathSoundID[UNIT_AXMEN] = m_nDeathSoundID[UNIT_INFANTRY] = m_nDeathSoundID[UNIT_ARCHER] = m_pWM->LoadWave("Resource/KQ_DeathMen.wav");
     m_nDeathSoundID[UNIT_CAVALRY] = m_nDeathSoundID[UNIT_CAVALRY_ARCHER] = m_pWM->LoadWave("Resource/KQ_DeathHorse.wav");
 	m_nDeathSoundID[UNIT_WAR_ELEPHANT] = m_pWM->LoadWave("Resource/KQ_DeathElephant.wav");
-	
 	STOP("CGame::Initialize(HWND, HINSTANCE, int, int, bool)");
 	return true;
 }
@@ -1007,7 +1006,16 @@ void CGame::LoseLastCity()
 }
 void CGame::AddWins(bool bUsedTerror)
 {
+	bool bNewUnit1 = false;
+	bool bNewUnit2 = false;
+	bool bNewUnit3 = false;
 	PROFILE("CGame::AddWins()");
+	if(m_chKCount <3)
+		bNewUnit1 = true;
+	if(m_chXiaCount <3)
+		bNewUnit2 = true;
+	if(m_chJinCount <3)
+		bNewUnit3 = true;
 	SetCityConquered(m_pSelectedCity);
 	++m_nWins;
 	if(m_nLoses > 0)
@@ -1018,6 +1026,17 @@ void CGame::AddWins(bool bUsedTerror)
 	}
 	else if(bUsedTerror)
 		SetTerrorLevel(0);
+	if(GetTerrorLevel() == 100)
+	{
+		CWorldMapState::GetInstance()->SetTerror(true);
+	}
+	if(m_chKCount ==3 && bNewUnit1)
+		CWorldMapState::GetInstance()->SetUnlockedUnit(true);
+	if(m_chXiaCount ==3 && bNewUnit2)
+		CWorldMapState::GetInstance()->SetUnlockedUnit(true);
+	if(m_chJinCount ==3 && bNewUnit3)
+		CWorldMapState::GetInstance()->SetUnlockedUnit(true);
+	
 	
 	if(m_vConqueredCities.size() == (TOTAL_CITIES-1))
 	{
@@ -1195,12 +1214,12 @@ void CGame::NewGame(int nSlot)
 	this->ParseBinaryUnitInfo("Resource/KQ_unitStats.dat");
 	InitCities();
 	for(int j = 0; j < 6; ++j)
-		{	
-			for(int i = 0; i < 3; ++i)
-			{
-				m_bUpGrades[j][i] = false;
-			}
+	{	
+		for(int i = 0; i < 3; ++i)
+		{
+			m_bUpGrades[j][i] = false;
 		}
+	}
 	STOP("CGame::NewGame(int)");
 }
 

@@ -233,7 +233,6 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 				//}while((nx==0 && ny==0) || (ptPath.x+nx)<0 || (ptPath.x+nx)>=m_nMapWidth || (ptPath.y+ny)<0 || (ptPath.y+ny)>=m_nMapHeight);
 				////check to see if the value is lower
 				// go thru all neighbors until we find our path 
-				
 				for (nx = -1; nx <= 1 && !found; nx++)
 				{
 					for (ny = -1; ny <= 1 && !found; ny++)
@@ -251,9 +250,7 @@ list<POINT> CAISystem::FindPath(CTile* current, CTile* destination)//find the pa
 							ptPath.x+=nx;
 							ptPath.y+=ny;
 							lowvalue=MapPath[ptPath.x][ptPath.y];
-							
 						}
-
 					}
 				}
 				// if we didnt find a path from our neighbors, we done messed up somewhere

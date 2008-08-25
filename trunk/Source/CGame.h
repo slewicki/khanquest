@@ -276,6 +276,9 @@ public:
 	void SetPlayerUnitInfo(CUnit toChange, int nType){m_pPlayerUnitInfo[nType] = toChange;}
 	void SetUpgraded(int j,int i,bool value){m_bUpGrades[j][i] = value;}
 	void SetTutorialMode(bool value){m_bTutorial = value;}
+	inline void UnlockArcher() { m_chJinCount = 3;}
+	inline void UnlockAxmen() { m_chXiaCount = 3;}
+	inline void UnlockWarElephant() { m_chKCount = 3;}
 	///////////////////////////////////////////
 	//  Function: ParseXMLUnitInfo
 	//	Last Modified: July 18, 2008
