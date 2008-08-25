@@ -186,7 +186,7 @@ void CGame::Shutdown(void)
 		m_pCities[i] = NULL;
 	}
 
-	m_pAM->ReleaseImages();
+//	m_pAM->ReleaseImages();
 
 	//	Safe Release
 	if (m_pDI)
@@ -1443,7 +1443,7 @@ void CGame::ParseOptions(char* szFileName)
 	toRead.read((char*)&m_bShowBoxes,sizeof(m_bShowBoxes));
 	toRead.read((char*)&m_nMusicVolume,sizeof(m_nMusicVolume));
 	toRead.read((char*)&m_nSFXVolume,sizeof(m_nSFXVolume));
-	STOP("CGame::ParseOptions(char*)");
+	STOP("CGame::ParseOptions(char*)");	
 }
 
 void CGame::SwitchFullScreen()

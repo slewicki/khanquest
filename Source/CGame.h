@@ -399,6 +399,11 @@ public:
 	///////////////////////////////////////////
 	void ParseOptions(char* szFileName);
 
+	///////////////////////////////////////////
+	//  Function: SwitchFullScreen
+	//	Last Modified: August 20, 2008
+	//  Purpose : switch to and from full screen
+	///////////////////////////////////////////
 	void SwitchFullScreen();
 
 };
