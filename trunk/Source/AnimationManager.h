@@ -52,4 +52,6 @@ public:
 	CSheet LookUp(int UnitType);
 
 	void ReleaseImages();
+
+	void ClearSheets();
 };

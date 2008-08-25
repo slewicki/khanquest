@@ -176,6 +176,7 @@ void CGame::Shutdown(void)
 	PROFILE("CGame::ShutDown()");
 	//	Clean up current state
 	ChangeState(NULL);
+	CAnimationManager::GetInstance()->ClearSheets();
 
 	//	Unload assets
 	for (int i = 0; i < 10; i++)
