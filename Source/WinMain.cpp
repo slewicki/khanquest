@@ -128,10 +128,10 @@ int WINAPI WinMain(	HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	// Get the dimensions of a window that will have a client rect that
 	// will really be the resolution we're looking for.
-	/*AdjustWindowRectEx(&rWindow, 
+	AdjustWindowRectEx(&rWindow, 
 						dwWindowStyleFlags,
 						(winClassEx.lpszMenuName) ? TRUE : FALSE, 
-						WS_EX_APPWINDOW);*/
+						WS_EX_APPWINDOW);
 	
 	// Calculate the width/height of that window's dimensions
 	int windowWidth		= rWindow.right - rWindow.left;
@@ -153,9 +153,9 @@ int WINAPI WinMain(	HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		return(0);
 
 	CGame* pGame = CGame::GetInstance();
-	pGame->SetWindowOffset(windowWidth - WINDOW_WIDTH, windowHeight - WINDOW_HEIGHT);
+	
 	pGame->Initialize(hWnd, hInstance, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOWED);
-
+	pGame->SetWindowOffset(windowWidth - WINDOW_WIDTH, windowHeight - WINDOW_HEIGHT);
 	//	Enter main event loop
 	while (TRUE)
 	{

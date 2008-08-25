@@ -40,7 +40,7 @@ CUnit::CUnit(int nType)
 	SetDestTile(NULL);
 	SetCurrentTile(NULL);
 	m_pAnimInstance = new CAnimInstance(GetType());
-
+	m_bIsTargeted = false;
 	m_pAnimInstance->SetPlayer(m_bIsPlayerUnit);
 
 	//m_pAnimInstance->Play(m_nDirectionFacing, m_nState);
@@ -64,7 +64,6 @@ void CUnit::RenderHealth()
 	POINT ptPos = CCamera::GetInstance()->TransformToScreen((int)GetPosX(), (int)GetPosY());
 	// Set Health Rect
 	//-------------------------------
-	
 	float fHealth = ((float)GetHealth() / ((float)GetMaxHP()));
 	int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 	DWORD dwColor;
@@ -92,16 +91,17 @@ void CUnit::RenderHealth()
 	CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, dwColor);
 	CSGD_Direct3D::GetInstance()->DeviceBegin();
 	CSGD_Direct3D::GetInstance()->SpriteBegin();
-	if(IsPlayerUnit() && IsSelected() && m_pTarget)
+	/*if(IsPlayerUnit() && IsSelected() && m_pTarget)
 	{
 		m_pTarget->RenderHealth();
-	}
+	}*/
 
 	
 }
 void CUnit::Update(float fElapsedTime)
 {
 	PROFILE("CUnit::Update(float)");
+	m_bIsTargeted = false;
 	if(m_bIsActive)
 	{
 		m_pAnimInstance->Update(fElapsedTime);
@@ -139,10 +139,10 @@ void CUnit::Update(float fElapsedTime)
 			if(m_fShakeTimer <.1)
 			{
 
-			ptTest1.x = (int)(rand() % 50);
-			ptTest1.y = (int)(rand() % 50);
-			ptTest1.x -= 25;
-			ptTest1.y -= 25;
+			ptTest1.x = (int)(rand() % 20);
+			ptTest1.y = (int)(rand() % 20);
+			ptTest1.x -= 10;
+			ptTest1.y -= 10;
 			CCamera::GetInstance()->SetPosX(CCamera::GetInstance()->GetPosX() + (float)ptTest1.x);
 			CCamera::GetInstance()->SetPosY(CCamera::GetInstance()->GetPosY() + (float)ptTest1.y);
 			}
@@ -208,6 +208,9 @@ void CUnit::Update(float fElapsedTime)
 		// Change animation to idle
 		ChangeDirection(m_pCurrentTile);
 	}
+	else if(m_pTarget && m_pTarget->GetHealth() >0 && IsSelected())
+		m_pTarget->SetTargeted(true);
+
 	
 
 	switch (m_nState)
@@ -464,13 +467,13 @@ void CUnit::RenderSelection()
 	else
 		CSGD_TextureManager::GetInstance()->Draw(CGamePlayState::GetInstance()->GetSelectionID(), nPosX, nPosY, 1.f, 1.f, 0, 0, 0, 0, D3DCOLOR_ARGB(255, 255, 0, 0));
 
-	if(m_pTarget && m_bIsPlayerUnit)
+	/*if(m_pTarget && m_bIsPlayerUnit)
 	{
 		int nPosX = m_pTarget->GetLocalRect().left+ (int)((m_pTarget->GetLocalRect().right - m_pTarget->GetLocalRect().left)*.5f) - 32;
 		int nPosY = m_pTarget->GetLocalRect().top+ (int)((m_pTarget->GetLocalRect().bottom - m_pTarget->GetLocalRect().top)*.5f);
 
 		CSGD_TextureManager::GetInstance()->Draw(CGamePlayState::GetInstance()->GetSelectionID(), nPosX, nPosY, 1.f, 1.f, 0, 0, 0, 0, D3DCOLOR_ARGB(255, 255, 0, 0));
-	}
+	}*/
 	
 }
 void CUnit::Render(float fElapsedTime)
@@ -484,6 +487,12 @@ void CUnit::Render(float fElapsedTime)
 		if(m_bIsAlive)
 		{
 			if(m_bIsSelected)
+			{
+				RenderSelection();
+
+				RenderHealth();
+			}
+			else if(m_bIsTargeted && !IsPlayerUnit())
 			{
 				RenderSelection();
 
