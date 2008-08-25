@@ -31,6 +31,17 @@ public:
 	}
 	// Last Modified: July 27, 2008 
 	vector<CAnimation>& GetAnimations(){return m_vAnimations;}
+
+	int GetAIImageID()
+	{
+		for(unsigned int i = 0; i < m_vAnimations.size(); i++)
+			m_vAnimations[i].GetAIImageID();
+	}
+	int GetPlayerImageID()
+	{
+		for(unsigned int i = 0; i < m_vAnimations.size(); i++)
+			m_vAnimations[i].GetPlayerImageID();
+	}
 #pragma endregion
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
