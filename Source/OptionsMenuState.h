@@ -59,6 +59,7 @@ class COptionsMenuState : public IGameState
 		BACK,
 		FULLSCREEN,
 		FPS,
+		STATEBOXES,
 	};
 
 	COptionsMenuState(void);

@@ -18,7 +18,7 @@
         <Song>Resource/KQ_CitySelect.wav</Song>
       </Songs>
 
-      <NumButtons>8</NumButtons>
+      <NumButtons>9</NumButtons>
           <Button>
                   <ButtonPositionX>350</ButtonPositionX>
                   <ButtonPositionY>50</ButtonPositionY>
@@ -69,6 +69,18 @@
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
                   <ButtonPositionY>250</ButtonPositionY>
+                  <TextColorA>200</TextColorA>
+                  <TextColorR>0</TextColorR>
+                  <TextColorG>0</TextColorG>
+                  <TextColorB>0</TextColorB>
+                  <TextScaleX>.2</TextScaleX>
+                  <TextScaleY>.2</TextScaleY>
+                  <Action>7</Action>
+                  <ButtonText>State Boxes?</ButtonText>
+          </Button>
+          <Button>
+                  <ButtonPositionX>200</ButtonPositionX>
+                  <ButtonPositionY>300</ButtonPositionY>
                   <TextColorA>250</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -80,7 +92,7 @@
           </Button>
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
-                  <ButtonPositionY>300</ButtonPositionY>
+                  <ButtonPositionY>350</ButtonPositionY>
                   <TextColorA>200</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -92,7 +104,7 @@
           </Button>
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
-                  <ButtonPositionY>350</ButtonPositionY>
+                  <ButtonPositionY>400</ButtonPositionY>
                   <TextColorA>200</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -104,7 +116,7 @@
           </Button>
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
-                  <ButtonPositionY>400</ButtonPositionY>
+                  <ButtonPositionY>450</ButtonPositionY>
                   <TextColorA>200</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -116,6 +128,8 @@
           </Button>
 
 </Menu>
+
+
 
 
 

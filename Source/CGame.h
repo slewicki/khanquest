@@ -70,7 +70,7 @@ private:
 	int						m_nPreviousSong;
 	CUnit					m_pPlayerUnitInfo[6];	// Info for player's units
 	CUnit					m_pCPUUnitInfo[6];		// Info for CPU's units
-	
+	bool					m_bShowBoxes;
 	char					m_szPlayerName[6];		// Name of player's load slot (3 letters)
 	bool					m_bTutorial;
 	int						m_nCurrentSaveSlot;
@@ -213,6 +213,8 @@ public:
 	int	GetLoses()		{ return m_nLoses; }
 	bool GetUpgraded(int j,int i){return m_bUpGrades[j][i];}
 	bool GetTutorialMode(){return m_bTutorial;}
+	inline bool GetBoxes(){return m_bShowBoxes;}
+
 	///////////////////////////////////////////
 	//  Function: "GetNumConquered"
 	//	Last Modified: July 18, 2008
@@ -279,6 +281,8 @@ public:
 	inline void UnlockArcher() { m_chJinCount = 3;}
 	inline void UnlockAxmen() { m_chXiaCount = 3;}
 	inline void UnlockWarElephant() { m_chKCount = 3;}
+	void SetBoxes(bool value){m_bShowBoxes = value;}
+
 	///////////////////////////////////////////
 	//  Function: ParseXMLUnitInfo
 	//	Last Modified: July 18, 2008

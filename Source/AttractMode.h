@@ -14,7 +14,7 @@ class CAttractMode : public IGameState
 	CDirectShow*	m_pDS;
 	CGame*			m_pCG;
 	int				m_nDemoID;
-
+	float fTimer;
 	CAttractMode(void);
 	CAttractMode(const CAttractMode&);
 	CAttractMode& operator=(const CAttractMode&);
