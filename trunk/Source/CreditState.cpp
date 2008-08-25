@@ -61,21 +61,21 @@ void CCreditState::Render(float fElapsedTime)
 	for( int i = 0; i < m_nNumTitle;++i)
 	{
 		if(m_szTitles[i] == "Programmers")
-			m_cFont.DrawTextA(m_szTitles[i],50,m_nYpos,.5f,.5f);
+			m_cFont.DrawTextA(m_szTitles[i],50,m_nYpos,.5f,.5f, D3DCOLOR_ARGB(255, 0, 0, 0));
 		if(m_szTitles[i] == "Resources")
-			m_cFont.DrawTextA(m_szTitles[i],50,m_nYpos + 50 + (m_nNumCoders*60),.5f,.5f);
+			m_cFont.DrawTextA(m_szTitles[i],50,m_nYpos + 50 + (m_nNumCoders*60),.5f,.5f, D3DCOLOR_ARGB(255, 0, 0, 0));
 		if(m_szTitles[i] == "Instructors")
-			m_cFont.DrawTextA(m_szTitles[i],50,m_nYpos + 100 + (m_nNumCoders*60) + (m_nNumResources*60),.5f,.5f);
+			m_cFont.DrawTextA(m_szTitles[i],50,m_nYpos + 100 + (m_nNumCoders*60) + (m_nNumResources*60),.5f,.5f, D3DCOLOR_ARGB(255, 0, 0, 0));
 
 		if(m_szTitles[i] == "Programmers")
 			for(int j= 0; j < m_nNumCoders;++j)	
-				m_cFont.DrawTextA(m_szCoders[j],100,m_nYpos + 50 +(i+(j*60)),.3f,.3f);
+				m_cFont.DrawTextA(m_szCoders[j],100,m_nYpos + 50 +(i+(j*60)),.3f,.3f, D3DCOLOR_ARGB(255, 0, 0, 0));
 		if(m_szTitles[i] == "Resources")
 			for(int j=0; j < m_nNumResources;++j)
-				m_cFont.DrawTextA(m_szResources[j],100,m_nYpos + 100 + (m_nNumCoders*60) + (i+(j*60)),.3f,.3f);
+				m_cFont.DrawTextA(m_szResources[j],100,m_nYpos + 100 + (m_nNumCoders*60) + (i+(j*60)),.3f,.3f, D3DCOLOR_ARGB(255, 0, 0, 0));
 		if(m_szTitles[i] == "Instructors")
 			for(int j = 0; j < m_nNumInstructors;++j)
-				m_cFont.DrawTextA(m_szInstructors[j],100,m_nYpos + 150 + (m_nNumResources*60) + (m_nNumCoders*60) + (i+(j*60)),.3f,.3f);		
+				m_cFont.DrawTextA(m_szInstructors[j],100,m_nYpos + 150 + (m_nNumResources*60) + (m_nNumCoders*60) + (i+(j*60)),.3f,.3f, D3DCOLOR_ARGB(255, 0, 0, 0));		
 	}
 }
 
