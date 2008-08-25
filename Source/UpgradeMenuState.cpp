@@ -83,7 +83,7 @@ void CUpgradeMenuState::Enter()
 	}
 	else
 		m_bTutorial = false;
-
+	// Placed in Enter so they are not overwritten each pass
 	m_pUnit[UNIT_INFANTRY] = CGame::GetInstance()->GetUnitInfo(UNIT_INFANTRY);
 	m_pUnit[UNIT_AXMEN] = CGame::GetInstance()->GetUnitInfo(UNIT_AXMEN);
 	m_pUnit[UNIT_CAVALRY] = CGame::GetInstance()->GetUnitInfo(UNIT_CAVALRY);

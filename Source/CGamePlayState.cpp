@@ -270,7 +270,7 @@ bool CGamePlayState::Input(float fElapsedTime)
 			}
 			/*if(m_pDI->GetBufferedKey(DIK_F8))
 			{
-			m_pCG->AddWins();
+			m_pCG->AddWins(false);
 			m_pCG->ChangeState(CWorldMapState::GetInstance());
 			}*/
 

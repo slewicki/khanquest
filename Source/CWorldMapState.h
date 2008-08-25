@@ -14,7 +14,7 @@
 #include "CCity.h"
 #include "CBitmapFont.h"
 
-#define NUM_CHEATS 3
+#define NUM_CHEATS 5
 
 class CWorldMapState : public IGameState
 {
@@ -24,6 +24,8 @@ private:
 	CSGD_WaveManager*				m_pWM;
 	CSGD_TextureManager*			m_pTM;
 	CSGD_DirectInput*				m_pDI;
+	int						m_nTerrorID;
+	int						m_nNewUnitID;
 
 	CBitmapFont						m_cFont;
 
@@ -46,6 +48,9 @@ private:
 	bool							m_bFirst;
 	bool							m_bSecond;
 	RECT							m_rTutorial;
+	bool							m_bFullTerror;
+	bool							m_bNewUnit;
+	bool							m_bTerrorSound;
 
 	// cheat codes
 	list<char> m_clistInputQueue;
@@ -131,7 +136,8 @@ public:
 	//	Last Modified: July 23, 2008
 	//  Purpose : Modifies the specified type.
 	///////////////////////////////////////////
-
+	void SetTerror(bool bIsFullTerror) { m_bFullTerror = bIsFullTerror; m_bTerrorSound = true;}
+	void SetUnlockedUnit(bool bIsUnitUnlocked) { m_bNewUnit = bIsUnitUnlocked; m_bTerrorSound = true;}
 	
 	//////////////////////////////////////////////////////
 	//	Function: “IntToString”

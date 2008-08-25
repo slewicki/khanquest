@@ -405,13 +405,9 @@ void ObjectManager::SetSelectedUnit(RECT toCheck)
 				{
 					static_cast<CUnit*>(m_vObjectList[i])->SetSelected(true);
 					++nSelectedAmount;
-
 				}
-				
 			}
-			
 		}
-		
 	}
 	if(nSelectedAmount == 0)
 	{
@@ -422,15 +418,11 @@ void ObjectManager::SetSelectedUnit(RECT toCheck)
 			{
 				if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() && static_cast<CUnit*>(m_vObjectList[i])->IsSelected() == false && !static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())
 				{
-
 						static_cast<CUnit*>(m_vObjectList[i])->SetSelected(true);
 						++nSelectedAmount;
 						break;
-					
 				}
-			
 			}
-		
 		}
 	}
 	CHUDState::GetInstance()->UpdateSelected();
