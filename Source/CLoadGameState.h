@@ -15,11 +15,15 @@
 #include "CGame.h"
 #include "CBitmapFont.h"
 #include "CParticleEngine.h"
+
+class CGame;
+
 class CLoadGameState : public IGameState
 {
 private:
 
 	//	Wrappers
+	CGame*									m_pCG;
 	CSGD_WaveManager*						m_pWM;
 	CSGD_TextureManager*					m_pTM;
 	CSGD_DirectInput*						m_pDI;
@@ -31,6 +35,8 @@ private:
 	int										m_nSmokeID2;
 	int										m_nTorchID2;
 	int										m_nTorchPicID;
+	//fire sound
+	int										m_nFireSound;
 
 	float									m_fTimer;
 	int										m_nButtonID;
