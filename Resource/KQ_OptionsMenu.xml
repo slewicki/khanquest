@@ -52,7 +52,7 @@
                   <TextScaleX>.2</TextScaleX>
                   <TextScaleY>.2</TextScaleY>
                   <Action>5</Action>
-                  <ButtonText>FullScreen?</ButtonText>
+                  <ButtonText>FullScreen</ButtonText>
           </Button>
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
@@ -64,7 +64,7 @@
                   <TextScaleX>.2</TextScaleX>
                   <TextScaleY>.2</TextScaleY>
                   <Action>6</Action>
-                  <ButtonText>FPS?</ButtonText>
+                  <ButtonText>FPS</ButtonText>
           </Button>
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
@@ -76,7 +76,7 @@
                   <TextScaleX>.2</TextScaleX>
                   <TextScaleY>.2</TextScaleY>
                   <Action>7</Action>
-                  <ButtonText>State Boxes?</ButtonText>
+                  <ButtonText>Colored Boxes</ButtonText>
           </Button>
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>

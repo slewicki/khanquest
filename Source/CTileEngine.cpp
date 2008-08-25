@@ -9,6 +9,7 @@
 #include "CUnit.h"
 #include "CCamera.h"
 #include "CProfile.h"
+#include "CGame.h"
 
 CTileEngine::CTileEngine()
 {
@@ -189,10 +190,18 @@ void CTileEngine::Render(RECT nCamPos)
 					{
 						//Temp
 						//-------------------------
-						/*pTileArray[nLayer][Row][Col].vColor = D3DCOLOR_ARGB(255, 255, 255, 255);
-						
-						if(pTileArray[nLayer][Row][Col].bIsOccupied) 
-							pTileArray[nLayer][Row][Col].vColor = D3DCOLOR_ARGB(255,255, 0, 0);*/
+						if(CGame::GetInstance()->GetBoxes())
+						{
+							pTileArray[nLayer][Row][Col].vColor = D3DCOLOR_ARGB(255, 255, 255, 255);
+							
+							if(pTileArray[nLayer][Row][Col].bIsOccupied) 
+							{
+								if(pTileArray[nLayer][Row][Col].pUnit->IsPlayerUnit())
+									pTileArray[nLayer][Row][Col].vColor = D3DCOLOR_ARGB(255, 0, 128, 0);
+								else
+									pTileArray[nLayer][Row][Col].vColor = D3DCOLOR_ARGB(255, 255, 0, 0);
+							}
+						}
 						//----------------------------
 						m_pTM->Draw(m_nImageID, ptTilePos.x, ptTilePos.y, 1, 1, &rTile, 0, 0, 0, pTileArray[0][Row][Col].vColor); 
 						// Temp for anchors
