@@ -32,15 +32,17 @@ public:
 	// Last Modified: July 27, 2008 
 	vector<CAnimation>& GetAnimations(){return m_vAnimations;}
 
-	int GetAIImageID()
+	vector<int> GetAIImageID()
 	{
+		vector<int> vIDs;
 		for(unsigned int i = 0; i < m_vAnimations.size(); i++)
-			m_vAnimations[i].GetAIImageID();
+			vIDs.push_back(m_vAnimations[i].GetAIImageID());
 	}
-	int GetPlayerImageID()
+	vector<int> GetPlayerImageID()
 	{
+		vector<int> vIDs;
 		for(unsigned int i = 0; i < m_vAnimations.size(); i++)
-			m_vAnimations[i].GetPlayerImageID();
+			vIDs.push_back(m_vAnimations[i].GetPlayerImageID());
 	}
 #pragma endregion
 

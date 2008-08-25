@@ -747,9 +747,16 @@ CSheet CAnimationManager::LookUp(int UnitType)
 void CAnimationManager::ReleaseImages()
 {
 	CSGD_TextureManager* m_pTM = CSGD_TextureManager::GetInstance();
+
 	for(int i = 0; i < 6; ++i)
 	{
-		m_pTM->ReleaseTexture(m_UnitSheets[i].GetAIImageID());
-		m_pTM->ReleaseTexture(m_UnitSheets[i].GetPlayerImageID());
+		for(unsigned int j = 0; j < m_UnitSheets->GetAIImageID().size(); ++j)
+		{
+			m_pTM->ReleaseTexture(m_UnitSheets[i].GetAIImageID()[j]);
+		}
+		for(unsigned int j = 0; j < m_UnitSheets->GetPlayerImageID().size(); ++j)
+		{
+			m_pTM->ReleaseTexture(m_UnitSheets[i].GetPlayerImageID()[j]);
+		}
 	}
 }
