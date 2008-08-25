@@ -15,6 +15,7 @@ CAttractMode::CAttractMode(void)
 	PROFILE("CAttractMode::CAttractMode()");
 	m_nDemoID = -1;
 	STOP("CAttractMode::CAttractMode()");
+	fTimer = 0;
 }
 
 CAttractMode::~CAttractMode(void)
@@ -30,7 +31,7 @@ void CAttractMode::Enter()
 	m_pDS->Init();
 	m_nDemoID = m_pDS->LoadVideo(L"Resource/KQ_Test.WMV", m_pCG->GetWindowHandle(), m_pCG->GetIsWindowed());
 	m_pDS->Play(m_nDemoID);
-
+	fTimer = 0;
 	STOP("CAttractMode::Enter()");
 }
 
@@ -61,5 +62,10 @@ void CAttractMode::Render(float fElapsedTime)
 
 void CAttractMode::Update(float fElapsedTime)
 {
-
+	fTimer += fElapsedTime;
+	if(fTimer >= 37)
+	{
+		m_pDS->Stop(m_nDemoID);
+		m_pCG->ChangeState(CMainMenuState::GetInstance());
+	}
 }

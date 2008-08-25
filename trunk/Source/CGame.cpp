@@ -1437,6 +1437,7 @@ void CGame::ParseOptions(char* szFileName)
 	}
 	toRead.read((char*)&m_bIsWindowed,sizeof(m_bIsWindowed));
 	toRead.read((char*)&m_bFPS,sizeof(m_bFPS));	
+	toRead.read((char*)&m_bShowBoxes,sizeof(m_bShowBoxes));
 	toRead.read((char*)&m_nMusicVolume,sizeof(m_nMusicVolume));
 	toRead.read((char*)&m_nSFXVolume,sizeof(m_nSFXVolume));
 	STOP("CGame::ParseOptions(char*)");

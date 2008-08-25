@@ -232,7 +232,11 @@ bool COptionsMenuState::Input(float fElapsedTime)
 			m_pWM->Play(m_nClick);
 			CGame::GetInstance()->PopCurrentState();
 			CMainMenuState::GetInstance()->SetPause(false);
-		}		
+		}	
+		if(Buttons[m_nCurrentButton].Action == STATEBOXES)
+		{
+			CGame::GetInstance()->SetBoxes(!CGame::GetInstance()->GetBoxes());
+		}
 	}
 #pragma endregion
 
@@ -279,6 +283,15 @@ void COptionsMenuState::Render(float fElapsedTime)
 
 			m_pTM->Draw(m_nCheckBoxID,Buttons[i].ptPosition.x + 200,Buttons[i].ptPosition.y);
 			if(CGame::GetInstance()->GetFPSDisplay())
+				m_pTM->Draw(m_nCheckMarkID,Buttons[i].ptPosition.x + 200, Buttons[i].ptPosition.y);
+		}
+		else if(Buttons[i].Action == STATEBOXES)
+		{
+			m_BF.DrawTextA(Buttons[i].Text,Buttons[i].ptPosition.x, Buttons[i].ptPosition.y, Buttons[i].fscalex, Buttons[i].fscaley,
+				D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
+
+			m_pTM->Draw(m_nCheckBoxID,Buttons[i].ptPosition.x + 200,Buttons[i].ptPosition.y);
+			if(CGame::GetInstance()->GetBoxes())
 				m_pTM->Draw(m_nCheckMarkID,Buttons[i].ptPosition.x + 200, Buttons[i].ptPosition.y);
 		}
 		else
@@ -461,7 +474,9 @@ void COptionsMenuState::SaveOptions()
 	bool bFullScreen = CGame::GetInstance()->GetIsWindowed();
 	output.write((char*)&bFullScreen,sizeof(bFullScreen));
 	bool bFPS = CGame::GetInstance()->GetFPSDisplay();
-	output.write((char*)&bFPS,sizeof(bFPS));	
+	output.write((char*)&bFPS,sizeof(bFPS));
+	bool bBoxes = CGame::GetInstance()->GetBoxes();
+	output.write((char*)&bBoxes,sizeof(bBoxes));
 	int nMusicVol = CGame::GetInstance()->GetMusicVolume();
 	output.write((char*)&nMusicVol,sizeof(nMusicVol));
 	int nSFXVol = CGame::GetInstance()->GetSFXVolume();
