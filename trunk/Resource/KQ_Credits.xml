@@ -7,15 +7,16 @@
 <Code>Rodney Kite - Project Officer</Code>
 <Code>Sebastian Lewicki - Technology Officer</Code>
 <Code>Dennis Wallace - Interface Officer</Code>
-<Code>Thomas Impellitteri (Second) Gameplay Officer</Code>
+<Code>Thomas Impellitteri - Gameplay Officer 2</Code>
 <Code/>
 </Coders>
 
-<NumResources>3</NumResources>
+<NumResources>4</NumResources>
 <Resources>
-<Resource>www.shadedrelief.com/world/</Resource>
-<Resource>www.google.com\alpha\beta\gama</Resource>
+<Resource>www.shadedrelief.com</Resource>
 <Resource>Age Of Empires</Resource>
+<Resource>Battle Music - Greg Requa</Resource>
+<Resource>Music - Soul Caliber 3</Resource>
 </Resources>
 
 <NumInstructors>5</NumInstructors>
@@ -35,6 +36,8 @@
 </Titles>
 
 </Menu>
+
+
 
 
 
