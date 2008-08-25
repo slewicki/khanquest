@@ -92,8 +92,8 @@ int WINAPI WinMain(	HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	winClassEx.cbWndExtra		= 0;
 	winClassEx.hInstance		= hInstance;
 		// Edit for custom icon: LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1) );
-	winClassEx.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1) );
-	//winClassEx.hIcon			= LoadIcon(NULL, IDI_APPLICATION);
+	//winClassEx.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1) );
+	winClassEx.hIcon			= LoadIcon(NULL, IDI_APPLICATION);
 		// Edit for custom cursor
 	winClassEx.hCursor			= LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR_NORMAL));
 	winClassEx.hbrBackground	= (HBRUSH)GetStockObject(BLACK_BRUSH);
@@ -110,7 +110,7 @@ int WINAPI WinMain(	HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	if (WINDOWED)
 	{
-		dwWindowStyleFlags |= WS_OVERLAPPEDWINDOW;
+		dwWindowStyleFlags |= /*WS_OVERLAPPEDWINDOW*/ WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU;
 		ShowCursor(TRUE);
 	}
 	else
@@ -128,10 +128,10 @@ int WINAPI WinMain(	HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	// Get the dimensions of a window that will have a client rect that
 	// will really be the resolution we're looking for.
-	AdjustWindowRectEx(&rWindow, 
+	/*AdjustWindowRectEx(&rWindow, 
 						dwWindowStyleFlags,
 						(winClassEx.lpszMenuName) ? TRUE : FALSE, 
-						WS_EX_APPWINDOW);
+						WS_EX_APPWINDOW);*/
 	
 	// Calculate the width/height of that window's dimensions
 	int windowWidth		= rWindow.right - rWindow.left;
