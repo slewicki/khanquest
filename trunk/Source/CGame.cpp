@@ -185,6 +185,9 @@ void CGame::Shutdown(void)
 		delete m_pCities[i];
 		m_pCities[i] = NULL;
 	}
+
+	m_pAM->ReleaseImages();
+
 	//	Safe Release
 	if (m_pDI)
 	{
@@ -1441,4 +1444,17 @@ void CGame::ParseOptions(char* szFileName)
 	toRead.read((char*)&m_nMusicVolume,sizeof(m_nMusicVolume));
 	toRead.read((char*)&m_nSFXVolume,sizeof(m_nSFXVolume));
 	STOP("CGame::ParseOptions(char*)");
+}
+
+void CGame::SwitchFullScreen()
+{
+	m_bIsWindowed = !m_bIsWindowed;
+	m_pD3D->ChangeDisplayParam(800, 600, m_bIsWindowed);
+	Shutdown();
+	this->Initialize(m_hWnd, m_hInstance, 800, 600, m_bIsWindowed);
+	if(!m_bIsWindowed)
+	SetWindowOffset(0, 0);
+	else
+	SetWindowOffset(8, 31);
+	ChangeState(CMainMenuState::GetInstance());
 }
