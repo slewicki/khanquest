@@ -280,7 +280,7 @@ void CMainMenuState::FadeOut(float fElapsedTime)
 		m_nAlpha-=5;
 		m_fEscTimer = 0;
 
-		if(m_nAlpha == 0)
+		if(m_nAlpha <= 0)
 		{	
 			m_nAlpha = 0;
 			m_ptCursorPosition  = Buttons[1].ptPosition;
