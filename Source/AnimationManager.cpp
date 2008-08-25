@@ -760,3 +760,11 @@ void CAnimationManager::ReleaseImages()
 		}
 	}
 }
+
+void CAnimationManager::ClearSheets()
+{
+	for(int i = 0; i < 6; ++i)
+	{
+		m_UnitSheets[i].Clear();
+	}
+}
