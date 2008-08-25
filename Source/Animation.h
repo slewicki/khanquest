@@ -77,7 +77,8 @@ public:
 	void IsLooping(bool ToLoop){m_bIsLooping = ToLoop;}
 	bool IsPlaying(){return m_bIsPlaying;}
 	void StartFadeTimer() { m_bIsFading = true; }
-
+	int GetAIImageID(){return m_nAIAnimationID;}
+	int GetPlayerImageID(){return m_nPlayerAnimationID;}
 
 	//////////////////////////////////////////////////////////////////////////
 	// Function: Modifiers

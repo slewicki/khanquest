@@ -744,3 +744,12 @@ CSheet CAnimationManager::LookUp(int UnitType)
 	return CSheet();
 }
 
+void CAnimationManager::ReleaseImages()
+{
+	CSGD_TextureManager* m_pTM = CSGD_TextureManager::GetInstance();
+	for(int i = 0; i < 6; ++i)
+	{
+		m_pTM->ReleaseTexture(m_UnitSheets[i].GetAIImageID());
+		m_pTM->ReleaseTexture(m_UnitSheets[i].GetPlayerImageID());
+	}
+}
