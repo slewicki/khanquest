@@ -750,11 +750,11 @@ void CAnimationManager::ReleaseImages()
 
 	for(int i = 0; i < 6; ++i)
 	{
-		for(unsigned int j = 0; j < m_UnitSheets->GetAIImageID().size(); ++j)
+		for(unsigned int j = 0; j < m_UnitSheets[i].GetAIImageID().size(); ++j)
 		{
 			m_pTM->ReleaseTexture(m_UnitSheets[i].GetAIImageID()[j]);
 		}
-		for(unsigned int j = 0; j < m_UnitSheets->GetPlayerImageID().size(); ++j)
+		for(unsigned int j = 0; j < m_UnitSheets[i].GetPlayerImageID().size(); ++j)
 		{
 			m_pTM->ReleaseTexture(m_UnitSheets[i].GetPlayerImageID()[j]);
 		}

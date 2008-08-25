@@ -399,15 +399,6 @@ public:
 	///////////////////////////////////////////
 	void ParseOptions(char* szFileName);
 
-	void SwitchFullScreen(bool bIsWindowed)
-	{
-		Shutdown();
-		this->Initialize(m_hWnd, m_hInstance, 800, 600, bIsWindowed);
-		if(!bIsWindowed)
-			SetWindowOffset(0, 0);
-		else
-			SetWindowOffset(8, 31);
-		ChangeState(CMainMenuState::GetInstance());
-	}
+	void SwitchFullScreen();
 
 };
