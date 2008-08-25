@@ -24,6 +24,7 @@ CMainMenuState::~CMainMenuState(void)
 
 void CMainMenuState::Enter(void)
 {
+	m_pCG = CGame::GetInstance();
 	m_pDI = CSGD_DirectInput::GetInstance();
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pWM = CSGD_WaveManager::GetInstance();
@@ -36,6 +37,9 @@ void CMainMenuState::Enter(void)
 
 	m_nFireID = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_Fire1.dat", 500, 300);
 	m_pPE->SetIsRunning(m_nFireID, true);
+
+	m_nFireSound = m_pWM->LoadWave("Resource/KQ_FireBurn.wav");
+	m_pWM->Play(m_nFireSound, DSBPLAY_LOOPING );
 
 	m_nLogsID = m_pTM->LoadTexture("Resource/KQ_Logs2.PNG");
 
@@ -76,6 +80,12 @@ void CMainMenuState::Exit(void)
 	m_pPE->SetIsRunning(m_nSmoke2ID, false);
 	m_pPE->UnLoadEmitter(m_nFireID);
 	m_pPE->UnLoadEmitter(m_nSmoke2ID);
+	
+	// fire sound
+	if(m_pWM->IsWavePlaying(m_nFireSound))
+		m_pWM->Stop(m_nFireSound);
+
+	m_pWM->UnloadWave(m_nFireSound);
 }
 
 bool CMainMenuState::Input(float fElapsedTime)
@@ -211,8 +221,17 @@ bool CMainMenuState::Input(float fElapsedTime)
 void CMainMenuState::Update(float fElapsedTime)
 {
 	if(m_bPaused)
+	{
+		m_pWM->Stop(m_nFireSound);
 		return;
-	
+	}
+	if(!m_pWM->IsWavePlaying(m_nFireSound))
+	{
+		m_pWM->SetVolume(m_nFireSound, m_pCG->GetSFXVolume());
+		if (m_pCG->GetSFXVolume() > 0)
+			m_pWM->Play(m_nFireSound, DSBPLAY_LOOPING );
+	}
+
 	FadeIn(fElapsedTime);
 	m_pPE->Update(fElapsedTime);
 

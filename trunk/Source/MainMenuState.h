@@ -5,12 +5,14 @@
 #include <string>
 using namespace std;
 
+class CGame;
 class CSGD_TextureManager;
 class CSGD_DirectInput;
 class CSGD_WaveManager;
 
 class CMainMenuState : public IGameState
 {	
+	CGame*					m_pCG;
 	CSGD_TextureManager*	m_pTM;
 	CSGD_DirectInput*		m_pDI;
 	CBitmapFont				m_BF;
@@ -23,6 +25,8 @@ class CMainMenuState : public IGameState
 	IGameState*				m_pToSwitchTo;
 	bool					m_bPaused;
 	
+	//fire sound
+	int						m_nFireSound;
 	
 	float					m_fTimer;
 	float					m_fEscTimer;
