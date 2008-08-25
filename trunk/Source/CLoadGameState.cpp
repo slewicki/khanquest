@@ -35,6 +35,7 @@ CLoadGameState::~CLoadGameState(void)
 void CLoadGameState::Enter(void)
 {
 	PROFILE("CLoadGameState::Enter()");
+	m_pCG = CGame::GetInstance();
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pWM = CSGD_WaveManager::GetInstance();
 	m_pDI = CSGD_DirectInput::GetInstance();
@@ -55,12 +56,12 @@ void CLoadGameState::Enter(void)
 	m_nSmokeID2 = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_Smoke.dat", 670, 300);
 	
 	// fire sound
-	m_nFireSound = m_pWM->LoadWave("Resource/KQ_FireBurn.wav");
-	m_pWM->Play(m_nFireSound, DSBPLAY_LOOPING );
+	m_nTorchSound = m_pWM->LoadWave("Resource/KQ_FireBurn.wav");
+
 
 	m_nClickID =  m_pWM->LoadWave("Resource/KQ_Click.wav");
 	m_nTickID =  m_pWM->LoadWave("Resource/KQ_ButtonTick.wav");
-	m_pWM->SetVolume(m_nClickID,CGame::GetInstance()->GetSFXVolume());
+	m_pWM->SetVolume(m_nClickID, m_pCG->GetSFXVolume());
 
 	m_cFont.InitBitmapFont(m_nLucidiaWhiteID, ' ', 16, 128, 128);
 
@@ -83,7 +84,7 @@ void CLoadGameState::Enter(void)
 	m_rBack.bottom = 575;
 
 	m_fJoyTimer += 0;
-	CGame::GetInstance()->SetSongPlay(CITYSELECT);
+	m_pCG->SetSongPlay(CITYSELECT);
 
 	//m_pPE->SetPostion(100, 100, m_nTorchID);
 	m_pPE->SetIsRunning(m_nTorchID, true);
@@ -91,7 +92,7 @@ void CLoadGameState::Enter(void)
 	m_pPE->SetIsRunning(m_nSmokeID2, true);
 	m_pPE->SetIsRunning(m_nTorchID2, true);
 
-	if(CGame::GetInstance()->GetTutorialMode())
+	if(m_pCG->GetTutorialMode())
 	{
 		m_bTutorial = true;
 		m_rTutorial.top = 400;
@@ -101,6 +102,9 @@ void CLoadGameState::Enter(void)
 	}
 	else
 		m_bTutorial = false;
+
+	m_pWM->Play(m_nTorchSound, DSBPLAY_LOOPING);
+	m_pWM->SetVolume(m_nTorchSound, m_pCG->GetSFXVolume());
 }
 
 void CLoadGameState::Exit(void)
@@ -110,6 +114,11 @@ void CLoadGameState::Exit(void)
 		m_pWM->Stop(m_nClickID);
 	if(m_pWM->IsWavePlaying(m_nTickID))
 		m_pWM->Stop(m_nTickID);
+	// fire sound
+	if(m_pWM->IsWavePlaying(m_nTorchSound))
+		m_pWM->Stop(m_nTorchSound);
+
+	m_pWM->UnloadWave(m_nTorchSound);
 	m_pWM->UnloadWave(m_nClickID);
 	m_pWM->UnloadWave(m_nTickID);
 
@@ -127,11 +136,7 @@ void CLoadGameState::Exit(void)
 	m_pPE->UnLoadEmitter(m_nTorchID);
 	m_pPE->UnLoadEmitter(m_nTorchID2);
 
-	// fire sound
-	if(m_pWM->IsWavePlaying(m_nFireSound))
-		m_pWM->Stop(m_nFireSound);
 
-	m_pWM->UnloadWave(m_nFireSound);
 }
 
 bool CLoadGameState::Input(float fElapsedTime)
@@ -220,14 +225,14 @@ bool CLoadGameState::Input(float fElapsedTime)
 
 		for (int i = 0; i < 3; i++)
 		{
-			if(CGame::GetInstance()->GetSaveName(i, true) == "EMPTY")
+			if(m_pCG->GetSaveName(i, true) == "EMPTY")
 				m_bIsEmpty[i] = true;
 			else
 				m_bIsEmpty[i] = false;
-			if(m_nChosenSlot != i && CGame::GetInstance()->IsMouseInRect(m_rClickRect[i]))
+			if(m_nChosenSlot != i &&m_pCG->IsMouseInRect(m_rClickRect[i]))
 			{
 				// Change cursor to click icon
-				CGame::GetInstance()->SetCursorClick();
+				m_pCG->SetCursorClick();
 				if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 				{
 					m_pWM->Play(m_nTickID);
@@ -237,11 +242,11 @@ bool CLoadGameState::Input(float fElapsedTime)
 				}
 			}
 		}
-		if(CGame::GetInstance()->IsMouseInRect(m_rAccept))
+		if(m_pCG->IsMouseInRect(m_rAccept))
 		{
 			if(!m_bIsNewGame && m_bIsEmpty[m_nChosenSlot])
 				return true;
-			CGame::GetInstance()->SetCursorClick();
+			m_pCG->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT) || m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 			{
 				m_pWM->Play(m_nClickID);
@@ -250,41 +255,41 @@ bool CLoadGameState::Input(float fElapsedTime)
 				{
 					if(m_bIsEmpty[m_nChosenSlot])
 					{
-						CGame::GetInstance()->NewGame(m_nChosenSlot);
-						CGame::GetInstance()->Save(false);
-						CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());
+						m_pCG->NewGame(m_nChosenSlot);
+						m_pCG->Save(false);
+						m_pCG->ChangeState(CWorldMapState::GetInstance());
 					}
 					else
 					{
-						CGame::GetInstance()->NewGame(m_nChosenSlot);
-						CGame::GetInstance()->Save(true);
-						CGame::GetInstance()->PopCurrentState();
-						CGame::GetInstance()->PushState(this);
+						m_pCG->NewGame(m_nChosenSlot);
+						m_pCG->Save(true);
+						m_pCG->PopCurrentState();
+						m_pCG->PushState(this);
 					}
 				}
 				else
-					if(CGame::GetInstance()->LoadSlot(m_nChosenSlot))
-						CGame::GetInstance()->ChangeState(CWorldMapState::GetInstance());			
+					if(m_pCG->LoadSlot(m_nChosenSlot))
+						m_pCG->ChangeState(CWorldMapState::GetInstance());			
 			}
 		}
-		if(CGame::GetInstance()->IsMouseInRect(m_rBack) )
+		if(m_pCG->IsMouseInRect(m_rBack) )
 		{
-			CGame::GetInstance()->SetCursorClick();
+			m_pCG->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT)|| m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 			{
 				m_pWM->Play(m_nClickID);
 				// Go back to the map
 				
 				CMainMenuState::GetInstance()->SetPause(false);
-				CGame::GetInstance()->PopCurrentState();
+				m_pCG->PopCurrentState();
 			}
 		}
 	}
 	else
 	{
-		if(CGame::GetInstance()->IsMouseInRect(m_rTutorial))
+		if(m_pCG->IsMouseInRect(m_rTutorial))
 		{
-			CGame::GetInstance()->SetCursorClick();
+			m_pCG->SetCursorClick();
 			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT)|| m_pDI->GetBufferedJoyButton(JOYSTICK_X))
 			{
 				m_pWM->Play(m_nClickID);
@@ -316,14 +321,14 @@ void CLoadGameState::Render(float fElapsedTime)
 
 			if(i == m_nChosenSlot)
 			{
-				string szInfo = CGame::GetInstance()->GetSaveName(i, false);
-				m_cFont.DrawTextA(CGame::GetInstance()->GetSaveName(i, true), m_rClickRect[i].left+50, m_rClickRect[i].top, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));
+				string szInfo =m_pCG->GetSaveName(i, false);
+				m_cFont.DrawTextA(m_pCG->GetSaveName(i, true), m_rClickRect[i].left+50, m_rClickRect[i].top, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));
 				if(!m_bIsEmpty[i])
 					m_cFont.DrawTextA(szInfo, (int)(((800-(15*szInfo.length()))*.5f)), m_rClickRect[i].top+20, .25f, .25f, D3DCOLOR_ARGB(255, 255, 255, 0));
 			}
 
 			else	
-				m_cFont.DrawTextA(CGame::GetInstance()->GetSaveName(i, true), m_rClickRect[i].left+50, m_rClickRect[i].top, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
+				m_cFont.DrawTextA(m_pCG->GetSaveName(i, true), m_rClickRect[i].left+50, m_rClickRect[i].top, .25f, .25f, D3DCOLOR_ARGB(255, 0, 0, 0));
 
 		}
 		if(m_bIsNewGame)
@@ -355,7 +360,7 @@ void CLoadGameState::Render(float fElapsedTime)
 
 		
 	}
-	else if(CGame::GetInstance()->GetTutorialMode() && m_bTutorial)
+	else if(m_pCG->GetTutorialMode() && m_bTutorial)
 	{
 		RECT toDraw; toDraw.top = 0; toDraw.left = 0; toDraw.right = 578; toDraw.bottom = 495;
 		int nImage = m_pTM->LoadTexture("Resource/KQ_TutorialBox.png");

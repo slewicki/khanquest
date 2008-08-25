@@ -227,9 +227,9 @@ void CMainMenuState::Update(float fElapsedTime)
 	}
 	if(!m_pWM->IsWavePlaying(m_nFireSound))
 	{
-		m_pWM->SetVolume(m_nFireSound, m_pCG->GetSFXVolume());
 		if (m_pCG->GetSFXVolume() > 0)
 			m_pWM->Play(m_nFireSound, DSBPLAY_LOOPING );
+		m_pWM->SetVolume(m_nFireSound, m_pCG->GetSFXVolume());
 	}
 
 	FadeIn(fElapsedTime);

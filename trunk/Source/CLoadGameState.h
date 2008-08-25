@@ -36,7 +36,7 @@ private:
 	int										m_nTorchID2;
 	int										m_nTorchPicID;
 	//fire sound
-	int										m_nFireSound;
+	int										m_nTorchSound;
 
 	float									m_fTimer;
 	int										m_nButtonID;
