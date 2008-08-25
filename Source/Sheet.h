@@ -37,12 +37,14 @@ public:
 		vector<int> vIDs;
 		for(unsigned int i = 0; i < m_vAnimations.size(); i++)
 			vIDs.push_back(m_vAnimations[i].GetAIImageID());
+		return vIDs;
 	}
 	vector<int> GetPlayerImageID()
 	{
 		vector<int> vIDs;
 		for(unsigned int i = 0; i < m_vAnimations.size(); i++)
 			vIDs.push_back(m_vAnimations[i].GetPlayerImageID());
+		return vIDs;
 	}
 #pragma endregion
 
