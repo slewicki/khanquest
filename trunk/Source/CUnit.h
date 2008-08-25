@@ -65,7 +65,7 @@ private:
 
 	//vector<CTile*>	m_vTilePath;		// The path the unit will take to 
 										// get to the destination
-
+	bool			m_bIsTargeted;
 	int				m_nState;			// The state the unit is in
 	CAnimInstance*	m_pAnimInstance;
 	CTileEngine*	m_pTE;
@@ -149,7 +149,7 @@ public:
 	inline void SetGrouped		(bool bIsGrouped)		{ m_bIsGrouped = bIsGrouped; }
 	inline void SetPath			(list<POINT> vPath)		{m_vPath = vPath;}
 	inline void ClearPath		(void)					{m_vPath.clear();}
-
+	inline void SetTargeted(bool bIsTargeted) {m_bIsTargeted = bIsTargeted; }
 	void SetTarget(CUnit* pTarget)		
 	{
 		// If we have a target tell him we no longer are attaking
