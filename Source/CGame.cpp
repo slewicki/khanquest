@@ -187,8 +187,6 @@ void CGame::Shutdown(void)
 		m_pCities[i] = NULL;
 	}
 
-//	m_pAM->ReleaseImages();
-
 	//	Safe Release
 	if (m_pDI)
 	{

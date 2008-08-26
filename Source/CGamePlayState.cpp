@@ -159,6 +159,8 @@ void CGamePlayState::Exit(void)
 	m_pPE->ClearEmitter();
 
 	m_pHUD->Exit();
+
+	Map->ClearImages();
 	//m_pHUD->Enter();
 }
 

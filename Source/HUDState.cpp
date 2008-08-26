@@ -29,6 +29,9 @@ void CHUDState::Enter(void)
 void CHUDState::Exit(void)
 {
 	UpdateSelected();
+	m_pTM->ReleaseTexture(m_nMiniMapBkgID);
+	m_pTM->ReleaseTexture(m_nIconID);
+	m_pTM->ReleaseTexture(m_nHUDID);
 }
 
 bool CHUDState::Input(float fElapsedTime)
