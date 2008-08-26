@@ -475,8 +475,6 @@ void COptionsMenuState::SaveOptions()
 		output.write((char*)&temp,sizeof(temp));
 	}
 
-	bool bFullScreen = CGame::GetInstance()->GetIsWindowed();
-	output.write((char*)&bFullScreen,sizeof(bFullScreen));
 	bool bFPS = CGame::GetInstance()->GetFPSDisplay();
 	output.write((char*)&bFPS,sizeof(bFPS));
 	bool bBoxes = CGame::GetInstance()->GetBoxes();
