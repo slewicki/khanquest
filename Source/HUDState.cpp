@@ -346,14 +346,24 @@ void CHUDState::Render(float fElapsedTime)
 		int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 		CSGD_Direct3D::GetInstance()->DeviceEnd();
 		CSGD_Direct3D::GetInstance()->SpriteEnd();
+		DWORD dwColor;
+		if ( fHealth <= .2f )
+				dwColor = D3DCOLOR_ARGB(255, 255, 0, 0);
+			else if ( fHealth <= .4f && fHealth > .2f )
+				dwColor = D3DCOLOR_ARGB(255, 255, 128, 0);
+			else if ( fHealth <= .6f && fHealth > .4f)
+				dwColor = D3DCOLOR_ARGB(255, 255, 255, 0);
+			else if ( fHealth <= .8f && fHealth > .6f )
+				dwColor = D3DCOLOR_ARGB(255, 0, 240, 0);
+			else
+				dwColor = D3DCOLOR_ARGB(255, 0, 190, 0);
 		RECT rHealthBar;
 		rHealthBar.left = 225;
 		rHealthBar.bottom = 530;
 		rHealthBar.right = rHealthBar.left + 50;
 		rHealthBar.top	= 525;
-		CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 255, 0, 0);
 		rHealthBar.right = rHealthBar.left + nHealthBarLength;
-		CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 0, 255, 0);
+		CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, dwColor);
 
 		CSGD_Direct3D::GetInstance()->DeviceBegin();
 		CSGD_Direct3D::GetInstance()->SpriteBegin();
@@ -406,20 +416,34 @@ void CHUDState::Render(float fElapsedTime)
 				char idk[64];
 				sprintf_s(idk,"%d",m_vUnits[i]->GetHealth());
 				m_BF.DrawTextA(idk, 225 + (nPosX * 60), 500+nPosY,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
+				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetMaxHP()));
+				DWORD dwColor;
+				if ( fHealth <= .2f )
+						dwColor = D3DCOLOR_ARGB(255, 255, 0, 0);
+					else if ( fHealth <= .4f && fHealth > .2f )
+						dwColor = D3DCOLOR_ARGB(255, 255, 128, 0);
+					else if ( fHealth <= .6f && fHealth > .4f)
+						dwColor = D3DCOLOR_ARGB(255, 255, 255, 0);
+					else if ( fHealth <= .8f && fHealth > .6f )
+						dwColor = D3DCOLOR_ARGB(255, 0, 240, 0);
+					else
+						dwColor = D3DCOLOR_ARGB(255, 0, 190, 0);
+
+
+
+
 
 				
-				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetMaxHP()));
+				
 				int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 				CSGD_Direct3D::GetInstance()->DeviceEnd();
 				CSGD_Direct3D::GetInstance()->SpriteEnd();
 				RECT rHealthBar;
 				rHealthBar.left =	225+(nPosX*60);
 				rHealthBar.bottom = 530+nPosY;
-				rHealthBar.right = rHealthBar.left + 50;
 				rHealthBar.top	= rHealthBar.bottom - 5;
-				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 255, 0, 0);
 				rHealthBar.right = rHealthBar.left + nHealthBarLength;
-				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 0, 255, 0);
+				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, dwColor);
 
 				CSGD_Direct3D::GetInstance()->DeviceBegin();
 				CSGD_Direct3D::GetInstance()->SpriteBegin();
@@ -434,20 +458,28 @@ void CHUDState::Render(float fElapsedTime)
 				char idk[64];
 				sprintf_s(idk,"%d",m_vUnits[i]->GetHealth());
 				m_BF.DrawTextA(idk, 225 + (nPosX * 60), 500+nPosY,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
-
-				
 				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetMaxHP()));
+				DWORD dwColor;
+				if ( fHealth <= .2f )
+						dwColor = D3DCOLOR_ARGB(255, 255, 0, 0);
+					else if ( fHealth <= .4f && fHealth > .2f )
+						dwColor = D3DCOLOR_ARGB(255, 255, 128, 0);
+					else if ( fHealth <= .6f && fHealth > .4f)
+						dwColor = D3DCOLOR_ARGB(255, 255, 255, 0);
+					else if ( fHealth <= .8f && fHealth > .6f )
+						dwColor = D3DCOLOR_ARGB(255, 0, 240, 0);
+					else
+						dwColor = D3DCOLOR_ARGB(255, 0, 190, 0);
+				
 				int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 				CSGD_Direct3D::GetInstance()->DeviceEnd();
 				CSGD_Direct3D::GetInstance()->SpriteEnd();
 				RECT rHealthBar;
 				rHealthBar.left =	225+(nPosX*60);
 				rHealthBar.bottom = 530+nPosY;
-				rHealthBar.right = rHealthBar.left + 50;
 				rHealthBar.top	= rHealthBar.bottom - 5;
-				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 255, 0, 0);
 				rHealthBar.right = rHealthBar.left + nHealthBarLength;
-				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 0, 255, 0);
+				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, dwColor);
 
 				CSGD_Direct3D::GetInstance()->DeviceBegin();
 				CSGD_Direct3D::GetInstance()->SpriteBegin();
@@ -461,20 +493,28 @@ void CHUDState::Render(float fElapsedTime)
 				char idk[64];
 				sprintf_s(idk,"%d",m_vUnits[i]->GetHealth());
 				m_BF.DrawTextA(idk, 225 + (nPosX * 60), 500+nPosY,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
-
-				
 				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetMaxHP()));
+				DWORD dwColor;
+				if ( fHealth <= .2f )
+						dwColor = D3DCOLOR_ARGB(255, 255, 0, 0);
+					else if ( fHealth <= .4f && fHealth > .2f )
+						dwColor = D3DCOLOR_ARGB(255, 255, 128, 0);
+					else if ( fHealth <= .6f && fHealth > .4f)
+						dwColor = D3DCOLOR_ARGB(255, 255, 255, 0);
+					else if ( fHealth <= .8f && fHealth > .6f )
+						dwColor = D3DCOLOR_ARGB(255, 0, 240, 0);
+					else
+						dwColor = D3DCOLOR_ARGB(255, 0, 190, 0);
+				
 				int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 				CSGD_Direct3D::GetInstance()->DeviceEnd();
 				CSGD_Direct3D::GetInstance()->SpriteEnd();
 				RECT rHealthBar;
 				rHealthBar.left =	225+(nPosX*60);
 				rHealthBar.bottom = 530+nPosY;
-				rHealthBar.right = rHealthBar.left + 50;
 				rHealthBar.top	= rHealthBar.bottom - 5;
-				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 255, 0, 0);
 				rHealthBar.right = rHealthBar.left + nHealthBarLength;
-				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 0, 255, 0);
+				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, dwColor);
 
 				CSGD_Direct3D::GetInstance()->DeviceBegin();
 				CSGD_Direct3D::GetInstance()->SpriteBegin();
@@ -488,20 +528,28 @@ void CHUDState::Render(float fElapsedTime)
 				char idk[64];
 				sprintf_s(idk,"%d",m_vUnits[i]->GetHealth());
 				m_BF.DrawTextA(idk, 225 + (nPosX * 60), 500+nPosY,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
-
-				
 				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetMaxHP()));
+				DWORD dwColor;
+				if ( fHealth <= .2f )
+						dwColor = D3DCOLOR_ARGB(255, 255, 0, 0);
+					else if ( fHealth <= .4f && fHealth > .2f )
+						dwColor = D3DCOLOR_ARGB(255, 255, 128, 0);
+					else if ( fHealth <= .6f && fHealth > .4f)
+						dwColor = D3DCOLOR_ARGB(255, 255, 255, 0);
+					else if ( fHealth <= .8f && fHealth > .6f )
+						dwColor = D3DCOLOR_ARGB(255, 0, 240, 0);
+					else
+						dwColor = D3DCOLOR_ARGB(255, 0, 190, 0);
+				
 				int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 				CSGD_Direct3D::GetInstance()->DeviceEnd();
 				CSGD_Direct3D::GetInstance()->SpriteEnd();
 				RECT rHealthBar;
 				rHealthBar.left =	225+(nPosX*60);
 				rHealthBar.bottom = 530+nPosY;
-				rHealthBar.right = rHealthBar.left + 50;
 				rHealthBar.top	= rHealthBar.bottom - 5;
-				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 255, 0, 0);
 				rHealthBar.right = rHealthBar.left + nHealthBarLength;
-				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 0, 255, 0);
+				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, dwColor);
 
 				CSGD_Direct3D::GetInstance()->DeviceBegin();
 				CSGD_Direct3D::GetInstance()->SpriteBegin();
@@ -515,20 +563,28 @@ void CHUDState::Render(float fElapsedTime)
 				char idk[64];
 				sprintf_s(idk,"%d",m_vUnits[i]->GetHealth());
 				m_BF.DrawTextA(idk, 225 + (nPosX * 60), 500+nPosY,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
-
-				
 				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetMaxHP()));
+				DWORD dwColor;
+				if ( fHealth <= .2f )
+						dwColor = D3DCOLOR_ARGB(255, 255, 0, 0);
+					else if ( fHealth <= .4f && fHealth > .2f )
+						dwColor = D3DCOLOR_ARGB(255, 255, 128, 0);
+					else if ( fHealth <= .6f && fHealth > .4f)
+						dwColor = D3DCOLOR_ARGB(255, 255, 255, 0);
+					else if ( fHealth <= .8f && fHealth > .6f )
+						dwColor = D3DCOLOR_ARGB(255, 0, 240, 0);
+					else
+						dwColor = D3DCOLOR_ARGB(255, 0, 190, 0);
+				
 				int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 				CSGD_Direct3D::GetInstance()->DeviceEnd();
 				CSGD_Direct3D::GetInstance()->SpriteEnd();
 				RECT rHealthBar;
 				rHealthBar.left =	225+(nPosX*60);
 				rHealthBar.bottom = 530+nPosY;
-				rHealthBar.right = rHealthBar.left + 50;
 				rHealthBar.top	= rHealthBar.bottom - 5;
-				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 255, 0, 0);
 				rHealthBar.right = rHealthBar.left + nHealthBarLength;
-				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 0, 255, 0);
+				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, dwColor);
 
 				CSGD_Direct3D::GetInstance()->DeviceBegin();
 				CSGD_Direct3D::GetInstance()->SpriteBegin();
@@ -542,20 +598,28 @@ void CHUDState::Render(float fElapsedTime)
 				char idk[64];
 				sprintf_s(idk,"%d",m_vUnits[i]->GetHealth());
 				m_BF.DrawTextA(idk, 225 + (nPosX * 60), 500+nPosY,.25f,.25f,D3DCOLOR_ARGB(255,255,255,255));
-
-				
 				float fHealth = ((float)m_vUnits[i]->GetHealth() / ((float)m_vUnits[i]->GetMaxHP()));
+				DWORD dwColor;
+				if ( fHealth <= .2f )
+						dwColor = D3DCOLOR_ARGB(255, 255, 0, 0);
+					else if ( fHealth <= .4f && fHealth > .2f )
+						dwColor = D3DCOLOR_ARGB(255, 255, 128, 0);
+					else if ( fHealth <= .6f && fHealth > .4f)
+						dwColor = D3DCOLOR_ARGB(255, 255, 255, 0);
+					else if ( fHealth <= .8f && fHealth > .6f )
+						dwColor = D3DCOLOR_ARGB(255, 0, 240, 0);
+					else
+						dwColor = D3DCOLOR_ARGB(255, 0, 190, 0);
+				
 				int nHealthBarLength = (int)Lerp(0.0f, 50.f, fHealth);
 				CSGD_Direct3D::GetInstance()->DeviceEnd();
 				CSGD_Direct3D::GetInstance()->SpriteEnd();
 				RECT rHealthBar;
 				rHealthBar.left =	225+(nPosX*60);
 				rHealthBar.bottom = 530+nPosY;
-				rHealthBar.right = rHealthBar.left + 50;
 				rHealthBar.top	= rHealthBar.bottom - 5;
-				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 255, 0, 0);
 				rHealthBar.right = rHealthBar.left + nHealthBarLength;
-				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, 0, 255, 0);
+				CSGD_Direct3D::GetInstance()->DrawRect(rHealthBar, dwColor);
 
 				CSGD_Direct3D::GetInstance()->DeviceBegin();
 				CSGD_Direct3D::GetInstance()->SpriteBegin();
