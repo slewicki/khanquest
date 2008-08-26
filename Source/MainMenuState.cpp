@@ -93,14 +93,14 @@ void CMainMenuState::Exit(void)
 bool CMainMenuState::Input(float fElapsedTime)
 {
 	m_JoyTimer += fElapsedTime;
-	m_fAttractTimer += fElapsedTime;
+	
 
 	if(m_pToSwitchTo != NULL)
 		FadeOut(fElapsedTime);
 
 	if(m_bPaused)
 		return true;
-
+	m_fAttractTimer += fElapsedTime;
 	if(m_fAttractTimer > 30)
 	{
 		m_bPaused = true;

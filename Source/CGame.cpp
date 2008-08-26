@@ -127,7 +127,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	nLoading = m_pTM->LoadTexture("Resource/KQ_Loading.png");
 	m_pD3D->DeviceBegin();
 	m_pD3D->SpriteBegin();
-	m_pTM->Draw(nLoading,0,0,1,1);
+	m_pTM->Draw(nLoading,0,0);
 	m_pD3D->SpriteEnd();
 	m_pD3D->DeviceEnd();
 	m_pD3D->Present();
@@ -356,7 +356,7 @@ bool CGame::Main(void)
 
 	////Print mouse position
 	//char buffer2[128];
-	//POINT ptMouse = GetCursorPosition();
+	GetCursorPosition();
 	//sprintf_s(buffer2, _countof(buffer2), "Position: %i %i", ptMouse.x, ptMouse.y);
 	//CSGD_Direct3D::GetInstance()->DrawTextA(buffer2, 120,20,255,255,255);
 	
@@ -367,7 +367,7 @@ bool CGame::Main(void)
 	}
 	
 	//m_pTM->Draw(m_nCursorID, ptMouse.x, ptMouse.y);
-//	m_BF.DrawTextA(buffer2, 10, 10, .3f, .3f);
+	//m_BF.DrawTextA(buffer2, 10, 10, .3f, .3f);
 	//Print Frames Per Second
 	if (m_bFPS)
 	{
@@ -1457,9 +1457,9 @@ void CGame::SwitchFullScreen()
 {
 	m_bIsWindowed = !m_bIsWindowed;
 	if(m_bIsWindowed)
-		m_pD3D->ChangeDisplayParam(808, 629, m_bIsWindowed);
+	m_pD3D->ChangeDisplayParam(808, 629, m_bIsWindowed);
 	else
-		m_pD3D->ChangeDisplayParam(800, 600, m_bIsWindowed);
+	m_pD3D->ChangeDisplayParam(800, 600, m_bIsWindowed);
 
 	Shutdown();
 	this->Initialize(m_hWnd, m_hInstance, 800, 600, m_bIsWindowed);

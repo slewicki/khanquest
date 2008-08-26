@@ -101,7 +101,6 @@ void CUnit::RenderHealth()
 void CUnit::Update(float fElapsedTime)
 {
 	PROFILE("CUnit::Update(float)");
-	m_bIsTargeted = false;
 	if(m_bIsActive)
 	{
 		m_pAnimInstance->Update(fElapsedTime);

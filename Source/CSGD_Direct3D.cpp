@@ -356,7 +356,7 @@ void CSGD_Direct3D::ChangeDisplayParam(int nWidth, int nHeight, bool bWindowed)
 	else
 	{
 		SetWindowLong(m_hWnd, GWL_STYLE, WS_POPUP);
-		ShowCursor(false);
+		ShowCursor(true);
 	}
 
 	// Let windows know the window has changed.
