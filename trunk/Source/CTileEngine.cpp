@@ -104,9 +104,10 @@ void CTileEngine::LoadFile(char* szFileName)
 					szBuffer = new char[nStringSize];
 
 					fin.read((char*)szBuffer, nStringSize);
-
-					m_szTileType = szBuffer;
+					
 					m_szTileType.resize(nStringSize);
+					m_szTileType = szBuffer;
+					
 
 					delete szBuffer;
 
