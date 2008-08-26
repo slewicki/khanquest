@@ -495,7 +495,7 @@ void CGamePlayState::Render(float fElapsedTime)
 		m_pTM->Draw(m_nScrollButtonID,325,400,.4f,.3f);
 		m_cFont.DrawTextA("Accept",350,425,.2f,.2f,D3DCOLOR_ARGB(255,255,0,0));
 		m_cFont.DrawTextA("Tutorial",315,15,.4f,.4f,D3DCOLOR_ARGB(255,255,0,0));
-		m_cFont.DrawTextA("Press Arrow Keys to move the camera. These /settings are adjustable through the options /menu. Click and hold the left mouse button./Drag the mouse over units to select them./Right click to move the selected units.//Your object here is to seek out all enemies /on the map and defeat them.",80,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
+		m_cFont.DrawTextA("Press Arrow Keys to move the camera. These /settings are adjustable through the options /menu. Click and hold the left mouse button./Drag the mouse over units to select them./Right click to move the selected units.//The objective here is to seek out all /enemies on the map and defeat them.",80,100,.25f,.25f,D3DCOLOR_ARGB(255,0,0,0));
 	}		
 }
 
