@@ -84,7 +84,7 @@ void CFactory::CreateComputerUnit(int nType)
 		case KCITY3:
 			unit->SetAttackPower(unit->GetAttackPower()+2);
 			unit->SetAttackSpeed(unit->GetAttackSpeed()-(unit->GetAttackSpeed()*.2f));
-			unit->SetAttackSpeed(unit->GetSpeed()-(unit->GetSpeed()*.5f));
+			unit->SetSpeed(unit->GetSpeed()-(unit->GetSpeed()*.5f));
 
 			break;
 		case XCITY1:
@@ -97,7 +97,7 @@ void CFactory::CreateComputerUnit(int nType)
 		case XCITY3:
 			unit->SetAttackPower(unit->GetAttackPower()+2);
 			unit->SetAttackSpeed(unit->GetAttackSpeed()-(unit->GetAttackSpeed()*.2f));
-			unit->SetAttackSpeed(unit->GetSpeed()-(unit->GetSpeed()*.5f));
+			unit->SetSpeed(unit->GetSpeed()-(unit->GetSpeed()*.5f));
 
 			break;
 		case JCITY1:
@@ -110,7 +110,7 @@ void CFactory::CreateComputerUnit(int nType)
 		case JCITY3:
 			unit->SetAttackPower(unit->GetAttackPower()+2);
 			unit->SetAttackSpeed(unit->GetAttackSpeed()-(unit->GetAttackSpeed()*.2f));
-			unit->SetAttackSpeed(unit->GetSpeed()-(unit->GetSpeed()*.5f));
+			unit->SetSpeed(unit->GetSpeed()-(unit->GetSpeed()*.5f));
 
 			break;
 	}
