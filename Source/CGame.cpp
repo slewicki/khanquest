@@ -127,7 +127,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	nLoading = m_pTM->LoadTexture("Resource/KQ_Loading.png");
 	m_pD3D->DeviceBegin();
 	m_pD3D->SpriteBegin();
-	m_pTM->Draw(nLoading,0,0);
+	m_pTM->Draw(nLoading,0,0,1,1);
 	m_pD3D->SpriteEnd();
 	m_pD3D->DeviceEnd();
 	m_pD3D->Present();
@@ -1446,7 +1446,6 @@ void CGame::ParseOptions(char* szFileName)
 		toRead.read((char*)&temp,sizeof(temp));
 		CKeyBindState::GetInstance()->BindKey(temp,i);
 	}
-	toRead.read((char*)&m_bIsWindowed,sizeof(m_bIsWindowed));
 	toRead.read((char*)&m_bFPS,sizeof(m_bFPS));	
 	toRead.read((char*)&m_bShowBoxes,sizeof(m_bShowBoxes));
 	toRead.read((char*)&m_nMusicVolume,sizeof(m_nMusicVolume));
