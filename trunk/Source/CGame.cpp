@@ -124,7 +124,15 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 		return false;
 	} 
 #pragma endregion
-
+	int nLoading;
+	nLoading = m_pTM->LoadTexture("Resource/KQ_Loading.png");
+	RECT rLoading; rLoading.top = 0; rLoading.bottom = 512; rLoading.left = 0; rLoading.right = 512;
+	m_pD3D->DeviceBegin();
+	m_pD3D->SpriteBegin();
+	m_pTM->Draw(nLoading,0,0,1,1,&rLoading);
+	m_pD3D->DeviceEnd();
+	m_pD3D->SpriteEnd();
+	m_pD3D->Present();
 	/*if(bIsWindowed)
 		m_pD3D->ChangeDisplayParam(800, 600, bIsWindowed);*/
 	// Init the Pixel Shader

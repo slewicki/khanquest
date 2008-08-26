@@ -56,7 +56,10 @@ void COptionsMenuState::Exit()
 	SaveOptions();
 	if(m_pWM->IsWavePlaying(m_nClick))
 		m_pWM->Stop(m_nClick);
-	
+	m_pTM->ReleaseTexture(m_nCheckBoxID);
+	m_pTM->ReleaseTexture(m_nCheckMarkID);
+	m_pTM->ReleaseTexture(m_nImageID);
+	m_pTM->ReleaseTexture(m_nCursorID);
 	m_pWM->UnloadWave(m_nClick);
 }
 

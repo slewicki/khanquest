@@ -35,7 +35,7 @@ void CWinGameState::Exit()
 {
 	CMainMenuState::GetInstance()->SetPause(false);
 	CGame::GetInstance()->SetSongPlay(CITYSELECT);
-
+	m_pTM->ReleaseTexture(m_nImageID);
 }
 
 bool CWinGameState::Input(float fElapsedTime)
