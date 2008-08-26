@@ -32,6 +32,8 @@ void CLoseBattleState::Enter()
 
 void CLoseBattleState::Exit()
 {
+	m_pTM->ReleaseTexture(m_nImageID);
+
 //	CWorldMapState::GetInstance()->SetPause(false);
 }
 

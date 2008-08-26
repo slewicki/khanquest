@@ -80,7 +80,9 @@ void CMainMenuState::Exit(void)
 	m_pPE->SetIsRunning(m_nSmoke2ID, false);
 	m_pPE->UnLoadEmitter(m_nFireID);
 	m_pPE->UnLoadEmitter(m_nSmoke2ID);
-	
+	m_pTM->ReleaseTexture(m_nCursorID);
+	m_pTM->ReleaseTexture(m_nImageID);
+
 	// fire sound
 	if(m_pWM->IsWavePlaying(m_nFireSound))
 		m_pWM->Stop(m_nFireSound);

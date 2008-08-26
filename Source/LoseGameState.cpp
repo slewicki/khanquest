@@ -33,6 +33,7 @@ void CLoseGameState::Enter()
 
 void CLoseGameState::Exit()
 {
+	m_pTM->ReleaseTexture(m_nImageID);
 	CMainMenuState::GetInstance()->SetPause(false);
 }
 

@@ -49,6 +49,8 @@ void COutroState::Exit()
 {
 	if(Buttons)
 		delete [] Buttons;
+	m_pTM->ReleaseTexture(m_nImageID);
+	m_pTM->ReleaseTexture(m_nCursorID);
 
 	CProfile::GetInstance()->Process();
 	CProfile::GetInstance()->MinMaxOutput();

@@ -40,6 +40,8 @@ void CWinBattleState::Enter()
 void CWinBattleState::Exit()
 {
 	CMainMenuState::GetInstance()->SetPause(false);
+	m_pTM->ReleaseTexture(m_nImageID);
+
 }
 
 bool CWinBattleState::Input(float fElapsedTime)
