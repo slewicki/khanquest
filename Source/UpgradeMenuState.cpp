@@ -154,7 +154,6 @@ void CUpgradeMenuState::Exit()
 	m_pTM->ReleaseTexture(m_nScrollButtonID);
 	m_pTM->ReleaseTexture(m_nCheckBoxID);
 	m_pTM->ReleaseTexture(m_nCheckMarkID);
-	m_pTM->ReleaseTexture(m_nDisplayID);
 
 
 }
