@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Menu Name ="Credits">
 
-<NumCoders>5</NumCoders>
+<NumCoders>10</NumCoders>
 <Coders>
-<Code>Sean Hamstra - Gameplay Officer</Code>
-<Code>Rodney Kite - Project Officer</Code>
-<Code>Sebastian Lewicki - Technology Officer</Code>
-<Code>Dennis Wallace - Interface Officer</Code>
-<Code>Thomas Impellitteri - Gameplay Officer 2</Code>
-<Code/>
+<Code>Sean Hamstra</Code>
+<Code>     Gameplay Officer</Code>
+<Code>Rodney Kite</Code>
+<Code>     Project Officer</Code>
+<Code>Sebastian Lewicki</Code>
+<Code>     Technology Officer</Code>
+<Code>Dennis Wallace</Code>
+<Code>     Interface Officer</Code>
+<Code>Thomas Impellitteri</Code>
+<Code>     Gameplay Officer 2</Code>
 </Coders>
 
 <NumResources>4</NumResources>
