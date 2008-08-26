@@ -349,7 +349,7 @@ void CSGD_Direct3D::ChangeDisplayParam(int nWidth, int nHeight, bool bWindowed)
 	// Set the window to an overlapped window.
 	if (bWindowed)
 	{
-		SetWindowLong(m_hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+		SetWindowLong(m_hWnd, GWL_STYLE, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU);
 		ShowCursor(true);
 	}
 	// Change the window to a popup window.

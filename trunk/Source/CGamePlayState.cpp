@@ -140,6 +140,7 @@ void CGamePlayState::Enter(void)
 		}
 		else
 			m_bTutorial = false;
+		Map->LoadImages();
 	
 }
 void CGamePlayState::Exit(void)

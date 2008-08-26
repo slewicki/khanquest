@@ -270,6 +270,9 @@ void CCityInfoState::Update(float fElapsedTime)
 	}
 	else if(m_fPositionX >= 270)
 		m_fPositionX  -= 500*fElapsedTime;
+	if(m_fPositionX < 270)
+		m_fPositionX = 270;
+
 	STOP("CCityInfoState::Update(float)");
 
 }

@@ -108,6 +108,8 @@ public:
 
 	void SetColor(int Layer, int x, int y, int nRed, int nGreen, int nBlue);
 	void ClearImages();
+
+	void LoadImages();
 };
 
 #endif

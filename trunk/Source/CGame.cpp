@@ -81,7 +81,6 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 	m_hInstance = hInstance;
 	
 	//this->ParseBinaryUnitInfo("Resource/KQ_unitStats.dat");
-	this->ParseBinaryUnitInfo("Resource/KQ_unitStats.dat");
 	//	Get pointers to singletons:
 	m_pD3D	= CSGD_Direct3D::GetInstance();
 	m_pTM	= CSGD_TextureManager::GetInstance();
@@ -126,12 +125,11 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 #pragma endregion
 	int nLoading;
 	nLoading = m_pTM->LoadTexture("Resource/KQ_Loading.png");
-	RECT rLoading; rLoading.top = 0; rLoading.bottom = 512; rLoading.left = 0; rLoading.right = 512;
 	m_pD3D->DeviceBegin();
 	m_pD3D->SpriteBegin();
-	m_pTM->Draw(nLoading,0,0,1,1,&rLoading);
-	m_pD3D->DeviceEnd();
+	m_pTM->Draw(nLoading,0,0);
 	m_pD3D->SpriteEnd();
+	m_pD3D->DeviceEnd();
 	m_pD3D->Present();
 	/*if(bIsWindowed)
 		m_pD3D->ChangeDisplayParam(800, 600, bIsWindowed);*/
@@ -140,7 +138,8 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 		MessageBox(hWnd, "Failed to load Pixel Shader", "Error", MB_OK);
 	m_nScreenWidth = nScreenWidth;
 	m_nScreenHeight = nScreenHeight;
-
+	this->ParseBinaryUnitInfo("Resource/KQ_unitStats.dat");
+	
 	// Remember how the window started
 	m_bIsWindowed = bIsWindowed;
 
@@ -148,7 +147,7 @@ bool CGame::Initialize(HWND hWnd, HINSTANCE hInstance,
 
 	InitCities();
 		
-//	SetCursorNormal();
+	SetCursorNormal();
 	m_nCurrentSong = 0;
 	ParseOptions("Resource/KQ_Options.dat");
 
@@ -184,8 +183,9 @@ void CGame::Shutdown(void)
 	PROFILE("CGame::ShutDown()");
 	//	Clean up current state
 	ChangeState(NULL);
+	CAnimationManager::GetInstance()->ReleaseImages();
 	CAnimationManager::GetInstance()->ClearSheets();
-
+	
 	//	Unload assets
 	for (int i = 0; i < 10; i++)
 	{
@@ -356,17 +356,18 @@ bool CGame::Main(void)
 
 	////Print mouse position
 	//char buffer2[128];
-	//sprintf_s(buffer2, _countof(buffer2), "Position: %i %i", m_ptMousePos.x, m_ptMousePos.y);
+	//POINT ptMouse = GetCursorPosition();
+	//sprintf_s(buffer2, _countof(buffer2), "Position: %i %i", ptMouse.x, ptMouse.y);
 	//CSGD_Direct3D::GetInstance()->DrawTextA(buffer2, 120,20,255,255,255);
-
+	
 	// Render all states on the stack
 	for(unsigned int i = 0; i < m_vStates.size(); i++)
 	{
 		m_vStates[i]->Render(fElapsedTime);
 	}
-	POINT ptMouse = GetCursorPosition();
+	
 	//m_pTM->Draw(m_nCursorID, ptMouse.x, ptMouse.y);
-
+//	m_BF.DrawTextA(buffer2, 10, 10, .3f, .3f);
 	//Print Frames Per Second
 	if (m_bFPS)
 	{
@@ -1456,12 +1457,16 @@ void CGame::ParseOptions(char* szFileName)
 void CGame::SwitchFullScreen()
 {
 	m_bIsWindowed = !m_bIsWindowed;
-	m_pD3D->ChangeDisplayParam(800, 600, m_bIsWindowed);
+	if(m_bIsWindowed)
+		m_pD3D->ChangeDisplayParam(808, 629, m_bIsWindowed);
+	else
+		m_pD3D->ChangeDisplayParam(800, 600, m_bIsWindowed);
+
 	Shutdown();
 	this->Initialize(m_hWnd, m_hInstance, 800, 600, m_bIsWindowed);
 	if(!m_bIsWindowed)
-	SetWindowOffset(0, 0);
+		SetWindowOffset(0, 0);
 	else
-	SetWindowOffset(8, 31);
+		SetWindowOffset(6, 29);
 	ChangeState(CMainMenuState::GetInstance());
 }

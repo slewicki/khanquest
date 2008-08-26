@@ -17,13 +17,18 @@ CTileEngine::CTileEngine()
 	m_pTM = CSGD_TextureManager::GetInstance();
 	m_pD3D = CSGD_Direct3D::GetInstance();
 	m_nImageID = -1;
-	m_nImageID = m_pTM->LoadTexture("Resource/KQ_Terrain.png", D3DCOLOR_XRGB(255, 0, 255));
-	m_nBlankTileID = m_pTM->LoadTexture("Resource/KQ_BlankTile.png");
 	m_ptMousePoint.x = 0;
 	m_ptMousePoint.y = 0;
 	m_nScrollX = 800;
 	m_nScrollY = 0;
 }
+void CTileEngine::LoadImages()
+{
+	m_nImageID = m_pTM->LoadTexture("Resource/KQ_Terrain.png", D3DCOLOR_XRGB(255, 0, 255));
+	m_nBlankTileID = m_pTM->LoadTexture("Resource/KQ_BlankTile.png");
+	
+}
+
 
 CTileEngine::~CTileEngine()
 {
