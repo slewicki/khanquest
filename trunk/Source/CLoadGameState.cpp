@@ -55,6 +55,9 @@ void CLoadGameState::Enter(void)
 	m_nTorchID2 = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_Torch2.dat", 670, 300);
 	m_nSmokeID2 = m_pPE->LoadBineryEmitter("Resource/Emitters/KQ_Smoke.dat", 670, 300);
 	
+	// fire sound
+	m_nTorchSound = m_pWM->LoadWave("Resource/KQ_FireBurn.wav");
+
 
 	m_nClickID =  m_pWM->LoadWave("Resource/KQ_Click.wav");
 	m_nTickID =  m_pWM->LoadWave("Resource/KQ_ButtonTick.wav");
