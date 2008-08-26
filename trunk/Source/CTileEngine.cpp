@@ -18,7 +18,6 @@ CTileEngine::CTileEngine()
 	m_pD3D = CSGD_Direct3D::GetInstance();
 	m_nImageID = -1;
 	m_nImageID = m_pTM->LoadTexture("Resource/KQ_Terrain.png", D3DCOLOR_XRGB(255, 0, 255));
-	m_nScrollImage = m_pTM->LoadTexture("Resource/KQ_Clouds.png");
 	m_nBlankTileID = m_pTM->LoadTexture("Resource/KQ_BlankTile.png");
 	m_ptMousePoint.x = 0;
 	m_ptMousePoint.y = 0;
@@ -29,7 +28,6 @@ CTileEngine::CTileEngine()
 CTileEngine::~CTileEngine()
 {
 	PROFILE("CTileEngine::~CTileEngine()");
-	//m_pTM->ReleaseTexture(m_nBlankTileID);
 	Clear();
 }
 
@@ -444,4 +442,10 @@ void CTileEngine::SetColor(int Layer, int x, int y, int nRed, int nGreen, int nB
 	pTileArray[Layer][x][y].vColor.r = (float)nRed;
 	pTileArray[Layer][x][y].vColor.g = (float)nGreen;
 	pTileArray[Layer][x][y].vColor.b = (float)nBlue;
+}
+
+void CTileEngine::ClearImages()
+{
+	m_pTM->ReleaseTexture(m_nBlankTileID);
+	m_pTM->ReleaseTexture(m_nImageID);
 }

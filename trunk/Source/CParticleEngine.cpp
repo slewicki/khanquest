@@ -302,6 +302,7 @@ void CParticleEngine::UnLoadEmitter(int ID)
 {
 	CEmitter empty;
 	vEmitterList[ID].m_bIsRunning =  false;
+	m_pTM->ReleaseTexture(vEmitterList[ID].m_nImageID);
 	if (vEmitterList.size() > 0 && vEmitterList[ID].m_bHasParts)
 	{
 		vEmitterList[ID] = empty;
