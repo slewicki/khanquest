@@ -23,13 +23,11 @@
 <Resource>Music - Soul Caliber 3</Resource>
 </Resources>
 
-<NumInstructors>5</NumInstructors>
+<NumInstructors>3</NumInstructors>
 <Instructors>
 <Instructor>Dustin Clingman</Instructor>
 <Instructor>Keyvan Acosta</Instructor>
 <Instructor>Rob Martinez</Instructor>
-<Instructor>Ap2</Instructor>
-<Instructor>Ap3</Instructor>
 </Instructors>
 
 <NumTitles>3</NumTitles>
@@ -40,6 +38,7 @@
 </Titles>
 
 </Menu>
+
 
 
 
