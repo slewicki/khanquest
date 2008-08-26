@@ -397,6 +397,7 @@ void ObjectManager::SetSelectedUnit(RECT toCheck)
 	for(unsigned int i = 0; i < m_vObjectList.size(); ++i)
 	{
 		static_cast<CUnit*>(m_vObjectList[i])->SetSelected(false);
+		static_cast<CUnit*>(m_vObjectList[i])->SetTargeted(false);
 		if(IntersectRect(&rIntersect, &static_cast<CUnit*>(m_vObjectList[i])->GetLocalRect(), &toCheck))
 		{
 			if(static_cast<CUnit*>(m_vObjectList[i])->IsAlive() && static_cast<CUnit*>(m_vObjectList[i])->IsSelected() == false && static_cast<CUnit*>(m_vObjectList[i])->IsPlayerUnit())

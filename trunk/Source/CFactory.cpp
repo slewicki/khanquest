@@ -73,6 +73,50 @@ void CFactory::CreateComputerUnit(int nType)
 	unit->SetAttackSoundID(CGame::GetInstance()->GetAttackSound(unit->GetType()));
 	unit->SetDeathSoundID(CGame::GetInstance()->GetDeathSound(unit->GetType()));
 
+	switch(CGame::GetInstance()->GetSelectedCity()->GetID())
+	{
+		case KCITY1:
+
+			break;
+		case KCITY2:
+			unit->SetAttackPower(unit->GetAttackPower()+2);
+			break;
+		case KCITY3:
+			unit->SetAttackPower(unit->GetAttackPower()+2);
+			unit->SetAttackSpeed(unit->GetAttackSpeed()-(unit->GetAttackSpeed()*.2f));
+			unit->SetAttackSpeed(unit->GetSpeed()-(unit->GetSpeed()*.5f));
+
+			break;
+		case XCITY1:
+
+			break;
+		case XCITY2:
+			unit->SetAttackPower(unit->GetAttackPower()+2);
+
+			break;
+		case XCITY3:
+			unit->SetAttackPower(unit->GetAttackPower()+2);
+			unit->SetAttackSpeed(unit->GetAttackSpeed()-(unit->GetAttackSpeed()*.2f));
+			unit->SetAttackSpeed(unit->GetSpeed()-(unit->GetSpeed()*.5f));
+
+			break;
+		case JCITY1:
+
+			break;
+		case JCITY2:
+			unit->SetAttackPower(unit->GetAttackPower()+2);
+
+			break;
+		case JCITY3:
+			unit->SetAttackPower(unit->GetAttackPower()+2);
+			unit->SetAttackSpeed(unit->GetAttackSpeed()-(unit->GetAttackSpeed()*.2f));
+			unit->SetAttackSpeed(unit->GetSpeed()-(unit->GetSpeed()*.5f));
+
+			break;
+	}
+
+
+
 	// Add to manager
 	ObjectManager::GetInstance()->AddObject(unit);
 
