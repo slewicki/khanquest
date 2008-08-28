@@ -33,6 +33,8 @@
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
                   <ButtonPositionY>150</ButtonPositionY>
+                  <ButtonRight>400</ButtonRight>
+                  <ButtonBottom>175</ButtonBottom>
                   <TextColorA>200</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -45,6 +47,8 @@
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
                   <ButtonPositionY>200</ButtonPositionY>
+                  <ButtonRight>400</ButtonRight>
+                  <ButtonBottom>225</ButtonBottom>
                   <TextColorA>200</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -57,6 +61,8 @@
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
                   <ButtonPositionY>250</ButtonPositionY>
+                  <ButtonRight>400</ButtonRight>
+                  <ButtonBottom>275</ButtonBottom>
                   <TextColorA>200</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -69,6 +75,8 @@
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
                   <ButtonPositionY>300</ButtonPositionY>
+                  <ButtonRight>400</ButtonRight>
+                  <ButtonBottom>325</ButtonBottom>
                   <TextColorA>200</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -81,6 +89,8 @@
           <Button>
                   <ButtonPositionX>200</ButtonPositionX>
                   <ButtonPositionY>350</ButtonPositionY>
+                  <ButtonRight>400</ButtonRight>
+                  <ButtonBottom>375</ButtonBottom>
                   <TextColorA>200</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -91,6 +101,7 @@
                   <ButtonText>Exit Game</ButtonText>
           </Button>
 </Menu>
+
 
 
 
