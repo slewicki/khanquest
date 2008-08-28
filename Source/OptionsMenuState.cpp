@@ -71,6 +71,52 @@ bool COptionsMenuState::Input(float fElapsedTime)
 		FadeOut(fElapsedTime);
 	if(m_bPaused)
 		return true;
+
+	for(int i = 0; i < m_nNumButtons; i++)
+	{
+		if(CGame::GetInstance()->IsMouseInRect(Buttons[i].rToClick))
+		{
+			CGame::GetInstance()->SetCursorClick();
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+			{
+				switch(Buttons[i].Action)
+				{
+				case KEYBIND:
+					{
+						m_pWM->Play(m_nClick);
+						//Switch States;
+						m_pToSwitchTo = CKeyBindState::GetInstance();
+						SetPause(true);
+					}break;
+				case FULLSCREEN:
+					{
+						CGame::GetInstance()->SwitchFullScreen();
+					}break;	
+				case FPS:
+					{
+						CGame::GetInstance()->SetFPSDisplay(!CGame::GetInstance()->GetFPSDisplay());
+					}break;				
+				case STATEBOXES:
+					{
+						CGame::GetInstance()->SetBoxes(!CGame::GetInstance()->GetBoxes());	
+					}break;
+				case CREDITS:
+					{
+						m_pWM->Play(m_nClick);
+						m_pToSwitchTo = CCreditState::GetInstance();
+						SetPause(true);
+					}break;
+				case BACK:
+					{
+						m_pWM->Play(m_nClick);
+						CGame::GetInstance()->PopCurrentState();
+						CMainMenuState::GetInstance()->SetPause(false);
+					}break;
+				}
+			}
+		}
+	}
+
 #pragma region UP
 	if(m_pDI->GetBufferedKey(DIK_UP))
 	{
@@ -407,11 +453,23 @@ bool COptionsMenuState::Parse(char* szFileName)
 				{
 					if(nCounter < m_nNumButtons)
 						Buttons[nCounter].ptPosition.x = atoi(xml->getNodeName());
+					Buttons[nCounter].rToClick.left = Buttons[nCounter].ptPosition.x;
 				}
 				else if(!strcmp("ButtonPositionY",szName.c_str()))
 				{
 					if(nCounter < m_nNumButtons)
 						Buttons[nCounter].ptPosition.y = atoi(xml->getNodeName());
+					Buttons[nCounter].rToClick.top = Buttons[nCounter].ptPosition.y;
+				}
+				else if(!strcmp("ButtonRight",szName.c_str()))
+				{
+					if(nCounter < m_nNumButtons)
+						Buttons[nCounter].rToClick.right = atoi(xml->getNodeName());
+				}
+				else if(!strcmp("ButtonBottom",szName.c_str()))
+				{
+					if(nCounter < m_nNumButtons)
+						Buttons[nCounter].rToClick.bottom = atoi(xml->getNodeName());
 				}
 				else if(!strcmp("TextColorA",szName.c_str()))
 				{
