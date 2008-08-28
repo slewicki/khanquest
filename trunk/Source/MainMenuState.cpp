@@ -93,20 +93,81 @@ void CMainMenuState::Exit(void)
 bool CMainMenuState::Input(float fElapsedTime)
 {
 	m_JoyTimer += fElapsedTime;
-	
-
 	if(m_pToSwitchTo != NULL)
 		FadeOut(fElapsedTime);
 
 	if(m_bPaused)
 		return true;
+
+	for(int i = 0; i < m_nNumButtons; i++)
+	{
+		if(CGame::GetInstance()->IsMouseInRect(Buttons[i].rToClick))
+		{
+			CGame::GetInstance()->SetCursorClick();
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+			{
+				switch(Buttons[i].Action)
+				{
+				case Tutorial:
+					{
+						m_bPaused = true;
+						CGame::GetInstance()->SetTutorialMode(true);
+
+						CLoadGameState::GetInstance()->IsNewGame(true);
+						m_pToSwitchTo = CLoadGameState::GetInstance();
+					}
+					break;
+				case WorldMapState:
+					{
+						CGame::GetInstance()->SetTutorialMode(false);
+						m_bPaused = true;
+						CLoadGameState::GetInstance()->IsNewGame(true);
+
+						m_pToSwitchTo = CLoadGameState::GetInstance();
+					}
+					break;
+				case Load:
+					{
+						CGame::GetInstance()->SetTutorialMode(false);
+						m_bPaused = true;
+						//TODO: Make Loading State
+						CLoadGameState::GetInstance()->IsNewGame(false);
+						m_pToSwitchTo = CLoadGameState::GetInstance();
+					}
+					break;
+				case Options:
+					{
+						CGame::GetInstance()->SetTutorialMode(false);
+						m_bPaused = true;
+						m_pToSwitchTo = COptionsMenuState::GetInstance();
+					}
+					break;
+				case ExitGame:
+					{
+						CGame::GetInstance()->SetTutorialMode(false);
+						//TODO: ExitGameState
+						m_bPaused = true;
+						m_pToSwitchTo = COutroState::GetInstance();
+					}
+					break;
+				default:
+					{
+
+					}
+					break;
+				};
+				m_fAttractTimer = 0;
+			}
+		}
+	}
+
 	m_fAttractTimer += fElapsedTime;
 	if(m_fAttractTimer > 30)
 	{
 		m_bPaused = true;
 		CGame::GetInstance()->PushState(CAttractMode::GetInstance());
 	}
-	
+
 	if(m_pDI->GetBufferedKey(DIK_UP))
 	{
 		m_nCurrentButton--;
@@ -180,7 +241,7 @@ bool CMainMenuState::Input(float fElapsedTime)
 				CGame::GetInstance()->SetTutorialMode(false);
 				m_bPaused = true;
 				CLoadGameState::GetInstance()->IsNewGame(true);
-				
+
 				m_pToSwitchTo = CLoadGameState::GetInstance();
 			}
 			break;
@@ -250,10 +311,10 @@ void CMainMenuState::Render(float fElapsedTime)
 			D3DCOLOR_ARGB(m_nAlpha/*Buttons[i].alpha*/, Buttons[i].red, Buttons[i].green, Buttons[i].blue));
 	}
 	m_pTM->Draw(m_nCursorID,m_ptCursorPosition.x-50,m_ptCursorPosition.y,m_fCurScaleX,m_fCurScaleY,0,0,0,0,D3DCOLOR_ARGB(m_nAlpha,255,255,255));
-	
+
 	if (!m_bPaused)
 		m_pTM->Draw(m_nLogsID, 375, 300, .50f, .50f, 0);
-	
+
 	m_pPE->Render(fElapsedTime);
 }
 
@@ -261,7 +322,7 @@ void CMainMenuState::FadeIn(float fElapsedTime)
 {
 
 	m_fTimer += fElapsedTime;
-	
+
 	if(!m_bAlpha)
 		if(m_fTimer > .00002f && m_nAlpha < 255)
 		{
@@ -310,7 +371,7 @@ bool CMainMenuState::Parse(char* szFileName)
 		case EXN_ELEMENT:
 			{
 				//Grabs the attribute name
- 				szName = xml->getNodeName();
+				szName = xml->getNodeName();
 			}
 			break;
 		case EXN_TEXT:
@@ -357,11 +418,23 @@ bool CMainMenuState::Parse(char* szFileName)
 				{
 					if(nCounter < m_nNumButtons)
 						Buttons[nCounter].ptPosition.x = atoi(xml->getNodeName());
+					Buttons[nCounter].rToClick.left = Buttons[nCounter].ptPosition.x;
 				}
 				else if(!strcmp("ButtonPositionY",szName.c_str()))
 				{
 					if(nCounter < m_nNumButtons)
 						Buttons[nCounter].ptPosition.y = atoi(xml->getNodeName());
+					Buttons[nCounter].rToClick.top = Buttons[nCounter].ptPosition.y;
+				}
+				else if(!strcmp("ButtonRight",szName.c_str()))
+				{
+					if(nCounter < m_nNumButtons)
+						Buttons[nCounter].rToClick.right = atoi(xml->getNodeName());
+				}
+				else if(!strcmp("ButtonBottom",szName.c_str()))
+				{
+					if(nCounter < m_nNumButtons)
+						Buttons[nCounter].rToClick.bottom = atoi(xml->getNodeName());
 				}
 				else if(!strcmp("TextColorA",szName.c_str()))
 				{
