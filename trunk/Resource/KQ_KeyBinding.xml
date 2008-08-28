@@ -34,6 +34,8 @@
           <Button>
                   <ButtonPositionX>275</ButtonPositionX>
                   <ButtonPositionY>150</ButtonPositionY>
+                  <ButtonRight>400</ButtonRight>
+                  <ButtonBottom>175</ButtonBottom>
                   <TextColorA>200</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -94,6 +96,8 @@
           <Button>
                   <ButtonPositionX>275</ButtonPositionX>
                   <ButtonPositionY>400</ButtonPositionY>
+                  <ButtonRight>400</ButtonRight>
+                  <ButtonBottom>425</ButtonBottom>
                   <TextColorA>200</TextColorA>
                   <TextColorR>0</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -104,6 +108,7 @@
                   <ButtonText>Back</ButtonText>
           </Button>
 </Menu>
+
 
 
 
