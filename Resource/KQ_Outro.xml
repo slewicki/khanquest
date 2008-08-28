@@ -29,6 +29,8 @@
           <Button>
                   <ButtonPositionX>575</ButtonPositionX>
                   <ButtonPositionY>250</ButtonPositionY>
+                  <ButtonRight>650</ButtonRight>
+                  <ButtonBottom>275</ButtonBottom>
                   <TextColorA>200</TextColorA>
                   <TextColorR>255</TextColorR>
                   <TextColorG>0</TextColorG>
@@ -41,6 +43,8 @@
           <Button>
                   <ButtonPositionX>650</ButtonPositionX>
                   <ButtonPositionY>250</ButtonPositionY>
+                  <ButtonRight>700</ButtonRight>
+                  <ButtonBottom>275</ButtonBottom>
                   <TextColorA>200</TextColorA>
                   <TextColorR>255</TextColorR>
                   <TextColorG>0</TextColorG>
