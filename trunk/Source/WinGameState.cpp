@@ -49,7 +49,10 @@ bool CWinGameState::Input(float fElapsedTime)
 	{	
 		m_bEsc = true;
 	}
-	
+	if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+	{
+		m_bEsc = true;
+	}
 	return true;
 }
 void CWinGameState::Render(float fElapsedTime)

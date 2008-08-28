@@ -44,6 +44,11 @@ bool CAttractMode::Input(float fElapsedTime)
 		m_pDS->Stop(m_nDemoID);
 		m_pCG->ChangeState(CMainMenuState::GetInstance());
 	}
+	if(pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+	{
+		m_pDS->Stop(m_nDemoID);
+		m_pCG->ChangeState(CMainMenuState::GetInstance());
+	}
 	STOP("CAttractMode::Input(float)");
 	return true;
 }

@@ -113,6 +113,28 @@ bool COutroState::Input(float fElapsedTime)
 		}
 	}
 
+	for(int i = 0; i < m_nNumButtons;i++)
+	{
+		if(CGame::GetInstance()->IsMouseInRect(Buttons[i].rToClick))
+		{
+			CGame::GetInstance()->SetCursorClick();
+			if(m_pDI->GetBufferedMouseButton(M_BUTTON_LEFT))
+			{
+				switch(Buttons[i].Action)
+				{
+				case YES:
+					{
+						m_bAlpha = true	;
+					}break;
+				case NO:
+					{
+						CMainMenuState::GetInstance()->SetPause(false);
+						CGame::GetInstance()->PopCurrentState();
+					}break;
+				}
+			}
+		}
+	}
 
 	if(m_pDI->GetBufferedKey(DIK_RETURN) || m_pDI->GetBufferedJoyButton(JOYSTICK_X) || m_pDI->GetBufferedJoyButton(JOYSTICK_R2))
 	{	
@@ -231,11 +253,23 @@ bool COutroState::Parse(char* szFilename)
 					{
 						if(nCounter < m_nNumButtons)
 							Buttons[nCounter].ptPosition.x = atoi(xml->getNodeName());
+						Buttons[nCounter].rToClick.left = Buttons[nCounter].ptPosition.x;
 					}
 					else if(!strcmp("ButtonPositionY",szName.c_str()))
 					{
 						if(nCounter < m_nNumButtons)
 							Buttons[nCounter].ptPosition.y = atoi(xml->getNodeName());
+						Buttons[nCounter].rToClick.top = Buttons[nCounter].ptPosition.y;
+					}
+					else if(!strcmp("ButtonRight",szName.c_str()))
+					{
+						if(nCounter < m_nNumButtons)
+							Buttons[nCounter].rToClick.right = atoi(xml->getNodeName());
+					}
+					else if(!strcmp("ButtonBottom",szName.c_str()))
+					{
+						if(nCounter < m_nNumButtons)
+							Buttons[nCounter].rToClick.bottom = atoi(xml->getNodeName());
 					}
 					else if(!strcmp("TextColorA",szName.c_str()))
 					{

@@ -42,6 +42,7 @@ class CKeyBindState : public IGameState
 		string Text;
 		int alpha,red,green,blue,Action;			
 		float fscalex,fscaley;
+		RECT rToClick;
 	};
 	TextToHold* Buttons;
 	int m_nNumButtons;
